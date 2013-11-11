@@ -16,13 +16,14 @@ ExternalProject_Get_Property(
   source_dir
 )
 
-
 set(GTEST_INCLUDE_DIRS "${source_dir}/include")
+set(GTEST_INSTALL_LIB "${source_dir}/${CMAKE_SHARED_LIBRARY_PREFIX}gtest${CMAKE_SHARED_LIBRARY_SUFFIX}")
+if(WIN32)
+  set(GTEST_LIBRARIES "${source_dir}/${CMAKE_IMPORT_LIBRARY_PREFIX}gtest${CMAKE_IMPORT_LIBRARY_SUFFIX}")
+else()
+  set(GTEST_LIBRARIES "${GTEST_INSTALL_LIB}")
+endif()
 
-# TODO: handle UNIX here
-set(GTEST_LIBRARIES "${source_dir}/${CMAKE_SHARED_LIBRARY_PREFIX}gtest${CMAKE_LINK_LIBRARY_SUFFIX}")
-set(GTEST_INSTALL_LIBS "${source_dir}/${CMAKE_SHARED_LIBRARY_PREFIX}gtest${CMAKE_SHARED_LIBRARY_SUFFIX}")
+set(GTEST_BOTH_LIBRARIES ${GTEST_LIBRARIES})
 
-set(GTEST_BOTH_LIBRARIES ${GTEST_LIBRARIES} ${GTEST_MAIN_LIBRARIES})
-
-install_external_library(gtest ${GTEST_INSTALL_LIBS})
+install_external_library(gtest ${GTEST_INSTALL_LIB})
