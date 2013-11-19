@@ -14,3 +14,7 @@
 
 # cmake stuff
 build/
+
+# doc stuff
+doc/*
+!doc/Doxyfile
