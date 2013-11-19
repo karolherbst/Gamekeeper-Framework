@@ -21,7 +21,7 @@
 #ifndef LOG_LOGGER_H
 #define LOG_LOGGER_H 1
 
-#include <gamelib/core/common.h>
+#include <core/common.h>
 
 #include <string>
 
@@ -81,6 +81,8 @@ PUBLIC_API enum class LOG_LEVEL
 };
 
 /**
+ * @class logger logger.h <log/logger.h>
+ *
  * the gamelib logger class
  *
  * this will be used for any logging functionalities.
