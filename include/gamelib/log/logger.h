@@ -18,10 +18,10 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef LOG_LOGGER_H
-#define LOG_LOGGER_H 1
+#ifndef GAMELIB_LOG_LOGGER_H
+#define GAMELIB_LOG_LOGGER_H 1
 
-#include <core/common.h>
+#include <gamelib/core/common.h>
 
 #include <string>
 
@@ -81,7 +81,7 @@ PUBLIC_API enum class LOG_LEVEL
 };
 
 /**
- * @class logger logger.h <log/logger.h>
+ * @class logger logger.h <gamelib/log/logger.h>
  *
  * the gamelib logger class
  *
@@ -101,4 +101,4 @@ public:
 } // namespace log
 } // namespace gamelib
 
-#endif //LOG_LOGGER_H
+#endif //GAMELIB_LOG_LOGGER_H

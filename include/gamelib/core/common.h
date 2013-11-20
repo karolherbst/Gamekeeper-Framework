@@ -18,11 +18,11 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef CORE_COMMON_H
-#define CORE_COMMON_H 1
+#ifndef GAMELIB_CORE_COMMON_H
+#define GAMELIB_CORE_COMMON_H 1
 
 // used for later stuff
 #define PUBLIC_API
 #define PRIVATE_API
 
-#endif //CORE_COMMON_H
+#endif //GAMELIB_CORE_COMMON_H
