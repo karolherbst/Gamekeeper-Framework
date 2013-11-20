@@ -24,7 +24,7 @@ include(SetInstallPaths)
 # dependency management
 #######################################################################################################################
 
-find_package(Boost ${REQUIRED_ON_UNIX})
+find_package(Boost 1.20 ${REQUIRED_ON_UNIX})
 find_package(CURL ${REQUIRED_ON_UNIX})
 
 # gtest
