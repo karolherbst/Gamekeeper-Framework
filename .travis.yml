@@ -1,0 +1,27 @@
+language: cpp
+compiler:
+  - gcc
+  - clang
+env:
+  - CFLAGS=--coverage CXXFLAGS=--coverage
+before_install:
+  - sudo apt-get update
+  - sudo apt-get install libboost-dev libgtest-dev
+  - sudo pip install cpp-coveralls --use-mirrors
+script:
+  - cmake .
+  - make -j4
+  - ctest --output-on-failure .
+after_success:
+  - coveralls --exclude tests --exclude gtest-prefix --exclude CMakeFiles --exclude-pattern 'CMake[^\.]*\.c(?:pp)?' --exclude-pattern '[^\.]*\.h' > /dev/null
+notifications:
+  irc:
+    channels:
+      - "irc.freenode.org#gamelib"
+    template:
+      - "%{repository} (%{commit}) by %{author} : %{message} %{foo} "
+      - "Build details: %{build_url}"
+      - "Latest commit: %{compare_url}"
+    on_success: change
+    on_failure: change
+    skip_join: true
