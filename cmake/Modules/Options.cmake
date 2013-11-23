@@ -2,4 +2,5 @@
 # global options
 #######################################################################################################################
 
-option(ENABLE_TEST "enable Unit tests" OFF)
+option(BUILD_TESTS "enables the build of unit tests" OFF)
+option(BUILD_PROTOTYPES "enables the build of prototypes" OFF)

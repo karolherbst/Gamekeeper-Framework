@@ -1,3 +1,10 @@
+#######################################################################################################################
+# global Object documentation
+# name              default      description
+# BUILD_TESTS       OFF          enables the build of unit tests
+# BUILD_PROTOTYPES  OFF          enables the build of prototypes
+#######################################################################################################################
+
 project(gamelib CXX)
 cmake_minimum_required(VERSION 2.8)
 
@@ -28,7 +35,7 @@ find_package(Boost 1.20 ${REQUIRED_ON_UNIX})
 find_package(CURL ${REQUIRED_ON_UNIX})
 
 # gtest
-if(ENABLE_TEST)
+if(BUILD_TEST)
   find_package(GTest)
   
   if(NOT GTEST_FOUND)
