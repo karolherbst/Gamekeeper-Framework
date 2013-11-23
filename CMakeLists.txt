@@ -15,6 +15,9 @@ cmake_minimum_required(VERSION 2.8)
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/Modules")
 
 if(NOT WIN32)
+  if(NOT APPLE)
+    set(REQUIRED_ON_LINUX REQUIRED)
+  endif()
   set(REQUIRED_ON_UNIX REQUIRED)
 endif()
 
@@ -31,7 +34,7 @@ include(SetInstallPaths)
 # dependency management
 #######################################################################################################################
 
-find_package(Boost 1.20 ${REQUIRED_ON_UNIX})
+find_package(Boost 1.44 COMPONENTS filesystem ${REQUIRED_ON_LINUX})
 find_package(CURL ${REQUIRED_ON_UNIX})
 
 # gtest
