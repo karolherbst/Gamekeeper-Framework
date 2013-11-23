@@ -38,7 +38,7 @@ find_package(Boost 1.44 COMPONENTS filesystem ${REQUIRED_ON_LINUX})
 find_package(CURL ${REQUIRED_ON_UNIX})
 
 # gtest
-if(BUILD_TEST)
+if(BUILD_TESTS)
   find_package(GTest)
   
   if(NOT GTEST_FOUND)
