@@ -25,4 +25,21 @@
 #define PUBLIC_API
 #define PRIVATE_API
 
+// declare override if the compiler does not understand it
+#if defined(__GNUC__)
+	// supported since gcc-4.7
+	#if ((GNUC_MAJOR == 4 && GNUC_MINOR < 7) || GNUC_MAJOR < 4)
+		#define override
+	#endif
+#elif defined(__clang__)
+	#if !__has_feature(cxx_override_control)
+		#define override
+	#endif
+#elif defined(_MSC_VER)
+	// supported since Visual Studio 2010
+	#if (_MSC_VER < 1600)
+		#define override
+	#endif
+#endif
+
 #endif //GAMELIB_CORE_COMMON_H
