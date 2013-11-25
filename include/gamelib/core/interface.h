@@ -21,4 +21,48 @@
 #ifndef GAMELIB_CORE_INTERFACE_H
 #define GAMELIB_CORE_INTERFACE_H 1
 
+#include <gamelib/core/common.h>
+
+#ifndef interface
+	/**
+	 * fake type for interfaces.
+	 * 
+	 * Every pure virtual class should be declared with this type instead of class or struct.
+	 * Also members, non pure virtual methods, or any protected or private methods may not be used.
+	 * 
+	 * Use the GAMELIB_INTERFACE_* macros to simplify interface declerations.
+	 * 
+	 * @author Karol Herbst
+	 * @since 0
+	 */
+	#define interface struct
+#endif
+
+/**
+ * this method auto creates the destructor for interface types
+ * 
+ * @author Karol Herbst
+ * @since 0
+ * @param type the name of the interface
+ */
+#define GAMELIB_INTERFACE_DESTRUCTOR(type) virtual ~type(){}
+
+/**
+ * this method auto creates the pure virtual method given
+ * 
+ * @author Karol Herbst
+ * @since 0
+ * @param method the method signature
+ */
+#define GAMELIB_INTERFACE_METHOD(method) virtual method = 0;
+
+/**
+ * this macro shall be used to override interface methods
+ * 
+ * @author Karol Herbst
+ * @since 0
+ * @param method the method signature
+ */
+#define GAMELIB_IMPLEMENTATION_OVERRIDE(method) virtual method override
+
 #endif //GAMELIB_CORE_INTERFACE_H
