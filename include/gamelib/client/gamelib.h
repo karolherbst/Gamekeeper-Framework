@@ -57,7 +57,7 @@ PUBLIC_API GameLib newDefaultInit();
  * 
  * @pre @p gamelib needs to be created by a method from the {@link gamelib::client} namespace
  * 
- * @parm[in] gamelib the to destroyed gamelib instance
+ * @param[in] gamelib the to destroyed gamelib instance
  */
 PUBLIC_API void destroyGameLib(Gamelib gamelib);
 
