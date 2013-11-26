@@ -25,17 +25,15 @@
 
 #include <string>
 
-namespace gamelib
-{
-namespace log
-{
+GAMELIB_NAMESPACE_START(log)
+
 /**
  * this enum should be used to define the loging level used in the logger
  *
  * @author Karol Herbst
  * @since 0
  */
-PUBLIC_API enum class LOG_LEVEL
+PUBLIC_TYPE enum class LOG_LEVEL
 {
 	/**
 	 * used for trace output
@@ -92,13 +90,12 @@ PUBLIC_API enum class LOG_LEVEL
  * @author Karol Herbst
  * @since 0
  */
-PUBLIC_API class logger
+PUBLIC_TYPE class logger
 {
 public:
-	virtual void log(LOG_LEVEL, std::string) = 0;
+	PUBLIC_API virtual void log(LOG_LEVEL, std::string) = 0;
 };
 
-} // namespace log
-} // namespace gamelib
+GAMELIB_NAMESPACE_END(log)
 
 #endif //GAMELIB_LOG_LOGGER_H
