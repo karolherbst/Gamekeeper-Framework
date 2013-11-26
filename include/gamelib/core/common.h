@@ -24,7 +24,11 @@
 // some headers we want to use nearly everywhere
 
 // for C99 integer types
+#ifdef __cplusplus
 #include <cstdint>
+#else
+#include <stdint.h>
+#endif
 
 // used for later stuff
 #define PRIVATE_TYPE
