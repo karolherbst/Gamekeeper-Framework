@@ -28,13 +28,18 @@
 
 // used for later stuff
 #define PRIVATE_TYPE
-#define PUBLIC_API
 #define PRIVATE_API
 
 #ifdef __cplusplus
 #define PUBLIC_API extern "C"
+#define PUBLIC_TYPE extern "C"
+#define PUBLIC_TYPE_STRUCT(name) extern "C" struct name
+#define PUBLIC_TYPE_FORWARD_STRUCT(name) extern "C" typedef struct internal_##name * name
 #else
 #define PUBLIC_API
+#define PUBLIC_TYPE
+#define PUBLIC_TYPE_STRUCT(name) typedef struct name name; struct name
+#define PUBLIC_TYPE_FORWARD_STRUCT(name) typedef struct internal_##name * name
 #endif
 
 /**
