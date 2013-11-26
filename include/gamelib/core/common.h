@@ -27,10 +27,15 @@
 #include <cstdint>
 
 // used for later stuff
-#define PUBLIC_TYPE
 #define PRIVATE_TYPE
 #define PUBLIC_API
 #define PRIVATE_API
+
+#ifdef __cplusplus
+#define PUBLIC_API extern "C"
+#else
+#define PUBLIC_API
+#endif
 
 /**
  * used to start a C++ namespace
