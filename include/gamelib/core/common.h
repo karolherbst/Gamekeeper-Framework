@@ -21,6 +21,11 @@
 #ifndef GAMELIB_CORE_COMMON_H
 #define GAMELIB_CORE_COMMON_H 1
 
+// some headers we want to use nearly everywhere
+
+// for C99 integer types
+#include <cstdint>
+
 // used for later stuff
 #define PUBLIC_API
 #define PRIVATE_API
