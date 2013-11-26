@@ -30,19 +30,41 @@
 	#include <stdint.h>
 #endif
 
-// used for later stuff
-#define PRIVATE_TYPE
-#define PRIVATE_API
-
+// for C++ we have to handle visibility and importing exporting
 #ifdef __cplusplus
-	#define PUBLIC_API extern "C"
-	#define PUBLIC_TYPE extern "C"
-	#define PUBLIC_TYPE_STRUCT(name) extern "C" struct name
+	// dllexport, dllimport and visibility flags for Win32 and Unix
+	#if defined(_WIN32) || defined (__CYGWIN__)
+		#if defined(BUILDING_DLL)
+			#if defined(__GNUC__)
+				#define PUBLIC_API __attribute__ ((dllexport))
+			#else
+				#define PUBLIC_API __declspec(dllexport)
+			#endif
+		#else
+			#if defined(__GNUC__)
+				#define PUBLIC_API __attribute__ ((dllimport))
+			#else
+				#define PUBLIC_API __declspec(dllimport)
+			#endif
+		#endif
+		#define DLL_LOCAL
+	#else
+		#if defined(__GNUC__) || defined(__clang__)
+			#if __GNUC__ >= 4
+				#define PUBLIC_API __attribute__ ((visibility ("default")))
+				#define PRIVATE_API  __attribute__ ((visibility ("hidden")))
+			#else
+				#define PUBLIC_API
+				#define PRIVATE_API
+			#endif
+		#endif
+	#endif
+	#define PUBLIC_TYPE_STRUCT(name) extern "C" struct PUBLIC_API name
 	#define PUBLIC_TYPE_FORWARD_STRUCT(name) extern "C" typedef struct internal_##name * name
 #else
 	#define PUBLIC_API
-	#define PUBLIC_TYPE
-	#define PUBLIC_TYPE_STRUCT(name) typedef struct name name; struct name
+	#define PRIVATE_API
+	#define PUBLIC_TYPE_STRUCT(name) typedef struct name name; struct PUBLIC_API name
 	#define PUBLIC_TYPE_FORWARD_STRUCT(name) typedef struct internal_##name * name
 #endif
 
