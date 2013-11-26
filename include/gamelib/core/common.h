@@ -27,6 +27,8 @@
 #include <cstdint>
 
 // used for later stuff
+#define PUBLIC_TYPE
+#define PRIVATE_TYPE
 #define PUBLIC_API
 #define PRIVATE_API
 
