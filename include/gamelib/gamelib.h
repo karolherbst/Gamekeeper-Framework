@@ -26,11 +26,11 @@
 /**
  * @class GameLib gamelib.h <gamelib/gamelib.h>
  *
- * Entry class for the gamelib library
+ * Entry type for the gamelib library
  *
  * use this to configure and setup your gamelib environment. You usually want to do this in UI clients
  */
-PUBLIC_API class GameLib
+PUBLIC_TYPE struct GameLib
 {
 }
 
