@@ -23,6 +23,8 @@
 
 #include <gamelib/core/common.h>
 
+GAMELIB_NAMESPACE_START(client)
+
 /**
  * @class GameLib gamelib.h <gamelib/gamelib.h>
  *
@@ -33,5 +35,7 @@
 PUBLIC_TYPE struct GameLib
 {
 }
+
+GAMELIB_NAMESPACE_END(client)
 
 #endif //GAMELIB_GAMELIB_H
