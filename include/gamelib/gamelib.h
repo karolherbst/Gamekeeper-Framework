@@ -32,9 +32,17 @@ GAMELIB_NAMESPACE_START(client)
  *
  * use this to configure and setup your gamelib environment. You usually want to do this in UI clients
  */
-PUBLIC_TYPE struct GameLib
-{
-}
+PUBLIC_TYPE_FORWARD_STRUCT(GameLib);
+
+/**
+ * default init method
+ * 
+ * this function should be used very carefully, because you don't have any control about how gamelib is configured
+ * 
+ * @author Karol Herbst
+ * @since 0
+ */
+PUBLIC_API GameLib* defaultInit();
 
 GAMELIB_NAMESPACE_END(client)
 
