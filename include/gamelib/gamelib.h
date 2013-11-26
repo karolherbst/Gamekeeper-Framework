@@ -39,10 +39,15 @@ PUBLIC_TYPE_FORWARD_STRUCT(GameLib);
  * 
  * this function should be used very carefully, because you don't have any control about how gamelib is configured
  * 
+ * It may be, that the returned instance will use only volatile inmemory storage and should only be used for testing
+ * purposes
+ * 
  * @author Karol Herbst
  * @since 0
+ * 
+ * @return a new created default instance of gameLib
  */
-PUBLIC_API GameLib* defaultInit();
+PUBLIC_API GameLib newDefaultInit();
 
 GAMELIB_NAMESPACE_END(client)
 
