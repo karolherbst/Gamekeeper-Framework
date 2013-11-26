@@ -37,10 +37,24 @@
  * 
  * It should be used in every header file also used in C applications.
  * It guards the namespace decleration with #ifdef __cplusplus check
+ * 
+ * This macro creates the following lines for C++ applications:
+ * 
+ * @code{.cpp}
+ * namespace gamelib
+ * {
+ * namespace @p name
+ * {
+ * @endcode
+ * 
+ * @param[in] name of the namespace
  */
 #define GAMELIB_NAMESPACE_START(name) \
 #ifdef __cplusplus \
-namespace gamelib { namespace name { \
+namespace gamelib \
+{ \
+namespace name \
+{ \
 #endif
 
 /**
@@ -48,10 +62,20 @@ namespace gamelib { namespace name { \
  * 
  * It should be used in every header file also used in C applications.
  * It guards the namespace decleration with #ifdef __cplusplus check
+ * 
+ * This macro creates the following line for C++ applications:
+ * 
+ * @code{.cpp}
+ * }
+ * }
+ * @endcode
+ * 
+ * @param[in] name of the namespace
  */
 #define GAMELIB_NAMESPACE_END(name) \
 #ifdef __cplusplus \
-}} \
+} \
+} \
 #endif
 
 // declare override if the compiler does not understand it
