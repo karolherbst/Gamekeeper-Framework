@@ -32,6 +32,28 @@
 #define PUBLIC_API
 #define PRIVATE_API
 
+/**
+ * used to start a C++ namespace
+ * 
+ * It should be used in every header file also used in C applications.
+ * It guards the namespace decleration with #ifdef __cplusplus check
+ */
+#define GAMELIB_NAMESPACE_START(name) \
+#ifdef __cplusplus \
+namespace gamelib { namespace name { \
+#endif
+
+/**
+ * used to end a C++ namespace
+ * 
+ * It should be used in every header file also used in C applications.
+ * It guards the namespace decleration with #ifdef __cplusplus check
+ */
+#define GAMELIB_NAMESPACE_END(name) \
+#ifdef __cplusplus \
+}} \
+#endif
+
 // declare override if the compiler does not understand it
 #if defined(__GNUC__)
 	// supported since gcc-4.7
