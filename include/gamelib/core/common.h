@@ -85,12 +85,14 @@
  * 
  * @param[in] name of the namespace
  */
-#define GAMELIB_NAMESPACE_START(name) \
-#ifdef __cplusplus \
-namespace gamelib \
-{ \
-namespace name \
-{ \
+#ifdef __cplusplus
+	#define GAMELIB_NAMESPACE_START(name) \
+	namespace gamelib \
+	{ \
+	namespace name \
+	{
+#else
+	#define GAMELIB_NAMESPACE_START(name)
 #endif
 
 /**
@@ -108,10 +110,12 @@ namespace name \
  * 
  * @param[in] name of the namespace
  */
+#ifdef __cplusplus
 #define GAMELIB_NAMESPACE_END(name) \
-#ifdef __cplusplus \
 } \
-} \
+}
+#else
+#define GAMELIB_NAMESPACE_END(name)
 #endif
 
 // the following stuff is for C++ only
