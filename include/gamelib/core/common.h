@@ -23,7 +23,6 @@
 
 // some headers we want to use nearly everywhere
 
-// for C99 integer types
 #ifdef __cplusplus
 	#include <cstdint>
 #else
