@@ -27,6 +27,7 @@
 #ifdef __cplusplus
 	#include <cstdint>
 #else
+	#include <stdbool.h>
 	#include <stdint.h>
 #endif
 
