@@ -50,7 +50,14 @@ PUBLIC_TYPE_FORWARD_STRUCT(GameLib);
 PUBLIC_API GameLib newDefaultInit();
 
 /**
- * destroys the given {@link GameLib} instance
+ * tries to destroy the given {@link GameLib} instance
+ * 
+ * internally it will call all onExit handlers and anything related to a clean shutdown of the client and a clean abort
+ * of all current running and pending actions in @p gamelib itself. If something is blocking or aborting the shutdown
+ * the @p gamelib Instance won't be destroyed at all, though some user triggered actions might be canceled.
+ * 
+ * Please rely on callbacks from the triggered actions to be called and don't clean up the client before this function
+ * returned successfully.
  * 
  * @author Karol Herbst
  * @since 0
@@ -58,8 +65,9 @@ PUBLIC_API GameLib newDefaultInit();
  * @pre @p gamelib needs to be created by a method from the {@link gamelib::client} namespace
  * 
  * @param[in] gamelib the to destroyed gamelib instance
+ * @return true if nothing blocked or aborted the shutdown of @p gamelib, false otherwise.
  */
-PUBLIC_API void destroyGameLib(Gamelib gamelib);
+PUBLIC_API bool destroyGameLib(Gamelib gamelib);
 
 GAMELIB_NAMESPACE_END(client)
 
