@@ -28,11 +28,11 @@ endif()
 # include some cmake modules
 #######################################################################################################################
 
-# should be included first
+# macros should be included first, then environment, the others aren't that important
+include(Macros)
 include(Environment)
 
 include(ExternalProject)
-include(Macros)
 include(Options)
 include(SetInstallPaths)
 
