@@ -26,7 +26,7 @@
 GAMELIB_NAMESPACE_START(client)
 
 /**
- * @class GameLib gamelib.h <gamelib/gamelib.h>
+ * @class GameLib gamelib.h <gamelib/client/gamelib.h>
  *
  * Entry type for the gamelib library
  *
