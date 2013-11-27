@@ -28,6 +28,9 @@ endif()
 # include some cmake modules
 #######################################################################################################################
 
+# should be included first
+include(Environment)
+
 include(ExternalProject)
 include(Macros)
 include(Options)
