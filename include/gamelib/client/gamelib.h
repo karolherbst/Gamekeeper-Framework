@@ -68,7 +68,7 @@ PUBLIC_API GameLib newDefaultInit();
  * @param[in] gamelib the to destroyed gamelib instance
  * @return true if nothing blocked or aborted the shutdown of @p gamelib, false otherwise.
  */
-PUBLIC_API bool shutdownGameLib(Gamelib gamelib);
+PUBLIC_API bool shutdownGameLib(GameLib gamelib);
 
 GAMELIB_NAMESPACE_END(client)
 
