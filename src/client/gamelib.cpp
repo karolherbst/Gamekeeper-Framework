@@ -36,7 +36,7 @@ GameLib newDefaultInit()
 	return new internal_GameLib();
 }
 
-bool shutdownGameLib(Gamelib gamelib)
+bool shutdownGameLib(GameLib gamelib)
 {
 	delete gamelib;
 	return true;
