@@ -46,11 +46,24 @@ function(add_copy_target_file_step target target_loc)
   endif()
 endfunction()
 
+function(add_copy_target_step target)
+  get_target_property(target_loc ${target} LOCATION)
+  add_copy_target_file_step(${target} ${target_loc})
+endfunction()
+
 function(install_external_library target)
   foreach(file ${ARGN})
     install(CODE "get_filename_component(resolved_file \"${file}\" REALPATH)\n get_filename_component(file_name \"${file}\" NAME)\n file(INSTALL DESTINATION ${LIB_INSTALL_DIR} TYPE FILE RENAME \${file_name} FILES \"\${resolved_file}\" )")
     add_copy_target_file_step(${target} "${file}")
   endforeach()
+endfunction()
+
+function(install_library target)
+  # dlls are runtime targets, import libs are archive, but we don't need them
+  install(TARGETS "${target}"
+          RUNTIME DESTINATION "${LIB_INSTALL_DIR}"
+          LIBRARY DESTINATION "${LIB_INSTALL_DIR}")
+  add_copy_target_step(${target})
 endfunction()
 
 #######################################################################################################################
