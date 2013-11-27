@@ -20,3 +20,5 @@
 
 // list of header files we want to use in most of the client API class files
 #include <gamelib/core/common.h>
+
+#include <string>
