@@ -12,6 +12,7 @@ cmake_minimum_required(VERSION 2.8)
 # some global stuff
 #######################################################################################################################
 
+set(CMAKE_COMPILER_PATH "${CMAKE_SOURCE_DIR}/cmake/Compiler")
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/Modules")
 
 set(LINUX FALSE)
