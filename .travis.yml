@@ -6,7 +6,7 @@ env:
   - CFLAGS=--coverage CXXFLAGS=--coverage
 before_install:
   - sudo apt-get update
-  - sudo apt-get install libboost-dev libgtest-dev
+  - sudo apt-get install libboost-dev libboost-filesystem-dev libgtest-dev
   - sudo pip install cpp-coveralls --use-mirrors
 script:
   - cmake .
