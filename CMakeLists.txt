@@ -14,8 +14,10 @@ cmake_minimum_required(VERSION 2.8)
 
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/Modules")
 
+set(LINUX FALSE)
 if(NOT WIN32)
   if(NOT APPLE)
+    set(LINUX TRUE)
     set(REQUIRED_ON_LINUX REQUIRED)
   endif()
   set(REQUIRED_ON_UNIX REQUIRED)
