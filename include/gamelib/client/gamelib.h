@@ -63,11 +63,12 @@ PUBLIC_API GameLib newDefaultInit();
  * @since 0
  * 
  * @pre @p gamelib needs to be created by a method from the {@link gamelib::client} namespace
+ * @post if true is returned @p gamelib is destroyed, nothing changed if false is returned.
  * 
  * @param[in] gamelib the to destroyed gamelib instance
  * @return true if nothing blocked or aborted the shutdown of @p gamelib, false otherwise.
  */
-PUBLIC_API bool destroyGameLib(Gamelib gamelib);
+PUBLIC_API bool shutdownGameLib(Gamelib gamelib);
 
 GAMELIB_NAMESPACE_END(client)
 
