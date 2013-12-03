@@ -121,13 +121,18 @@
 // the following stuff is for C++ only
 #ifdef __cplusplus
 	// declare override if the compiler does not understand it
-	#if defined(__GNUC__)
-		// supported since gcc-4.7
-		#if ((GNUC_MAJOR == 4 && GNUC_MINOR < 7) || GNUC_MAJOR < 4)
+	#if defined(__clang__)
+		#if !__has_feature(cxx_override_control)
 			#define override
 		#endif
-	#elif defined(__clang__)
-		#if !__has_feature(cxx_override_control)
+	#elif defined(__INTEL_COMPILER)
+		// supported since icc-14.0
+		#if (__INTEL_COMPILER < 1400)
+			#define override
+		#endif
+	#elif defined(__GNUC__)
+		// supported since gcc-4.7
+		#if ((GNUC_MAJOR == 4 && GNUC_MINOR < 7) || GNUC_MAJOR < 4)
 			#define override
 		#endif
 	#elif defined(_MSC_VER)
@@ -138,13 +143,18 @@
 	#endif
 	
 	// declare nullptr if the compiler does not understand it
+	// we don't need to check clang, because we require 3.1 anyway
+	#if defined(__INTEL_COMPILER)
+		#if (__INTEL_COMPILER < 1210)
+			#include <stddef.h>
+			#define nullptr NULL
+		#endif
 	#if defined(__GNUC__)
 		// supported since gcc-4.6
 		#if ((GNUC_MAJOR == 4 && GNUC_MINOR < 6) || GNUC_MAJOR < 4)
 			#include <stddef.h>
 			#define nullptr NULL
 		#endif
-	// we don't need to check clang, because we require 3.1 anyway
 	// we don't need to check msvc, because we require msvc10 anyway
 	#endif
 #endif
