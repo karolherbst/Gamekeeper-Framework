@@ -136,6 +136,17 @@
 			#define override
 		#endif
 	#endif
+	
+	// declare nullptr if the compiler does not understand it
+	#if defined(__GNUC__)
+		// supported since gcc-4.6
+		#if ((GNUC_MAJOR == 4 && GNUC_MINOR < 6) || GNUC_MAJOR < 4)
+			#include <stddef.h>
+			#define nullptr NULL
+		#endif
+	// we don't need to check clang, because we require 3.1 anyway
+	// we don't need to check msvc, because we require msvc10 anyway
+	#endif
 #endif
 
 #endif //GAMELIB_CORE_COMMON_H
