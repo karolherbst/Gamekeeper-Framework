@@ -53,6 +53,22 @@ if(BUILD_TESTS)
   endif()
 endif()
 
+if(WITH_CSHARP_FRONTEND OR WITH_JAVA_FRONTEND OR WITH_PYTHON_FRONTEND)
+  find_package(SWIG REQUIRED)
+  
+  if(WITH_CSHARP_FRONTEND)
+    # find file needed for mono/.NET
+  endif()
+  
+  if(WITH_JAVA_FRONTEND)
+    find_package(Java REQUIRED)
+  endif()
+  
+  if(WITH_PYTHON_FRONTEND)
+    find_package(PythonLibs REQUIRED)
+  endif()
+endif()
+
 #######################################################################################################################
 # set some cmake variables needed by gamelib build
 #######################################################################################################################
