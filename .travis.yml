@@ -6,10 +6,10 @@ env:
   - CFLAGS=--coverage CXXFLAGS=--coverage
 before_install:
   - sudo apt-get update
-  - sudo apt-get install libboost-dev libboost-filesystem-dev libgtest-dev
+  - sudo apt-get install default-jdk libboost-dev libboost-filesystem-dev libgtest-dev swig
   - sudo pip install cpp-coveralls --use-mirrors
 script:
-  - cmake .
+  - cmake . -DWITH_CSHARP_FRONTEND=OFF -DWITH_JAVA_FRONTEND=ON -DWITH_PYTHON_FRONTEND=OFF -DBUILD_TESTS=ON
   - make -j4
   - ctest --output-on-failure .
 after_success:
