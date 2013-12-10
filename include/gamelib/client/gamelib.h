@@ -23,52 +23,97 @@
 
 #include <gamelib/core/common.h>
 
+#include <gamelib/core/interface.h>
+
+#include <boost/property_tree/ptree_fwd.hpp>
+
 GAMELIB_NAMESPACE_START(client)
 
 /**
- * @class GameLib gamelib.h <gamelib/client/gamelib.h>
+ * @interface GameLib gamelib.h <gamelib/client/gamelib.h>
  *
  * Entry type for the gamelib library
  *
- * use this to configure and setup your gamelib environment. You usually want to do this in UI clients
- */
-struct GameLib;
-
-/**
- * default init method
- * 
- * this function should be used very carefully, because you don't have any control about how gamelib is configured
- * 
- * It may be, that the returned instance will use only volatile inmemory storage and should only be used for testing
- * purposes
- * 
+ * this interface has to be implemented by the specific Language Frontend. This Interface is not intented for client
+ * usage at all. Refer to the specific language frontent API you want to use instead.
+ *
  * @author Karol Herbst
  * @since 0
- * 
- * @return a new created default instance of gameLib
  */
-GameLib * newDefaultInit();
+interface PUBLIC_API GameLib
+{
+	/**
+	 * default destructor
+	 *
+	 * @author Karol Herbst
+	 * @since 0
+	 */
+	PUBLIC_API GAMELIB_INTERFACE_DESTRUCTOR(GameLib)
+	
+	/**
+	 * init method for GameLib
+	 *
+	 * this method should be used to initialize GameLib with default options and configurations. Keep sure, that after 
+	 * a call to this method, every other method must be ready to use.
+	 *
+	 * {@link #setConfig} doesn't have to be called before.
+	 *
+	 * @author Karol Herbst
+	 * @since 0
+	 */
+	PUBLIC_API GAMELIB_INTERFACE_METHOD(void init())
+	
+	/**
+	 * shutdown method for GameLib
+	 *
+	 * clean up GameLib so that it can be reused with a call to {@link #init} again.
+	 *
+	 * @author Karol Herbst
+	 * @since 0
+	 */
+	PUBLIC_API GAMELIB_INTERFACE_METHOD(void shutdown())
+	
+	/**
+	 * sets the config of the current GameLib instance
+	 *
+	 * this method is called usually after it was constructed. It may be called after a shutdown call or to reconfigure
+	 * GameLib at runtime.
+	 *
+	 * It is recommend to store a copy of the passed object to create diff objects, so you can trigger updates only
+	 * for changed properties.
+	 *
+	 * @author Karol Herbst
+	 * @since 0
+	 *
+	 * @param[in] config the property tree with all the configuration properties.
+	 */
+	PUBLIC_API GAMELIB_INTERFACE_METHOD(void setConfig(boost::property_tree::ptree& config))
+	
+	/**
+	 * starts the implementation specific event loop
+	 *
+	 * @author Karol Herbst
+	 * @since 0
+	 *
+	 * @pre {@link #init} was called
+	 * @post blocks the current thread of execution
+	 *
+	 * @param[in] config the property tree with all the configuration properties.
+	 */
+	PUBLIC_API GAMELIB_INTERFACE_METHOD(void startEventLoop())
+}
 
 /**
- * tries to destroy the given {@link GameLib} instance
- * 
- * internally it will call all onExit handlers and anything related to a clean shutdown of the client and a clean abort
- * of all current running and pending actions in @p gamelib itself. If something is blocking or aborting the shutdown
- * the @p gamelib Instance won't be destroyed at all, though some user triggered actions might be canceled.
- * 
- * Please rely on callbacks from the triggered actions to be called and don't clean up the client before this function
- * returned successfully.
- * 
+ * is used by {@link main()} to get a language specific implementation of {@link GameLib}
+ *
+ * This method is provided by the language frontend library, not gamelib itself.
+ *
  * @author Karol Herbst
  * @since 0
- * 
- * @pre @p gamelib needs to be created by a method from the {@link gamelib::client} namespace
- * @post if true is returned @p gamelib is destroyed, nothing changed if false is returned.
- * 
- * @param[in] gamelib the to destroyed gamelib instance
- * @return true if nothing blocked or aborted the shutdown of @p gamelib, false otherwise.
+ *
+ * @return a new created instance of gameLib
  */
-PUBLIC_API bool shutdownGameLib(GameLib * gamelib);
+GameLib * newInstance();
 
 GAMELIB_NAMESPACE_END(client)
 

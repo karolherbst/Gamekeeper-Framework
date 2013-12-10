@@ -4,11 +4,10 @@ include_directories(
 
 file(GLOB headers
   pch.h
-  gamelib.h
 )
 
 file(GLOB sources
-  gamelib.cpp
+  main.cpp
 )
 
 add_library(gamelibClient SHARED ${sources} ${headers})
