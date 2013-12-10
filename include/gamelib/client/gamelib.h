@@ -32,7 +32,7 @@ GAMELIB_NAMESPACE_START(client)
  *
  * use this to configure and setup your gamelib environment. You usually want to do this in UI clients
  */
-PUBLIC_TYPE_FORWARD_STRUCT(GameLib);
+struct GameLib;
 
 /**
  * default init method
@@ -47,7 +47,7 @@ PUBLIC_TYPE_FORWARD_STRUCT(GameLib);
  * 
  * @return a new created default instance of gameLib
  */
-PUBLIC_API GameLib newDefaultInit();
+GameLib * newDefaultInit();
 
 /**
  * tries to destroy the given {@link GameLib} instance
@@ -68,7 +68,7 @@ PUBLIC_API GameLib newDefaultInit();
  * @param[in] gamelib the to destroyed gamelib instance
  * @return true if nothing blocked or aborted the shutdown of @p gamelib, false otherwise.
  */
-PUBLIC_API bool shutdownGameLib(GameLib gamelib);
+PUBLIC_API bool shutdownGameLib(GameLib * gamelib);
 
 GAMELIB_NAMESPACE_END(client)
 

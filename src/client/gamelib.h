@@ -27,10 +27,10 @@ GAMELIB_NAMESPACE_START(client)
  *
  * This struct contains all data needed for our gamelib client context.
  */
-class PRIVATE_API internal_GameLib
+class PUBLIC_API GameLib
 {
 public:
-	internal_GameLib();
+	GameLib();
 
 private:
 	std::string version;

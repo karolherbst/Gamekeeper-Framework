@@ -59,13 +59,9 @@
 			#endif
 		#endif
 	#endif
-	#define PUBLIC_TYPE_STRUCT(name) extern "C" struct PUBLIC_API name
-	#define PUBLIC_TYPE_FORWARD_STRUCT(name) extern "C" typedef struct internal_##name * name
 #else
 	#define PUBLIC_API
 	#define PRIVATE_API
-	#define PUBLIC_TYPE_STRUCT(name) typedef struct name name; struct PUBLIC_API name
-	#define PUBLIC_TYPE_FORWARD_STRUCT(name) typedef struct internal_##name * name
 #endif
 
 /**

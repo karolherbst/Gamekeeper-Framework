@@ -25,18 +25,18 @@
 
 GAMELIB_NAMESPACE_START(client)
 
-internal_GameLib::internal_GameLib()
+GameLib::GameLib()
 :	version("0")
 {
 	// nothing else here
 }
 
-GameLib newDefaultInit()
+GameLib * newDefaultInit()
 {
-	return new internal_GameLib();
+	return new GameLib();
 }
 
-bool shutdownGameLib(GameLib gamelib)
+bool shutdownGameLib(GameLib * gamelib)
 {
 	delete gamelib;
 	return true;
