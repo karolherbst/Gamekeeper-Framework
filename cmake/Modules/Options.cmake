@@ -9,4 +9,4 @@ option(BUILD_PROTOTYPES "enables the build of prototypes" OFF)
 # module options
 #######################################################################################################################
 
-option(WITH_FRONTENDS "list of frontends to compile" "CXX")
+option(WITH_CXX_FRONTEND "compile C++ Frontend" ON)
