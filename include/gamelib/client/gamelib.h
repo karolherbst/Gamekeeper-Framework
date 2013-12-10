@@ -25,8 +25,6 @@
 
 #include <gamelib/core/interface.h>
 
-#include <boost/property_tree/ptree_fwd.hpp>
-
 GAMELIB_NAMESPACE_START(client)
 
 /**
@@ -72,22 +70,6 @@ interface PUBLIC_API GameLib
 	 * @since 0
 	 */
 	PUBLIC_API GAMELIB_INTERFACE_METHOD(void shutdown())
-	
-	/**
-	 * sets the config of the current GameLib instance
-	 *
-	 * this method is called usually after it was constructed. It may be called after a shutdown call or to reconfigure
-	 * GameLib at runtime.
-	 *
-	 * It is recommend to store a copy of the passed object to create diff objects, so you can trigger updates only
-	 * for changed properties.
-	 *
-	 * @author Karol Herbst
-	 * @since 0
-	 *
-	 * @param[in] config the property tree with all the configuration properties.
-	 */
-	PUBLIC_API GAMELIB_INTERFACE_METHOD(void setConfig(boost::property_tree::ptree& config))
 	
 	/**
 	 * starts the implementation specific event loop
