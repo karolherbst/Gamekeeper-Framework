@@ -18,8 +18,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef GAMELIB_GAMELIB_H
-#define GAMELIB_GAMELIB_H 1
+#ifndef GAMELIB_CLIENT_GAMELIBUI_H
+#define GAMELIB_CLIENT_GAMELIBUI_H 1
 
 #include <gamelib/core/common.h>
 
@@ -28,7 +28,7 @@
 GAMELIB_NAMESPACE_START(client)
 
 /**
- * @interface GameLib gamelib.h <gamelib/client/gamelib.h>
+ * @interface GameLibUI gamelibui.h <gamelib/client/gamelibui.h>
  *
  * Entry type for the gamelib library
  *
@@ -38,7 +38,7 @@ GAMELIB_NAMESPACE_START(client)
  * @author Karol Herbst
  * @since 0
  */
-interface PUBLIC_API GameLib
+interface PUBLIC_API GameLibUI
 {
 	/**
 	 * default destructor
@@ -46,15 +46,13 @@ interface PUBLIC_API GameLib
 	 * @author Karol Herbst
 	 * @since 0
 	 */
-	PUBLIC_API GAMELIB_INTERFACE_DESTRUCTOR(GameLib)
+	PUBLIC_API GAMELIB_INTERFACE_DESTRUCTOR(GameLibUI)
 	
 	/**
 	 * init method for GameLib
 	 *
-	 * this method should be used to initialize GameLib with default options and configurations. Keep sure, that after 
-	 * a call to this method, every other method must be ready to use.
-	 *
-	 * {@link #setConfig} doesn't have to be called before.
+	 * this method should be used to initialize the GameLib client with default options and configurations. Keep sure,
+	 * that after a call to this method, every other method must be ready to use.
 	 *
 	 * @author Karol Herbst
 	 * @since 0
@@ -62,14 +60,14 @@ interface PUBLIC_API GameLib
 	PUBLIC_API GAMELIB_INTERFACE_METHOD(void init())
 	
 	/**
-	 * shutdown method for GameLib
+	 * shutdown event handling method for GameLib
 	 *
-	 * clean up GameLib so that it can be reused with a call to {@link #init} again.
+	 * clean up the GameLib client so that it can be destroyed or reused with a call to {@link #init} again.
 	 *
 	 * @author Karol Herbst
 	 * @since 0
 	 */
-	PUBLIC_API GAMELIB_INTERFACE_METHOD(void shutdown())
+	PUBLIC_API GAMELIB_INTERFACE_METHOD(void onShutdown())
 	
 	/**
 	 * starts the implementation specific event loop
@@ -79,8 +77,6 @@ interface PUBLIC_API GameLib
 	 *
 	 * @pre {@link #init} was called
 	 * @post blocks the current thread of execution
-	 *
-	 * @param[in] config the property tree with all the configuration properties.
 	 */
 	PUBLIC_API GAMELIB_INTERFACE_METHOD(void startEventLoop())
 }
@@ -88,15 +84,23 @@ interface PUBLIC_API GameLib
 /**
  * is used by {@link main()} to get a language specific implementation of {@link GameLib}
  *
- * This method is provided by the language frontend library, not gamelib itself.
+ * This method is provided by the GUI client, not gamelib itself.
  *
  * @author Karol Herbst
  * @since 0
  *
  * @return a new created instance of gameLib
  */
-GameLib * newInstance();
+extern "C" GameLibUI * newInstance();
+
+/**
+ * declares the Implementation of the {@link GameLibUI} interface
+ *
+ * use this by the client to provide all the needed things.
+ */
+#define GAMECLIENTUI_CLASS(class) \
+extern "C" PUBLIC_API GameLibUI * newInstance() { return new class() }
 
 GAMELIB_NAMESPACE_END(client)
 
-#endif //GAMELIB_GAMELIB_H
+#endif //GAMELIB_CLIENT_GAMELIBUI_H
