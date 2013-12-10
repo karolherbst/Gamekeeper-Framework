@@ -57,6 +57,15 @@
 #define GAMELIB_INTERFACE_METHOD(method) virtual method = 0;
 
 /**
+ * this method auto creates the optional virtual method given
+ * 
+ * @author Karol Herbst
+ * @since 0
+ * @param method the method signature
+ */
+#define GAMELIB_INTERFACE_METHOD_OPTIONAL(method) virtual method{};
+
+/**
  * this macro shall be used to override interface methods
  * 
  * @author Karol Herbst
