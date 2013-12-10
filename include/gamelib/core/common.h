@@ -120,21 +120,28 @@
 	#if defined(__clang__)
 		#if !__has_feature(cxx_override_control)
 			#define override
+			#define final
 		#endif
 	#elif defined(__INTEL_COMPILER)
 		// supported since icc-14.0
 		#if (__INTEL_COMPILER < 1400)
 			#define override
+			#define final
 		#endif
 	#elif defined(__GNUC__)
 		// supported since gcc-4.7
 		#if ((GNUC_MAJOR == 4 && GNUC_MINOR < 7) || GNUC_MAJOR < 4)
 			#define override
+			#define final
 		#endif
 	#elif defined(_MSC_VER)
 		// supported since Visual Studio 2010
 		#if (_MSC_VER < 1600)
 			#define override
+			#define final
+		// MSVC 2010 defines sealed instead of final
+		#elif (_MSC_VER < 1700)
+			#define final sealed
 		#endif
 	#endif
 	
