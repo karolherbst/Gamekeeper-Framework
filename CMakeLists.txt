@@ -42,6 +42,7 @@ include(SetInstallPaths)
 
 find_package(Boost 1.44 COMPONENTS filesystem ${REQUIRED_ON_LINUX})
 find_package(CURL ${REQUIRED_ON_UNIX})
+find_package(Hypodermic)
 
 # gtest
 if(BUILD_TESTS)
