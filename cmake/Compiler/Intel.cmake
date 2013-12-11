@@ -5,5 +5,5 @@ if(LINUX)
   add_compiler_flags(-gcc)
 endif()
 
-message(STATUS "-- using ICC")
+message(STATUS "using ICC")
 set(ICC TRUE)
