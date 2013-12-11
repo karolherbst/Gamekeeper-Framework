@@ -152,7 +152,7 @@
 			#include <stddef.h>
 			#define nullptr NULL
 		#endif
-	#if defined(__GNUC__)
+	#elif defined(__GNUC__)
 		// supported since gcc-4.6
 		#if ((GNUC_MAJOR == 4 && GNUC_MINOR < 6) || GNUC_MAJOR < 4)
 			#include <stddef.h>
