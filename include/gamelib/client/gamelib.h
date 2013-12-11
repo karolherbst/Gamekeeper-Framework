@@ -79,7 +79,7 @@ interface PUBLIC_API GameLibUI
 	 * @post blocks the current thread of execution
 	 */
 	PUBLIC_API GAMELIB_INTERFACE_METHOD(void startEventLoop())
-}
+};
 
 /**
  * is used by {@link main()} to get a language specific implementation of {@link GameLib}
