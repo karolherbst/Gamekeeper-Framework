@@ -43,7 +43,7 @@ static gamelib::client::GameLibUI* gamelibI = nullptr;
  * @author Karol Herbst
  * @since 0
  */
-int main(int argc, const char* argv[])
+PUBLIC_API int main(int argc, const char* argv[])
 {
 	// left out not implemented stuff yet
 	gamelibI = gamelib::client::newInstance();
