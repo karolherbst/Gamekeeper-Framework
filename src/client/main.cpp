@@ -24,7 +24,7 @@
 
 #include <gamelib/client/gamelib.h>
 
-static gamelib::client::GameLib* gamelib = nullptr;
+static gamelib::client::GameLibUI* gamelibI = nullptr;
 
 /**
  * main entry point of gamelib
@@ -46,10 +46,10 @@ static gamelib::client::GameLib* gamelib = nullptr;
 int main(int argc, const char* argv[])
 {
 	// left out not implemented stuff yet
-	gamelib = gamelib::client::newInstance();
-	gamelib->init();
-	gamelib->startEventLoop();
-	gamelib->shutdown();
-	delete gamelib;
-	gamelib = nullptr;
+	gamelibI = gamelib::client::newInstance();
+	gamelibI->init();
+	gamelibI->startEventLoop();
+	gamelibI->onShutdown();
+	delete gamelibI;
+	gamelibI = nullptr;
 }
