@@ -99,7 +99,7 @@ extern "C" GameLibUI * newInstance();
  * use this by the client to provide all the needed things.
  */
 #define GAMECLIENTUI_CLASS(class) \
-extern "C" PUBLIC_API GameLibUI * newInstance() { return new class() }
+extern "C" PUBLIC_API gamelib::client::GameLibUI * newInstance() { return new class(); }
 
 GAMELIB_NAMESPACE_END(client)
 
