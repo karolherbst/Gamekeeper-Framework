@@ -47,7 +47,7 @@ PUBLIC_API int main(int argc, const char* argv[])
 {
 	// left out not implemented stuff yet
 	gamelibI = gamelib::client::newInstance();
-	gamelibI->init();
+	gamelibI->init(argc, argv);
 	gamelibI->startEventLoop();
 	gamelibI->onShutdown();
 	delete gamelibI;
