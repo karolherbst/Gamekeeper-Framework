@@ -73,7 +73,7 @@ HBPrototype::doPythonStuff()
 	
 	if (pyModule != NULL)
 	{
-		PyObject *func = PyObject_GetAttrString(pyModule, "parseGameListDOM");
+		PyObject *func = PyObject_GetAttrString(pyModule, "parseGameListHTML");
 		
 		if (func && PyCallable_Check(func))
 		{
@@ -90,7 +90,8 @@ HBPrototype::doPythonStuff()
 			PyObject *result = PyObject_CallObject(func, args);
 			if (result != NULL)
 			{
-				
+				std::cout << "call finished with code: " << PyLong_AsLong(result) << std::endl;
+				Py_DECREF(result);
 			}
 			else
 			{
