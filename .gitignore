@@ -16,6 +16,9 @@
 build/
 qt-build/
 
+# qt-creator stuff
+CMakeLists.txt.user
+
 # doc stuff
 doc/*
 !doc/Doxyfile
