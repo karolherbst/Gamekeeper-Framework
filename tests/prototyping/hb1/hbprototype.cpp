@@ -65,7 +65,8 @@ HBPrototype::doPythonStuff()
 	Py_Initialize();
 	
 	PyRun_SimpleString("import sys");
-	PyRun_SimpleString("sys.path.append(\""PYTHONPATH"\")");
+	PyRun_SimpleString("sys.path.append(\"" PYTHONPATH "\")");
+	PyRun_SimpleString("sys.path.append(\"" GAMELIBPYPATH "\")");
 	
 	PyObject *moduleName = PyUnicode_FromString(PYMODULENAME);
 	PyObject *pyModule = PyImport_Import(moduleName);
