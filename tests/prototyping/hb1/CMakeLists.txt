@@ -20,10 +20,6 @@ file(GLOB sources
 
 add_library(GameLibPy SHARED ${py_sources})
 
-target_link_libraries(GameLibPy
-  ${PYTHON_LIBRARIES}
-)
-
 get_target_property(target_loc GameLibPy LOCATION)
 get_filename_component(target_path "${target_loc}" PATH)
 
