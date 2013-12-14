@@ -1,9 +1,5 @@
-from libGameLibPy import Game
+from GameLibPy import Game
 from bs4 import BeautifulSoup
-
-class GameTest:
-    def __str__(self):
-        return "{name: %s; website: %s; publisher: %s}" % (self.name, self.website, self.publisher)
 
 def parseGameListHTML(htmlString):
     print("parsing HTML")
@@ -17,9 +13,9 @@ def parseGameListHTML(htmlString):
     gameSubTitleHTML = gameInfoHTML.find("div", {"class" : "subtitle"})
     gameSubTitleLinkHTML = gameSubTitleHTML.find("a")
     
-    game = GameTest()
-    game.name = gameTitleLinkHTML.contents[0]
-    game.website = gameTitleLinkHTML["href"]
-    game.publisher = gameSubTitleLinkHTML.contents[0]
+    game = Game()
+    game.name(gameTitleLinkHTML.contents[0])
+    game.website(gameTitleLinkHTML["href"])
+    game.publisher(gameSubTitleLinkHTML.contents[0])
     print(game)
-    return 0
+    return game

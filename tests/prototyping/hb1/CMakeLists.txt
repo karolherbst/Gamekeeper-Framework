@@ -7,10 +7,11 @@ include_directories(
 
 file(GLOB headers
   game.h
+  gameBind.h
   hbprototype.h
 )
 
-file(GLOB py_sources
+file(GLOB binding_sources
   game.cpp
 )
 
@@ -18,7 +19,15 @@ file(GLOB sources
   hbprototype.cpp
 )
 
-add_library(GameLibPy SHARED ${py_sources})
+add_library(GameModelBindings SHARED ${binding_sources} ${headers})
+
+include(${SWIG_USE_FILE})
+set(CMAKE_SWIG_FLAGS -c++ -py3)
+
+set_source_files_properties(game.i PROPERTIES CPLUSPLUS ON)
+set_source_files_properties(game.i PROPERTIES SWIG_FLAGS "-includeall")
+swig_add_module(GameLibPy python game.i)
+swig_link_libraries(GameLibPy GameModelBindings)
 
 get_target_property(target_loc GameLibPy LOCATION)
 get_filename_component(target_path "${target_loc}" PATH)
