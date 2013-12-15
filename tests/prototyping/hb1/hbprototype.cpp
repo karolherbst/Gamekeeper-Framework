@@ -2,6 +2,7 @@
 
 #include "game.h"
 
+#include <map>
 #include <iostream>
 
 #include <curl/curl.h>
@@ -91,9 +92,10 @@ HBPrototype::doPythonStuff()
 	
 	if (pyModule != NULL)
 	{
-		PyObject *func = PyObject_GetAttrString(pyModule, "parseGameListHTML");
+		PyObject *funcGetAll = PyObject_GetAttrString(pyModule, "parseGameIdsHTML");
+		PyObject *funcGetGame = PyObject_GetAttrString(pyModule, "parseGameHTML");
 		
-		if (func && PyCallable_Check(func))
+		if (funcGetAll && PyCallable_Check(funcGetAll) && funcGetGame && PyCallable_Check(funcGetGame))
 		{
 			PyObject *args = PyTuple_New(1);
 			PyObject *domTree = PyUnicode_FromString(this->sstream.str().c_str());
@@ -105,17 +107,36 @@ HBPrototype::doPythonStuff()
 				return;
 			}
 			PyTuple_SetItem(args, 0, domTree);
-			PyObject *result = PyObject_CallObject(func, args);
+			PyObject *result = PyObject_CallObject(funcGetAll, args);
 			if (result != NULL)
 			{
-				std::cout << "call finished" << std::endl;
-				gameLibModel::Game * game = castPyObjectToGame(result);
-				std::cout << game->name() << " (" << game->website() << ")" << std::endl;
+				std::cout << "call finished, got the game list" << std::endl;
+				std::map<std::string, gameLibModel::Game*> games;
+				
+				for(int i = 0; i < PyList_Size(result); i++)
+				{
+					PyObject *argsGame = PyTuple_New(2);
+					PyTuple_SetItem(argsGame, 0, domTree);
+					PyTuple_SetItem(argsGame, 1, PyList_GetItem(result, i));
+					PyObject *resultGame = PyObject_CallObject(funcGetGame, argsGame);
+					if (resultGame != NULL)
+					{
+						gameLibModel::Game * game = castPyObjectToGame(resultGame);
+						games[PyUnicode_AsUTF8(PyList_GetItem(result, i))] = game;
+						std::cout << game->name() << " (" << game->website() << ")" << std::endl;
+					}
+					else
+					{
+						std::cout << "Call failed for game: " << PyUnicode_AsASCIIString(PyList_GetItem(result, i)) << std::endl;
+					}
+				}
+				
 				Py_DECREF(result);
 			}
 			else
 			{
-				Py_DECREF(func);
+				Py_DECREF(funcGetAll);
+				Py_DECREF(funcGetGame);
 				Py_DECREF(pyModule);
 				PyErr_Print();
 				std::cout << "Call failed" << std::endl;
@@ -128,7 +149,8 @@ HBPrototype::doPythonStuff()
 				PyErr_Print();
 			std::cout << "Cannot find function" << std::endl;
 		}
-		Py_XDECREF(func);
+		Py_XDECREF(funcGetAll);
+		Py_XDECREF(funcGetGame);
 		Py_DECREF(pyModule);
 	}
 	else
