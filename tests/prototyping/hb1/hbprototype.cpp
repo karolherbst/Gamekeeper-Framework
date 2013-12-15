@@ -1,5 +1,7 @@
 #include "hbprototype.h"
 
+#include "game.h"
+
 #include <iostream>
 
 #include <curl/curl.h>
@@ -59,6 +61,21 @@ HBPrototype::startEventLoop()
 	curl_easy_cleanup(curl);
 }
 
+typedef struct {
+  PyObject_HEAD
+  void *ptr;
+  void *ty;
+  int own;
+  PyObject *next;
+  PyObject *dict;
+} SwigPyObject;
+
+static gameLibModel::Game * castPyObjectToGame(PyObject *obj)
+{
+	SwigPyObject * swigPyObj = reinterpret_cast<SwigPyObject *>(obj);
+	return static_cast<gameLibModel::Game*>(swigPyObj->ptr);
+}
+
 void
 HBPrototype::doPythonStuff()
 {
@@ -91,7 +108,9 @@ HBPrototype::doPythonStuff()
 			PyObject *result = PyObject_CallObject(func, args);
 			if (result != NULL)
 			{
-				std::cout << "call finished with code: " << PyLong_AsLong(result) << std::endl;
+				std::cout << "call finished" << std::endl;
+				gameLibModel::Game * game = castPyObjectToGame(result);
+				std::cout << game->name() << " (" << game->website() << ")" << std::endl;
 				Py_DECREF(result);
 			}
 			else

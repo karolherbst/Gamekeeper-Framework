@@ -22,7 +22,9 @@ file(GLOB sources
 add_library(GameModelBindings SHARED ${binding_sources} ${headers})
 
 include(${SWIG_USE_FILE})
-set(CMAKE_SWIG_FLAGS -c++ -py3)
+# builtin gives us a performance boost
+# http://www.swig.org/Doc2.0/Python.html#Python_builtin_types
+set(CMAKE_SWIG_FLAGS -c++ -py3 -builtin)
 
 set_source_files_properties(game.i PROPERTIES CPLUSPLUS ON)
 set_source_files_properties(game.i PROPERTIES SWIG_FLAGS "-includeall")
