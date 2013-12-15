@@ -1,13 +1,18 @@
 from GameLibPy import Game
 from bs4 import BeautifulSoup
 
-def getEntryHTMLTag(htmlString):
+gameHTMLTree = [""]
+
+def getEntryHTMLTag():
+    return gameHTMLTree[0]
+
+def setGameHTML(htmlString):
     print("parsing HTML")
     soup = BeautifulSoup(htmlString, "html.parser")
-    return soup.find("div", {"id" : "regular_download_list"})
+    gameHTMLTree[0] = soup.find("div", {"id" : "regular_download_list"})
 
-def parseGameHTML(htmlString, storeGameId):
-    gameListHTML = getEntryHTMLTag(htmlString)
+def parseGameHTML(storeGameId):
+    gameListHTML = getEntryHTMLTag()
     gameHTML = gameListHTML.find("div", {"class" : storeGameId})
     gameInfoHTML = gameHTML.find("div", {"class" : "gameinfo"})
     gameTitleHTML = gameInfoHTML.find("div", {"class" : "title"})
@@ -19,12 +24,11 @@ def parseGameHTML(htmlString, storeGameId):
     game.name(gameTitleLinkHTML.contents[0])
     game.website(gameTitleLinkHTML["href"])
     game.publisher(gameSubTitleLinkHTML.contents[0])
-    print(game)
     return game
 
-def parseGameIdsHTML(htmlString):
+def parseGameIdsHTML(unused):
     result = []
-    gameListHTML = getEntryHTMLTag(htmlString)
+    gameListHTML = getEntryHTMLTag()
     gameHTMLTags = gameListHTML.findAll("div", {"class" : "row"})
     for tag in gameHTMLTags:
         result.append(tag["class"][1]);

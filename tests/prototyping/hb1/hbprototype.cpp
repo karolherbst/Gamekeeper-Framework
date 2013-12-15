@@ -92,10 +92,12 @@ HBPrototype::doPythonStuff()
 	
 	if (pyModule != NULL)
 	{
+		PyObject *setTree = PyObject_GetAttrString(pyModule, "setGameHTML");
 		PyObject *funcGetAll = PyObject_GetAttrString(pyModule, "parseGameIdsHTML");
 		PyObject *funcGetGame = PyObject_GetAttrString(pyModule, "parseGameHTML");
 		
-		if (funcGetAll && PyCallable_Check(funcGetAll) && funcGetGame && PyCallable_Check(funcGetGame))
+		if (setTree && PyCallable_Check(setTree) && funcGetAll && PyCallable_Check(funcGetAll) && funcGetGame
+		        && PyCallable_Check(funcGetGame))
 		{
 			PyObject *args = PyTuple_New(1);
 			PyObject *domTree = PyUnicode_FromString(this->sstream.str().c_str());
@@ -107,7 +109,12 @@ HBPrototype::doPythonStuff()
 				return;
 			}
 			PyTuple_SetItem(args, 0, domTree);
-			PyObject *result = PyObject_CallObject(funcGetAll, args);
+			PyObject *ignore = PyObject_CallObject(setTree, args);
+			Py_DECREF(ignore);
+			PyObject *emptyTuple = PyTuple_New(1);
+			PyTuple_SetItem(emptyTuple, 0, PyUnicode_FromString("unused"));
+			PyObject *result = PyObject_CallObject(funcGetAll, emptyTuple);
+			Py_DECREF(emptyTuple);
 			if (result != NULL)
 			{
 				std::cout << "call finished, got the game list" << std::endl;
@@ -115,9 +122,8 @@ HBPrototype::doPythonStuff()
 				
 				for(int i = 0; i < PyList_Size(result); i++)
 				{
-					PyObject *argsGame = PyTuple_New(2);
-					PyTuple_SetItem(argsGame, 0, domTree);
-					PyTuple_SetItem(argsGame, 1, PyList_GetItem(result, i));
+					PyObject *argsGame = PyTuple_New(1);
+					PyTuple_SetItem(argsGame, 0, PyList_GetItem(result, i));
 					PyObject *resultGame = PyObject_CallObject(funcGetGame, argsGame);
 					if (resultGame != NULL)
 					{
