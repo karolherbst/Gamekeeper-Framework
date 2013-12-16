@@ -129,7 +129,7 @@ HBPrototype::doPythonStuff()
 					{
 						gameLibModel::Game * game = castPyObjectToGame(resultGame);
 						games[PyUnicode_AsUTF8(PyList_GetItem(result, i))] = game;
-						std::cout << game->name() << " (" << game->website() << ")" << std::endl;
+						std::cout << game->getName() << " (" << game->getWebsite() << ")" << std::endl;
 					}
 					else
 					{

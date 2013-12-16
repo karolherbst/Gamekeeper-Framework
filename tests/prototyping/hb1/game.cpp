@@ -3,40 +3,40 @@
 #include <string>
 
 Game::Game()
-:	_name("test binded Game"){}
+:	name("test binded Game"){}
 
 const char*
-Game::name()
+Game::getName() const
 {
-	return this->_name.c_str();
-}
-
-const char*
-Game::website()
-{
-	return this->_website.c_str();
+	return this->name.c_str();
 }
 
 const char*
-Game::publisher()
+Game::getWebsite() const
 {
-	return this->_publisher.c_str();
+	return this->website.c_str();
+}
+
+const char*
+Game::getPublisher() const
+{
+	return this->publisher.c_str();
 }
 
 void
-Game::name(const char* n)
+Game::setName(const char* n)
 {
-	this->_name = n;
+	this->name = n;
 }
 
 void
-Game::website(const char* w)
+Game::setWebsite(const char* w)
 {
-	this->_website = w;
+	this->website = w;
 }
 
 void
-Game::publisher(const char* p)
+Game::setPublisher(const char* p)
 {
-	this->_publisher = p;
+	this->publisher = p;
 }

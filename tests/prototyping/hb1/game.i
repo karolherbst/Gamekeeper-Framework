@@ -2,9 +2,10 @@
 %{
 #include "gameBind.h"
 %}
-struct Game
-{
-    void name(const char*);
-    void website(const char*);
-    void publisher(const char*);
-};
+
+%include <attribute.i>
+
+struct Game{};
+%attribute(Game, const char*, name, getName, setName);
+%attribute(Game, const char*, website, getWebsite, setWebsite);
+%attribute(Game, const char*, publisher, getPublisher, setPublisher);

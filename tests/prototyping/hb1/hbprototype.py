@@ -20,9 +20,9 @@ def parseGameHTML(storeGameId):
     gameSubTitleLinkHTML = gameSubTitleHTML.find("a")
     
     game = Game()
-    game.name(gameTitleLinkHTML.contents[0])
-    game.website(gameTitleLinkHTML["href"])
-    game.publisher(gameSubTitleLinkHTML.contents[0])
+    game.name = gameTitleLinkHTML.contents[0]
+    game.website = gameTitleLinkHTML["href"]
+    game.publisher = gameSubTitleLinkHTML.contents[0]
     return game
 
 def parseGameIdsHTML(unused):
