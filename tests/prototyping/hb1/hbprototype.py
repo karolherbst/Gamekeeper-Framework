@@ -7,7 +7,6 @@ def getEntryHTMLTag():
     return gameHTMLTree[0]
 
 def setGameHTML(htmlString):
-    print("parsing HTML")
     soup = BeautifulSoup(htmlString, "html.parser")
     gameHTMLTree[0] = soup.find("div", {"id" : "regular_download_list"})
 
