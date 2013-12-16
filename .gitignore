@@ -16,6 +16,9 @@
 build/
 qt-build/
 
+# python stuff
+__pycache__
+
 # qt-creator stuff
 CMakeLists.txt.user
 
