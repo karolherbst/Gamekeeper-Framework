@@ -46,6 +46,11 @@ find_package(Boost 1.44 COMPONENTS filesystem ${REQUIRED_ON_LINUX})
 find_package(CURL ${REQUIRED_ON_UNIX})
 find_package(Hypodermic)
 
+# hypdermic
+if(NOT HYPODERMIC_FOUND
+  include(BuildHypodermic)
+endif()
+
 # gtest
 if(BUILD_TESTS)
   find_package(GTest)
