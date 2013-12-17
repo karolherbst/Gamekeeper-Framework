@@ -12,6 +12,8 @@ cmake_minimum_required(VERSION 2.8)
 # some global stuff
 #######################################################################################################################
 
+# Path where external dependencies will be installed
+set(CMAKE_EXTERNAL_BINARY_DIR "${CMAKE_BINARY_DIR}/external")
 set(CMAKE_COMPILER_PATH "${CMAKE_SOURCE_DIR}/cmake/Compiler")
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/Modules")
 
