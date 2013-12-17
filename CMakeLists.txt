@@ -87,5 +87,6 @@ set(GAMELIB_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/include")
 # build libgamelib
 #######################################################################################################################
 
+add_subdirectory(include)
 add_subdirectory(src)
 add_subdirectory(tests)
