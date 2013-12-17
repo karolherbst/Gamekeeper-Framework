@@ -2,18 +2,21 @@ language: cpp
 compiler:
   - gcc
   - clang
-env:
-  - CFLAGS=--coverage CXXFLAGS=--coverage
+matrix:
+  include:
+    - compiler: gcc
+      env: CFLAGS=--coverage CXXFLAGS=--coverage COVERAGE=1
+      fast_finish: true
 before_install:
   - sudo apt-get update
   - sudo apt-get install default-jdk libboost-dev libboost-filesystem-dev libgtest-dev swig
-  - sudo pip install cpp-coveralls --use-mirrors
+  - if [ -n "$COVERAGE" ]; then sudo pip install cpp-coveralls --use-mirrors; fi
 script:
   - cmake . -DWITH_CSHARP_FRONTEND=OFF -DWITH_JAVA_FRONTEND=ON -DWITH_PYTHON_FRONTEND=OFF -DBUILD_TESTS=ON
   - make -j4
   - ctest --output-on-failure .
 after_success:
-  - coveralls --exclude tests --exclude gtest-prefix --exclude CMakeFiles --exclude-pattern 'CMake[^\.]*\.c(?:pp)?' --exclude-pattern '[^\.]*\.h' > /dev/null
+  - if [ -n "$COVERAGE" ]; then coveralls --exclude tests --exclude gtest-prefix --exclude CMakeFiles --exclude-pattern 'CMake[^\.]*\.c(?:pp)?' --exclude-pattern '[^\.]*\.h' > /dev/null ; fi
 notifications:
   irc:
     channels:
