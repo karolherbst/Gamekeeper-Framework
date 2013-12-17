@@ -2,6 +2,8 @@
 
 #include "game.h"
 
+#include <gamelib/core/filedownloader.h>
+
 #include <map>
 #include <iostream>
 
@@ -11,8 +13,10 @@
 GAMECLIENTUI_CLASS(HBPrototype);
 
 void
-HBPrototype::init(int argc, const char* argv[])
+HBPrototype::init(int argc, const char* argv[], Hypodermic::IContainer * container)
 {
+	std::cout << container->resolve<gamelib::core::FileDownloader>()->supportsProtocol("http", 4) << std::endl;
+	
 	if(argc == 2)
 		this->hbcookie = argv[1];
 }

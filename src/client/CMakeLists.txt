@@ -11,4 +11,10 @@ file(GLOB sources
 )
 
 add_library(gamelibClient SHARED ${sources} ${headers})
+target_link_libraries(gamelibClient
+  gamelibCore
+  ${HYPODERMIC_LIBRARIES}
+  ${Boost_SYSTEM_LIBRARY}
+)
+
 install_library(gamelibClient)

@@ -24,6 +24,10 @@
 
 #include <gamelib/client/gamelib.h>
 
+#include <Hypodermic/ContainerBuilder.h>
+
+#include "../core/curlFileDownloader.h"
+
 static gamelib::client::GameLibUI* gamelibI = nullptr;
 
 /**
@@ -45,9 +49,17 @@ static gamelib::client::GameLibUI* gamelibI = nullptr;
  */
 PUBLIC_API int main(int argc, const char* argv[])
 {
+	Hypodermic::ContainerBuilder containerBuilder;
+	{
+		using namespace gamelib::core;
+		
+		// set up IoC container
+		containerBuilder.registerType<CurlFileDownloader>()->as<FileDownloader>()->singleInstance();;
+	}
+	
 	// left out not implemented stuff yet
 	gamelibI = gamelib::client::newInstance();
-	gamelibI->init(argc, argv);
+	gamelibI->init(argc, argv, containerBuilder.build().get());
 	gamelibI->startEventLoop();
 	gamelibI->onShutdown();
 	delete gamelibI;

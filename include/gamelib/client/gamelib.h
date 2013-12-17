@@ -25,6 +25,8 @@
 
 #include <gamelib/core/interface.h>
 
+#include <Hypodermic/IContainer.h>
+
 GAMELIB_NAMESPACE_START(client)
 
 /**
@@ -60,7 +62,7 @@ interface PUBLIC_API GameLibUI
 	 * @param argc amount of arguments passed
 	 * @param argv array of application arguments
 	 */
-	PUBLIC_API GAMELIB_INTERFACE_METHOD(void init(int argc, const char* argv[]))
+	PUBLIC_API GAMELIB_INTERFACE_METHOD(void init(int argc, const char* argv[], Hypodermic::IContainer * container))
 	
 	/**
 	 * shutdown event handling method for GameLib
