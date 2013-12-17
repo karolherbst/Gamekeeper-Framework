@@ -54,7 +54,10 @@ PUBLIC_API int main(int argc, const char* argv[])
 		using namespace gamelib::core;
 		
 		// set up IoC container
-		containerBuilder.registerType<CurlFileDownloader>()->as<FileDownloader>()->singleInstance();;
+		containerBuilder.registerType<CurlFileDownloader>()->
+		        as<FileDownloader>()->
+		        as<HttpFileDownloader>()->
+		        singleInstance();
 	}
 	
 	// left out not implemented stuff yet
