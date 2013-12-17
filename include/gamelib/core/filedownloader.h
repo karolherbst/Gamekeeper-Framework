@@ -47,8 +47,8 @@ interface PUBLIC_API FileDownloader
 	 * @since 0
 	 * 
 	 * @param[in] protocolName the name of the protocol
-	 * @param[in] nameSize the size of {@p protocolName}
-	 * @return true if the implementation supports {@p protocolName}
+	 * @param[in] nameSize the size of @p protocolName
+	 * @return true if the implementation supports @p protocolName
 	 */
 	PUBLIC_API GAMELIB_INTERFACE_METHOD(bool supportsProtocol(const char * protocolName, size_t nameSize))
 };
