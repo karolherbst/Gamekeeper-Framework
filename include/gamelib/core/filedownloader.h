@@ -38,7 +38,7 @@ GAMELIB_NAMESPACE_START(core)
  */
 interface PUBLIC_API FileDownloader
 {
-
+	GAMELIB_INTERFACE_DESTRUCTOR(FileDownloader)
 };
 
 GAMELIB_NAMESPACE_END(core)
