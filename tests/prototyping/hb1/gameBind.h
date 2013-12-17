@@ -4,7 +4,7 @@
 
 class PUBLIC_API Game : public gameLibModel::Game
 {
-public:
+private:
 	std::string name;
 	std::string website;
 	std::string publisher;
