@@ -38,7 +38,19 @@ GAMELIB_NAMESPACE_START(core)
  */
 interface PUBLIC_API FileDownloader
 {
-	GAMELIB_INTERFACE_DESTRUCTOR(FileDownloader)
+	PUBLIC_API GAMELIB_INTERFACE_DESTRUCTOR(FileDownloader)
+	
+	/**
+	 * checks if the implementation supports the givven protocol
+	 * 
+	 * @author Karol Herbst
+	 * @since 0
+	 * 
+	 * @param[in] protocolName the name of the protocol
+	 * @param[in] nameSize the size of {@p protocolName}
+	 * @return true if the implementation supports {@p protocolName}
+	 */
+	PUBLIC_API GAMELIB_INTERFACE_METHOD(bool supportsProtocol(const char * protocolName, size_t nameSize))
 };
 
 GAMELIB_NAMESPACE_END(core)
