@@ -47,7 +47,7 @@ find_package(CURL ${REQUIRED_ON_UNIX})
 find_package(Hypodermic)
 
 # hypdermic
-if(NOT HYPODERMIC_FOUND
+if(NOT HYPODERMIC_FOUND)
   include(BuildHypodermic)
 endif()
 
