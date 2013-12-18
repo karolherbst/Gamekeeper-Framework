@@ -8,5 +8,5 @@ ExternalProject_Add(
   SOURCE_DIR <prefix>/src/<name>/hypodermic-master/
 )
 
-set(HYPODERMIC_LIBRARIES ${HYPODERMIC_INSTALL_DIR}/lib)
+set(HYPODERMIC_LIBRARIES ${HYPODERMIC_INSTALL_DIR}/lib/libhypodermic.so)
 set(HYPODERMIC_INCLUDE_DIRS ${HYPODERMIC_INSTALL_DIR}/include)
