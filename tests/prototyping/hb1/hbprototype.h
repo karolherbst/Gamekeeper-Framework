@@ -14,8 +14,7 @@ public:
 private:
 	const char* hbcookie = nullptr;
 	
-	static size_t curlWrapper(void *buffer, size_t sz, size_t n, void *f);
-	size_t handleRequest(void *buffer, size_t sz, size_t n);
+	bool handleRequest(void * const buffer, size_t sz, size_t n);
 	std::stringstream sstream;
 	void doPythonStuff();
 };

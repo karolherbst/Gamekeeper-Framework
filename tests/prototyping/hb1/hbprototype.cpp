@@ -2,20 +2,21 @@
 
 #include "game.h"
 
-#include <gamelib/core/filedownloader.h>
+#include <gamelib/core/httpfiledownloader.h>
 
 #include <map>
 #include <iostream>
 
-#include <curl/curl.h>
 #include <Python.h>
 
 GAMECLIENTUI_CLASS(HBPrototype);
 
+static std::shared_ptr<gamelib::core::HttpFileDownloader> fileDownloader;
+
 void
 HBPrototype::init(int argc, const char* argv[], Hypodermic::IContainer * container)
 {
-	std::cout << container->resolve<gamelib::core::FileDownloader>()->supportsProtocol("http", 4) << std::endl;
+	fileDownloader = container->resolve<gamelib::core::HttpFileDownloader>();
 	
 	if(argc == 2)
 		this->hbcookie = argv[1];
@@ -27,43 +28,27 @@ HBPrototype::onShutdown()
 	std::cout << "shutdown" << std::endl;
 }
 
-size_t
-HBPrototype::curlWrapper(void *buffer, size_t sz, size_t n, void *f)
-{
-	return static_cast<HBPrototype*>(f)->handleRequest(buffer, sz, n);
-}
-
-size_t
-HBPrototype::handleRequest(void *buffer, size_t sz, size_t n)
+bool
+HBPrototype::handleRequest(void * const buffer, size_t sz, size_t n)
 {
 	this->sstream.write(static_cast<char*>(buffer), n);
-	return n;
+	return true;
 }
 
 void
 HBPrototype::startEventLoop()
 {
 	std::cout << "starting hb test with cookie: " << this->hbcookie << std::endl;
-
-	CURL *curl = curl_easy_init();
-	std::string cookie = std::string("_simpleauth_sess=") + this->hbcookie;
-	curl_easy_setopt(curl, CURLOPT_URL, "https://www.humblebundle.com/home");
-	curl_easy_setopt(curl, CURLOPT_COOKIE, cookie.c_str());
-	curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, HBPrototype::curlWrapper);
-	curl_easy_setopt(curl, CURLOPT_WRITEDATA, this);
+	gamelib::core::HttpFileDownloader::CookieBuket cookies;
+	cookies["_simpleauth_sess"] = this->hbcookie;
 	
-	CURLcode curlCode = curl_easy_perform(curl);
-	
-	if(curlCode != CURLE_OK)
+	fileDownloader->downloadFileWithCookies("https://www.humblebundle.com/home",
+	                                        [this](void * const buffer, size_t bufferSize, size_t dataLength) -> bool
 	{
-		std::cout << "error occured:  " << curl_easy_strerror(curlCode) << std::endl;
-	}
-	else
-	{
-		this->doPythonStuff();
-	}
+		return this->handleRequest(buffer, bufferSize, dataLength);
+	}, cookies);
 	
-	curl_easy_cleanup(curl);
+	this->doPythonStuff();
 }
 
 typedef struct {
