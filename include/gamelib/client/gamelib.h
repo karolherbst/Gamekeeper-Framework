@@ -62,7 +62,7 @@ interface PUBLIC_API GameLibUI
 	 * @param argc amount of arguments passed
 	 * @param argv array of application arguments
 	 */
-	PUBLIC_API GAMELIB_INTERFACE_METHOD(void init(int argc, const char* argv[], Hypodermic::IContainer * container))
+	PUBLIC_API GAMELIB_INTERFACE_METHOD(void init(int argc, const char* argv[], Hypodermic::IContainer * container));
 	
 	/**
 	 * shutdown event handling method for GameLib
@@ -72,7 +72,7 @@ interface PUBLIC_API GameLibUI
 	 * @author Karol Herbst
 	 * @since 0
 	 */
-	PUBLIC_API GAMELIB_INTERFACE_METHOD(void onShutdown())
+	PUBLIC_API GAMELIB_INTERFACE_METHOD(void onShutdown());
 	
 	/**
 	 * starts the implementation specific event loop
@@ -83,7 +83,7 @@ interface PUBLIC_API GameLibUI
 	 * @pre {@link #init} was called
 	 * @post blocks the current thread of execution
 	 */
-	PUBLIC_API GAMELIB_INTERFACE_METHOD(void startEventLoop())
+	PUBLIC_API GAMELIB_INTERFACE_METHOD(void startEventLoop());
 	
 	/**
 	 * this method will be called, if the Client is invoked with the -h or --help argument
@@ -95,7 +95,7 @@ interface PUBLIC_API GameLibUI
 	 * 
 	 * @return a well formatted help string
 	 */
-	PUBLIC_API GAMELIB_INTERFACE_METHOD_OPTIONAL(const char* getHelp())
+	PUBLIC_API GAMELIB_INTERFACE_METHOD_OPTIONAL(const char* getHelp());
 };
 
 /**
