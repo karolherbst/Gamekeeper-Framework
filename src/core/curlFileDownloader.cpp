@@ -72,7 +72,6 @@ CurlFileDownloader::downloadFileWithCookies(const char * const url, DownloadCall
 			cookieLineBuilder << pair.first << '=' << pair.second << ";";
 		}
 		std::string cookieLine = cookieLineBuilder.str();
-		cookieLine.pop_back();
 		curl_easy_setopt(curl, CURLOPT_COOKIE, cookieLine.c_str());
 	}
 	
