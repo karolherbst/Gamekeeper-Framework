@@ -22,6 +22,9 @@
 #define GAMELIB_CORE_HTTPFILEDOWNLOADER_H 1
 
 #include <gamelib/core/common.h>
+
+#include <unordered_map>
+
 #include <gamelib/core/filedownloader.h>
 #include <gamelib/core/interface.h>
 
@@ -37,7 +40,28 @@ GAMELIB_NAMESPACE_START(core)
  */
 interface PUBLIC_API HttpFileDownloader : public FileDownloader
 {
-
+	/**
+	 * A CookieBuket stores cookies as simple string string mappings
+	 *
+	 * @author Karol Herbst
+	 * @since 0
+	 */
+	typedef std::unordered_map<std::string, std::string> CookieBuket;
+	
+	/**
+	 * downloads the file behind the given location
+	 *
+	 * the given cookies will be passed to the Http(s) request
+	 *
+	 * @author Karol Herbst
+	 * @since 0
+	 *
+	 * @param[in] url the url
+	 * @param[in] callback the callback function
+	 * @param[in] cookies the cookies
+	 */
+	PUBLIC_API GAMELIB_INTERFACE_METHOD(void downloadFileWithCookies(const char * const url, DownloadCallback callback,
+	                                                                 const CookieBuket& cookies));
 };
 
 GAMELIB_NAMESPACE_END(core)

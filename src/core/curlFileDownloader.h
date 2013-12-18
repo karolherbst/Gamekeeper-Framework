@@ -34,6 +34,12 @@ public:
 	PRIVATE_API ~CurlFileDownloader();
 	PRIVATE_API GAMELIB_IMPLEMENTATION_OVERRIDE(bool supportsProtocol(const char * const protocolName, size_t nameSize));
 	PRIVATE_API GAMELIB_IMPLEMENTATION_OVERRIDE(void downloadFile(const char * const url, DownloadCallback callback));
+	PRIVATE_API GAMELIB_IMPLEMENTATION_OVERRIDE(void downloadFileWithCookies(const char * const url,
+	                                                                         DownloadCallback callback,
+	                                                                         const CookieBuket& cookies));
+private:
+	PRIVATE_API static int curlFileDownloadCallback(void * const buffer, size_t bufferSize, size_t dataLength,
+	                                DownloadCallback * func);
 };
 
 GAMELIB_NAMESPACE_END(core)

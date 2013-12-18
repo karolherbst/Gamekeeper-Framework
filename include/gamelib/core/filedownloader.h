@@ -22,6 +22,9 @@
 #define GAMELIB_CORE_FILEDOWNLOADER_H 1
 
 #include <gamelib/core/common.h>
+
+#include <functional>
+
 #include <gamelib/core/interface.h>
 
 GAMELIB_NAMESPACE_START(core)
@@ -41,7 +44,7 @@ interface PUBLIC_API FileDownloader
 	PUBLIC_API GAMELIB_INTERFACE_DESTRUCTOR(FileDownloader)
 	
 	/**
-	 * the callback function signature used by this class
+	 * the callback function signature primary for lambdas
 	 *
 	 * @author Karol Herbst
 	 * @since 0
@@ -49,8 +52,9 @@ interface PUBLIC_API FileDownloader
 	 * @param[in] buffer the buffer with the raw data
 	 * @param[in] bufferSize the size of @p buffer
 	 * @param[in] dataLength the length of the data inside @p buffer
+	 * @return true if there was no error while handling the callback
 	 */
-	typedef void (*DownloadCallback)(void * const buffer, size_t bufferSize, size_t dataLength);
+	typedef std::function<bool (void * const buffer, size_t bufferSize, size_t dataLength)> DownloadCallback;
 	
 	/**
 	 * checks if the implementation supports the givven protocol
