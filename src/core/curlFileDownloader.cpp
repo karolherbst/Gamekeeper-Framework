@@ -25,7 +25,7 @@
 GAMELIB_NAMESPACE_START(core)
 
 bool
-CurlFileDownloader::supportsProtocol(const char * protocolName, size_t nameSize)
+CurlFileDownloader::supportsProtocol(const char * const protocolName, size_t nameSize)
 {
 	return true;
 }
