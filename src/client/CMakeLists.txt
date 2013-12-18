@@ -1,6 +1,6 @@
 include_directories(
   ${CMAKE_CURRENT_SOURCE_DIR}
-  ${HYPODERMIC_LIBRARIES}
+  ${HYPODERMIC_INCLUDE_DIRS}
 )
 
 file(GLOB headers
