@@ -29,7 +29,11 @@ GAMELIB_NAMESPACE_START(core)
 
 class PRIVATE_API CurlFileDownloader : public HttpFileDownloader
 {
+public:
+	PRIVATE_API CurlFileDownloader();
+	PRIVATE_API ~CurlFileDownloader();
 	PRIVATE_API GAMELIB_IMPLEMENTATION_OVERRIDE(bool supportsProtocol(const char * const protocolName, size_t nameSize));
+	PRIVATE_API GAMELIB_IMPLEMENTATION_OVERRIDE(void downloadFile(const char * const url, DownloadCallback callback));
 };
 
 GAMELIB_NAMESPACE_END(core)

@@ -41,6 +41,18 @@ interface PUBLIC_API FileDownloader
 	PUBLIC_API GAMELIB_INTERFACE_DESTRUCTOR(FileDownloader)
 	
 	/**
+	 * the callback function signature used by this class
+	 *
+	 * @author Karol Herbst
+	 * @since 0
+	 *
+	 * @param[in] buffer the buffer with the raw data
+	 * @param[in] bufferSize the size of @p buffer
+	 * @param[in] dataLength the length of the data inside @p buffer
+	 */
+	typedef void (*DownloadCallback)(void * const buffer, size_t bufferSize, size_t dataLength);
+	
+	/**
 	 * checks if the implementation supports the givven protocol
 	 * 
 	 * @author Karol Herbst
@@ -51,6 +63,17 @@ interface PUBLIC_API FileDownloader
 	 * @return true if the implementation supports @p protocolName
 	 */
 	PUBLIC_API GAMELIB_INTERFACE_METHOD(bool supportsProtocol(const char * const protocolName, size_t nameSize));
+	
+	/**
+	 * downloads the file behind the given location
+	 *
+	 * @author Karol Herbst
+	 * @since 0
+	 *
+	 * @param[in] url the url
+	 * @param[in] callback the callback function
+	 */
+	PUBLIC_API GAMELIB_INTERFACE_METHOD(void downloadFile(const char * const url, DownloadCallback callback));
 };
 
 GAMELIB_NAMESPACE_END(core)

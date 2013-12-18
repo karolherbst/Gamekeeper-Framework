@@ -22,12 +22,34 @@
 
 #include "curlFileDownloader.h"
 
+#include <curl/curl.h>
+
 GAMELIB_NAMESPACE_START(core)
+
+CurlFileDownloader::CurlFileDownloader()
+{
+	curl_global_init(CURL_GLOBAL_SSL);
+}
+
+CurlFileDownloader::~CurlFileDownloader()
+{
+	curl_global_cleanup();
+}
 
 bool
 CurlFileDownloader::supportsProtocol(const char * const protocolName, size_t nameSize)
 {
 	return true;
+}
+
+void
+CurlFileDownloader::downloadFile(const char * const url, DownloadCallback callback)
+{
+	CURL * curl = curl_easy_init();
+	curl_easy_setopt(curl, CURLOPT_URL, url);
+	curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, callback);
+	curl_easy_perform(curl);
+	curl_easy_cleanup(curl);
 }
 
 GAMELIB_NAMESPACE_END(core)
