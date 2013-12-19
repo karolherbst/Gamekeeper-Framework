@@ -61,18 +61,18 @@ if(BUILD_TESTS)
   endif()
 endif()
 
-if(WITH_CSHARP_FRONTEND OR WITH_JAVA_FRONTEND OR WITH_PYTHON_FRONTEND)
+if(WITH_CSHARP_BINDINGS OR WITH_JAVA_BINDINGS OR WITH_PYTHON_BINDINGS)
   find_package(SWIG REQUIRED)
   
-  if(WITH_CSHARP_FRONTEND)
+  if(WITH_CSHARP_BINDINGS)
     # find file needed for mono/.NET
   endif()
   
-  if(WITH_JAVA_FRONTEND)
+  if(WITH_JAVA_BINDINGS)
     find_package(Java REQUIRED)
   endif()
   
-  if(WITH_PYTHON_FRONTEND)
+  if(WITH_PYTHON_BINDINGS)
     find_package(PythonLibs REQUIRED)
   endif()
 endif()
