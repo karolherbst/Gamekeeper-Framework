@@ -6,3 +6,4 @@ include_directories(
 add_subdirectory(client)
 add_subdirectory(core)
 add_subdirectory(frontend)
+add_subdirectory(model)
