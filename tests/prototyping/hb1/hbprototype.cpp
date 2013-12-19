@@ -1,8 +1,7 @@
 #include "hbprototype.h"
 
-#include "game.h"
-
 #include <gamelib/core/httpfiledownloader.h>
+#include <gamelib/model/game.h>
 
 #include <map>
 #include <iostream>
@@ -60,10 +59,10 @@ typedef struct {
   PyObject *dict;
 } SwigPyObject;
 
-static gameLibModel::Game * castPyObjectToGame(PyObject *obj)
+static gamelib::model::Game * castPyObjectToGame(PyObject *obj)
 {
 	SwigPyObject * swigPyObj = reinterpret_cast<SwigPyObject *>(obj);
-	return static_cast<gameLibModel::Game*>(swigPyObj->ptr);
+	return static_cast<gamelib::model::Game*>(swigPyObj->ptr);
 }
 
 void
@@ -107,7 +106,7 @@ HBPrototype::doPythonStuff()
 			if (result != NULL)
 			{
 				std::cout << "call finished, got the game list" << std::endl;
-				std::map<std::string, gameLibModel::Game*> games;
+				std::map<std::string, gamelib::model::Game*> games;
 				
 				for(int i = 0; i < PyList_Size(result); i++)
 				{
@@ -116,9 +115,9 @@ HBPrototype::doPythonStuff()
 					PyObject *resultGame = PyObject_CallObject(funcGetGame, argsGame);
 					if (resultGame != NULL)
 					{
-						gameLibModel::Game * game = castPyObjectToGame(resultGame);
+						gamelib::model::Game * game = castPyObjectToGame(resultGame);
 						games[PyUnicode_AsUTF8(PyList_GetItem(result, i))] = game;
-						std::cout << game->getName() << " (" << game->getWebsite() << ")" << std::endl;
+						std::cout << game->getName() << std::endl;
 					}
 					else
 					{
