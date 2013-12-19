@@ -12,3 +12,6 @@ file(GLOB sources
 )
 
 add_library(gamelibCore STATIC ${sources} ${headers})
+target_link_libraries(gamelibCore
+  ${CURL_LIBRARIES}
+)
