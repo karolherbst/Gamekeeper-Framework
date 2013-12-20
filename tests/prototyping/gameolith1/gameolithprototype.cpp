@@ -8,28 +8,48 @@
 
 GAMECLIENTUI_CLASS(GameolithPrototype);
 
+using gamelib::model::Game;
+
 static std::shared_ptr<gamelib::core::HttpFileDownloader> fileDownloader;
 
 class GameJSON : public gamelib::model::Game
 {
+	friend class JSONGameResolver;
 private:
-	Json::Value root;
+	std::string id;
+	std::string name;
 public:
-	GameJSON(const Json::Value& value)
-	:	root(value){}
-
 	const char * getId() const
 	{
-		return this->root["slug"].asCString();
+		return this->id.c_str();
 	}
 
 	const char * getName() const
 	{
-		return this->root["title"].asCString();
+		return this->name.c_str();
 	}
 
 	void setId(const char*){}
 	void setName(const char*){}
+};
+
+class JSONGameResolver
+{
+private:
+	Json::Path idPath;
+	Json::Path namePath;
+public:
+	JSONGameResolver()
+	:	idPath(std::string(".slug")),
+		namePath(std::string(".title")){}
+
+	Game * createGame(const Json::Value & gameNode)
+	{
+		GameJSON * game = new GameJSON();
+		game->id = this->idPath.resolve(gameNode).asString();
+		game->name = this->namePath.resolve(gameNode).asString();
+		return game;
+	}
 };
 
 void
@@ -52,10 +72,17 @@ GameolithPrototype::handleRequest(void * const buffer, size_t sz, size_t n)
 	std::string jsonTree(static_cast<const char*>(buffer), n);
 	if (reader.parse(jsonTree, root, false))
 	{
+		JSONGameResolver gr;
+		std::map<const std::string, const Game *> games;
 		for (int i = 0; i < root.size(); i++)
 		{
-			GameJSON game(root[i]);
-			std::cout << game.getName() << ' ' << game.getId() << std::endl;
+			const Game * game = gr.createGame(root[i]);
+			games[game->getId()] = game;
+		}
+		for (auto pair : games)
+		{
+			const Game * game = pair.second;
+			std::cout << game->getName() << ' ' << game->getId() << std::endl;
 		}
 		return true;
 	}
