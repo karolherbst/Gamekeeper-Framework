@@ -28,9 +28,6 @@ public:
 	{
 		return this->name.c_str();
 	}
-
-	void setId(const char*){}
-	void setName(const char*){}
 };
 
 class JSONGameResolver

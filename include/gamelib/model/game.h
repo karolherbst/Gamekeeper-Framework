@@ -30,9 +30,6 @@ interface PUBLIC_API Game
 	PUBLIC_API GAMELIB_INTERFACE_DESTRUCTOR(Game)
 	PUBLIC_API GAMELIB_INTERFACE_METHOD(const char * getId() const);
 	PUBLIC_API GAMELIB_INTERFACE_METHOD(const char * getName() const);
-
-	PUBLIC_API GAMELIB_INTERFACE_METHOD(void setId(const char *));
-	PUBLIC_API GAMELIB_INTERFACE_METHOD(void setName(const char *));
 };
 
 GAMELIB_NAMESPACE_END(model)

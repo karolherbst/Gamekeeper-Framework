@@ -37,8 +37,8 @@ public:
 	PRIVATE_API GAMELIB_IMPLEMENTATION_OVERRIDE(const char* getId() const);
 	PRIVATE_API GAMELIB_IMPLEMENTATION_OVERRIDE(const char* getName() const);
 	
-	PRIVATE_API GAMELIB_IMPLEMENTATION_OVERRIDE(void setId(const char*));
-	PRIVATE_API GAMELIB_IMPLEMENTATION_OVERRIDE(void setName(const char*));
+	PUBLIC_API void setId(const char*);
+	PUBLIC_API void setName(const char*);
 };
 
 GAMELIB_NAMESPACE_END(model)
