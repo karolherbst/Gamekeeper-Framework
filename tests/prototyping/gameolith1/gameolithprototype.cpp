@@ -10,6 +10,28 @@ GAMECLIENTUI_CLASS(GameolithPrototype);
 
 static std::shared_ptr<gamelib::core::HttpFileDownloader> fileDownloader;
 
+class GameJSON : public gamelib::model::Game
+{
+private:
+	Json::Value root;
+public:
+	GameJSON(const Json::Value& value)
+	:	root(value){}
+
+	const char * getId() const
+	{
+		return this->root["slug"].asCString();
+	}
+
+	const char * getName() const
+	{
+		return this->root["title"].asCString();
+	}
+
+	void setId(const char*){}
+	void setName(const char*){}
+};
+
 void
 GameolithPrototype::init(int argc, const char* argv[], Hypodermic::IContainer * container)
 {
@@ -32,7 +54,8 @@ GameolithPrototype::handleRequest(void * const buffer, size_t sz, size_t n)
 	{
 		for (int i = 0; i < root.size(); i++)
 		{
-			std::cout << root[i]["title"].asString() << std::endl;
+			GameJSON game(root[i]);
+			std::cout << game.getName() << ' ' << game.getId() << std::endl;
 		}
 		return true;
 	}
