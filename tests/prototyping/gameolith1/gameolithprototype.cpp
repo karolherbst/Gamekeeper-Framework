@@ -3,6 +3,9 @@
 #include <gamelib/core/httpfiledownloader.h>
 #include <gamelib/model/game.h>
 
+#include <json/reader.h>
+#include <json/value.h>
+
 GAMECLIENTUI_CLASS(GameolithPrototype);
 
 static std::shared_ptr<gamelib::core::HttpFileDownloader> fileDownloader;
@@ -22,8 +25,18 @@ GameolithPrototype::onShutdown()
 bool
 GameolithPrototype::handleRequest(void * const buffer, size_t sz, size_t n)
 {
-	std::cout << static_cast<const char*>(buffer) << std::endl;
-	return true;
+	Json::Value root;
+	Json::Reader reader;
+	std::string jsonTree(static_cast<const char*>(buffer), n);
+	if (reader.parse(jsonTree, root, false))
+	{
+		for (int i = 0; i < root.size(); i++)
+		{
+			std::cout << root[i]["title"].asString() << std::endl;
+		}
+		return true;
+	}
+	return false;
 }
 
 void
