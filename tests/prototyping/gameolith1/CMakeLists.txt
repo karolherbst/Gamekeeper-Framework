@@ -1,5 +1,4 @@
-include(FindPkgConfig)
-pkg_check_modules(JSONCPP REQUIRED jsoncpp)
+find_package(Jsoncpp REQUIRED)
 
 include_directories(
   ${CMAKE_CURRENT_SOURCE_DIR}
