@@ -3,6 +3,9 @@
 #include <gamelib/core/httpfiledownloader.h>
 #include <gamelib/model/game.h>
 
+#include <boost/algorithm/string/predicate.hpp>
+#include <boost/algorithm/string/replace.hpp>
+
 #include <json/reader.h>
 #include <json/value.h>
 
@@ -11,6 +14,32 @@ GAMECLIENTUI_CLASS(GameolithPrototype);
 using gamelib::model::Game;
 
 static std::shared_ptr<gamelib::core::HttpFileDownloader> fileDownloader;
+
+// simulate the config file here
+static std::map<std::string, std::string> config;
+
+static std::string convertJsonPathToJsonCppPath(std::string path)
+{
+	// we handle root as current
+	boost::replace_all(path, "$", "@");
+	boost::replace_all(path, "@.", ".");
+	
+	// we don't have any @. anymore
+	boost::replace_all(path, "@", ".");
+	
+	// if we have [*] at the end, it indicates an array only, but we don't use it
+	if(boost::ends_with(path, "[*]"))
+	{
+		boost::replace_all(path, "[*]", "");
+	}
+	return path;
+}
+
+static Json::Value getRootForGames(std::string path, Json::Value node)
+{
+	Json::Path jsoncppPath(convertJsonPathToJsonCppPath(path));
+	return jsoncppPath.resolve(node);
+}
 
 class GameJSON : public gamelib::model::Game
 {
@@ -37,8 +66,8 @@ private:
 	Json::Path namePath;
 public:
 	JSONGameResolver()
-	:	idPath(std::string(".slug")),
-		namePath(std::string(".title")){}
+	:	idPath(convertJsonPathToJsonCppPath(config["bindings.game.id"])),
+		namePath(convertJsonPathToJsonCppPath(config["bindings.game.name"])){}
 
 	Game * createGame(const Json::Value & gameNode)
 	{
@@ -52,6 +81,9 @@ public:
 void
 GameolithPrototype::init(int argc, const char* argv[], Hypodermic::IContainer * container)
 {
+	config["bindings.games"] = "$[*]";
+	config["bindings.game.id"] = "@.slug";
+	config["bindings.game.name"] = "@.title";
 	fileDownloader = container->resolve<gamelib::core::HttpFileDownloader>();
 }
 
@@ -69,11 +101,12 @@ GameolithPrototype::handleRequest(void * const buffer, size_t sz, size_t n)
 	std::string jsonTree(static_cast<const char*>(buffer), n);
 	if (reader.parse(jsonTree, root, false))
 	{
+		Json::Value gameRoot = getRootForGames(config["bindings.games"], root);
 		JSONGameResolver gr;
 		std::map<const std::string, const Game *> games;
-		for (int i = 0; i < root.size(); i++)
+		for (int i = 0; i < gameRoot.size(); i++)
 		{
-			const Game * game = gr.createGame(root[i]);
+			const Game * game = gr.createGame(gameRoot[i]);
 			games[game->getId()] = game;
 		}
 		for (auto pair : games)
@@ -91,7 +124,7 @@ GameolithPrototype::startEventLoop()
 {
 	std::cout << "starting gameolith test" << std::endl;
 	fileDownloader->downloadFile("https://www.gameolith.com/user/karolherbst/games/?format=json",
-	                                        [this](void * const buffer, size_t bufferSize, size_t dataLength) -> bool
+	                             [this](void * const buffer, size_t bufferSize, size_t dataLength) -> bool
 	{
 		return this->handleRequest(buffer, bufferSize, dataLength);
 	});
