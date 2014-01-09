@@ -10,15 +10,21 @@
 
 GAMECLIENTUI_CLASS(HBPrototype);
 
+typedef gamelib::core::HttpFileDownloader::CookieBuket CookieBuket;
+typedef gamelib::core::HttpFileDownloader::Cookie Cookie;
+typedef gamelib::core::HttpFileDownloader::Form Form;
+
 static std::shared_ptr<gamelib::core::HttpFileDownloader> fileDownloader;
 
 void
 HBPrototype::init(int argc, const char* argv[], Hypodermic::IContainer * container)
 {
 	fileDownloader = container->resolve<gamelib::core::HttpFileDownloader>();
-	
-	if(argc == 2)
-		this->hbcookie = argv[1];
+	if(argc == 3)
+	{
+		this->username = argv[1];
+		this->userpass = argv[2];
+	}
 }
 
 void
@@ -37,10 +43,12 @@ HBPrototype::handleRequest(void * const buffer, size_t sz, size_t n)
 void
 HBPrototype::startEventLoop()
 {
-	std::cout << "starting hb test with cookie: " << this->hbcookie << std::endl;
-	gamelib::core::HttpFileDownloader::CookieBuket cookies;
-	cookies["_simpleauth_sess"] = this->hbcookie;
+	Form form;
+	form["username"] = this->username;
+	form["password"] = this->userpass;
 	
+	CookieBuket cookies = fileDownloader->doPostRequestForCookies("https://www.humblebundle.com/login", form);
+
 	fileDownloader->downloadFileWithCookies("https://www.humblebundle.com/home",
 	                                        [this](void * const buffer, size_t bufferSize, size_t dataLength) -> bool
 	{

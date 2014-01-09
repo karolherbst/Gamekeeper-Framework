@@ -12,7 +12,8 @@ public:
 	GAMELIB_IMPLEMENTATION_OVERRIDE(void onShutdown());
 	GAMELIB_IMPLEMENTATION_OVERRIDE(void startEventLoop());
 private:
-	const char* hbcookie = nullptr;
+	const char* username = nullptr;
+	const char* userpass = nullptr;
 	
 	bool handleRequest(void * const buffer, size_t sz, size_t n);
 	std::stringstream sstream;
