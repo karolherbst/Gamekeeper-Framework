@@ -70,24 +70,6 @@ CurlFileDownloader::downloadFileWithCookies(const char * const url, DownloadCall
 }
 
 CurlFileDownloader::CookieBuket
-CurlFileDownloader::getAllCookies(const char * const url, const CookieBuket& cookies)
-{
-	CURL * curl = CurlHelper::createCURL();
-	curl_easy_setopt(curl, CURLOPT_URL, url);
-	curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, &CurlHelper::emptyCurlFileDownloadCallback);
-	curl_easy_setopt(curl, CURLOPT_COOKIEJAR, nullptr);
-	
-	CurlHelper::addCookiesToCurl(cookies, curl);
-	
-	curl_easy_perform(curl);
-	
-	CurlFileDownloader::CookieBuket result = CurlHelper::getCookies(curl);
-	CurlHelper::deleteCURL(curl);
-	
-	return result;
-}
-
-CurlFileDownloader::CookieBuket
 CurlFileDownloader::doPostRequestForCookies(const char * const url, const Form& form)
 {
 	CURL * curl = CurlHelper::createCURL();

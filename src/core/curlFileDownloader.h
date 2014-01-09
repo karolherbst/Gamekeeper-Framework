@@ -37,8 +37,6 @@ public:
 	PRIVATE_API GAMELIB_IMPLEMENTATION_OVERRIDE(void downloadFileWithCookies(const char * const url,
 	                                                                         DownloadCallback callback,
 	                                                                         const CookieBuket& cookies));
-	PRIVATE_API GAMELIB_IMPLEMENTATION_OVERRIDE(CookieBuket getAllCookies(const char * const url,
-	                                                                      const CookieBuket& cookies));
 	PRIVATE_API GAMELIB_IMPLEMENTATION_OVERRIDE(CookieBuket doPostRequestForCookies(const char * const url,
 	                                                                                const Form& form));
 };
