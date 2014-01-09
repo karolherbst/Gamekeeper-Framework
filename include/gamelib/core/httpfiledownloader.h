@@ -57,6 +57,22 @@ interface PUBLIC_API HttpFileDownloader : public FileDownloader
 	typedef std::pair<std::string, std::string> Cookie;
 
 	/**
+	 * A Form stores form data as simple string string mappings
+	 *
+	 * @author Karol Herbst
+	 * @since 0
+	 */
+	typedef std::unordered_map<std::string, std::string> Form;
+
+	/**
+	 * The signature of one HTTP Form entry
+	 *
+	 * @author Karol Herbst
+	 * @since 0
+	 */
+	typedef std::pair<std::string, std::string> FormField;
+
+	/**
 	 * downloads the file behind the given location
 	 *
 	 * the given cookies will be passed to the Http(s) request
@@ -84,6 +100,18 @@ interface PUBLIC_API HttpFileDownloader : public FileDownloader
 	 * @return the fetched cookies
 	 */
 	PUBLIC_API GAMELIB_INTERFACE_METHOD(CookieBuket getAllCookies(const char * const url, const CookieBuket& cookies));
+
+	/**
+	 * fetches cookies with the given POST form
+	 *
+	 * @author Karol Herbst
+	 * @since 0
+	 *
+	 * @param[in] url the url
+	 * @param[in] form the form
+	 * @return the fetched cookies
+	 */
+	PUBLIC_API GAMELIB_INTERFACE_METHOD(CookieBuket doPostRequestForCookies(const char * const url, const Form& form));
 };
 
 GAMELIB_NAMESPACE_END(core)

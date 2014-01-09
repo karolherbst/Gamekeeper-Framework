@@ -39,6 +39,8 @@ public:
 	                                                                         const CookieBuket& cookies));
 	PRIVATE_API GAMELIB_IMPLEMENTATION_OVERRIDE(CookieBuket getAllCookies(const char * const url,
 	                                                                      const CookieBuket& cookies));
+	PRIVATE_API GAMELIB_IMPLEMENTATION_OVERRIDE(CookieBuket doPostRequestForCookies(const char * const url,
+	                                                                                const Form& form));
 };
 
 GAMELIB_NAMESPACE_END(core)

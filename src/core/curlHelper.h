@@ -23,11 +23,15 @@
 
 #include <gamelib/core/common.h>
 
+#include <map>
+
 #include "curlFileDownloader.h"
 
 #include "curl/curl.h"
 
 GAMELIB_NAMESPACE_START(core)
+
+class CURLPrivateData;
 
 class PRIVATE_API CurlHelper
 {
@@ -38,10 +42,13 @@ public:
 	                                                void * func);
 	PRIVATE_API static void addCookiesToCurl(const CurlFileDownloader::CookieBuket& cookies, CURL * curl);
 	PRIVATE_API static CurlFileDownloader::CookieBuket getCookies(CURL * curl);
+	PRIVATE_API static void addFormToCurl(const CurlFileDownloader::Form& form, CURL * curl);
 	PRIVATE_API static CURL * createCURL();
 	PRIVATE_API static void deleteCURL(CURL * curl);
 private:
 	CurlHelper();
+
+	PRIVATE_API static std::map<CURL *, CURLPrivateData *> curlData;
 };
 
 GAMELIB_NAMESPACE_END(core)

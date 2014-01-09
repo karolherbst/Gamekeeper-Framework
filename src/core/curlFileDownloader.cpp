@@ -87,4 +87,22 @@ CurlFileDownloader::getAllCookies(const char * const url, const CookieBuket& coo
 	return result;
 }
 
+CurlFileDownloader::CookieBuket
+CurlFileDownloader::doPostRequestForCookies(const char * const url, const Form& form)
+{
+	CURL * curl = CurlHelper::createCURL();
+	curl_easy_setopt(curl, CURLOPT_URL, url);
+	curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, &CurlHelper::emptyCurlFileDownloadCallback);
+	curl_easy_setopt(curl, CURLOPT_COOKIEJAR, nullptr);
+
+	CurlHelper::addFormToCurl(form, curl);
+
+	curl_easy_perform(curl);
+
+	CurlFileDownloader::CookieBuket result = CurlHelper::getCookies(curl);
+	CurlHelper::deleteCURL(curl);
+
+	return result;
+}
+
 GAMELIB_NAMESPACE_END(core)

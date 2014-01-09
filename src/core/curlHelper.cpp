@@ -31,6 +31,13 @@
 
 GAMELIB_NAMESPACE_START(core)
 
+struct CURLPrivateData
+{
+	std::string postData;
+};
+
+std::map<CURL *, CURLPrivateData *> CurlHelper::curlData;
+
 int
 CurlHelper::curlFileDownloadCallback(void * const buffer, size_t bufferSize, size_t dataLength,
                                      CurlFileDownloader::DownloadCallback * func)
@@ -85,11 +92,27 @@ CurlHelper::getCookies(CURL * curl)
 	return result;
 }
 
+void
+CurlHelper::addFormToCurl(const CurlFileDownloader::Form& form, CURL * curl)
+{
+	if(!form.empty())
+	{
+		std::ostringstream cookieLineBuilder;
+		for (const HttpFileDownloader::FormField formField : form)
+		{
+			cookieLineBuilder << formField.first << '=' << formField.second << '&';
+		}
+		curlData[curl]->postData = cookieLineBuilder.str();
+		curl_easy_setopt(curl, CURLOPT_POSTFIELDS, curlData[curl]->postData.c_str());
+	}
+}
+
 CURL *
 CurlHelper::createCURL()
 {
 	CURL * curl = curl_easy_init();
 	curl_easy_setopt(curl, CURLOPT_USERAGENT, "Gamelib/0.1");
+	curlData[curl] = new CURLPrivateData();
 	return curl;
 }
 
@@ -97,6 +120,7 @@ CurlHelper::createCURL()
 void
 CurlHelper::deleteCURL(CURL * curl)
 {
+	delete curlData[curl];
 	curl_easy_cleanup(curl);
 }
 
