@@ -109,9 +109,10 @@ CurlHelper::addFormToCurl(const CurlFileDownloader::Form& form, CURL * curl)
 }
 
 CURL *
-CurlHelper::createCURL()
+CurlHelper::createCURL(const char * const url)
 {
 	CURL * curl = curl_easy_init();
+	curl_easy_setopt(curl, CURLOPT_URL, url);
 	curl_easy_setopt(curl, CURLOPT_USERAGENT, userAgent.c_str());
 	curlData[curl] = new CURLPrivateData();
 	return curl;

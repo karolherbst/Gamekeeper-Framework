@@ -43,7 +43,7 @@ public:
 	PRIVATE_API static void addCookiesToCurl(const CurlFileDownloader::CookieBuket& cookies, CURL * curl);
 	PRIVATE_API static CurlFileDownloader::CookieBuket getCookies(CURL * curl);
 	PRIVATE_API static void addFormToCurl(const CurlFileDownloader::Form& form, CURL * curl);
-	PRIVATE_API static CURL * createCURL();
+	PRIVATE_API static CURL * createCURL(const char * const url);
 	PRIVATE_API static void deleteCURL(CURL * curl);
 	PRIVATE_API static void setUserAgent(std::string userAgent);
 private:

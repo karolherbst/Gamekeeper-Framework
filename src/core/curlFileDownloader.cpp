@@ -47,8 +47,7 @@ CurlFileDownloader::supportsProtocol(const char * const protocolName, size_t nam
 void
 CurlFileDownloader::downloadFile(const char * const url, DownloadCallback callback)
 {
-	CURL * curl = CurlHelper::createCURL();
-	curl_easy_setopt(curl, CURLOPT_URL, url);
+	CURL * curl = CurlHelper::createCURL(url);
 	curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, &CurlHelper::curlFileDownloadCallback);
 	curl_easy_setopt(curl, CURLOPT_WRITEDATA, &callback);
 	curl_easy_perform(curl);
@@ -59,8 +58,7 @@ void
 CurlFileDownloader::downloadFileWithCookies(const char * const url, DownloadCallback callback,
                                             const CookieBuket& cookies)
 {
-	CURL * curl = CurlHelper::createCURL();
-	curl_easy_setopt(curl, CURLOPT_URL, url);
+	CURL * curl = CurlHelper::createCURL(url);
 	curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, &CurlHelper::curlFileDownloadCallback);
 	curl_easy_setopt(curl, CURLOPT_WRITEDATA, &callback);
 	
@@ -73,8 +71,7 @@ CurlFileDownloader::downloadFileWithCookies(const char * const url, DownloadCall
 CurlFileDownloader::CookieBuket
 CurlFileDownloader::doPostRequestForCookies(const char * const url, const Form& form)
 {
-	CURL * curl = CurlHelper::createCURL();
-	curl_easy_setopt(curl, CURLOPT_URL, url);
+	CURL * curl = CurlHelper::createCURL(url);
 	curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, &CurlHelper::emptyCurlFileDownloadCallback);
 	curl_easy_setopt(curl, CURLOPT_COOKIEJAR, nullptr);
 
