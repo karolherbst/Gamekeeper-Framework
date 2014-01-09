@@ -21,8 +21,7 @@
 #include "pch.h"
 
 #include "curlFileDownloader.h"
-
-#include <sstream>
+#include "curlHelper.h"
 
 #include <curl/curl.h>
 
@@ -47,50 +46,45 @@ CurlFileDownloader::supportsProtocol(const char * const protocolName, size_t nam
 void
 CurlFileDownloader::downloadFile(const char * const url, DownloadCallback callback)
 {
-	CURL * curl = curl_easy_init();
+	CURL * curl = CurlHelper::createCURL();
 	curl_easy_setopt(curl, CURLOPT_URL, url);
-	curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, &curlFileDownloadCallback);
+	curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, &CurlHelper::curlFileDownloadCallback);
 	curl_easy_setopt(curl, CURLOPT_WRITEDATA, &callback);
 	curl_easy_perform(curl);
-	curl_easy_cleanup(curl);
+	CurlHelper::deleteCURL(curl);
 }
 
 void
 CurlFileDownloader::downloadFileWithCookies(const char * const url, DownloadCallback callback,
                                             const CookieBuket& cookies)
 {
-	CURL * curl = curl_easy_init();
+	CURL * curl = CurlHelper::createCURL();
 	curl_easy_setopt(curl, CURLOPT_URL, url);
-	curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, &curlFileDownloadCallback);
+	curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, &CurlHelper::curlFileDownloadCallback);
 	curl_easy_setopt(curl, CURLOPT_WRITEDATA, &callback);
 	
-	if(!cookies.empty())
-	{
-		std::ostringstream cookieLineBuilder;
-		for (const std::pair<std::string, std::string> pair : cookies)
-		{
-			cookieLineBuilder << pair.first << '=' << pair.second << ";";
-		}
-		std::string cookieLine = cookieLineBuilder.str();
-		curl_easy_setopt(curl, CURLOPT_COOKIE, cookieLine.c_str());
-	}
+	CurlHelper::addCookiesToCurl(cookies, curl);
 	
 	curl_easy_perform(curl);
-	curl_easy_cleanup(curl);
+	CurlHelper::deleteCURL(curl);
 }
 
-int
-CurlFileDownloader::curlFileDownloadCallback(void * const buffer, size_t bufferSize, size_t dataLength,
-                                             DownloadCallback * func)
+CurlFileDownloader::CookieBuket
+CurlFileDownloader::getAllCookies(const char * const url, const CookieBuket& cookies)
 {
-	if (func->operator()(buffer, bufferSize, dataLength))
-	{
-		return dataLength;
-	}
-	else
-	{
-		return -1;
-	}
+	CURL * curl = CurlHelper::createCURL();
+	curl_easy_setopt(curl, CURLOPT_URL, url);
+	curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, &CurlHelper::emptyCurlFileDownloadCallback);
+	curl_easy_setopt(curl, CURLOPT_COOKIEJAR, nullptr);
+	
+	CurlHelper::addCookiesToCurl(cookies, curl);
+	
+	curl_easy_perform(curl);
+	
+	CurlFileDownloader::CookieBuket result = CurlHelper::getCookies(curl);
+	CurlHelper::deleteCURL(curl);
+	
+	return result;
 }
 
 GAMELIB_NAMESPACE_END(core)

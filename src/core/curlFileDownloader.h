@@ -37,9 +37,8 @@ public:
 	PRIVATE_API GAMELIB_IMPLEMENTATION_OVERRIDE(void downloadFileWithCookies(const char * const url,
 	                                                                         DownloadCallback callback,
 	                                                                         const CookieBuket& cookies));
-private:
-	PRIVATE_API static int curlFileDownloadCallback(void * const buffer, size_t bufferSize, size_t dataLength,
-	                                DownloadCallback * func);
+	PRIVATE_API GAMELIB_IMPLEMENTATION_OVERRIDE(CookieBuket getAllCookies(const char * const url,
+	                                                                      const CookieBuket& cookies));
 };
 
 GAMELIB_NAMESPACE_END(core)

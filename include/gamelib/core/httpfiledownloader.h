@@ -70,6 +70,20 @@ interface PUBLIC_API HttpFileDownloader : public FileDownloader
 	 */
 	PUBLIC_API GAMELIB_INTERFACE_METHOD(void downloadFileWithCookies(const char * const url, DownloadCallback callback,
 	                                                                 const CookieBuket& cookies));
+
+	/**
+	 * fetches all cookies behind a URL with the given cookies
+	 *
+	 * use this method to get authentication details or other important cookies behind an URL.
+	 *
+	 * @author Karol Herbst
+	 * @since 0
+	 *
+	 * @param[in] url the url
+	 * @param[in] cookies the cookies
+	 * @return the fetched cookies
+	 */
+	PUBLIC_API GAMELIB_INTERFACE_METHOD(CookieBuket getAllCookies(const char * const url, const CookieBuket& cookies));
 };
 
 GAMELIB_NAMESPACE_END(core)
