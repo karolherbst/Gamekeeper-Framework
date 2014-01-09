@@ -49,6 +49,14 @@ interface PUBLIC_API HttpFileDownloader : public FileDownloader
 	typedef std::unordered_map<std::string, std::string> CookieBuket;
 	
 	/**
+	 * The signature of one Cookie
+	 *
+	 * @author Karol Herbst
+	 * @since 0
+	 */
+	typedef std::pair<std::string, std::string> Cookie;
+
+	/**
 	 * downloads the file behind the given location
 	 *
 	 * the given cookies will be passed to the Http(s) request
