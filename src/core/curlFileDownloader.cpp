@@ -30,6 +30,7 @@ GAMELIB_NAMESPACE_START(core)
 CurlFileDownloader::CurlFileDownloader()
 {
 	curl_global_init(CURL_GLOBAL_SSL);
+	CurlHelper::setUserAgent("GameLib/0.1");
 }
 
 CurlFileDownloader::~CurlFileDownloader()

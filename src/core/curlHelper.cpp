@@ -37,6 +37,7 @@ struct CURLPrivateData
 };
 
 std::map<CURL *, CURLPrivateData *> CurlHelper::curlData;
+std::string CurlHelper::userAgent;
 
 int
 CurlHelper::curlFileDownloadCallback(void * const buffer, size_t bufferSize, size_t dataLength,
@@ -111,17 +112,26 @@ CURL *
 CurlHelper::createCURL()
 {
 	CURL * curl = curl_easy_init();
-	curl_easy_setopt(curl, CURLOPT_USERAGENT, "Gamelib/0.1");
+	curl_easy_setopt(curl, CURLOPT_USERAGENT, userAgent.c_str());
 	curlData[curl] = new CURLPrivateData();
 	return curl;
 }
-
 
 void
 CurlHelper::deleteCURL(CURL * curl)
 {
 	delete curlData[curl];
 	curl_easy_cleanup(curl);
+}
+
+void
+CurlHelper::setUserAgent(std::string newUserAgent)
+{
+	curl_version_info_data *versionData = curl_version_info(CURLVERSION_NOW);
+
+	std::stringstream ss;
+	ss << newUserAgent << " libcurl/" << versionData->version;
+	userAgent = ss.str();
 }
 
 GAMELIB_NAMESPACE_END(core)

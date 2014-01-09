@@ -45,10 +45,14 @@ public:
 	PRIVATE_API static void addFormToCurl(const CurlFileDownloader::Form& form, CURL * curl);
 	PRIVATE_API static CURL * createCURL();
 	PRIVATE_API static void deleteCURL(CURL * curl);
+	PRIVATE_API static void setUserAgent(std::string userAgent);
 private:
 	CurlHelper();
 
+	static std::string userAgent;
+
 	PRIVATE_API static std::map<CURL *, CURLPrivateData *> curlData;
+	PRIVATE_API static std::string& createUserAgentString();
 };
 
 GAMELIB_NAMESPACE_END(core)
