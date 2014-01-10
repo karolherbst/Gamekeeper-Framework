@@ -6,6 +6,12 @@
 #include <map>
 #include <iostream>
 
+#include <log4cpp/Appender.hh>
+#include <log4cpp/BasicLayout.hh>
+#include <log4cpp/Category.hh>
+#include <log4cpp/OstreamAppender.hh>
+#include <log4cpp/Priority.hh>
+
 #include <Python.h>
 
 GAMECLIENTUI_CLASS(HBPrototype);
@@ -20,6 +26,14 @@ void
 HBPrototype::init(int argc, const char* argv[], Hypodermic::IContainer * container)
 {
 	fileDownloader = container->resolve<gamelib::core::HttpFileDownloader>();
+
+	log4cpp::Appender *appender = new log4cpp::OstreamAppender("console", &std::cout);
+	appender->setLayout(new log4cpp::BasicLayout());
+	log4cpp::Category& root = log4cpp::Category::getRoot();
+	root.setPriority(log4cpp::Priority::DEBUG);
+	root.addAppender(appender);
+	root.info("init");
+
 	if(argc == 3)
 	{
 		this->username = argv[1];
@@ -30,7 +44,8 @@ HBPrototype::init(int argc, const char* argv[], Hypodermic::IContainer * contain
 void
 HBPrototype::onShutdown()
 {
-	std::cout << "shutdown" << std::endl;
+	log4cpp::Category& root = log4cpp::Category::getRoot();
+	root.info("shutdown");
 }
 
 bool
@@ -76,6 +91,7 @@ static gamelib::model::Game * castPyObjectToGame(PyObject *obj)
 void
 HBPrototype::doPythonStuff()
 {
+	log4cpp::Category& root = log4cpp::Category::getRoot();
 	Py_Initialize();
 	
 	PyRun_SimpleString("import sys");
@@ -101,7 +117,7 @@ HBPrototype::doPythonStuff()
 			{
 				Py_DECREF(args);
 				Py_DECREF(pyModule);
-				std::cout << "Could not convert argument" << std::endl;
+				root.errorStream() << "Could not convert argument";
 				return;
 			}
 			PyTuple_SetItem(args, 0, domTree);
@@ -113,7 +129,7 @@ HBPrototype::doPythonStuff()
 			Py_DECREF(emptyTuple);
 			if (result != NULL)
 			{
-				std::cout << "call finished, got the game list" << std::endl;
+				root.infoStream() << "call finished, got the game list";
 				std::map<std::string, gamelib::model::Game*> games;
 				
 				for(int i = 0; i < PyList_Size(result); i++)
@@ -125,11 +141,11 @@ HBPrototype::doPythonStuff()
 					{
 						gamelib::model::Game * game = castPyObjectToGame(resultGame);
 						games[PyUnicode_AsUTF8(PyList_GetItem(result, i))] = game;
-						std::cout << game->getName() << std::endl;
+						root.debugStream() << game->getName();
 					}
 					else
 					{
-						std::cout << "Call failed for game: " << PyUnicode_AsASCIIString(PyList_GetItem(result, i)) << std::endl;
+						root.errorStream() << "Call failed for game: " << PyUnicode_AsASCIIString(PyList_GetItem(result, i));
 					}
 				}
 				
@@ -141,7 +157,7 @@ HBPrototype::doPythonStuff()
 				Py_DECREF(funcGetGame);
 				Py_DECREF(pyModule);
 				PyErr_Print();
-				std::cout << "Call failed" << std::endl;
+				root.errorStream() << "Call failed";
 				return;
 			}
 		}
@@ -149,7 +165,7 @@ HBPrototype::doPythonStuff()
 		{
 			if (PyErr_Occurred())
 				PyErr_Print();
-			std::cout << "Cannot find function" << std::endl;
+			root.errorStream() << "Cannot find function";
 		}
 		Py_XDECREF(funcGetAll);
 		Py_XDECREF(funcGetGame);
@@ -158,7 +174,7 @@ HBPrototype::doPythonStuff()
 	else
 	{
 		PyErr_Print();
-		std::cout << "Failed to load " << PYMODULENAME << std::endl;
+		root.errorStream() << "Failed to load " << PYMODULENAME;
 		return;
 	}
 	
