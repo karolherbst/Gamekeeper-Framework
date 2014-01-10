@@ -43,7 +43,10 @@ include(SetInstallPaths)
 #######################################################################################################################
 
 # boost
-find_package(Boost 1.44 COMPONENTS filesystem system ${REQUIRED_ON_LINUX})
+find_package(Boost 1.54 COMPONENTS filesystem log system)
+if(NOT Boost_FOUND)
+  find_package(Boost 1.44 COMPONENTS filesystem system ${REQUIRED_ON_LINUX})
+endif()
 
 # curl
 find_package(CURL ${REQUIRED_ON_UNIX})
