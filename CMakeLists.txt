@@ -33,7 +33,6 @@ endif()
 # macros should be included first, then environment, the others aren't that important
 include(Macros)
 include(Environment)
-
 include(ExternalProject)
 include(Options)
 include(SetInstallPaths)
@@ -63,6 +62,9 @@ if(BUILD_TESTS)
     include(BuildGTest)
   endif()
 endif()
+
+# log4cpp
+find_package(log4cpp ${REQUIRED_ON_LINUX})
 
 # swig
 if(WITH_CSHARP_BINDINGS OR WITH_JAVA_BINDINGS OR WITH_PYTHON_BINDINGS)
