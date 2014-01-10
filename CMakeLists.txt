@@ -42,11 +42,14 @@ include(SetInstallPaths)
 # dependency management
 #######################################################################################################################
 
+# boost
 find_package(Boost 1.44 COMPONENTS filesystem system ${REQUIRED_ON_LINUX})
+
+# curl
 find_package(CURL ${REQUIRED_ON_UNIX})
-find_package(Hypodermic)
 
 # hypdermic
+find_package(Hypodermic)
 if(NOT HYPODERMIC_FOUND)
   include(BuildHypodermic)
 endif()
@@ -61,6 +64,7 @@ if(BUILD_TESTS)
   endif()
 endif()
 
+# swig
 if(WITH_CSHARP_BINDINGS OR WITH_JAVA_BINDINGS OR WITH_PYTHON_BINDINGS)
   find_package(SWIG REQUIRED)
   
