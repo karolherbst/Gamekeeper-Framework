@@ -33,7 +33,7 @@ GAMELIB_NAMESPACE_START(core)
  * @author Karol Herbst
  * @since 0
  */
-PUBLIC_TYPE enum class LOG_LEVEL
+PUBLIC_API enum class LOG_LEVEL
 {
 	/**
 	 * used for trace output
@@ -90,7 +90,7 @@ PUBLIC_TYPE enum class LOG_LEVEL
  * @author Karol Herbst
  * @since 0
  */
-PUBLIC_TYPE class logger
+PUBLIC_API class logger
 {
 public:
 	PUBLIC_API virtual void log(LOG_LEVEL, std::string) = 0;
