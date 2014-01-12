@@ -8,8 +8,7 @@ add_custom_target(headers
     gamelib/core/filedownloader.h
     gamelib/core/httpfiledownloader.h
     gamelib/core/interface.h
+    gamelib/core/logger.h
 
-    gamelib/log/logger.h
-    
     gamelib/model/game.h
 )

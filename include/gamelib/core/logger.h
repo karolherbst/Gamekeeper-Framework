@@ -18,14 +18,14 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef GAMELIB_LOG_LOGGER_H
-#define GAMELIB_LOG_LOGGER_H 1
+#ifndef GAMELIB_CORE_LOGGER_H
+#define GAMELIB_CORE_LOGGER_H 1
 
 #include <gamelib/core/common.h>
 
 #include <string>
 
-GAMELIB_NAMESPACE_START(log)
+GAMELIB_NAMESPACE_START(core)
 
 /**
  * this enum should be used to define the loging level used in the logger
@@ -79,7 +79,7 @@ PUBLIC_TYPE enum class LOG_LEVEL
 };
 
 /**
- * @class logger logger.h <gamelib/log/logger.h>
+ * @class logger logger.h <gamelib/core/logger.h>
  *
  * the gamelib logger class
  *
@@ -96,6 +96,6 @@ public:
 	PUBLIC_API virtual void log(LOG_LEVEL, std::string) = 0;
 };
 
-GAMELIB_NAMESPACE_END(log)
+GAMELIB_NAMESPACE_END(core)
 
-#endif //GAMELIB_LOG_LOGGER_H
+#endif //GAMELIB_CORE_LOGGER_H
