@@ -23,6 +23,8 @@
 
 #include <gamelib/core/common.h>
 
+#include <gamelib/core/interface.h>
+
 #include <string>
 
 GAMELIB_NAMESPACE_START(core)
@@ -33,7 +35,7 @@ GAMELIB_NAMESPACE_START(core)
  * @author Karol Herbst
  * @since 0
  */
-PUBLIC_API enum class LOG_LEVEL
+enum class LOG_LEVEL
 {
 	/**
 	 * used for trace output
@@ -79,7 +81,7 @@ PUBLIC_API enum class LOG_LEVEL
 };
 
 /**
- * @class logger logger.h <gamelib/core/logger.h>
+ * @interface logger logger.h <gamelib/core/logger.h>
  *
  * the gamelib logger class
  *
@@ -90,10 +92,10 @@ PUBLIC_API enum class LOG_LEVEL
  * @author Karol Herbst
  * @since 0
  */
-PUBLIC_API class logger
+interface PUBLIC_API logger
 {
 public:
-	PUBLIC_API virtual void log(LOG_LEVEL, std::string) = 0;
+	PUBLIC_API GAMELIB_INTERFACE_METHOD(void log(LOG_LEVEL, std::string));
 };
 
 GAMELIB_NAMESPACE_END(core)
