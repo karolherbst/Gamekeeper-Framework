@@ -18,12 +18,14 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef GAMELIB_CORE_LOGGER_H
-#define GAMELIB_CORE_LOGGER_H 1
+#ifndef GAMELIB_CORE_OSPATHS_H
+#define GAMELIB_CORE_OSPATHS_H 1
 
 #include <gamelib/core/common.h>
 
 #include <gamelib/core/interface.h>
+
+#include <boost/filesystem/path.hpp>
 
 GAMELIB_NAMESPACE_START(core)
 
@@ -37,9 +39,20 @@ GAMELIB_NAMESPACE_START(core)
  */
 interface PUBLIC_API OSPaths
 {
-	
+	PUBLIC_API GAMELIB_INTERFACE_DESTRUCTOR(OSPaths)
+
+	/**
+	 * returns the file with the given name from the config paths
+	 *
+	 * @author Karol Herbst
+	 * @since 0
+	 *
+	 * @param name the file name
+	 * @return the resolved file
+	 */
+	PUBLIC_API GAMELIB_INTERFACE_METHOD(const boost::filesystem::path& getConfigFile(std::string name));
 };
 
 GAMELIB_NAMESPACE_END(core)
 
-#endif //GAMELIB_CORE_LOGGER_H
+#endif //GAMELIB_CORE_OSPATHS_H
