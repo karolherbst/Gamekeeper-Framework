@@ -6,10 +6,12 @@ include_directories(
 
 if(LINUX)
   file(GLOB linux_headers
+    linuxinformation.h
     linuxpaths.h
   )
 
   file(GLOB linux_sources
+    linuxinformation.cpp
     linuxpaths.cpp
   )
 endif()
