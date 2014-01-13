@@ -78,6 +78,9 @@ public:
 	}
 };
 
+GameolithPrototype::GameolithPrototype(gamelib::core::Logger& _logger)
+:	logger(_logger){}
+
 void
 GameolithPrototype::init(int argc, const char* argv[], Hypodermic::IContainer * container)
 {

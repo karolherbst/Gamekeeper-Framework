@@ -27,6 +27,10 @@
 
 #include <Hypodermic/IContainer.h>
 
+GAMELIB_NAMESPACE_START(core)
+class Logger;
+GAMELIB_NAMESPACE_END(core)
+
 GAMELIB_NAMESPACE_START(client)
 
 /**
@@ -106,9 +110,10 @@ interface PUBLIC_API GameLibUI
  * @author Karol Herbst
  * @since 0
  *
+ * @param logger the logger provided by gamelib
  * @return a new created instance of gameLib
  */
-extern "C" GameLibUI * newInstance();
+extern "C" GameLibUI * newInstance(gamelib::core::Logger& logger);
 
 /**
  * declares the Implementation of the {@link GameLibUI} interface
@@ -116,7 +121,10 @@ extern "C" GameLibUI * newInstance();
  * use this by the client to provide all the needed things.
  */
 #define GAMECLIENTUI_CLASS(class) \
-extern "C" PUBLIC_API gamelib::client::GameLibUI * newInstance() { return new class(); }
+extern "C" PUBLIC_API gamelib::client::GameLibUI * newInstance(gamelib::core::Logger& logger) \
+{ \
+	return new class(logger); \
+}
 
 GAMELIB_NAMESPACE_END(client)
 

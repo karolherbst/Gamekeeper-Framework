@@ -2,7 +2,6 @@ include_directories(
   ${CMAKE_CURRENT_SOURCE_DIR}
   ${GAMELIB_INCLUDE_DIR}
   ${HYPODERMIC_INCLUDE_DIRS}
-  ${LOG4CPP_INCLUDE_DIR}
   ${PYTHON_INCLUDE_DIRS}
 )
 
@@ -27,6 +26,5 @@ add_executable(HBPrototype ${sources} ${headers} ${otherFiles})
 target_link_libraries(HBPrototype
   gamelibClient
   gamelibModelBindings
-  ${LOG4CPP_LIBRARIES}
   ${PYTHON_LIBRARIES}
 )
