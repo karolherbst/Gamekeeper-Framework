@@ -22,12 +22,14 @@
 
 #include "linuxinformation.h"
 
+#include <cstdlib>
+
 GAMELIB_NAMESPACE_START(core)
 
 std::string
 LinuxInformation::getEnv(const char * name)
 {
-	return "";
+	return getenv(name);
 }
 
 GAMELIB_NAMESPACE_END(core)
