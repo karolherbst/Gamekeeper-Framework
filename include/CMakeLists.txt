@@ -10,6 +10,7 @@ add_custom_target(headers
     gamelib/core/interface.h
     gamelib/core/logger.h
     gamelib/core/loggerStream.h
+    gamelib/core/ospaths.h
 
     gamelib/model/game.h
 )
