@@ -87,12 +87,14 @@ endif()
 # set some cmake variables needed by gamelib build
 #######################################################################################################################
 
+set(GAMELIB_PRIVATE_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/include_private")
 set(GAMELIB_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/include")
 
 #######################################################################################################################
 # build libgamelib
 #######################################################################################################################
 
+add_subdirectory(include_private)
 add_subdirectory(include)
 add_subdirectory(src)
 add_subdirectory(tests)

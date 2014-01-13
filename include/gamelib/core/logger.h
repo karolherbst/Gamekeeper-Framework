@@ -25,8 +25,6 @@
 
 #include <gamelib/core/interface.h>
 
-#include <string>
-
 GAMELIB_NAMESPACE_START(core)
 
 /**
@@ -80,22 +78,35 @@ enum class LOG_LEVEL
 	FATAL
 };
 
+class LoggerStream;
+
 /**
- * @interface logger logger.h <gamelib/core/logger.h>
+ * @interface Logger logger.h <gamelib/core/logger.h>
  *
  * the gamelib logger class
  *
  * this will be used for any logging functionalities.
  *
- * NOTE: unstable API
- *
  * @author Karol Herbst
  * @since 0
  */
-interface PUBLIC_API logger
+interface PUBLIC_API Logger
 {
 public:
-	PUBLIC_API GAMELIB_INTERFACE_METHOD(void log(LOG_LEVEL, std::string));
+	GAMELIB_INTERFACE_DESTRUCTOR(Logger);
+
+	/**
+	 * Stream based log method
+	 *
+	 * use this to get a logger Stream to perform logging
+	 *
+	 * @author Karol Herbst
+	 * @since 0
+	 *
+	 * @param logLevel the log Level
+	 * @return a loggerStream
+	 */
+	PUBLIC_API GAMELIB_INTERFACE_METHOD(LoggerStream& operator<<(const LOG_LEVEL& logLevel) const);
 };
 
 GAMELIB_NAMESPACE_END(core)
