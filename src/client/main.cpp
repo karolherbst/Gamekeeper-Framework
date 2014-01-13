@@ -66,7 +66,7 @@ PUBLIC_API int main(int argc, const char* argv[])
 		containerBuilder.registerType<LinuxInformation>()->
 		        as<OSInformation>()->
 		        singleInstance();
-		containerBuilder.registerType<XDGPaths>()->
+		containerBuilder.registerType<XDGPaths>(CREATE(new XDGPaths(INJECT(OSInformation))))->
 		        as<OSPaths>()->
 		        singleInstance();
 		containerBuilder.registerType<CurlFileDownloader>(CREATE(new CurlFileDownloader(INJECT(LoggerFactory))))->

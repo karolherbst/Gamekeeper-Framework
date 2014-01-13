@@ -23,13 +23,17 @@
 
 #include <gamelib/core/common.h>
 
+#include <gamelib/core/osinformation.h>
 #include <gamelib/core/ospaths.h>
+
+#include <memory>
 
 GAMELIB_NAMESPACE_START(core)
 
 class PRIVATE_API XDGPaths : public OSPaths
 {
 public:
+	PRIVATE_API XDGPaths(std::shared_ptr<OSInformation>);
 	PRIVATE_API GAMELIB_IMPLEMENTATION_OVERRIDE(boost::filesystem::path getConfigFile(std::string name));
 };
 

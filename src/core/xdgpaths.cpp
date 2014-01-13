@@ -24,6 +24,11 @@
 
 GAMELIB_NAMESPACE_START(core)
 
+XDGPaths::XDGPaths(std::shared_ptr<OSInformation>)
+{
+
+}
+
 boost::filesystem::path
 XDGPaths::getConfigFile(std::string name)
 {
