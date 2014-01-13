@@ -27,6 +27,7 @@
 #include <Hypodermic/ContainerBuilder.h>
 
 #include "../core/curlFileDownloader.h"
+#include "../core/log4cpploggerFactory.h"
 
 static gamelib::client::GameLibUI* gamelibI = nullptr;
 
@@ -58,11 +59,16 @@ PUBLIC_API int main(int argc, const char* argv[])
 		        as<FileDownloader>()->
 		        as<HttpFileDownloader>()->
 		        singleInstance();
+		containerBuilder.registerType<Log4cppLoggerFactory>()->
+		        as<LoggerFactory>()->
+		        singleInstance();
 	}
 	
 	// left out not implemented stuff yet
-	gamelibI = gamelib::client::newInstance();
-	gamelibI->init(argc, argv, containerBuilder.build().get());
+	Hypodermic::IContainer * container = containerBuilder.build().get();
+	std::shared_ptr<gamelib::core::LoggerFactory> loggerFactory = container->resolve<gamelib::core::LoggerFactory>();
+	gamelibI = gamelib::client::newInstance(loggerFactory->getDefaultLogger());
+	gamelibI->init(argc, argv, container);
 	gamelibI->startEventLoop();
 	gamelibI->onShutdown();
 	delete gamelibI;
