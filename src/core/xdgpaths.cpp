@@ -18,21 +18,16 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef GAMELIB_CORE_LINUXPATHS_H
-#define GAMELIB_CORE_LINUXPATHS_H 1
+#include "pch.h"
 
-#include <gamelib/core/common.h>
-
-#include <gamelib/core/ospaths.h>
+#include "xdgpaths.h"
 
 GAMELIB_NAMESPACE_START(core)
 
-class PRIVATE_API LinuxPaths : public OSPaths
+boost::filesystem::path
+XDGPaths::getConfigFile(std::string name)
 {
-public:
-	PRIVATE_API GAMELIB_IMPLEMENTATION_OVERRIDE(boost::filesystem::path getConfigFile(std::string name));
-};
+	return "$HOME/.config/gamelib";
+}
 
 GAMELIB_NAMESPACE_END(core)
-
-#endif //GAMELIB_CORE_LINUXPATHS_H
