@@ -1,5 +1,6 @@
 include_directories(
   ${CMAKE_CURRENT_SOURCE_DIR}
+  ${HYPODERMIC_INCLUDE_DIRS}
   ${LOG4CPP_INCLUDE_DIR}
 )
 

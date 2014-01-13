@@ -27,6 +27,7 @@
 #include <gamelib/client/gamelib.h>
 
 #include <Hypodermic/ContainerBuilder.h>
+#include <Hypodermic/Helpers.h>
 
 #include "../core/curlFileDownloader.h"
 #include "../core/log4cpploggerFactory.h"
@@ -57,12 +58,12 @@ PUBLIC_API int main(int argc, const char* argv[])
 		using namespace gamelib::core;
 		
 		// set up IoC container
-		containerBuilder.registerType<CurlFileDownloader>()->
-		        as<FileDownloader>()->
-		        as<HttpFileDownloader>()->
-		        singleInstance();
 		containerBuilder.registerType<Log4cppLoggerFactory>()->
 		        as<LoggerFactory>()->
+		        singleInstance();
+		containerBuilder.registerType<CurlFileDownloader>(CREATE(new CurlFileDownloader(INJECT(LoggerFactory))))->
+		        as<FileDownloader>()->
+		        as<HttpFileDownloader>()->
 		        singleInstance();
 	}
 	

@@ -23,12 +23,18 @@
 #include "curlFileDownloader.h"
 #include "curlHelper.h"
 
+#include <gamelib/core/logger.h>
+#include <gamelib/core/loggerFactory.h>
+#include <gamelib/core/loggerStream.h>
+
 #include <curl/curl.h>
 
 GAMELIB_NAMESPACE_START(core)
 
-CurlFileDownloader::CurlFileDownloader()
+CurlFileDownloader::CurlFileDownloader(std::shared_ptr<LoggerFactory> loggerFactory)
+:	logger(loggerFactory->getComponentLogger("IO.curl"))
 {
+	logger << LOG_LEVEL::DEBUG << "init curl" << endl;
 	curl_global_init(CURL_GLOBAL_SSL);
 	CurlHelper::setUserAgent("GameLib/0.1");
 }
@@ -47,6 +53,7 @@ CurlFileDownloader::supportsProtocol(const char * const protocolName, size_t nam
 void
 CurlFileDownloader::downloadFile(const char * const url, DownloadCallback callback)
 {
+	logger << LOG_LEVEL::DEBUG << "try to download file at: " << url << endl;
 	CURL * curl = CurlHelper::createCURL(url);
 	curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, &CurlHelper::curlFileDownloadCallback);
 	curl_easy_setopt(curl, CURLOPT_WRITEDATA, &callback);
@@ -58,6 +65,7 @@ void
 CurlFileDownloader::downloadFileWithCookies(const char * const url, DownloadCallback callback,
                                             const CookieBuket& cookies)
 {
+	logger << LOG_LEVEL::DEBUG << "try to download file at: " << url << endl;
 	CURL * curl = CurlHelper::createCURL(url);
 	curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, &CurlHelper::curlFileDownloadCallback);
 	curl_easy_setopt(curl, CURLOPT_WRITEDATA, &callback);
@@ -71,6 +79,7 @@ CurlFileDownloader::downloadFileWithCookies(const char * const url, DownloadCall
 CurlFileDownloader::CookieBuket
 CurlFileDownloader::doPostRequestForCookies(const char * const url, const Form& form)
 {
+	logger << LOG_LEVEL::DEBUG << "try to fetch cookies at: " << url << endl;
 	CURL * curl = CurlHelper::createCURL(url);
 	curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, &CurlHelper::emptyCurlFileDownloadCallback);
 	curl_easy_setopt(curl, CURLOPT_COOKIEJAR, nullptr);
