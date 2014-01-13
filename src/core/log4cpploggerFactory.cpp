@@ -25,9 +25,9 @@
 #include "log4cppLogger.h"
 
 #include <log4cpp/Appender.hh>
-#include <log4cpp/BasicLayout.hh>
 #include <log4cpp/Category.hh>
 #include <log4cpp/OstreamAppender.hh>
+#include <log4cpp/PatternLayout.hh>
 #include <log4cpp/Priority.hh>
 
 GAMELIB_NAMESPACE_START(core)
@@ -35,7 +35,9 @@ GAMELIB_NAMESPACE_START(core)
 Log4cppLoggerFactory::Log4cppLoggerFactory()
 {
 	log4cpp::Appender *appender = new log4cpp::OstreamAppender("console", &std::cout);
-	appender->setLayout(new log4cpp::BasicLayout());
+	log4cpp::PatternLayout * layout = new log4cpp::PatternLayout();
+	layout->setConversionPattern("%d{%Y-%m-%d %H:%M:%S} [%c] %p: %m%n");
+	appender->setLayout(layout);
 
 	log4cpp::Category& rootCategory = log4cpp::Category::getInstance("GameLib Root");
 	rootCategory.setPriority(log4cpp::Priority::DEBUG);
