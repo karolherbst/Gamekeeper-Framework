@@ -40,6 +40,13 @@ class Logger;
 interface PRIVATE_API LoggerFactory
 {
 	GAMELIB_INTERFACE_DESTRUCTOR(LoggerFactory);
+
+	/**
+	 * @author Karol Herbst
+	 * @since 0
+	 *
+	 * @return the default logger
+	 */
 	PRIVATE_API GAMELIB_INTERFACE_METHOD(Logger& getDefaultLogger());
 };
 
