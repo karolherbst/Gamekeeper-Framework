@@ -34,9 +34,11 @@ class PRIVATE_API Log4cppLoggerFactory : public LoggerFactory
 public:
 	PRIVATE_API Log4cppLoggerFactory();
 	PRIVATE_API GAMELIB_IMPLEMENTATION_OVERRIDE(Logger& getDefaultLogger());
+	PRIVATE_API GAMELIB_IMPLEMENTATION_OVERRIDE(Logger& getUILogger());
 	PRIVATE_API GAMELIB_IMPLEMENTATION_OVERRIDE(~Log4cppLoggerFactory());
 private:
 	Logger * rootLogger = nullptr;
+	Logger * uiLogger = nullptr;
 };
 
 GAMELIB_NAMESPACE_END(core)

@@ -41,7 +41,12 @@ Log4cppLoggerFactory::Log4cppLoggerFactory()
 	rootCategory.setPriority(log4cpp::Priority::DEBUG);
 	rootCategory.addAppender(appender);
 
+	log4cpp::Category& uiCategory = log4cpp::Category::getInstance("UI");
+	uiCategory.setPriority(log4cpp::Priority::DEBUG);
+	uiCategory.addAppender(appender);
+
 	this->rootLogger = new Log4cppLogger(rootCategory);
+	this->uiLogger = new Log4cppLogger(uiCategory);
 }
 
 Logger&
@@ -50,11 +55,22 @@ Log4cppLoggerFactory::getDefaultLogger()
 	return *this->rootLogger;
 }
 
+Logger&
+Log4cppLoggerFactory::getUILogger()
+{
+	return *this->uiLogger;
+}
+
 Log4cppLoggerFactory::~Log4cppLoggerFactory()
 {
 	if (this->rootLogger != nullptr)
 	{
 		delete this->rootLogger;
+	}
+
+	if (this->uiLogger != nullptr)
+	{
+		delete this->uiLogger;
 	}
 }
 

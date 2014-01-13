@@ -48,6 +48,14 @@ interface PRIVATE_API LoggerFactory
 	 * @return the default logger
 	 */
 	PRIVATE_API GAMELIB_INTERFACE_METHOD(Logger& getDefaultLogger());
+
+	/**
+	 * @author Karol Herbst
+	 * @since 0
+	 *
+	 * @return the UI logger
+	 */
+	PRIVATE_API GAMELIB_INTERFACE_METHOD(Logger& getUILogger());
 };
 
 GAMELIB_NAMESPACE_END(core)

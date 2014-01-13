@@ -67,7 +67,7 @@ PUBLIC_API int main(int argc, const char* argv[])
 	// left out not implemented stuff yet
 	std::shared_ptr<Hypodermic::IContainer> container = containerBuilder.build();
 	std::shared_ptr<gamelib::core::LoggerFactory> loggerFactory = container->resolve<gamelib::core::LoggerFactory>();
-	gamelibI = gamelib::client::newInstance(loggerFactory->getDefaultLogger());
+	gamelibI = gamelib::client::newInstance(loggerFactory->getUILogger());
 	gamelibI->init(argc, argv, container.get());
 	gamelibI->startEventLoop();
 	gamelibI->onShutdown();
