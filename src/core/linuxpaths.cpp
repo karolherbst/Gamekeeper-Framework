@@ -18,41 +18,15 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef GAMELIB_CORE_OSPATHS_H
-#define GAMELIB_CORE_OSPATHS_H 1
+#include "pch.h"
 
-#include <gamelib/core/common.h>
-
-#include <gamelib/core/interface.h>
-
-#include <boost/filesystem/path.hpp>
+#include "linuxpaths.h"
 
 GAMELIB_NAMESPACE_START(core)
 
-/**
- * @interface OSPaths ospaths.h <gamelib/core/ospaths.h>
- *
- * this interface provides all methods to get OS specific paths like where should config files be stored
- *
- * @author Karol Herbst
- * @since 0
- */
-interface PUBLIC_API OSPaths
+boost::filesystem::path getConfigFile(std::string name)
 {
-	PUBLIC_API GAMELIB_INTERFACE_DESTRUCTOR(OSPaths)
-
-	/**
-	 * returns the file with the given name from the config paths
-	 *
-	 * @author Karol Herbst
-	 * @since 0
-	 *
-	 * @param name the file name
-	 * @return the resolved file
-	 */
-	PUBLIC_API GAMELIB_INTERFACE_METHOD(boost::filesystem::path getConfigFile(std::string name));
-};
+	return "$HOME/.config/gamelib";
+}
 
 GAMELIB_NAMESPACE_END(core)
-
-#endif //GAMELIB_CORE_OSPATHS_H

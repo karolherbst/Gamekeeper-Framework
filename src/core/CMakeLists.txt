@@ -4,6 +4,16 @@ include_directories(
   ${LOG4CPP_INCLUDE_DIR}
 )
 
+if(LINUX)
+  file(GLOB linux_headers
+    linuxpaths.h
+  )
+
+  file(GLOB linux_sources
+    linuxpaths.cpp
+  )
+endif()
+
 file(GLOB headers
   pch.h
   curlFileDownloader.h
@@ -11,6 +21,7 @@ file(GLOB headers
   log4cppLogger.h
   log4cpploggerFactory.h
   log4cppLoggerStream.h
+  ${linux_headers}
 )
 
 file(GLOB sources
@@ -19,6 +30,7 @@ file(GLOB sources
   log4cppLogger.cpp
   log4cpploggerFactory.cpp
   log4cppLoggerStream.cpp
+  ${linux_sources}
 )
 
 add_library(gamelibCore STATIC ${sources} ${headers})
