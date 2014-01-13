@@ -8,3 +8,8 @@ add_subdirectory(client)
 add_subdirectory(core)
 add_subdirectory(frontend)
 add_subdirectory(model)
+
+# some important dependencies
+if(NOT HYPODERMIC_FOUND)
+  add_dependencies(gamelibClient hypodermic)
+endif()
