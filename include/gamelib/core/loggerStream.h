@@ -54,6 +54,16 @@ public:
 	 * @return the logger stream itself
 	 */
 	PUBLIC_API GAMELIB_INTERFACE_METHOD(LoggerStream& operator<<(const std::string& str));
+
+	/**
+	 * This methods flushes the stream
+	 *
+	 * @author Karol Herbst
+	 * @since 0
+	 *
+	 * @return the logger stream itself
+	 */
+	PUBLIC_API GAMELIB_INTERFACE_METHOD(LoggerStream& flush());
 };
 
 /**
@@ -71,6 +81,35 @@ PUBLIC_API LoggerStream& operator<<(LoggerStream& loggerStream, const T& t)
 {
 	loggerStream << boost::lexical_cast<std::string>(t);
 	return loggerStream;
+}
+
+/**
+ * this operator<< overloading allows function to be called on top of a logger stream
+ *
+ * @author Karol Herbst
+ * @since 0
+ *
+ * @param loggerstream the stream on which func will be applied
+ * @param func the function to be called on loggerstream
+ * @return loggerstream
+ */
+inline PUBLIC_API LoggerStream& operator<<(LoggerStream& loggerstream, LoggerStream& (*func)(LoggerStream&))
+{
+	return func(loggerstream);
+}
+
+/**
+ * flushes the given loggerstream
+ *
+ * @author Karol Herbst
+ * @since 0
+ *
+ * @param loggerstream the stream which should be flushed
+ * @return loggerstream
+ */
+inline PUBLIC_API LoggerStream& endl(LoggerStream& loggerStream)
+{
+	return loggerStream.flush();
 }
 
 GAMELIB_NAMESPACE_END(core)

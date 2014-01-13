@@ -34,4 +34,11 @@ Log4cppLoggerStream::operator<<(const std::string& str)
 	return *this;
 }
 
+LoggerStream&
+Log4cppLoggerStream::flush()
+{
+	this->stream.flush();
+	return *this;
+}
+
 GAMELIB_NAMESPACE_END(core)
