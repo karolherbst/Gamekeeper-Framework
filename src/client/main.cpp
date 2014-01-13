@@ -30,7 +30,9 @@
 #include <Hypodermic/Helpers.h>
 
 #include "../core/curlFileDownloader.h"
+#include "../core/linuxinformation.h"
 #include "../core/log4cpploggerFactory.h"
+#include "../core/xdgpaths.h"
 
 static gamelib::client::GameLibUI* gamelibI = nullptr;
 
@@ -60,6 +62,12 @@ PUBLIC_API int main(int argc, const char* argv[])
 		// set up IoC container
 		containerBuilder.registerType<Log4cppLoggerFactory>()->
 		        as<LoggerFactory>()->
+		        singleInstance();
+		containerBuilder.registerType<LinuxInformation>()->
+		        as<OSInformation>()->
+		        singleInstance();
+		containerBuilder.registerType<XDGPaths>()->
+		        as<OSPaths>()->
 		        singleInstance();
 		containerBuilder.registerType<CurlFileDownloader>(CREATE(new CurlFileDownloader(INJECT(LoggerFactory))))->
 		        as<FileDownloader>()->
