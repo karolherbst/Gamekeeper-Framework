@@ -18,38 +18,20 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef GAMELIB_CORE_LOGGERFACTORY_H
-#define GAMELIB_CORE_LOGGERFACTORY_H 1
+#include "pch.h"
 
-#include <gamelib/core/common.h>
-
-#include <gamelib/core/interface.h>
+#include "log4cppLoggerStream.h"
 
 GAMELIB_NAMESPACE_START(core)
 
-class Logger;
+Log4cppLoggerStream::Log4cppLoggerStream(log4cpp::CategoryStream log4cppStream)
+:	stream(log4cppStream){}
 
-/**
- * @interface LoggerFactory loggerFactory.h <gamelib/core/loggerFactory.h>
- *
- * This interface is used to create Logger instances
- * 
- * @author Karol Herbst
- * @since 0
- */
-interface PRIVATE_API LoggerFactory
+LoggerStream&
+Log4cppLoggerStream::operator<<(const std::string& str)
 {
-	GAMELIB_INTERFACE_DESTRUCTOR(LoggerFactory)
-
-	/**
-	 * @author Karol Herbst
-	 * @since 0
-	 *
-	 * @return the default logger
-	 */
-	PRIVATE_API GAMELIB_INTERFACE_METHOD(Logger& getDefaultLogger());
-};
+	this->stream << str;
+	return *this;
+}
 
 GAMELIB_NAMESPACE_END(core)
-
-#endif //GAMELIB_CORE_LOGGERFACTORY_H

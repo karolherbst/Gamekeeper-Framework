@@ -42,7 +42,7 @@ GAMELIB_NAMESPACE_START(core)
 interface PUBLIC_API LoggerStream
 {
 public:
-	GAMELIB_INTERFACE_DESTRUCTOR(LoggerStream);
+	GAMELIB_INTERFACE_DESTRUCTOR(LoggerStream)
 	
 	/**
 	 * This methods logs the given string into the logger Stream
@@ -70,6 +70,7 @@ template <typename T>
 PUBLIC_API LoggerStream& operator<<(LoggerStream& loggerStream, const T& t)
 {
 	loggerStream << boost::lexical_cast<std::string>(t);
+	return loggerStream;
 }
 
 GAMELIB_NAMESPACE_END(core)

@@ -93,7 +93,7 @@ class LoggerStream;
 interface PUBLIC_API Logger
 {
 public:
-	GAMELIB_INTERFACE_DESTRUCTOR(Logger);
+	GAMELIB_INTERFACE_DESTRUCTOR(Logger)
 
 	/**
 	 * Stream based log method
@@ -106,7 +106,7 @@ public:
 	 * @param logLevel the log Level
 	 * @return a loggerStream
 	 */
-	PUBLIC_API GAMELIB_INTERFACE_METHOD(LoggerStream& operator<<(const LOG_LEVEL& logLevel) const);
+	PUBLIC_API GAMELIB_INTERFACE_METHOD(LoggerStream& operator<<(const LOG_LEVEL& logLevel));
 };
 
 GAMELIB_NAMESPACE_END(core)
