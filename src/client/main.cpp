@@ -22,6 +22,8 @@
 
 #include <gamelib/core/common.h>
 
+#include <gamelib/core/logger.h>
+#include <gamelib/core/loggerStream.h>
 #include <gamelib/client/gamelib.h>
 
 #include <Hypodermic/ContainerBuilder.h>
@@ -67,7 +69,8 @@ PUBLIC_API int main(int argc, const char* argv[])
 	// left out not implemented stuff yet
 	std::shared_ptr<Hypodermic::IContainer> container = containerBuilder.build();
 	std::shared_ptr<gamelib::core::LoggerFactory> loggerFactory = container->resolve<gamelib::core::LoggerFactory>();
-	gamelibI = gamelib::client::newInstance(loggerFactory->getUILogger());
+	loggerFactory->getComponentLogger("main") << gamelib::core::LOG_LEVEL::DEBUG << "firing up gamelib" << gamelib::core::endl;
+	gamelibI = gamelib::client::newInstance(loggerFactory->getComponentLogger("UI"));
 	gamelibI->init(argc, argv, container.get());
 	gamelibI->startEventLoop();
 	gamelibI->onShutdown();

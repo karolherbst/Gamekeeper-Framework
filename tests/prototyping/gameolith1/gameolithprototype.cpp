@@ -1,6 +1,8 @@
 #include "gameolithprototype.h"
 
 #include <gamelib/core/httpfiledownloader.h>
+#include <gamelib/core/logger.h>
+#include <gamelib/core/loggerStream.h>
 #include <gamelib/model/game.h>
 
 #include <boost/algorithm/string/predicate.hpp>
@@ -9,9 +11,10 @@
 #include <json/reader.h>
 #include <json/value.h>
 
-GAMECLIENTUI_CLASS(GameolithPrototype);
+GAMECLIENTUI_CLASS(GameolithPrototype)
 
 using gamelib::model::Game;
+using namespace gamelib::core;
 
 static std::shared_ptr<gamelib::core::HttpFileDownloader> fileDownloader;
 
@@ -93,7 +96,7 @@ GameolithPrototype::init(int argc, const char* argv[], Hypodermic::IContainer * 
 void
 GameolithPrototype::onShutdown()
 {
-	std::cout << "shutdown" << std::endl;
+	this->logger << LOG_LEVEL::DEBUG << "shutdown" << endl;
 }
 
 bool
@@ -115,7 +118,7 @@ GameolithPrototype::handleRequest(void * const buffer, size_t sz, size_t n)
 		for (auto pair : games)
 		{
 			const Game * game = pair.second;
-			std::cout << game->getName() << ' ' << game->getId() << std::endl;
+			this->logger << LOG_LEVEL::DEBUG << game->getName() << ' ' << game->getId() << endl;
 		}
 		return true;
 	}
@@ -125,7 +128,7 @@ GameolithPrototype::handleRequest(void * const buffer, size_t sz, size_t n)
 void
 GameolithPrototype::startEventLoop()
 {
-	std::cout << "starting gameolith test" << std::endl;
+	this->logger << LOG_LEVEL::DEBUG << "starting gameolith test" << endl;
 	fileDownloader->downloadFile("https://www.gameolith.com/user/karolherbst/games/?format=json",
 	                             [this](void * const buffer, size_t bufferSize, size_t dataLength) -> bool
 	{

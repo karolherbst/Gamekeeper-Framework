@@ -24,7 +24,6 @@
 
 #include "log4cppLogger.h"
 
-#include <log4cpp/Appender.hh>
 #include <log4cpp/Category.hh>
 #include <log4cpp/OstreamAppender.hh>
 #include <log4cpp/PatternLayout.hh>
@@ -33,34 +32,35 @@
 GAMELIB_NAMESPACE_START(core)
 
 Log4cppLoggerFactory::Log4cppLoggerFactory()
+:	rootCategory(log4cpp::Category::getRoot()),
+	appender(new log4cpp::OstreamAppender("console", &std::cout))
 {
-	log4cpp::Appender *appender = new log4cpp::OstreamAppender("console", &std::cout);
 	log4cpp::PatternLayout * layout = new log4cpp::PatternLayout();
 	layout->setConversionPattern("%d{%Y-%m-%d %H:%M:%S} [%c] %p: %m%n");
-	appender->setLayout(layout);
+	this->appender->setLayout(layout);
 
-	log4cpp::Category& rootCategory = log4cpp::Category::getInstance("GameLib Root");
 	rootCategory.setPriority(log4cpp::Priority::DEBUG);
-	rootCategory.addAppender(appender);
+	rootCategory.addAppender(this->appender);
 
-	log4cpp::Category& uiCategory = log4cpp::Category::getInstance("UI");
-	uiCategory.setPriority(log4cpp::Priority::DEBUG);
-	uiCategory.addAppender(appender);
-
-	this->rootLogger = new Log4cppLogger(rootCategory);
-	this->uiLogger = new Log4cppLogger(uiCategory);
+	this->rootLogger = new Log4cppLogger(this->rootCategory);
 }
 
 Logger&
 Log4cppLoggerFactory::getDefaultLogger()
 {
-	return *this->rootLogger;
+	return getComponentLogger("Default");
 }
 
 Logger&
-Log4cppLoggerFactory::getUILogger()
+Log4cppLoggerFactory::getComponentLogger(const char * const id)
 {
-	return *this->uiLogger;
+	if(this->loggers.find(id) == this->loggers.end())
+	{
+		Logger * newLogger = new Log4cppLogger(log4cpp::Category::getInstance(id));
+		this->loggers.insert(std::make_pair(id, newLogger));
+		return *newLogger;
+	}
+	return *this->rootLogger;
 }
 
 Log4cppLoggerFactory::~Log4cppLoggerFactory()
@@ -70,9 +70,9 @@ Log4cppLoggerFactory::~Log4cppLoggerFactory()
 		delete this->rootLogger;
 	}
 
-	if (this->uiLogger != nullptr)
+	for (auto entry : this->loggers)
 	{
-		delete this->uiLogger;
+		delete entry.second;
 	}
 }
 

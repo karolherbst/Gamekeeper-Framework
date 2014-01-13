@@ -53,9 +53,10 @@ interface PRIVATE_API LoggerFactory
 	 * @author Karol Herbst
 	 * @since 0
 	 *
-	 * @return the UI logger
+	 * @param id the id of the component
+	 * @return a logger with the given id
 	 */
-	PRIVATE_API GAMELIB_INTERFACE_METHOD(Logger& getUILogger());
+	PRIVATE_API GAMELIB_INTERFACE_METHOD(Logger& getComponentLogger(const char * const id));
 };
 
 GAMELIB_NAMESPACE_END(core)
