@@ -32,4 +32,10 @@ LinuxInformation::getEnv(const char * name)
 	return getenv(name);
 }
 
+std::string
+LinuxInformation::getSystemRoot()
+{
+	return "/";
+}
+
 GAMELIB_NAMESPACE_END(core)

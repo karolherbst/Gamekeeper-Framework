@@ -31,6 +31,7 @@ class PRIVATE_API LinuxInformation : public OSInformation
 {
 public:
 	PRIVATE_API GAMELIB_IMPLEMENTATION_OVERRIDE(std::string getEnv(const char * name));
+	PRIVATE_API GAMELIB_IMPLEMENTATION_OVERRIDE(std::string getSystemRoot());
 };
 
 GAMELIB_NAMESPACE_END(core)

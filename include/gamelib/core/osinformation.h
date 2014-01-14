@@ -51,6 +51,16 @@ interface PUBLIC_API OSInformation
 	 * @return the resolved file
 	 */
 	PUBLIC_API GAMELIB_INTERFACE_METHOD(std::string getEnv(const char * name));
+
+	/**
+	 * returns the path to the filesystem root of the system partition
+	 *
+	 * @author Karol Herbst
+	 * @since 0
+	 *
+	 * @return the path
+	 */
+	PUBLIC_API GAMELIB_INTERFACE_METHOD(std::string getSystemRoot());
 };
 
 GAMELIB_NAMESPACE_END(core)
