@@ -38,4 +38,10 @@ LinuxInformation::getSystemRoot()
 	return "/";
 }
 
+std::string
+LinuxInformation::getUserPath()
+{
+	return getEnv("HOME");
+}
+
 GAMELIB_NAMESPACE_END(core)

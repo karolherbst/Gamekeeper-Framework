@@ -61,6 +61,16 @@ interface PUBLIC_API OSInformation
 	 * @return the path
 	 */
 	PUBLIC_API GAMELIB_INTERFACE_METHOD(std::string getSystemRoot());
+
+	/**
+	 * returns the path to the user directory
+	 *
+	 * @author Karol Herbst
+	 * @since 0
+	 *
+	 * @return the path
+	 */
+	PUBLIC_API GAMELIB_INTERFACE_METHOD(std::string getUserPath());
 };
 
 GAMELIB_NAMESPACE_END(core)
