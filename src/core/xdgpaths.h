@@ -35,6 +35,8 @@ class PRIVATE_API XDGPaths : public OSPaths
 public:
 	PRIVATE_API XDGPaths(std::shared_ptr<OSInformation>);
 	PRIVATE_API GAMELIB_IMPLEMENTATION_OVERRIDE(boost::filesystem::path getConfigFile(std::string name));
+private:
+	std::string home;
 };
 
 GAMELIB_NAMESPACE_END(core)

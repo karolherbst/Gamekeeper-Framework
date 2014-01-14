@@ -24,15 +24,15 @@
 
 GAMELIB_NAMESPACE_START(core)
 
-XDGPaths::XDGPaths(std::shared_ptr<OSInformation>)
-{
+using namespace boost::filesystem;
 
-}
+XDGPaths::XDGPaths(std::shared_ptr<OSInformation> osInformation)
+:	home(osInformation->getEnv("HOME")){}
 
-boost::filesystem::path
+path
 XDGPaths::getConfigFile(std::string name)
 {
-	return "$HOME/.config/gamelib";
+	return path(this->home) / ".config" / "gamelib";
 }
 
 GAMELIB_NAMESPACE_END(core)

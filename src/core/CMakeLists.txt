@@ -1,5 +1,6 @@
 include_directories(
   ${CMAKE_CURRENT_SOURCE_DIR}
+  ${Boost_INCLUDE_DIRS}
   ${HYPODERMIC_INCLUDE_DIRS}
   ${LOG4CPP_INCLUDE_DIR}
 )
@@ -37,6 +38,7 @@ file(GLOB sources
 
 add_library(gamelibCore STATIC ${sources} ${headers})
 target_link_libraries(gamelibCore
+  ${Boost_FILESYSTEM_LIBRARY}
   ${CURL_LIBRARIES}
   ${LOG4CPP_LIBRARIES}
 )
