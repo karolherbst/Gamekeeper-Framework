@@ -34,6 +34,10 @@ GAMELIB_NAMESPACE_START(core)
  *
  * this interface provides all methods to get OS specific paths like where should config files be stored
  *
+ * All methods can return a path to a non existing file, which can be written to at any time. All methods will try to
+ * resolve files relative to the home directory of the current user first and only in system wide paths if no files were
+ * found (optional).
+ *
  * @author Karol Herbst
  * @since 0
  */
@@ -51,6 +55,39 @@ interface PUBLIC_API OSPaths
 	 * @return the resolved file
 	 */
 	PUBLIC_API GAMELIB_INTERFACE_METHOD(boost::filesystem::path getConfigFile(std::string name));
+
+	/**
+	 * returns the file with the given name from the data paths
+	 *
+	 * @author Karol Herbst
+	 * @since 0
+	 *
+	 * @param name the file name
+	 * @return the resolved file
+	 */
+	PUBLIC_API GAMELIB_INTERFACE_METHOD(boost::filesystem::path getDataFile(std::string name));
+
+	/**
+	 * returns the file with the given name from the cache paths
+	 *
+	 * @author Karol Herbst
+	 * @since 0
+	 *
+	 * @param name the file name
+	 * @return the resolved file
+	 */
+	PUBLIC_API GAMELIB_INTERFACE_METHOD(boost::filesystem::path getCacheFile(std::string name));
+
+	/**
+	 * returns the file with the given name from the runtime paths
+	 *
+	 * @author Karol Herbst
+	 * @since 0
+	 *
+	 * @param name the file name
+	 * @return the resolved file
+	 */
+	PUBLIC_API GAMELIB_INTERFACE_METHOD(boost::filesystem::path getRuntimeFile(std::string name));
 };
 
 GAMELIB_NAMESPACE_END(core)

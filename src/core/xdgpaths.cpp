@@ -26,13 +26,34 @@ GAMELIB_NAMESPACE_START(core)
 
 using namespace boost::filesystem;
 
-XDGPaths::XDGPaths(std::shared_ptr<OSInformation> osInformation)
-:	home(osInformation->getEnv("HOME")){}
+const std::string XDGPaths::prefix = "gamelib";
+
+XDGPaths::XDGPaths(std::shared_ptr<OSInformation> _osInformation)
+:	osInformation(_osInformation),
+	home(_osInformation->getEnv("HOME")){}
 
 path
 XDGPaths::getConfigFile(std::string name)
 {
-	return path(this->home) / ".config" / "gamelib" / name;
+	return path(this->home) / ".config" / XDGPaths::prefix / name;
+}
+
+path
+XDGPaths::getDataFile(std::string name)
+{
+	return path(this->home) / ".local" / "share" / XDGPaths::prefix / name;
+}
+
+path
+XDGPaths::getCacheFile(std::string name)
+{
+	return path(this->home) / ".cache" / XDGPaths::prefix / name;
+}
+
+path
+XDGPaths::getRuntimeFile(std::string name)
+{
+	return path(this->osInformation->getSystemRoot()) / "tmp" / XDGPaths::prefix / name;
 }
 
 GAMELIB_NAMESPACE_END(core)
