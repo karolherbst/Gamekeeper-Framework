@@ -21,9 +21,11 @@
 #ifndef GAMELIB_MODEL_GAMEBINDING_H
 #define GAMELIB_MODEL_GAMEBINDING_H 1
 
-#include <gamelib/model/game.h>
+#include <gamelib/core/common.h>
 
 #include <string>
+
+#include <gamelib/model/game.h>
 
 GAMELIB_NAMESPACE_START(model)
 

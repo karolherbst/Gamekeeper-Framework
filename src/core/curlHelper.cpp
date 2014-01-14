@@ -23,8 +23,8 @@
 #include "curlHelper.h"
 
 #include <algorithm>
-#include <sstream>
 #include <iostream>
+#include <sstream>
 
 #include <boost/algorithm/string/classification.hpp>
 #include <boost/algorithm/string/split.hpp>

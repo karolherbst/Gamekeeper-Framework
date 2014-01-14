@@ -21,7 +21,6 @@
 #include "pch.h"
 
 #include "log4cppLogger.h"
-
 #include "log4cppLoggerStream.h"
 
 #include <log4cpp/Category.hh>

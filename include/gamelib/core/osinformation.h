@@ -23,9 +23,9 @@
 
 #include <gamelib/core/common.h>
 
-#include <gamelib/core/interface.h>
-
 #include <string>
+
+#include <gamelib/core/interface.h>
 
 GAMELIB_NAMESPACE_START(core)
 

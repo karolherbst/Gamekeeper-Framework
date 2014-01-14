@@ -23,11 +23,11 @@
 
 #include <gamelib/core/common.h>
 
-#include <gamelib/core/logger.h>
+#include "log4cppLoggerStream.h"
 
 #include <map>
 
-#include "log4cppLoggerStream.h"
+#include <gamelib/core/logger.h>
 
 namespace log4cpp
 {

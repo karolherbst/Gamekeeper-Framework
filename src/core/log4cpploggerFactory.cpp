@@ -20,9 +20,8 @@
 
 #include "pch.h"
 
-#include "log4cpploggerFactory.h"
-
 #include "log4cppLogger.h"
+#include "log4cpploggerFactory.h"
 
 #include <log4cpp/Category.hh>
 #include <log4cpp/OstreamAppender.hh>

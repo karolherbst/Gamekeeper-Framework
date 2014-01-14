@@ -23,9 +23,9 @@
 
 #include <gamelib/core/common.h>
 
-#include <gamelib/core/httpfiledownloader.h>
-
 #include <memory>
+
+#include <gamelib/core/httpfiledownloader.h>
 
 GAMELIB_NAMESPACE_START(core)
 

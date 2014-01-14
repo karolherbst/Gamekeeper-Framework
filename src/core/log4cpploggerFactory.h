@@ -23,9 +23,9 @@
 
 #include <gamelib/core/common.h>
 
-#include <gamelib/core/loggerFactory.h>
-
 #include <unordered_map>
+
+#include <gamelib/core/loggerFactory.h>
 
 namespace log4cpp
 {

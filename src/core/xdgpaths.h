@@ -23,10 +23,10 @@
 
 #include <gamelib/core/common.h>
 
+#include <memory>
+
 #include <gamelib/core/osinformation.h>
 #include <gamelib/core/ospaths.h>
-
-#include <memory>
 
 GAMELIB_NAMESPACE_START(core)
 
