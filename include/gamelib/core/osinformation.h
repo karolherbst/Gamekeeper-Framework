@@ -53,6 +53,16 @@ interface PUBLIC_API OSInformation
 	PUBLIC_API GAMELIB_INTERFACE_METHOD(std::string getEnv(const char * name));
 
 	/**
+	 * This method should return the seperator used in environment variables to seperate multiple paths
+	 *
+	 * @author Karol Herbst
+	 * @since 0
+	 *
+	 * @return the seperator
+	 */
+	PUBLIC_API GAMELIB_INTERFACE_METHOD(std::string getEnvSeperator());
+
+	/**
 	 * returns the path to the filesystem root of the system partition
 	 *
 	 * @author Karol Herbst

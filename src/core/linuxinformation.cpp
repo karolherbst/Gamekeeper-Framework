@@ -33,6 +33,12 @@ LinuxInformation::getEnv(const char * name)
 }
 
 std::string
+LinuxInformation::getEnvSeperator()
+{
+	return ":";
+}
+
+std::string
 LinuxInformation::getSystemRoot()
 {
 	return "/";
