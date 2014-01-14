@@ -32,7 +32,7 @@ XDGPaths::XDGPaths(std::shared_ptr<OSInformation> osInformation)
 path
 XDGPaths::getConfigFile(std::string name)
 {
-	return path(this->home) / ".config" / "gamelib";
+	return path(this->home) / ".config" / "gamelib" / name;
 }
 
 GAMELIB_NAMESPACE_END(core)
