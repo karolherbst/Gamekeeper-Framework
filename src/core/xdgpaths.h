@@ -42,7 +42,6 @@ private:
 	static const std::string prefix;
 
 	std::shared_ptr<OSInformation> osInformation;
-	std::string home;
 };
 
 GAMELIB_NAMESPACE_END(core)

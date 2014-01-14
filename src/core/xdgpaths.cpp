@@ -29,25 +29,24 @@ using namespace boost::filesystem;
 const std::string XDGPaths::prefix = "gamelib";
 
 XDGPaths::XDGPaths(std::shared_ptr<OSInformation> _osInformation)
-:	osInformation(_osInformation),
-	home(_osInformation->getEnv("HOME")){}
+:	osInformation(_osInformation){}
 
 path
 XDGPaths::getConfigFile(std::string name)
 {
-	return path(this->home) / ".config" / XDGPaths::prefix / name;
+	return path(this->osInformation->getUserPath()) / ".config" / XDGPaths::prefix / name;
 }
 
 path
 XDGPaths::getDataFile(std::string name)
 {
-	return path(this->home) / ".local" / "share" / XDGPaths::prefix / name;
+	return path(this->osInformation->getUserPath()) / ".local" / "share" / XDGPaths::prefix / name;
 }
 
 path
 XDGPaths::getCacheFile(std::string name)
 {
-	return path(this->home) / ".cache" / XDGPaths::prefix / name;
+	return path(this->osInformation->getUserPath()) / ".cache" / XDGPaths::prefix / name;
 }
 
 path
