@@ -29,10 +29,10 @@
 #include <Hypodermic/ContainerBuilder.h>
 #include <Hypodermic/Helpers.h>
 
-#include "../core/curlFileDownloader.h"
-#include "../core/linuxinformation.h"
-#include "../core/log4cpploggerFactory.h"
-#include "../core/xdgpaths.h"
+#include <gamelib/core/curlFileDownloader.h>
+#include <gamelib/core/linuxinformation.h>
+#include <gamelib/core/log4cpploggerFactory.h>
+#include <gamelib/core/xdgpaths.h>
 
 static gamelib::client::GameLibUI* gamelibI = nullptr;
 

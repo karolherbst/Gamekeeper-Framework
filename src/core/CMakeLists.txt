@@ -1,4 +1,5 @@
 include_directories(
+  ${GAMELIB_PRIVATE_INCLUDE_DIR}/gamelib/core
   ${CMAKE_CURRENT_SOURCE_DIR}
   ${Boost_INCLUDE_DIRS}
   ${HYPODERMIC_INCLUDE_DIRS}
