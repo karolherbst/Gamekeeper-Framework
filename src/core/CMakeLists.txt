@@ -36,7 +36,7 @@ file(GLOB sources
   ${linux_sources}
 )
 
-add_library(gamelibCore STATIC ${sources} ${headers})
+add_library(gamelibCore SHARED ${sources} ${headers})
 target_link_libraries(gamelibCore
   ${Boost_FILESYSTEM_LIBRARY}
   ${CURL_LIBRARIES}

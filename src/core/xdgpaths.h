@@ -30,10 +30,10 @@
 
 GAMELIB_NAMESPACE_START(core)
 
-class PRIVATE_API XDGPaths : public OSPaths
+class PUBLIC_API XDGPaths : public OSPaths
 {
 public:
-	PRIVATE_API XDGPaths(std::shared_ptr<OSInformation>);
+	PUBLIC_API XDGPaths(std::shared_ptr<OSInformation>);
 	PRIVATE_API GAMELIB_IMPLEMENTATION_OVERRIDE(boost::filesystem::path getConfigFile(std::string name));
 	PRIVATE_API GAMELIB_IMPLEMENTATION_OVERRIDE(boost::filesystem::path getDataFile(std::string name));
 	PRIVATE_API GAMELIB_IMPLEMENTATION_OVERRIDE(boost::filesystem::path getCacheFile(std::string name));

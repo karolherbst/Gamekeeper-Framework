@@ -37,10 +37,10 @@ GAMELIB_NAMESPACE_START(core)
 
 class Logger;
 
-class PRIVATE_API Log4cppLoggerFactory : public LoggerFactory
+class PUBLIC_API Log4cppLoggerFactory : public LoggerFactory
 {
 public:
-	PRIVATE_API Log4cppLoggerFactory();
+	PUBLIC_API Log4cppLoggerFactory();
 	PRIVATE_API GAMELIB_IMPLEMENTATION_OVERRIDE(Logger& getDefaultLogger());
 	PRIVATE_API GAMELIB_IMPLEMENTATION_OVERRIDE(Logger& getComponentLogger(const char * const id));
 	PRIVATE_API GAMELIB_IMPLEMENTATION_OVERRIDE(~Log4cppLoggerFactory());

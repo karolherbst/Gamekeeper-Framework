@@ -27,7 +27,7 @@
 
 GAMELIB_NAMESPACE_START(core)
 
-class PRIVATE_API LinuxInformation : public OSInformation
+class PUBLIC_API LinuxInformation : public OSInformation
 {
 public:
 	PRIVATE_API GAMELIB_IMPLEMENTATION_OVERRIDE(std::string getEnv(const char * name));
