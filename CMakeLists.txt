@@ -55,6 +55,7 @@ endif()
 
 # gtest
 if(BUILD_TESTS)
+  enable_testing()
   find_package(GTest)
   
   if(NOT GTEST_FOUND)
