@@ -21,7 +21,7 @@ protected:
 	OSInformation * osInfo = nullptr;
 };
 
-TEST_F(LinuxInformationTest, testEnvMethodConsistent) {
+TEST_F(LinuxInformationTest, getEnvConsistency) {
 	// test that the stored char is not the same
 	std::string home = osInfo->getEnv("HOME");
 	std::string path = osInfo->getEnv("PATH");
