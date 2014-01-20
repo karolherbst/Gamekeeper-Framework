@@ -122,6 +122,7 @@ void
 CurlHelper::deleteCURL(CURL * curl)
 {
 	delete curlData[curl];
+	curlData.erase(curl);
 	curl_easy_cleanup(curl);
 }
 
