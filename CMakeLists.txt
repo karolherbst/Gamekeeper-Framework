@@ -41,17 +41,17 @@ include(SetInstallPaths)
 # dependency management
 #######################################################################################################################
 
-# boost
-find_package(Boost 1.44 COMPONENTS filesystem system ${REQUIRED_ON_LINUX})
-
-# curl
-find_package(CURL ${REQUIRED_ON_UNIX})
-
 # hypdermic
 find_package(Hypodermic)
 if(NOT HYPODERMIC_FOUND)
   include(BuildHypodermic)
 endif()
+
+# boost
+find_package(Boost 1.44 COMPONENTS filesystem system ${REQUIRED_ON_LINUX})
+
+# curl
+find_package(CURL ${REQUIRED_ON_UNIX})
 
 # gtest
 if(BUILD_TESTS)
