@@ -8,5 +8,7 @@ endif()
 
 # some important dependencies
 if(NOT GTEST_FOUND)
-  add_dependencies(gamelibUnitTests gtest)
+  if(BUILD_TESTS)
+    add_dependencies(gamelibUnitTests gtest)
+  endif()
 endif()
