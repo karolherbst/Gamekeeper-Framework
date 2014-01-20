@@ -44,7 +44,7 @@ include(SetInstallPaths)
 # hypdermic
 find_package(Hypodermic)
 if(NOT HYPODERMIC_FOUND)
-  set(boostAdditionalComponents signals test)
+  set(boostAdditionalComponents signals)
   include(BuildHypodermic)
 endif()
 
