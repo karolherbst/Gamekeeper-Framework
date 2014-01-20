@@ -44,11 +44,12 @@ include(SetInstallPaths)
 # hypdermic
 find_package(Hypodermic)
 if(NOT HYPODERMIC_FOUND)
+  set(boostAdditionalComponents signals test)
   include(BuildHypodermic)
 endif()
 
 # boost
-find_package(Boost 1.44 COMPONENTS filesystem system ${REQUIRED_ON_LINUX})
+find_package(Boost 1.44 COMPONENTS filesystem system ${boostAdditionalComponents} ${REQUIRED_ON_LINUX})
 
 # curl
 find_package(CURL ${REQUIRED_ON_UNIX})
