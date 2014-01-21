@@ -8,7 +8,7 @@ include_directories(
 
 if(LINUX)
   file(GLOB linux_headers
-    linuxinformation.h
+    ${GAMELIB_PRIVATE_INCLUDE_DIR}/gamelib/core/linuxinformation.h
   )
 
   file(GLOB linux_sources
@@ -18,12 +18,12 @@ endif()
 
 file(GLOB headers
   pch.h
-  curlFileDownloader.h
-  curlHelper.h
-  log4cppLogger.h
-  log4cpploggerFactory.h
-  log4cppLoggerStream.h
-  xdgpaths.h
+  ${GAMELIB_PRIVATE_INCLUDE_DIR}/gamelib/core/curlFileDownloader.h
+  ${GAMELIB_PRIVATE_INCLUDE_DIR}/gamelib/core/curlHelper.h
+  ${GAMELIB_PRIVATE_INCLUDE_DIR}/gamelib/core/log4cppLogger.h
+  ${GAMELIB_PRIVATE_INCLUDE_DIR}/gamelib/core/log4cpploggerFactory.h
+  ${GAMELIB_PRIVATE_INCLUDE_DIR}/gamelib/core/log4cppLoggerStream.h
+  ${GAMELIB_PRIVATE_INCLUDE_DIR}/gamelib/core/xdgpaths.h
   ${linux_headers}
 )
 
