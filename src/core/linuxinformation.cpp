@@ -38,13 +38,13 @@ LinuxInformation::getEnvSeperator()
 	return ":";
 }
 
-std::string
+boost::filesystem::path
 LinuxInformation::getSystemRoot()
 {
 	return "/";
 }
 
-std::string
+boost::filesystem::path
 LinuxInformation::getUserPath()
 {
 	return getEnv("HOME");

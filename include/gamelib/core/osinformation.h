@@ -27,6 +27,8 @@
 
 #include <gamelib/core/interface.h>
 
+#include <boost/filesystem/path.hpp>
+
 GAMELIB_NAMESPACE_START(core)
 
 /**
@@ -70,7 +72,7 @@ interface PUBLIC_API OSInformation
 	 *
 	 * @return the path
 	 */
-	PUBLIC_API GAMELIB_INTERFACE_METHOD(std::string getSystemRoot());
+	PUBLIC_API GAMELIB_INTERFACE_METHOD(boost::filesystem::path getSystemRoot());
 
 	/**
 	 * returns the path to the user directory
@@ -80,7 +82,7 @@ interface PUBLIC_API OSInformation
 	 *
 	 * @return the path
 	 */
-	PUBLIC_API GAMELIB_INTERFACE_METHOD(std::string getUserPath());
+	PUBLIC_API GAMELIB_INTERFACE_METHOD(boost::filesystem::path getUserPath());
 };
 
 GAMELIB_NAMESPACE_END(core)
