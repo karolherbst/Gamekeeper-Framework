@@ -42,6 +42,10 @@ private:
 	static const std::string prefix;
 
 	std::shared_ptr<OSInformation> osInformation;
+
+	PRIVATE_API boost::filesystem::path resolveFile(const char *, const boost::filesystem::path&, std::string);
+	PRIVATE_API boost::filesystem::path resolveFile(const char *, const boost::filesystem::path&, const char *,
+	                                                const char *, std::string);
 };
 
 GAMELIB_NAMESPACE_END(core)

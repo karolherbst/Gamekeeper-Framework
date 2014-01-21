@@ -22,37 +22,60 @@
 
 #include "xdgpaths.h"
 
+#include <forward_list>
+
+#include <boost/algorithm/string/classification.hpp>
+#include <boost/algorithm/string/split.hpp>
+#include <boost/filesystem/operations.hpp>
+
 GAMELIB_NAMESPACE_START(core)
 
-using namespace boost::filesystem;
+typedef boost::filesystem::path Path;
+using boost::filesystem::is_regular_file;
 
 const std::string XDGPaths::prefix = "gamelib";
+
+#define defaultPath(path) this->osInformation->getUserPath() / path
 
 XDGPaths::XDGPaths(std::shared_ptr<OSInformation> _osInformation)
 :	osInformation(_osInformation){}
 
-path
+Path
 XDGPaths::getConfigFile(std::string name)
 {
-	return path(this->osInformation->getUserPath()) / ".config" / XDGPaths::prefix / name;
+	return resolveFile("XDG_CONFIG_HOME", defaultPath(".config"), "XDG_CONFIG_DIRS", "/etc/xdg", name);
 }
 
-path
+Path
 XDGPaths::getDataFile(std::string name)
 {
-	return path(this->osInformation->getUserPath()) / ".local" / "share" / XDGPaths::prefix / name;
+	return resolveFile("XDG_DATA_HOME", defaultPath(".local" / "share"), "XDG_DATA_DIRS",
+	                   "/usr/local/share/:/usr/share/", name);
 }
 
-path
+Path
 XDGPaths::getCacheFile(std::string name)
 {
-	return path(this->osInformation->getUserPath()) / ".cache" / XDGPaths::prefix / name;
+	return resolveFile("XDG_CACHE_HOME", defaultPath(".cache"), name);
 }
 
-path
+Path
 XDGPaths::getRuntimeFile(std::string name)
 {
-	return path(this->osInformation->getSystemRoot()) / "tmp" / XDGPaths::prefix / name;
+	return resolveFile("XDG_RUNTIME_DIR", this->osInformation->getSystemRoot() / "tmp" / XDGPaths::prefix, name);
+}
+
+Path
+XDGPaths::resolveFile(const char * singlePath, const boost::filesystem::path& singleDefault, std::string fileName)
+{
+	return singleDefault / XDGPaths::prefix / fileName;
+}
+
+Path
+XDGPaths::resolveFile(const char * singlePath, const boost::filesystem::path& singleDefault, const char * multiPath,
+                      const char * multiDefaults, std::string fileName)
+{
+	return singleDefault / XDGPaths::prefix / fileName;
 }
 
 GAMELIB_NAMESPACE_END(core)
