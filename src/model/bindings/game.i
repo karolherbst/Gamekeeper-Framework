@@ -1,4 +1,4 @@
-%module GameLibPy
+%module GAMELIB_BINDING_MODULE
 %{
 #include "gameBinding.h"
 %}
