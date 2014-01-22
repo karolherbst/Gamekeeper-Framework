@@ -16,6 +16,7 @@ cmake_minimum_required(VERSION 2.8)
 set(CMAKE_EXTERNAL_BINARY_DIR "${CMAKE_BINARY_DIR}/external")
 set(CMAKE_COMPILER_PATH "${CMAKE_SOURCE_DIR}/cmake/Compiler")
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/Modules")
+set(CMAKE_GEN_DIR "${CMAKE_BINARY_DIR}/gen")
 
 set(LINUX FALSE)
 if(NOT WIN32)
