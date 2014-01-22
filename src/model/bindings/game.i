@@ -23,7 +23,7 @@ struct GameBinding
 }
 
 // generate attribute like getter and setter only for language, where this is common use
-#ifdef SWIGPYTHON
+#if defined(SWIGPYTHON) || defined(SWIGCSHARP)
 	%attribute(gamelib::model::bindings::GameBinding, const char*, id, getId, setId);
 	%attribute(gamelib::model::bindings::GameBinding, const char*, name, getName, setName);
 #endif
