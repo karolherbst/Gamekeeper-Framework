@@ -73,7 +73,7 @@ if(WITH_CSHARP_BINDINGS OR WITH_JAVA_BINDINGS OR WITH_PYTHON_BINDINGS)
   find_package(SWIG REQUIRED)
   
   if(WITH_CSHARP_BINDINGS)
-    # find file needed for mono/.NET
+    find_package(CSharp REQUIRED)
   endif()
   
   if(WITH_JAVA_BINDINGS)
