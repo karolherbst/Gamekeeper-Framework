@@ -28,6 +28,8 @@
 #include <gamelib/model/game.h>
 
 GAMELIB_NAMESPACE_START(model)
+namespace bindings
+{
 
 class PUBLIC_API GameBinding : public gamelib::model::Game
 {
@@ -43,6 +45,7 @@ public:
 	PUBLIC_API void setName(const char*);
 };
 
+}
 GAMELIB_NAMESPACE_END(model)
 
 #endif //GAMELIB_MODEL_GAMEBINDING_H

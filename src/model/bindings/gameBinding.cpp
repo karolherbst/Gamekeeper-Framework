@@ -23,6 +23,8 @@
 #include "gameBinding.h"
 
 GAMELIB_NAMESPACE_START(model)
+namespace bindings
+{
 
 const char*
 GameBinding::getId() const
@@ -48,4 +50,5 @@ GameBinding::setName(const char* n)
 	this->name = n;
 }
 
+}
 GAMELIB_NAMESPACE_END(model)
