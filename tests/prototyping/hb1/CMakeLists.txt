@@ -19,8 +19,9 @@ file(GLOB otherFiles
 
 add_definitions(
   -DPYMODULENAME="hbprototype"
-  -DPYTHONPATH="${CMAKE_CURRENT_SOURCE_DIR}"
-  -DGAMELIBPYPATH="${CMAKE_BINARY_DIR}/src/model/bindings/python")
+  -DPYMODULEPATH="${CMAKE_CURRENT_SOURCE_DIR}"
+  -DPYTHONPATH="${CMAKE_BINDINGS_OUT_DIR}/python/"
+)
 
 add_executable(HBPrototype ${sources} ${headers} ${otherFiles})
 target_link_libraries(HBPrototype
