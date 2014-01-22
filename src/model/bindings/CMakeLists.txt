@@ -32,6 +32,10 @@ macro(add_gamelib_swig_binding type name)
   swig_link_libraries(${name} gamelibModelBindings)
 endmacro()
 
+if(WITH_CSHARP_BINDINGS)
+  add_subdirectory(csharp)
+endif()
+
 if(WITH_PYTHON_BINDINGS)
   add_subdirectory(python)
 endif()
