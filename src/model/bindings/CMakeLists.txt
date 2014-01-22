@@ -28,3 +28,7 @@ endif()
 if(WITH_PYTHON_BINDINGS)
   add_subdirectory(python)
 endif()
+
+if(WITH_JAVA_BINDINGS)
+  add_subdirectory(java)
+endif()
