@@ -19,5 +19,9 @@ struct GameBinding
 }
 
 %rename(Game) GameBinding;
-%attribute(gamelib::model::GameBinding, const char*, id, getId, setId);
-%attribute(gamelib::model::GameBinding, const char*, name, getName, setName);
+
+// generate attribute like getter and setter only for language, where this is common use
+#ifdef SWIGPYTHON
+	%attribute(gamelib::model::GameBinding, const char*, id, getId, setId);
+	%attribute(gamelib::model::GameBinding, const char*, name, getName, setName);
+#endif
