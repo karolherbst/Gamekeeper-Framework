@@ -25,6 +25,13 @@ if(WITH_CSHARP_BINDINGS OR WITH_JAVA_BINDINGS OR WITH_PYTHON_BINDINGS)
   include(${SWIG_USE_FILE})
 endif()
 
+macro(add_gamelib_swig_binding type name)
+  set_source_files_properties(${swig_sources} PROPERTIES CPLUSPLUS ON)
+  set_source_files_properties(${swig_sources} PROPERTIES SWIG_FLAGS "-DGAMELIB_BINDING_MODULE=${name};${ARGN}")
+  swig_add_module(${name} ${type} ${swig_sources})
+  swig_link_libraries(${name} gamelibModelBindings)
+endmacro()
+
 if(WITH_PYTHON_BINDINGS)
   add_subdirectory(python)
 endif()
