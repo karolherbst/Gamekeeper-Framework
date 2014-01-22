@@ -5,6 +5,8 @@
 
 %include <attribute.i>
 
+%rename(Game) gamelib::model::bindings::GameBinding;
+
 namespace gamelib {
 namespace model {
 namespace bindings {
@@ -18,8 +20,6 @@ struct GameBinding
 };
 }
 }
-
-%rename(Game) GameBinding;
 }
 
 // generate attribute like getter and setter only for language, where this is common use
