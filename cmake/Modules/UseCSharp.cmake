@@ -106,7 +106,7 @@ macro( CSHARP_ADD_PROJECT type name )
     DEPENDS ${sources_dep}
   )
   add_custom_target(
-    ${name} ALL
+    ${name}CSharpCompile ALL
     DEPENDS ${CSHARP_BINARY_DIRECTORY}/${name}.${output}
     SOURCES ${sources_dep}
   )
