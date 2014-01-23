@@ -5,11 +5,11 @@ include_directories(
 
 file(GLOB headers
   pch.h
-  gameBinding.h
+  game.h
 )
 
 file(GLOB sources
-  gameBinding.cpp
+  game.cpp
 )
 
 set(swig_sources

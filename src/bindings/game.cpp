@@ -20,35 +20,35 @@
 
 #include "pch.h"
 
-#include "gameBinding.h"
+#include "game.h"
 
-GAMELIB_NAMESPACE_START(model)
-namespace bindings
+GAMELIB_NAMESPACE_START(bindings)
+namespace model
 {
 
 const char*
-GameBinding::getId() const
+Game::getId() const
 {
 	return this->id.c_str();
 }
 
 const char*
-GameBinding::getName() const
+Game::getName() const
 {
 	return this->name.c_str();
 }
 
 void
-GameBinding::setId(const char* id)
+Game::setId(const char* id)
 {
 	this->id = id;
 }
 
 void
-GameBinding::setName(const char* n)
+Game::setName(const char* n)
 {
 	this->name = n;
 }
 
 }
-GAMELIB_NAMESPACE_END(model)
+GAMELIB_NAMESPACE_END(bindings)

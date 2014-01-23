@@ -18,8 +18,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef GAMELIB_MODEL_GAMEBINDING_H
-#define GAMELIB_MODEL_GAMEBINDING_H 1
+#ifndef GAMELIB_BINDINGS_MODEL_GAME_H
+#define GAMELIB_BINDINGS_MODEL_GAME_H 1
 
 #include <gamelib/core/common.h>
 
@@ -27,11 +27,11 @@
 
 #include <gamelib/model/game.h>
 
-GAMELIB_NAMESPACE_START(model)
-namespace bindings
+GAMELIB_NAMESPACE_START(bindings)
+namespace model
 {
 
-class PUBLIC_API GameBinding : public gamelib::model::Game
+class PUBLIC_API Game : public gamelib::model::Game
 {
 private:
 	std::string id;
@@ -46,6 +46,6 @@ public:
 };
 
 }
-GAMELIB_NAMESPACE_END(model)
+GAMELIB_NAMESPACE_END(bindings)
 
-#endif //GAMELIB_MODEL_GAMEBINDING_H
+#endif //GAMELIB_BINDINGS_MODEL_GAME_H

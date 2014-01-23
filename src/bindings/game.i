@@ -1,16 +1,14 @@
 %module GAMELIB_BINDING_MODULE
 %{
-#include "gameBinding.h"
+#include "game.h"
 %}
 
 %include <attribute.i>
 
-%rename(Game) gamelib::model::bindings::GameBinding;
-
 namespace gamelib {
-namespace model {
 namespace bindings {
-struct GameBinding
+namespace model {
+struct Game
 {
 	const char * getId() const;
 	void setId(const char*);
@@ -24,6 +22,6 @@ struct GameBinding
 
 // generate attribute like getter and setter only for language, where this is common use
 #if defined(SWIGPYTHON) || defined(SWIGCSHARP)
-	%attribute(gamelib::model::bindings::GameBinding, const char*, id, getId, setId);
-	%attribute(gamelib::model::bindings::GameBinding, const char*, name, getName, setName);
+	%attribute(gamelib::bindings::model::Game, const char*, id, getId, setId);
+	%attribute(gamelib::bindings::model::Game, const char*, name, getName, setName);
 #endif
