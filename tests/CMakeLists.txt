@@ -7,8 +7,12 @@ if(BUILD_PROTOTYPES)
 endif()
 
 # some important dependencies
-if(NOT GTEST_FOUND)
-  if(BUILD_TESTS)
+if(BUILD_TESTS)
+  if(NOT GTEST_FOUND)
     add_dependencies(gamelibUnitTests gtest)
+  endif()
+
+  if(NOT HYPODERMIC_FOUND)
+    add_dependencies(gamelibUnitTests hypodermic)
   endif()
 endif()

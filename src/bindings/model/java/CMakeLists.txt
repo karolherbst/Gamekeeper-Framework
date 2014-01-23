@@ -19,3 +19,4 @@ get_property(target_loc TARGET GameLibModelJavaJar PROPERTY INSTALL_FILES)
 add_custom_command(TARGET GameLibModelJavaJar POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different "${target_loc}" "${SWIG_java_Model_LIBRARY_PATH}")
 unset(target_loc)
 
+add_dependencies(GameLibModelJavaJar ${SWIG_MODULE_GameLibModelJava_REAL_NAME})
