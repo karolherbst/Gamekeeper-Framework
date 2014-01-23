@@ -79,6 +79,7 @@ if(WITH_CSHARP_BINDINGS OR WITH_JAVA_BINDINGS OR WITH_PYTHON_BINDINGS)
   endif()
   
   if(WITH_JAVA_BINDINGS)
+    find_package(Java REQUIRED)
     find_package(JNI REQUIRED)
   endif()
   
