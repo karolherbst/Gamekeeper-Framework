@@ -26,6 +26,5 @@ add_definitions(
 add_executable(HBPrototype ${sources} ${headers} ${otherFiles})
 target_link_libraries(HBPrototype
   gamelibClient
-  gamelibModelBindings
   ${PYTHON_LIBRARIES}
 )
