@@ -46,6 +46,8 @@ public:
 	                                                                                const Form& form));
 private:
 	Logger & logger;
+
+	PRIVATE_API void handleCurlError(int code);
 };
 
 GAMELIB_NAMESPACE_END(core)

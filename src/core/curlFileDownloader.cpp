@@ -57,7 +57,7 @@ CurlFileDownloader::downloadFile(const char * const url, DownloadCallback callba
 	CURL * curl = CurlHelper::createCURL(url);
 	curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, &CurlHelper::curlFileDownloadCallback);
 	curl_easy_setopt(curl, CURLOPT_WRITEDATA, &callback);
-	curl_easy_perform(curl);
+	handleCurlError(curl_easy_perform(curl));
 	CurlHelper::deleteCURL(curl);
 }
 
@@ -72,7 +72,7 @@ CurlFileDownloader::downloadFileWithCookies(const char * const url, DownloadCall
 	
 	CurlHelper::addCookiesToCurl(cookies, curl);
 	
-	curl_easy_perform(curl);
+	handleCurlError(curl_easy_perform(curl));
 	CurlHelper::deleteCURL(curl);
 }
 
@@ -86,12 +86,28 @@ CurlFileDownloader::doPostRequestForCookies(const char * const url, const Form& 
 
 	CurlHelper::addFormToCurl(form, curl);
 
-	curl_easy_perform(curl);
+	handleCurlError(curl_easy_perform(curl));
 
 	CurlFileDownloader::CookieBuket result = CurlHelper::getCookies(curl);
 	CurlHelper::deleteCURL(curl);
 
 	return result;
+}
+
+void
+CurlFileDownloader::handleCurlError(int code)
+{
+	switch (code)
+	{
+		case CURLE_OK:
+			// everything okay
+			logger << LOG_LEVEL::TRACE << "CURL returned with CURLE_OK" << endl;
+			break;
+		default:
+			// unhandled error
+			logger << LOG_LEVEL::FATAL << "CURL return code " << code << " unhandled, please report a bug" << endl;
+			break;
+	}
 }
 
 GAMELIB_NAMESPACE_END(core)
