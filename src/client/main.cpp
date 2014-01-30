@@ -25,6 +25,7 @@
 #include <gamelib/core/logger.h>
 #include <gamelib/core/loggerStream.h>
 #include <gamelib/client/gamelib.h>
+#include <gamelib/client/hypodermic.h>
 
 #include <Hypodermic/ContainerBuilder.h>
 #include <Hypodermic/Helpers.h>
@@ -35,6 +36,7 @@
 #include <gamelib/core/xdgpaths.h>
 
 static gamelib::client::GameLibUI* gamelibI = nullptr;
+static std::shared_ptr<Hypodermic::IContainer> container;
 
 /**
  * main entry point of gamelib
@@ -76,7 +78,7 @@ PUBLIC_API int main(int argc, const char* argv[])
 	}
 	
 	// left out not implemented stuff yet
-	std::shared_ptr<Hypodermic::IContainer> container = containerBuilder.build();
+	container = containerBuilder.build();
 	std::shared_ptr<gamelib::core::LoggerFactory> loggerFactory = container->resolve<gamelib::core::LoggerFactory>();
 	loggerFactory->getComponentLogger("main") << gamelib::core::LOG_LEVEL::DEBUG << "firing up gamelib" << gamelib::core::endl;
 	gamelibI = gamelib::client::newInstance(loggerFactory->getComponentLogger("UI.client"));
@@ -86,3 +88,13 @@ PUBLIC_API int main(int argc, const char* argv[])
 	delete gamelibI;
 	gamelibI = nullptr;
 }
+
+GAMELIB_NAMESPACE_START(client)
+
+Hypodermic::IContainer&
+HypodermicUtil::getContainer()
+{
+	return *container;
+}
+
+GAMELIB_NAMESPACE_END(client)

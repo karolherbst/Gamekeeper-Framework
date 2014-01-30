@@ -3,6 +3,7 @@
 add_custom_target(headers
   SOURCES
     gamelib/client/gamelib.h
+    gamelib/client/hypodermic.h
 
     gamelib/core/common.h
     gamelib/core/filedownloader.h
