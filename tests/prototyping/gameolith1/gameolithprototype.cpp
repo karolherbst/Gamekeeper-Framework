@@ -1,5 +1,6 @@
 #include "gameolithprototype.h"
 
+#include <gamelib/client/autowire.h>
 #include <gamelib/core/httpfiledownloader.h>
 #include <gamelib/core/logger.h>
 #include <gamelib/core/loggerStream.h>
@@ -85,12 +86,12 @@ GameolithPrototype::GameolithPrototype(gamelib::core::Logger& _logger)
 :	logger(_logger){}
 
 void
-GameolithPrototype::init(int argc, const char* argv[], Hypodermic::IContainer * container)
+GameolithPrototype::init(int argc, const char* argv[])
 {
 	config["bindings.games"] = "$[*]";
 	config["bindings.game.id"] = "@.slug";
 	config["bindings.game.name"] = "@.title";
-	fileDownloader = container->resolve<gamelib::core::HttpFileDownloader>();
+	fileDownloader = gamelib::client::Autowire<gamelib::core::HttpFileDownloader>();
 }
 
 void

@@ -66,7 +66,7 @@ interface PUBLIC_API GameLibUI
 	 * @param argc amount of arguments passed
 	 * @param argv array of application arguments
 	 */
-	PUBLIC_API GAMELIB_INTERFACE_METHOD(void init(int argc, const char* argv[], Hypodermic::IContainer * container));
+	PUBLIC_API GAMELIB_INTERFACE_METHOD(void init(int argc, const char* argv[]));
 	
 	/**
 	 * shutdown event handling method for GameLib

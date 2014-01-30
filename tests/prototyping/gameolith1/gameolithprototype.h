@@ -7,7 +7,7 @@ class GameolithPrototype : public gamelib::client::GameLibUI
 {
 public:
 	GameolithPrototype(gamelib::core::Logger& logger);
-	GAMELIB_IMPLEMENTATION_OVERRIDE(void init(int argc, const char* argv[], Hypodermic::IContainer * container));
+	GAMELIB_IMPLEMENTATION_OVERRIDE(void init(int argc, const char* argv[]));
 	GAMELIB_IMPLEMENTATION_OVERRIDE(void onShutdown());
 	GAMELIB_IMPLEMENTATION_OVERRIDE(void startEventLoop());
 private:

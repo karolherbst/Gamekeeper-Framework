@@ -1,5 +1,6 @@
 #include "hbprototype.h"
 
+#include <gamelib/client/autowire.h>
 #include <gamelib/core/httpfiledownloader.h>
 #include <gamelib/core/logger.h>
 #include <gamelib/core/loggerStream.h>
@@ -24,9 +25,9 @@ HBPrototype::HBPrototype(gamelib::core::Logger& _logger)
 :	logger(_logger){}
 
 void
-HBPrototype::init(int argc, const char* argv[], Hypodermic::IContainer * container)
+HBPrototype::init(int argc, const char* argv[])
 {
-	fileDownloader = container->resolve<gamelib::core::HttpFileDownloader>();
+	fileDownloader = gamelib::client::Autowire<gamelib::core::HttpFileDownloader>();
 
 	this->logger << LOG_LEVEL::INFO << "init" << endl;
 

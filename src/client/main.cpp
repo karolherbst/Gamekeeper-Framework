@@ -82,7 +82,7 @@ PUBLIC_API int main(int argc, const char* argv[])
 	std::shared_ptr<gamelib::core::LoggerFactory> loggerFactory = container->resolve<gamelib::core::LoggerFactory>();
 	loggerFactory->getComponentLogger("main") << gamelib::core::LOG_LEVEL::DEBUG << "firing up gamelib" << gamelib::core::endl;
 	gamelibI = gamelib::client::newInstance(loggerFactory->getComponentLogger("UI.client"));
-	gamelibI->init(argc, argv, container.get());
+	gamelibI->init(argc, argv);
 	gamelibI->startEventLoop();
 	gamelibI->onShutdown();
 	delete gamelibI;
