@@ -2,6 +2,7 @@
 
 add_custom_target(headers
   SOURCES
+    gamelib/client/autowire.h
     gamelib/client/gamelib.h
     gamelib/client/hypodermic.h
 
