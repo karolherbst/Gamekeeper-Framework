@@ -47,6 +47,7 @@ public:
 	PUBLIC_API T & operator*() const noexcept;
 	PUBLIC_API T * operator->() const noexcept;
 	PUBLIC_API operator const std::shared_ptr<T> &() const noexcept;
+	PUBLIC_API operator std::shared_ptr<T> &() noexcept;
 private:
 	std::shared_ptr<T> ptr;
 };
@@ -71,6 +72,12 @@ Autowire<T>::operator->() const noexcept
 
 template <typename T>
 Autowire<T>::operator const std::shared_ptr<T> &() const noexcept
+{
+	return this->ptr;
+}
+
+template <typename T>
+Autowire<T>::operator std::shared_ptr<T> &() noexcept
 {
 	return this->ptr;
 }
