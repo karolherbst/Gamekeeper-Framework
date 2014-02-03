@@ -4,6 +4,9 @@ include_directories(
   ${GAMELIB_INCLUDE_DIR}
 )
 
+# needed for windows
+add_definitions(-DBUILDING_DLL)
+
 add_subdirectory(client)
 add_subdirectory(core)
 add_subdirectory(frontend)

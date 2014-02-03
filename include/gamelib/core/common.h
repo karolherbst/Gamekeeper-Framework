@@ -47,7 +47,7 @@
 				#define PUBLIC_API __declspec(dllimport)
 			#endif
 		#endif
-		#define DLL_LOCAL
+		#define PRIVATE_API
 	#else
 		#if defined(__GNUC__) || defined(__clang__)
 			#if __GNUC__ >= 4
