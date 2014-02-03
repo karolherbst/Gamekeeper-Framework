@@ -24,16 +24,13 @@ if(WIN32 AND NOT MINGW)
   )
   
   set(CURL_INSTALL_DIR ${source_dir}/builds/libcurl-vc-x86-release-dll-sspi-winssl)
-elseif(MINGW)
-  set(CURL_INSTALL_DIR ${CMAKE_EXTERNAL_BINARY_DIR}/curl)
-  ExternalProject_Add(
-    curl
-    URL ${CURL_URL}
-    URL_MD5 ${CURL_MD5}
-    CMAKE_ARGS -DCMAKE_INSTALL_PREFIX="${CURL_INSTALL_DIR}}"
-  )
 else()
-  find_package(OpenSSL REQUIRED)
+  if(MINGW)
+    set(CURL_SSL_SWITCH --with-winssl)
+  else()
+    find_package(OpenSSL REQUIRED)
+    set(CURL_SSL_SWITCH --with-ssl)
+  endif()
   set(CURL_INSTALL_DIR ${CMAKE_EXTERNAL_BINARY_DIR}/curl)
   ExternalProject_Add(
     curl
@@ -48,6 +45,7 @@ else()
         --disable-rtsp
         --with-ssl
         --with-zlib
+        ${CURL_SSL_SWITCH}
         
         --disable-manual
         --enable-static=no 
