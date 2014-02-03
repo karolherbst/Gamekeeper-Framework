@@ -11,6 +11,9 @@ add_subdirectory(model)
 add_subdirectory(bindings)
 
 # some important dependencies
+if(NOT CURL_FOUND)
+  add_dependencies(gamelibCore curl)
+endif()
 if(NOT HYPODERMIC_FOUND)
   add_dependencies(gamelibClient hypodermic)
 endif()

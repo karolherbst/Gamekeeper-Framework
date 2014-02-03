@@ -62,6 +62,10 @@ endif()
 
 # curl
 find_package(CURL ${REQUIRED_ON_UNIX})
+if(NOT CURL_FOUND)
+  set_download_url(CURL http://curl.haxx.se/download/curl-7.35.0.zip 4166537736ae9fb85c6a9aa6484dee84)
+  include(BuildCURL)
+endif()
 
 # gtest
 if(BUILD_TESTS)
