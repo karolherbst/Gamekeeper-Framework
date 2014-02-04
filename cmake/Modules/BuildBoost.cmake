@@ -40,13 +40,5 @@ else()
   set(Boost_SUFFIX lib)
 endif()
 
-set(Boost_CHRONO_LIBRARY "${Boost_LIBRARY_DIR}/libboost_chrono-${Boost_LIB_ADD_STRING}.${Boost_SUFFIX}")
-set(Boost_DATE_TIME_LIBRARY "${Boost_LIBRARY_DIR}/libboost_date_time-${Boost_LIB_ADD_STRING}.${Boost_SUFFIX}")
 set(Boost_FILESYSTEM_LIBRARY "${Boost_LIBRARY_DIR}/libboost_filesystem-${Boost_LIB_ADD_STRING}.${Boost_SUFFIX}")
-set(Boost_PRG_EXEC_MONITOR_LIBRARY "${Boost_LIBRARY_DIR}/libboost_prg_exec_monitor-${Boost_LIB_ADD_STRING}.${Boost_SUFFIX}")
 set(Boost_SYSTEM_LIBRARY "${Boost_LIBRARY_DIR}/libboost_system-${Boost_LIB_ADD_STRING}.${Boost_SUFFIX}")
-set(Boost_TEST_EXEC_MONITOR_LIBRARY "${Boost_LIBRARY_DIR}/libboost_test_exec_monitor-${Boost_LIB_ADD_STRING}.${Boost_SUFFIX}")
-set(Boost_THREAD_LIBRARY "${Boost_LIBRARY_DIR}/libboost_thread-${Boost_LIB_ADD_STRING}.${Boost_SUFFIX}")
-set(Boost_UNIT_TEST_FRAMEWORK_LIBRARY "${Boost_LIBRARY_DIR}/libboost_unit_test_framework-${Boost_LIB_ADD_STRING}.${Boost_SUFFIX}")
-
-set_property(TARGET boost PROPERTY FOLDER "ThirdParty")
