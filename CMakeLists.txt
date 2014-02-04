@@ -5,7 +5,7 @@
 # BUILD_PROTOTYPES  OFF          enables the build of prototypes
 #######################################################################################################################
 
-project(gamelib CXX)
+project(gamelib)
 cmake_minimum_required(VERSION 2.8)
 
 #######################################################################################################################
@@ -80,6 +80,10 @@ endif()
 
 # log4cpp
 find_package(log4cpp ${REQUIRED_ON_LINUX})
+if(NOT LOG4CPP_FOUND)
+  set_download_url(LOG4CPP http://sourceforge.net/projects/log4cpp/files/log4cpp-1.1.x%20%28new%29/log4cpp-1.1/log4cpp-1.1.1.tar.gz/download 1e173df8ee97205f412ff84aa93b8fbe)
+  include(Buildlog4cpp)
+endif()
 
 # swig
 if(WITH_CSHARP_BINDINGS OR WITH_JAVA_BINDINGS OR WITH_PYTHON_BINDINGS)
