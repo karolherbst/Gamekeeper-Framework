@@ -35,10 +35,10 @@ set(Boost_INCLUDE_DIRS ${Boost_DIR})
 set(Boost_LIBRARY_DIRS ${Boost_DIR}/stage/lib)
 
 if(MINGW)
-  set(Boost_SUFFIX a)
+  set(Boost_SUFFIX dll.a)
 else()
   set(Boost_SUFFIX lib)
 endif()
 
-set(Boost_FILESYSTEM_LIBRARY "${Boost_LIBRARY_DIR}/libboost_filesystem-${Boost_LIB_ADD_STRING}.${Boost_SUFFIX}")
-set(Boost_SYSTEM_LIBRARY "${Boost_LIBRARY_DIR}/libboost_system-${Boost_LIB_ADD_STRING}.${Boost_SUFFIX}")
+set(Boost_FILESYSTEM_LIBRARY "${Boost_LIBRARY_DIRS}/libboost_filesystem-${Boost_LIB_ADD_STRING}.${Boost_SUFFIX}")
+set(Boost_SYSTEM_LIBRARY "${Boost_LIBRARY_DIRS}/libboost_system-${Boost_LIB_ADD_STRING}.${Boost_SUFFIX}")

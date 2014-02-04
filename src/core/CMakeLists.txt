@@ -43,4 +43,5 @@ target_link_libraries(gamelibCore
   ${Boost_FILESYSTEM_LIBRARY}
   ${CURL_LIBRARIES}
   ${LOG4CPP_LIBRARIES}
+  ${Boost_SYSTEM_LIBRARY}
 )
