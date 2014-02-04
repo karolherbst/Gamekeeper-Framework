@@ -29,7 +29,7 @@ HBPrototype::init(int argc, const char* argv[])
 {
 	fileDownloader = gamelib::client::Autowire<gamelib::core::HttpFileDownloader>();
 
-	this->logger << LOG_LEVEL::INFO << "init" << endl;
+	this->logger << LogLevel::Info << "init" << endl;
 
 	if(argc == 3)
 	{
@@ -41,7 +41,7 @@ HBPrototype::init(int argc, const char* argv[])
 void
 HBPrototype::onShutdown()
 {
-	this->logger << LOG_LEVEL::INFO << "shutdown" << endl;
+	this->logger << LogLevel::Info << "shutdown" << endl;
 }
 
 bool
@@ -112,7 +112,7 @@ HBPrototype::doPythonStuff()
 			{
 				Py_DECREF(args);
 				Py_DECREF(pyModule);
-				this->logger << LOG_LEVEL::ERROR << "Could not convert argument" << endl;
+				this->logger << LogLevel::Error << "Could not convert argument" << endl;
 				return;
 			}
 			PyTuple_SetItem(args, 0, domTree);
@@ -124,7 +124,7 @@ HBPrototype::doPythonStuff()
 			Py_DECREF(emptyTuple);
 			if (result != NULL)
 			{
-				this->logger << LOG_LEVEL::INFO << "call finished, got the game list" << endl;
+				this->logger << LogLevel::Info << "call finished, got the game list" << endl;
 				std::map<std::string, gamelib::model::Game*> games;
 				
 				for(int i = 0; i < PyList_Size(result); i++)
@@ -136,11 +136,11 @@ HBPrototype::doPythonStuff()
 					{
 						gamelib::model::Game * game = castPyObjectToGame(resultGame);
 						games[PyUnicode_AsUTF8(PyList_GetItem(result, i))] = game;
-						this->logger << LOG_LEVEL::DEBUG << game->getName() << endl;
+						this->logger << LogLevel::Debug << game->getName() << endl;
 					}
 					else
 					{
-						this->logger << LOG_LEVEL::ERROR << "Call failed for game: " << PyUnicode_AsASCIIString(PyList_GetItem(result, i)) << endl;
+						this->logger << LogLevel::Error << "Call failed for game: " << PyUnicode_AsASCIIString(PyList_GetItem(result, i)) << endl;
 					}
 				}
 				
@@ -152,7 +152,7 @@ HBPrototype::doPythonStuff()
 				Py_DECREF(funcGetGame);
 				Py_DECREF(pyModule);
 				PyErr_Print();
-				this->logger << LOG_LEVEL::ERROR << "Call failed" << endl;
+				this->logger << LogLevel::Error << "Call failed" << endl;
 				return;
 			}
 		}
@@ -160,7 +160,7 @@ HBPrototype::doPythonStuff()
 		{
 			if (PyErr_Occurred())
 				PyErr_Print();
-			this->logger << LOG_LEVEL::ERROR << "Cannot find function" << endl;
+			this->logger << LogLevel::Error << "Cannot find function" << endl;
 		}
 		Py_XDECREF(funcGetAll);
 		Py_XDECREF(funcGetGame);
@@ -169,7 +169,7 @@ HBPrototype::doPythonStuff()
 	else
 	{
 		PyErr_Print();
-		this->logger << LOG_LEVEL::ERROR << "Failed to load " << PYMODULENAME << endl;
+		this->logger << LogLevel::Error << "Failed to load " << PYMODULENAME << endl;
 		return;
 	}
 	

@@ -97,7 +97,7 @@ GameolithPrototype::init(int argc, const char* argv[])
 void
 GameolithPrototype::onShutdown()
 {
-	this->logger << LOG_LEVEL::DEBUG << "shutdown" << endl;
+	this->logger << LogLevel::Debug << "shutdown" << endl;
 }
 
 bool
@@ -119,7 +119,7 @@ GameolithPrototype::handleRequest(void * const buffer, size_t sz, size_t n)
 		for (auto pair : games)
 		{
 			const Game * game = pair.second;
-			this->logger << LOG_LEVEL::DEBUG << game->getName() << ' ' << game->getId() << endl;
+			this->logger << LogLevel::Debug << game->getName() << ' ' << game->getId() << endl;
 		}
 		return true;
 	}
@@ -129,7 +129,7 @@ GameolithPrototype::handleRequest(void * const buffer, size_t sz, size_t n)
 void
 GameolithPrototype::startEventLoop()
 {
-	this->logger << LOG_LEVEL::DEBUG << "starting gameolith test" << endl;
+	this->logger << LogLevel::Debug << "starting gameolith test" << endl;
 	fileDownloader->downloadFile("https://www.gameolith.com/user/karolherbst/games/?format=json",
 	                             [this](void * const buffer, size_t bufferSize, size_t dataLength) -> bool
 	{

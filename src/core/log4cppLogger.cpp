@@ -31,26 +31,26 @@ Log4cppLogger::Log4cppLogger(log4cpp::Category& cat)
 :	category(cat){}
 
 LoggerStream&
-Log4cppLogger::operator<<(const LOG_LEVEL& logLevel)
+Log4cppLogger::operator<<(const LogLevel& logLevel)
 {
 	if(this->loggerStreams.find(logLevel) == this->loggerStreams.end())
 	{
 		log4cpp::Priority::PriorityLevel level;
 		switch (logLevel) {
-			case LOG_LEVEL::DEBUG:
-			case LOG_LEVEL::TRACE:
+			case LogLevel::Debug:
+			case LogLevel::Trace:
 				level = log4cpp::Priority::DEBUG;
 				break;
-			case LOG_LEVEL::ERROR:
+			case LogLevel::Error:
 				level = log4cpp::Priority::ERROR;
 				break;
-			case LOG_LEVEL::FATAL:
+			case LogLevel::Fatal:
 				level = log4cpp::Priority::FATAL;
 				break;
-			case LOG_LEVEL::INFO:
+			case LogLevel::Info:
 				level = log4cpp::Priority::INFO;
 				break;
-			case LOG_LEVEL::WARN:
+			case LogLevel::Warn:
 				level = log4cpp::Priority::WARN;
 				break;
 		}

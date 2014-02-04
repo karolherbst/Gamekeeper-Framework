@@ -34,7 +34,7 @@ GAMELIB_NAMESPACE_START(core)
 CurlFileDownloader::CurlFileDownloader(std::shared_ptr<LoggerFactory> loggerFactory)
 :	logger(loggerFactory->getComponentLogger("IO.curl"))
 {
-	logger << LOG_LEVEL::DEBUG << "init curl" << endl;
+	logger << LogLevel::Debug << "init curl" << endl;
 	curl_global_init(CURL_GLOBAL_SSL);
 	CurlHelper::setUserAgent("GameLib/0.1");
 }
@@ -53,7 +53,7 @@ CurlFileDownloader::supportsProtocol(const char * const protocolName, size_t nam
 void
 CurlFileDownloader::downloadFile(const char * const url, DownloadCallback callback)
 {
-	logger << LOG_LEVEL::DEBUG << "try to download file at: " << url << endl;
+	logger << LogLevel::Debug << "try to download file at: " << url << endl;
 	CURL * curl = CurlHelper::createCURL(url);
 	curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, &CurlHelper::curlFileDownloadCallback);
 	curl_easy_setopt(curl, CURLOPT_WRITEDATA, &callback);
@@ -65,7 +65,7 @@ void
 CurlFileDownloader::downloadFileWithCookies(const char * const url, DownloadCallback callback,
                                             const CookieBuket& cookies)
 {
-	logger << LOG_LEVEL::DEBUG << "try to download file at: " << url << endl;
+	logger << LogLevel::Debug << "try to download file at: " << url << endl;
 	CURL * curl = CurlHelper::createCURL(url);
 	curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, &CurlHelper::curlFileDownloadCallback);
 	curl_easy_setopt(curl, CURLOPT_WRITEDATA, &callback);
@@ -79,7 +79,7 @@ CurlFileDownloader::downloadFileWithCookies(const char * const url, DownloadCall
 CurlFileDownloader::CookieBuket
 CurlFileDownloader::doPostRequestForCookies(const char * const url, const Form& form)
 {
-	logger << LOG_LEVEL::DEBUG << "try to fetch cookies at: " << url << endl;
+	logger << LogLevel::Debug << "try to fetch cookies at: " << url << endl;
 	CURL * curl = CurlHelper::createCURL(url);
 	curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, &CurlHelper::emptyCurlFileDownloadCallback);
 	curl_easy_setopt(curl, CURLOPT_COOKIEJAR, nullptr);
@@ -101,11 +101,11 @@ CurlFileDownloader::handleCurlError(int code)
 	{
 		case CURLE_OK:
 			// everything okay
-			logger << LOG_LEVEL::TRACE << "CURL returned with CURLE_OK" << endl;
+			logger << LogLevel::Trace << "CURL returned with CURLE_OK" << endl;
 			break;
 		default:
 			// unhandled error
-			logger << LOG_LEVEL::FATAL << "CURL return code " << code << " unhandled, please report a bug" << endl;
+			logger << LogLevel::Fatal << "CURL return code " << code << " unhandled, please report a bug" << endl;
 			break;
 	}
 }
