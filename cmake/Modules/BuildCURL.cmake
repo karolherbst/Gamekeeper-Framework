@@ -43,7 +43,6 @@ else()
         --disable-ldap
         --without-librtmp
         --disable-rtsp
-        --with-ssl
         --with-zlib
         ${CURL_SSL_SWITCH}
         
