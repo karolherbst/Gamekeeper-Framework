@@ -18,23 +18,18 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef GAMELIB_CORE_LINUXINFORMATION_H
-#define GAMELIB_CORE_LINUXINFORMATION_H 1
-
-#include <gamelib/core/common.h>
+#include "pch.h"
 
 #include "abstractinformation.h"
 
+#include <cstdlib>
+
 GAMELIB_NAMESPACE_START(core)
 
-class PUBLIC_API LinuxInformation : public AbstractInformation
+std::string
+AbstractInformation::getEnv(const char * name)
 {
-public:
-	PRIVATE_API GAMELIB_IMPLEMENTATION_OVERRIDE(std::string getEnvSeperator());
-	PRIVATE_API GAMELIB_IMPLEMENTATION_OVERRIDE(boost::filesystem::path getSystemRoot());
-	PRIVATE_API GAMELIB_IMPLEMENTATION_OVERRIDE(boost::filesystem::path getUserPath());
-};
+	return getenv(name);
+}
 
 GAMELIB_NAMESPACE_END(core)
-
-#endif //GAMELIB_CORE_LINUXINFORMATION_H
