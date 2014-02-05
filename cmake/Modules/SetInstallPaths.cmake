@@ -4,7 +4,7 @@ elseif(WIN32)
   set(DEFAULT_INSTALL_DIR "install")
 endif()
 
-if(MINGW OR WIN32)
+if(CMAKE_HOST_WIN32)
   set(SYSTEM_ROOT_DIR "C:/")
 else()
   set(SYSTEM_ROOT_DIR "/")
