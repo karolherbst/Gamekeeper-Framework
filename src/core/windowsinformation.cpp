@@ -23,25 +23,28 @@
 #include "windowsinformation.h"
 
 #include <cstdlib>
+#include <Shlobj.h>
 
 GAMELIB_NAMESPACE_START(core)
 
 std::string
 WindowsInformation::getEnvSeperator()
 {
-	return ":";
+	return ";";
 }
 
 boost::filesystem::path
 WindowsInformation::getSystemRoot()
 {
-	return "/";
+	return "C:\\";
 }
 
 boost::filesystem::path
 WindowsInformation::getUserPath()
 {
-	return getEnv("HOME");
+	TCHAR szPath[MAX_PATH];
+	SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, szPath);
+	return szPath;
 }
 
 GAMELIB_NAMESPACE_END(core)
