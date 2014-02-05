@@ -7,12 +7,20 @@ include_directories(
   ${LOG4CPP_INCLUDE_DIR}
 )
 
-if(LINUX)
-  file(GLOB linux_headers
+if(WIN32)
+  file(GLOB platform_headers
+    ${GAMELIB_PRIVATE_INCLUDE_DIR}/gamelib/core/windowsinformation.h
+  )
+
+  file(GLOB platform_sources
+    windowsinformation.cpp
+  )
+elseif(LINUX)
+  file(GLOB platform_headers
     ${GAMELIB_PRIVATE_INCLUDE_DIR}/gamelib/core/linuxinformation.h
   )
 
-  file(GLOB linux_sources
+  file(GLOB platform_sources
     linuxinformation.cpp
   )
 endif()
@@ -26,7 +34,7 @@ file(GLOB headers
   ${GAMELIB_PRIVATE_INCLUDE_DIR}/gamelib/core/log4cpploggerFactory.h
   ${GAMELIB_PRIVATE_INCLUDE_DIR}/gamelib/core/log4cppLoggerStream.h
   ${GAMELIB_PRIVATE_INCLUDE_DIR}/gamelib/core/xdgpaths.h
-  ${linux_headers}
+  ${platform_headers}
 )
 
 file(GLOB sources
@@ -37,7 +45,7 @@ file(GLOB sources
   log4cpploggerFactory.cpp
   log4cppLoggerStream.cpp
   xdgpaths.cpp
-  ${linux_sources}
+  ${platform_sources}
 )
 
 add_library(gamelibCore SHARED ${sources} ${headers})
