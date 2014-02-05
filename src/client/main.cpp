@@ -31,7 +31,13 @@
 #include <Hypodermic/Helpers.h>
 
 #include <gamelib/core/curlFileDownloader.h>
-#include <gamelib/core/linuxinformation.h>
+#ifdef GAMELIB_OS_IS_WINDOWS
+  #include <gamelib/core/windowsinformation.h>
+  #define OSINFORMATIONCLASS WindowsInformation
+#else
+  #include <gamelib/core/linuxinformation.h>
+  #define OSINFORMATIONCLASS LinuxInformation
+#endif
 #include <gamelib/core/log4cpploggerFactory.h>
 #include <gamelib/core/xdgpaths.h>
 
@@ -65,7 +71,7 @@ PUBLIC_API int main(int argc, const char* argv[])
 		containerBuilder.registerType<Log4cppLoggerFactory>()->
 		        as<LoggerFactory>()->
 		        singleInstance();
-		containerBuilder.registerType<LinuxInformation>()->
+		containerBuilder.registerType<OSINFORMATIONCLASS>()->
 		        as<OSInformation>()->
 		        singleInstance();
 		containerBuilder.registerType<XDGPaths>(CREATE(new XDGPaths(INJECT(OSInformation))))->
