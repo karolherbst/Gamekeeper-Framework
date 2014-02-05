@@ -72,10 +72,6 @@ HBPrototype::startEventLoop()
 typedef struct {
   PyObject_HEAD
   void *ptr;
-  void *ty;
-  int own;
-  PyObject *next;
-  PyObject *dict;
 } SwigPyObject;
 
 static gamelib::model::Game * castPyObjectToGame(PyObject *obj)
