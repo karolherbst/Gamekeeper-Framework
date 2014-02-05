@@ -162,4 +162,22 @@
 	#endif
 #endif
 
+// OS defines
+#if defined(_WIN32)
+  #define GAMELIB_OS_IS_WINDOWS 1
+  #if defined(_WIN64)
+    #define GAMELIB_ARCH_IS_64BIT 1
+  #else
+    #define GAMELIB_ARCH_IS_32BIT 1
+  #endif
+#endif
+
+#if defined(__linux__)
+  #define GAMELIB_OS_IS_LINUX 1
+#endif
+
+#if defined(__APPLE__) && defined(__MACH__)
+  #define GAMELIB_OS_IS_MACOSX 1
+#endif
+
 #endif //GAMELIB_CORE_COMMON_H
