@@ -37,14 +37,18 @@
 		#if defined(BUILDING_DLL)
 			#if defined(__GNUC__)
 				#define PUBLIC_API __attribute__ ((dllexport))
+				#define REVERSE_PUBLIC_API __attribute__ ((dllimport))
 			#else
 				#define PUBLIC_API __declspec(dllexport)
+				#define REVERSE_PUBLIC_API __declspec(dllimport)
 			#endif
 		#else
 			#if defined(__GNUC__)
 				#define PUBLIC_API __attribute__ ((dllimport))
+				#define REVERSE_PUBLIC_API __attribute__ ((dllexport))
 			#else
 				#define PUBLIC_API __declspec(dllimport)
+				#define REVERSE_PUBLIC_API __declspec(dllexport)
 			#endif
 		#endif
 		#define PRIVATE_API
@@ -57,6 +61,7 @@
 				#define PUBLIC_API
 				#define PRIVATE_API
 			#endif
+			#define REVERSE_PUBLIC_API PUBLIC_API
 		#endif
 	#endif
 #else
