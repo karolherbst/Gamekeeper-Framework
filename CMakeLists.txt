@@ -16,6 +16,7 @@ cmake_minimum_required(VERSION 2.8)
 set(CMAKE_EXTERNAL_BINARY_DIR "${CMAKE_BINARY_DIR}/external")
 set(CMAKE_COMPILER_PATH "${CMAKE_SOURCE_DIR}/cmake/Compiler")
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/Modules")
+set(CMAKE_PATCH_DIR "${CMAKE_SOURCE_DIR}/cmake/Patches")
 set(CMAKE_GEN_DIR "${CMAKE_BINARY_DIR}/gen")
 set(CMAKE_BINDINGS_OUT_DIR "${CMAKE_BINARY_DIR}/bindings")
 
@@ -42,6 +43,11 @@ include(SetInstallPaths)
 #######################################################################################################################
 # dependency management
 #######################################################################################################################
+
+# we need to patch some deps on MinGW
+if(MINGW)
+  find_package(Patch REQUIRED)
+endif()
 
 find_package(Hypodermic)
 if(NOT HYPODERMIC_FOUND)

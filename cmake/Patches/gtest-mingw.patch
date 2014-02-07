@@ -1,0 +1,14 @@
+diff --git a/include/gtest/internal/gtest-port.h b/include/gtest/internal/gtest-port.h
+index c79f12a..2d89cb5 100644
+--- a/include/gtest/internal/gtest-port.h
++++ b/include/gtest/internal/gtest-port.h
+@@ -1179,2 +1179,5 @@ extern ::std::vector<testing::internal::string> g_argvs;
+ inline void SleepMilliseconds(int n) {
++#ifdef __MINGW32__
++  Sleep(n);
++#else
+   const timespec time = {
+@@ -1184,2 +1187,3 @@ inline void SleepMilliseconds(int n) {
+   nanosleep(&time, NULL);
++#endif
+ }
