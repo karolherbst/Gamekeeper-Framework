@@ -20,7 +20,7 @@ file(GLOB otherFiles
 add_definitions(
   -DPYMODULENAME="hbprototype"
   -DPYMODULEPATH="${CMAKE_CURRENT_SOURCE_DIR}"
-  -DPYTHONPATH="${CMAKE_BINDINGS_OUT_DIR}/python/"
+  -DPYTHONPATH="${CMAKE_BINDINGS_OUT_DIR}/python/Model"
 )
 
 add_executable(HBPrototype ${sources} ${headers} ${otherFiles})
