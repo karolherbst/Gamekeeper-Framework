@@ -113,7 +113,7 @@ interface PUBLIC_API GameLibUI
  * @param logger the logger provided by gamelib
  * @return a new created instance of gameLib
  */
-extern "C" GameLibUI * newInstance(gamelib::core::Logger& logger);
+extern "C" REVERSE_PUBLIC_API GameLibUI * newInstance(gamelib::core::Logger& logger);
 
 /**
  * declares the Implementation of the {@link GameLibUI} interface
@@ -121,7 +121,7 @@ extern "C" GameLibUI * newInstance(gamelib::core::Logger& logger);
  * use this by the client to provide all the needed things.
  */
 #define GAMECLIENTUI_CLASS(class) \
-extern "C" PUBLIC_API gamelib::client::GameLibUI * newInstance(gamelib::core::Logger& logger) \
+extern "C" REVERSE_PUBLIC_API gamelib::client::GameLibUI * newInstance(gamelib::core::Logger& logger) \
 { \
 	return new class(logger); \
 }
