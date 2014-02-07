@@ -6,9 +6,14 @@ include_directories(
 
 file(GLOB headers
   pch.h
+  runtime.h
 )
 
 file(GLOB sources
+  runtime.cpp
+)
+
+file(GLOB main_sources
   main.cpp
 )
 
@@ -18,5 +23,10 @@ target_link_libraries(gamelibClient
   ${HYPODERMIC_LIBRARIES}
   ${Boost_SYSTEM_LIBRARY}
 )
-
 install_library(gamelibClient)
+
+add_library(gamelibClientMain STATIC ${main_sources})
+target_link_libraries(gamelibClientMain
+  gamelibClient
+)
+#install_library(gamelibClientMain)

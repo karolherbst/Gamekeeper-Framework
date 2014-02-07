@@ -20,29 +20,9 @@
 
 #include "pch.h"
 
-#include <gamelib/core/common.h>
+#include "runtime.h"
 
-#include <gamelib/core/logger.h>
-#include <gamelib/core/loggerStream.h>
 #include <gamelib/client/gamelib.h>
-#include <gamelib/client/hypodermic.h>
-
-#include <Hypodermic/ContainerBuilder.h>
-#include <Hypodermic/Helpers.h>
-
-#include <gamelib/core/curlFileDownloader.h>
-#ifdef GAMELIB_OS_IS_WINDOWS
-  #include <gamelib/core/windowsinformation.h>
-  #define OSINFORMATIONCLASS WindowsInformation
-#else
-  #include <gamelib/core/linuxinformation.h>
-  #define OSINFORMATIONCLASS LinuxInformation
-#endif
-#include <gamelib/core/log4cpploggerFactory.h>
-#include <gamelib/core/xdgpaths.h>
-
-static gamelib::client::GameLibUI* gamelibI = nullptr;
-static std::shared_ptr<Hypodermic::IContainer> container;
 
 /**
  * main entry point of gamelib
@@ -63,44 +43,6 @@ static std::shared_ptr<Hypodermic::IContainer> container;
  */
 PUBLIC_API int main(int argc, const char* argv[])
 {
-	Hypodermic::ContainerBuilder containerBuilder;
-	{
-		using namespace gamelib::core;
-		
-		// set up IoC container
-		containerBuilder.registerType<Log4cppLoggerFactory>()->
-		        as<LoggerFactory>()->
-		        singleInstance();
-		containerBuilder.registerType<OSINFORMATIONCLASS>()->
-		        as<OSInformation>()->
-		        singleInstance();
-		containerBuilder.registerType<XDGPaths>(CREATE(new XDGPaths(INJECT(OSInformation))))->
-		        as<OSPaths>()->
-		        singleInstance();
-		containerBuilder.registerType<CurlFileDownloader>(CREATE(new CurlFileDownloader(INJECT(LoggerFactory))))->
-		        as<FileDownloader>()->
-		        as<HttpFileDownloader>()->
-		        singleInstance();
-	}
-	
-	// left out not implemented stuff yet
-	container = containerBuilder.build();
-	std::shared_ptr<gamelib::core::LoggerFactory> loggerFactory = container->resolve<gamelib::core::LoggerFactory>();
-	loggerFactory->getComponentLogger("main") << gamelib::core::LogLevel::Debug << "firing up gamelib" << gamelib::core::endl;
-	gamelibI = gamelib::client::newInstance(loggerFactory->getComponentLogger("UI.client"));
-	gamelibI->init(argc, argv);
-	gamelibI->startEventLoop();
-	gamelibI->onShutdown();
-	delete gamelibI;
-	gamelibI = nullptr;
+	gamelib::client::GameLibRuntime runtime;
+	runtime.main(argc, argv, gamelib::client::newInstance(runtime.getUILogger()));
 }
-
-GAMELIB_NAMESPACE_START(client)
-
-Hypodermic::IContainer&
-HypodermicUtil::getContainer()
-{
-	return *container;
-}
-
-GAMELIB_NAMESPACE_END(client)
