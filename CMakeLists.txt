@@ -48,6 +48,14 @@ include(SetInstallPaths)
 # dependency management
 #######################################################################################################################
 
+# threads
+find_package(Threads REQUIRED)
+if(CMAKE_USE_PTHREADS_INIT)
+  add_definitions(-DGAMEKEEPER_PTHREAD)
+elseif(CMAKE_USE_WIN32_THREADS_INIT)
+  add_definitions(-DGAMEKEEPER_WIN32_THREAD)
+endif()
+
 # we need to patch some deps on MinGW
 if(MINGW)
   find_package(Patch REQUIRED)

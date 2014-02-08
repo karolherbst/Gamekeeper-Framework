@@ -18,10 +18,12 @@ if(WIN32)
 elseif(LINUX)
   file(GLOB platform_headers
     ${GAMEKEEPER_PRIVATE_INCLUDE_DIR}/gamekeeper/core/linuxinformation.h
+    ${GAMEKEEPER_PRIVATE_INCLUDE_DIR}/gamekeeper/core/pthreadhelper.h
   )
 
   file(GLOB platform_sources
     linuxinformation.cpp
+    pthreadhelper.cpp
   )
 endif()
 
@@ -32,6 +34,8 @@ file(GLOB headers
   ${GAMEKEEPER_PRIVATE_INCLUDE_DIR}/gamekeeper/core/log4cppLogger.h
   ${GAMEKEEPER_PRIVATE_INCLUDE_DIR}/gamekeeper/core/log4cpploggerFactory.h
   ${GAMEKEEPER_PRIVATE_INCLUDE_DIR}/gamekeeper/core/log4cppLoggerStream.h
+  ${GAMEKEEPER_PRIVATE_INCLUDE_DIR}/gamekeeper/core/stdc++11threadmanager.h
+  ${GAMEKEEPER_PRIVATE_INCLUDE_DIR}/gamekeeper/core/threadmanager.h
   ${GAMEKEEPER_PRIVATE_INCLUDE_DIR}/gamekeeper/core/xdgpaths.h
   ${platform_headers}
 )
@@ -42,6 +46,7 @@ file(GLOB sources
   log4cppLogger.cpp
   log4cpploggerFactory.cpp
   log4cppLoggerStream.cpp
+  stdc++11threadmanager.cpp
   xdgpaths.cpp
   ${platform_sources}
 )
@@ -52,4 +57,5 @@ target_link_libraries(gamekeeperCore
   ${CURL_LIBRARIES}
   ${LOG4CPP_LIBRARIES}
   ${Boost_SYSTEM_LIBRARY}
+  ${CMAKE_THREAD_LIBS_INIT}
 )
