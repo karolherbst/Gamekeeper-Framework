@@ -54,10 +54,4 @@ PthreadHelper::getNameOfThread(std::thread & thread)
 	return name;
 }
 
-void
-PthreadHelper::interrupt(std::thread & thread)
-{
-	pthread_cancel(thread.native_handle());
-}
-
 GAMEKEEPER_NAMESPACE_END(core)
