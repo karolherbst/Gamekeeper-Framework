@@ -33,17 +33,22 @@ StdCpp11ThreadManager::StdCpp11ThreadManager(std::shared_ptr<NativeThreadHelper>
 :	nativeThreadHelper(_nativeThreadHelper),
 	logger(loggerFactory->getComponentLogger("Threads")){}
 
-void
-StdCpp11ThreadManager::tryJoinFor(time_t seconds)
+bool
+StdCpp11ThreadManager::tryJoinFor(int64_t milliseconds)
 {
-	for(auto it = this->activeThreads.begin(); it != this->activeThreads.end(); it++)
+	if(!this->activeThreads.empty())
 	{
-		std::thread & thread =  (*it).second;
-		if(thread.joinable())
-		{
-			thread.join();
-		}
+		this->logger << LogLevel::Info << "waiting for threads (count: " << this->activeThreads.size()
+			<< ')' << endl;
+		std::this_thread::sleep_for(std::chrono::milliseconds(milliseconds));
 	}
+
+	if(!this->activeThreads.empty())
+	{
+		this->logger << LogLevel::Error << "there are still active threads" << endl;
+		return false;
+	}
+	return true;
 }
 
 void
