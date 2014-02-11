@@ -50,9 +50,15 @@ StdCpp11ThreadManager::tryJoinFor(time_t seconds)
 void
 StdCpp11ThreadManager::createThread(const char * name, std::function<void()> function)
 {
-	std::thread newThread(function);
+	std::thread newThread([this, function]() {
+		function();
+		this->logger << LogLevel::Debug << "Thread \"" <<
+			this->nativeThreadHelper->getNameOfThread(
+				this->activeThreads[std::this_thread::get_id()]) << "\" finished" << endl;
+	});
 	this->nativeThreadHelper->setNameOfThread(newThread, name);
 	this->activeThreads.insert(std::make_pair(newThread.get_id(), std::move(newThread)));
+	this->logger << LogLevel::Debug << "Thread \"" << name << "\" created" << endl;
 }
 
 GAMEKEEPER_NAMESPACE_END(core)
