@@ -33,6 +33,7 @@ interface PRIVATE_API NativeThreadHelper
 {
 	PRIVATE_API GAMEKEEPER_INTERFACE_METHOD(void setNameOfThreadHandle(std::thread::native_handle_type handle,
 	                                                                const char * name));
+	PRIVATE_API GAMEKEEPER_INTERFACE_METHOD(std::string getNameOfThreadHandle(std::thread::native_handle_type handle));
 	PRIVATE_API GAMEKEEPER_INTERFACE_METHOD(void interrupt(std::thread::native_handle_type handle));
 };
 

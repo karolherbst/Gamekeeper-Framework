@@ -31,6 +31,7 @@ class PUBLIC_API PthreadHelper : public NativeThreadHelper
 {
 	PRIVATE_API GAMEKEEPER_IMPLEMENTATION_OVERRIDE(void setNameOfThreadHandle(std::thread::native_handle_type handle,
 	                                                                          const char * name));
+	PRIVATE_API GAMEKEEPER_IMPLEMENTATION_OVERRIDE(std::string getNameOfThreadHandle(std::thread::native_handle_type handle));
 	PRIVATE_API GAMEKEEPER_IMPLEMENTATION_OVERRIDE(void interrupt(std::thread::native_handle_type handle));
 };
 

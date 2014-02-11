@@ -32,6 +32,27 @@ PthreadHelper::setNameOfThreadHandle(std::thread::native_handle_type handle, con
 	pthread_setname_np(handle, name);
 }
 
+std::string
+PthreadHelper::getNameOfThreadHandle(std::thread::native_handle_type handle)
+{
+	// Linux documentation suggest a minimum of 16 and IBM requires it, but the latter isn't important
+	uint8_t size = 16;
+	char * buffer = new char[size];
+
+	// 64 is the biggest possible value, if we jump with 128 into the body, it will be duplicated to 256, which
+	// is 0 for 8 bit integers
+	while(pthread_getname_np(handle, buffer, size) == ERANGE && size < 128)
+	{
+		delete[] buffer;
+		size *= 2;
+		buffer = new char[size];
+	}
+
+	std::string name(buffer);
+	delete buffer;
+	return name;
+}
+
 void
 PthreadHelper::interrupt(std::thread::native_handle_type handle)
 {
