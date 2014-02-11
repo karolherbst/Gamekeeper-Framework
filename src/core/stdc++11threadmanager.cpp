@@ -43,7 +43,6 @@ StdCpp11ThreadManager::tryJoinFor(time_t seconds)
 		{
 			thread.join();
 		}
-		this->activeThreads.erase(it);
 	}
 }
 
@@ -59,9 +58,11 @@ StdCpp11ThreadManager::createThread(const char * name, ThreadFunction function)
 {
 	std::thread newThread([this, function]() {
 		function(this->interruptionRequested);
-		this->logger << LogLevel::Debug << "Thread \"" <<
-			this->nativeThreadHelper->getNameOfThread(this->activeThreads[std::this_thread::get_id()]) <<
+		std::thread & t = this->activeThreads.at(std::this_thread::get_id());
+		this->logger << LogLevel::Debug << "Thread \"" << this->nativeThreadHelper->getNameOfThread(t) <<
 			"\" finished" << endl;
+		t.detach();
+		this->activeThreads.erase(std::this_thread::get_id());
 	});
 	this->nativeThreadHelper->setNameOfThread(newThread, name);
 	this->activeThreads.insert(std::make_pair(newThread.get_id(), std::move(newThread)));
