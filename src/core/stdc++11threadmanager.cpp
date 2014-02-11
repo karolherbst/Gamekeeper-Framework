@@ -48,10 +48,17 @@ StdCpp11ThreadManager::tryJoinFor(time_t seconds)
 }
 
 void
-StdCpp11ThreadManager::createThread(const char * name, std::function<void()> function)
+StdCpp11ThreadManager::interruptAll()
+{
+	this->interruptionRequested = true;
+	this->logger << LogLevel::Debug << "Thread interruption requested" << endl;
+}
+
+void
+StdCpp11ThreadManager::createThread(const char * name, ThreadFunction function)
 {
 	std::thread newThread([this, function]() {
-		function();
+		function(this->interruptionRequested);
 		this->logger << LogLevel::Debug << "Thread \"" <<
 			this->nativeThreadHelper->getNameOfThread(
 				this->activeThreads[std::this_thread::get_id()]) << "\" finished" << endl;

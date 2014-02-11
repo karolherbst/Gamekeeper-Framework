@@ -199,6 +199,7 @@ GameKeeperRuntime::main(int argc, const char* argv[], GameKeeperUI * gameKeeperU
 	this->gameKeeperUI->startEventLoop();
 
 	std::shared_ptr<gamekeeper::core::ThreadManager> threadManager = container->resolve<gamekeeper::core::ThreadManager>();
+	threadManager->interruptAll();
 	threadManager->tryJoinFor(10);
 
 	this->gameKeeperUI->onShutdown();

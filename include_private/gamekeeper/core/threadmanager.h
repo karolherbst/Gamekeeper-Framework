@@ -51,6 +51,16 @@ interface PUBLIC_API ThreadManager
 	 * @param[in] seconds the amount of seconds to wait
 	 */
 	PUBLIC_API GAMEKEEPER_INTERFACE_METHOD(void tryJoinFor(time_t seconds));
+
+	/**
+	 * this method interrupts every thread except the main one.
+	 *
+	 * This will most likely only happen at application termination
+	 *
+	 * @author Karol Herbst
+	 * @since 0
+	 */
+	PUBLIC_API GAMEKEEPER_INTERFACE_METHOD(void interruptAll());
 };
 
 GAMEKEEPER_NAMESPACE_END(core)
