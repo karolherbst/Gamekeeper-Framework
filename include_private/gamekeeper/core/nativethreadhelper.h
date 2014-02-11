@@ -35,6 +35,7 @@ GAMEKEEPER_NAMESPACE_START(core)
 interface PRIVATE_API NativeThreadHelper
 {
 	PRIVATE_API GAMEKEEPER_INTERFACE_METHOD(void setNameOfThread(std::thread & thread, const char * name));
+	PRIVATE_API GAMEKEEPER_INTERFACE_METHOD(std::string getNameOfThread(std::thread & thread));
 };
 
 GAMEKEEPER_NAMESPACE_END(core)

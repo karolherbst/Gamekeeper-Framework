@@ -37,4 +37,10 @@ PthreadHelper::setNameOfThread(std::thread & thread, const char * name)
 	pthread_setname_np(thread.native_handle(), cutedName.c_str());
 }
 
+std::string
+PthreadHelper::getNameOfThread(std::thread & thread)
+{
+	return this->threadNames[&thread];
+}
+
 GAMEKEEPER_NAMESPACE_END(core)
