@@ -23,6 +23,7 @@
 
 #include <gamekeeper/core/common.h>
 
+#include <atomic>
 #include <functional>
 
 #include <gamekeeper/core/interface.h>
@@ -45,13 +46,27 @@ interface PUBLIC_API ThreadFactory
 	PUBLIC_API GAMEKEEPER_INTERFACE_DESTRUCTOR(ThreadFactory)
 
 	/**
+	 * Signature of functions used for creating Threads.
+	 *
+	 * the atomic value of interrupted will be set to true if the thread should terminate. The thread should have
+	 * enough "termination points" so that the point will be reached at least every 10 seconds. Otherwise threads
+	 * will be killed gracefully through the runtime leaving them in undefined state with leaked ressources.
+	 *
+	 * @author Karol Herbst
+	 * @since 0
+	 *
+	 * @param[in] interrupted the atomc interruption flag
+	 */
+	typedef std::function<void(const std::atomic<bool> & interrupted)> ThreadFunction;
+
+	/**
 	 * @author Karol Herbst
 	 * @since 0
 	 *
 	 * @param[in] name the name of the thread
 	 * @param[in] function the function run within the thread
 	 */
-	PUBLIC_API GAMEKEEPER_INTERFACE_METHOD(void createThread(const char * name, std::function<void()> function));
+	PUBLIC_API GAMEKEEPER_INTERFACE_METHOD(void createThread(const char * name, ThreadFunction function));
 };
 
 GAMEKEEPER_NAMESPACE_END(core)

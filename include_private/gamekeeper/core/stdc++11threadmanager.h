@@ -23,6 +23,7 @@
 
 #include <gamekeeper/core/common.h>
 
+#include <atomic>
 #include <map>
 #include <memory>
 #include <thread>
@@ -42,12 +43,12 @@ public:
 	PUBLIC_API StdCpp11ThreadManager(std::shared_ptr<NativeThreadHelper>, std::shared_ptr<LoggerFactory>);
 	PRIVATE_API GAMEKEEPER_IMPLEMENTATION_OVERRIDE(void tryJoinFor(time_t seconds));
 	PRIVATE_API GAMEKEEPER_IMPLEMENTATION_OVERRIDE(void interruptAll());
-	PRIVATE_API GAMEKEEPER_IMPLEMENTATION_OVERRIDE(void createThread(const char * name,
-	                                               std::function<void()> function));
+	PRIVATE_API GAMEKEEPER_IMPLEMENTATION_OVERRIDE(void createThread(const char * name, ThreadFunction function));
 private:
 	Logger & logger;
 	std::map<std::thread::id, std::thread> activeThreads;
 	std::shared_ptr<NativeThreadHelper> nativeThreadHelper;
+	std::atomic<bool> interruptionRequested{false};
 };
 
 GAMEKEEPER_NAMESPACE_END(core)
