@@ -23,18 +23,20 @@
 
 #include <gamekeeper/core/common.h>
 
-#include <thread>
-
 #include <gamekeeper/core/interface.h>
+
+namespace std
+{
+	class thread;
+}
 
 GAMEKEEPER_NAMESPACE_START(core)
 
 interface PRIVATE_API NativeThreadHelper
 {
-	PRIVATE_API GAMEKEEPER_INTERFACE_METHOD(void setNameOfThreadHandle(std::thread::native_handle_type handle,
-	                                                                const char * name));
-	PRIVATE_API GAMEKEEPER_INTERFACE_METHOD(std::string getNameOfThreadHandle(std::thread::native_handle_type handle));
-	PRIVATE_API GAMEKEEPER_INTERFACE_METHOD(void interrupt(std::thread::native_handle_type handle));
+	PRIVATE_API GAMEKEEPER_INTERFACE_METHOD(void setNameOfThread(std::thread & thread, const char * name));
+	PRIVATE_API GAMEKEEPER_INTERFACE_METHOD(std::string getNameOfThread(std::thread & thread));
+	PRIVATE_API GAMEKEEPER_INTERFACE_METHOD(void interrupt(std::thread & thread));
 };
 
 GAMEKEEPER_NAMESPACE_END(core)

@@ -23,17 +23,18 @@
 #include "pthreadhelper.h"
 
 #include <pthread.h>
+#include <thread>
 
 GAMEKEEPER_NAMESPACE_START(core)
 
 void
-PthreadHelper::setNameOfThreadHandle(std::thread::native_handle_type handle, const char * name)
+PthreadHelper::setNameOfThread(std::thread & thread, const char * name)
 {
-	pthread_setname_np(handle, name);
+	pthread_setname_np(thread.native_handle(), name);
 }
 
 std::string
-PthreadHelper::getNameOfThreadHandle(std::thread::native_handle_type handle)
+PthreadHelper::getNameOfThread(std::thread & thread)
 {
 	// Linux documentation suggest a minimum of 16 and IBM requires it, but the latter isn't important
 	uint8_t size = 16;
@@ -41,7 +42,7 @@ PthreadHelper::getNameOfThreadHandle(std::thread::native_handle_type handle)
 
 	// 64 is the biggest possible value, if we jump with 128 into the body, it will be duplicated to 256, which
 	// is 0 for 8 bit integers
-	while(pthread_getname_np(handle, buffer, size) == ERANGE && size < 128)
+	while(pthread_getname_np(thread.native_handle(), buffer, size) == ERANGE && size < 128)
 	{
 		delete[] buffer;
 		size *= 2;
@@ -54,9 +55,9 @@ PthreadHelper::getNameOfThreadHandle(std::thread::native_handle_type handle)
 }
 
 void
-PthreadHelper::interrupt(std::thread::native_handle_type handle)
+PthreadHelper::interrupt(std::thread & thread)
 {
-	pthread_cancel(handle);
+	pthread_cancel(thread.native_handle());
 }
 
 GAMEKEEPER_NAMESPACE_END(core)

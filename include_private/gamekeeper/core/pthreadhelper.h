@@ -29,10 +29,9 @@ GAMEKEEPER_NAMESPACE_START(core)
 
 class PUBLIC_API PthreadHelper : public NativeThreadHelper
 {
-	PRIVATE_API GAMEKEEPER_IMPLEMENTATION_OVERRIDE(void setNameOfThreadHandle(std::thread::native_handle_type handle,
-	                                                                          const char * name));
-	PRIVATE_API GAMEKEEPER_IMPLEMENTATION_OVERRIDE(std::string getNameOfThreadHandle(std::thread::native_handle_type handle));
-	PRIVATE_API GAMEKEEPER_IMPLEMENTATION_OVERRIDE(void interrupt(std::thread::native_handle_type handle));
+	PRIVATE_API GAMEKEEPER_IMPLEMENTATION_OVERRIDE(void setNameOfThread(std::thread & thread, const char * name));
+	PRIVATE_API GAMEKEEPER_IMPLEMENTATION_OVERRIDE(std::string getNameOfThread(std::thread & thread));
+	PRIVATE_API GAMEKEEPER_IMPLEMENTATION_OVERRIDE(void interrupt(std::thread & thread));
 };
 
 GAMEKEEPER_NAMESPACE_END(core)

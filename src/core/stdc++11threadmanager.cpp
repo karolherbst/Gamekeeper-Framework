@@ -62,11 +62,10 @@ StdCpp11ThreadManager::createThread(const char * name, std::function<void()> fun
 	std::thread newThread([this, function]() {
 		function();
 		this->logger << LogLevel::Debug << "Thread \"" <<
-			this->nativeThreadHelper->getNameOfThreadHandle(
-				this->activeThreads[std::this_thread::get_id()].native_handle()) << "\" finished" <<
-			endl;
+			this->nativeThreadHelper->getNameOfThread(this->activeThreads[std::this_thread::get_id()]) <<
+			"\" finished" << endl;
 	});
-	this->nativeThreadHelper->setNameOfThreadHandle(newThread.native_handle(), name);
+	this->nativeThreadHelper->setNameOfThread(newThread, name);
 	this->activeThreads.insert(std::make_pair(newThread.get_id(), std::move(newThread)));
 	this->logger << LogLevel::Debug << "Thread \"" << name << "\" created" << endl;
 }
