@@ -33,16 +33,20 @@
 
 GAMEKEEPER_NAMESPACE_START(core)
 
+class Logger;
+class LoggerFactory;
+
 class PUBLIC_API StdCpp11ThreadManager : public ThreadManager, public ThreadFactory
 {
 public:
-	PUBLIC_API StdCpp11ThreadManager(std::shared_ptr<NativeThreadHelper>);
+	PUBLIC_API StdCpp11ThreadManager(std::shared_ptr<NativeThreadHelper>, std::shared_ptr<LoggerFactory>);
 	PRIVATE_API GAMEKEEPER_IMPLEMENTATION_OVERRIDE(void tryJoinFor(time_t seconds));
 	PRIVATE_API GAMEKEEPER_IMPLEMENTATION_OVERRIDE(void createThread(const char * name,
 	                                               std::function<void()> function));
 private:
 	typedef std::map<std::thread::id, std::thread> ThreadMap;
 
+	Logger & logger;
 	ThreadMap activeThreads;
 	std::shared_ptr<NativeThreadHelper> nativeThreadHelper;
 };

@@ -184,7 +184,8 @@ GameKeeperRuntime::main(int argc, const char* argv[], GameKeeperUI * gameKeeperU
 		containerBuilder.registerType<THREADHELPERCLASS>()->
 		        as<NativeThreadHelper>()->
 		        singleInstance();
-		containerBuilder.registerType<StdCpp11ThreadManager>(CREATE(new StdCpp11ThreadManager(INJECT(NativeThreadHelper))))->
+		containerBuilder.registerType<StdCpp11ThreadManager>(CREATE(new StdCpp11ThreadManager(INJECT(NativeThreadHelper),
+		                                                                                      INJECT(LoggerFactory))))->
 		        as<ThreadManager>()->
 		        as<ThreadFactory>()->
 		        singleInstance();

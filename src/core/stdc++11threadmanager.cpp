@@ -22,10 +22,16 @@
 
 #include "stdc++11threadmanager.h"
 
+#include <gamekeeper/core/logger.h>
+#include <gamekeeper/core/loggerFactory.h>
+#include <gamekeeper/core/loggerStream.h>
+
 GAMEKEEPER_NAMESPACE_START(core)
 
-StdCpp11ThreadManager::StdCpp11ThreadManager(std::shared_ptr<NativeThreadHelper> _nativeThreadHelper)
-:	nativeThreadHelper(_nativeThreadHelper){}
+StdCpp11ThreadManager::StdCpp11ThreadManager(std::shared_ptr<NativeThreadHelper> _nativeThreadHelper,
+                                             std::shared_ptr<LoggerFactory> loggerFactory)
+:	nativeThreadHelper(_nativeThreadHelper),
+	logger(loggerFactory->getComponentLogger("Threads")){}
 
 void
 StdCpp11ThreadManager::tryJoinFor(time_t seconds)
