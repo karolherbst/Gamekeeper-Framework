@@ -200,7 +200,7 @@ GameKeeperRuntime::main(int argc, const char* argv[], GameKeeperUI * gameKeeperU
 
 	std::shared_ptr<gamekeeper::core::ThreadManager> threadManager = container->resolve<gamekeeper::core::ThreadManager>();
 	threadManager->interruptAll();
-	threadManager->tryJoinFor(10);
+	for(int8_t count = 0; count < 5 && !threadManager->tryJoinFor(2000); count++){}
 
 	this->gameKeeperUI->onShutdown();
 
