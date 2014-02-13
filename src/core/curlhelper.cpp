@@ -83,7 +83,7 @@ CurlHelper::getCookies(CURL * curl)
 	struct curl_slist * list;
 	HttpFileDownloader::CookieBuket result;
 	curl_easy_getinfo(curl, CURLINFO_COOKIELIST, &list);
-	
+
 	while(list != nullptr)
 	{
 		std::vector<std::string> strings;
@@ -91,7 +91,7 @@ CurlHelper::getCookies(CURL * curl)
 		result[strings[5]] = strings[6];
 		list = list->next;
 	}
-	
+
 	curl_slist_free_all(list);
 	return result;
 }
