@@ -22,6 +22,8 @@
 
 #include "stdc++11threadmanager.h"
 
+#include <mutex>
+
 #include <gamekeeper/core/logger.h>
 #include <gamekeeper/core/loggerFactory.h>
 #include <gamekeeper/core/loggerStream.h>
@@ -36,11 +38,27 @@ StdCpp11ThreadManager::StdCpp11ThreadManager(std::shared_ptr<NativeThreadHelper>
 bool
 StdCpp11ThreadManager::tryJoinFor(int64_t milliseconds)
 {
+	namespace chr = std::chrono;
+	// construct the time_point first
+	auto tp = chr::system_clock::now() + std::chrono::milliseconds(milliseconds);
+
+	std::unique_lock<std::timed_mutex> activeThreadsLock(activeThreadsMtx, tp);
+
+	if(!activeThreadsLock)
+	{
+		this->logger << LogLevel::Warn << "couldn't get lock, propably another thread is created now" << endl;
+		return false;
+	}
+
 	if(!this->activeThreads.empty())
 	{
 		this->logger << LogLevel::Info << "waiting for threads (count: " << this->activeThreads.size()
 			<< ')' << endl;
-		std::this_thread::sleep_for(std::chrono::milliseconds(milliseconds));
+		activeThreadsLock.unlock();
+		std::this_thread::sleep_until(tp);
+		// lock again, because another thread might be being created
+		if(!this->interruptionRequested)
+			activeThreadsLock.lock();
 	}
 
 	if(!this->activeThreads.empty())
@@ -61,16 +79,36 @@ StdCpp11ThreadManager::interruptAll()
 void
 StdCpp11ThreadManager::createThread(const char * name, ThreadFunction function)
 {
-	std::thread newThread([this, function]() {
+	// global lock
+	std::unique_lock<std::timed_mutex> activeThreadsLock(activeThreadsMtx);
+
+	// TODO: throw exception
+	if(this->interruptionRequested)
+		return;
+
+	// local insert lock
+	std::shared_ptr<std::mutex> mtxP(new std::mutex());
+	std::unique_lock<std::mutex> lock(*mtxP);
+	std::thread newThread([this, function, mtxP]()
+	{
 		function(this->interruptionRequested);
+		// we can only access the thread object, after it was inserted
+		std::lock_guard<std::mutex> guard(*mtxP);
 		std::thread & t = this->activeThreads.at(std::this_thread::get_id());
 		this->logger << LogLevel::Debug << "Thread \"" << this->nativeThreadHelper->getNameOfThread(t) <<
 			"\" finished" << endl;
+		// we have to detach here, because otherwise terminate() is called within this thread in erase()
 		t.detach();
+		std::lock_guard<std::timed_mutex> activeThreadsLock(activeThreadsMtx);
 		this->activeThreads.erase(std::this_thread::get_id());
 	});
-	this->nativeThreadHelper->setNameOfThread(newThread, name);
-	this->activeThreads.insert(std::make_pair(newThread.get_id(), std::move(newThread)));
+	// sadly :( gcc 4.7 doesn't know emplace
+	std::thread & newThreadRef = (*this->activeThreads.insert(
+		std::make_pair(newThread.get_id(), std::move(newThread))).first).second;
+	// member locks should be unlocked first
+	activeThreadsLock.unlock();
+	lock.unlock();
+	this->nativeThreadHelper->setNameOfThread(newThreadRef, name);
 	this->logger << LogLevel::Debug << "Thread \"" << name << "\" created" << endl;
 }
 

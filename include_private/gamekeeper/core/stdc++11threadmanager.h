@@ -26,6 +26,7 @@
 #include <atomic>
 #include <map>
 #include <memory>
+#include <mutex>
 #include <thread>
 
 #include <gamekeeper/core/nativethreadhelper.h>
@@ -48,7 +49,10 @@ private:
 	typedef std::map<std::thread::id, std::thread> ThreadMap;
 
 	Logger & logger;
+
 	ThreadMap activeThreads;
+	std::timed_mutex activeThreadsMtx;
+
 	std::shared_ptr<NativeThreadHelper> nativeThreadHelper;
 	std::atomic<bool> interruptionRequested{false};
 };
