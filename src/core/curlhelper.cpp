@@ -20,11 +20,11 @@
 
 #include "pch.h"
 
-#include "curlHelper.h"
-
 #include <algorithm>
 #include <iostream>
 #include <sstream>
+
+#include <gamelib/core/curlhelper.h>
 
 #include <boost/algorithm/string/classification.hpp>
 #include <boost/algorithm/string/split.hpp>

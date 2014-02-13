@@ -23,11 +23,10 @@
 
 #include <gamelib/core/common.h>
 
-#include "curlFileDownloader.h"
-
 #include <map>
 
 #include <curl/curl.h>
+#include <gamelib/core/httpfiledownloader.h>
 
 GAMELIB_NAMESPACE_START(core)
 

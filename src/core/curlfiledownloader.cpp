@@ -20,9 +20,8 @@
 
 #include "pch.h"
 
-#include "curlFileDownloader.h"
-#include "curlHelper.h"
-
+#include <gamelib/core/curlfiledownloader.h>
+#include <gamelib/core/curlhelper.h>
 #include <gamelib/core/logger.h>
 #include <gamelib/core/loggerFactory.h>
 #include <gamelib/core/loggerStream.h>
