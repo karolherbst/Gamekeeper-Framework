@@ -29,6 +29,8 @@
 #include <boost/algorithm/string/classification.hpp>
 #include <boost/algorithm/string/split.hpp>
 
+#include <curl/curl.h>
+
 GAMELIB_NAMESPACE_START(core)
 
 struct CURLPrivateData
@@ -36,8 +38,9 @@ struct CURLPrivateData
 	std::string postData;
 };
 
-std::map<CURL *, CURLPrivateData *> CurlHelper::curlData;
-std::string CurlHelper::userAgent;
+CurlHelper::CurlHelper(std::string newUserAgent)
+:	userAgent(newUserAgent + " libcurl/" + curl_version_info(CURLVERSION_NOW)->version){
+}
 
 int
 CurlHelper::curlFileDownloadCallback(void * const buffer, size_t bufferSize, size_t dataLength,
@@ -124,16 +127,6 @@ CurlHelper::deleteCURL(CURL * curl)
 	delete curlData[curl];
 	curlData.erase(curl);
 	curl_easy_cleanup(curl);
-}
-
-void
-CurlHelper::setUserAgent(std::string newUserAgent)
-{
-	curl_version_info_data *versionData = curl_version_info(CURLVERSION_NOW);
-
-	std::stringstream ss;
-	ss << newUserAgent << " libcurl/" << versionData->version;
-	userAgent = ss.str();
 }
 
 GAMELIB_NAMESPACE_END(core)

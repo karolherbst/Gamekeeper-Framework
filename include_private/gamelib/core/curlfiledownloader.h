@@ -25,6 +25,7 @@
 
 #include <memory>
 
+#include <gamelib/core/curlhelper.h>
 #include <gamelib/core/httpfiledownloader.h>
 
 GAMELIB_NAMESPACE_START(core)
@@ -46,6 +47,7 @@ public:
 	                                                                                const Form& form));
 private:
 	Logger & logger;
+	CurlHelper curlHelper;
 
 	PRIVATE_API void handleCurlError(int code);
 };

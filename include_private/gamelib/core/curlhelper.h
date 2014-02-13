@@ -25,8 +25,9 @@
 
 #include <map>
 
-#include <curl/curl.h>
 #include <gamelib/core/httpfiledownloader.h>
+
+typedef void CURL;
 
 GAMELIB_NAMESPACE_START(core)
 
@@ -38,20 +39,19 @@ public:
 	PRIVATE_API static int curlFileDownloadCallback(void * const buffer, size_t bufferSize, size_t dataLength,
 	                                                FileDownloader::DownloadCallback * func);
 	PRIVATE_API static int emptyCurlFileDownloadCallback(void * const buffer, size_t bufferSize, size_t dataLength,
-	                                                void * func);
-	PRIVATE_API static void addCookiesToCurl(const HttpFileDownloader::CookieBuket& cookies, CURL * curl);
-	PRIVATE_API static HttpFileDownloader::CookieBuket getCookies(CURL * curl);
-	PRIVATE_API static void addFormToCurl(const HttpFileDownloader::Form& form, CURL * curl);
-	PRIVATE_API static CURL * createCURL(const char * const url);
-	PRIVATE_API static void deleteCURL(CURL * curl);
-	PRIVATE_API static void setUserAgent(std::string userAgent);
+	                                              void * func);
+
+	PRIVATE_API CurlHelper(std::string userAgent);
+	PRIVATE_API void addCookiesToCurl(const HttpFileDownloader::CookieBuket& cookies, CURL * curl);
+	PRIVATE_API HttpFileDownloader::CookieBuket getCookies(CURL * curl);
+	PRIVATE_API void addFormToCurl(const HttpFileDownloader::Form& form, CURL * curl);
+	PRIVATE_API CURL * createCURL(const char * const url);
+	PRIVATE_API void deleteCURL(CURL * curl);
 private:
-	CurlHelper();
+	const std::string userAgent;
+	std::map<CURL *, CURLPrivateData *> curlData;
 
-	static std::string userAgent;
-
-	PRIVATE_API static std::map<CURL *, CURLPrivateData *> curlData;
-	PRIVATE_API static std::string& createUserAgentString();
+	PRIVATE_API std::string& createUserAgentString();
 };
 
 GAMELIB_NAMESPACE_END(core)
