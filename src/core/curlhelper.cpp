@@ -41,7 +41,7 @@ std::string CurlHelper::userAgent;
 
 int
 CurlHelper::curlFileDownloadCallback(void * const buffer, size_t bufferSize, size_t dataLength,
-                                     CurlFileDownloader::DownloadCallback * func)
+                                     HttpFileDownloader::DownloadCallback * func)
 {
 	if (func->operator()(buffer, bufferSize, dataLength))
 	{
@@ -60,7 +60,7 @@ CurlHelper::emptyCurlFileDownloadCallback(void * const buffer, size_t bufferSize
 }
 
 void
-CurlHelper::addCookiesToCurl(const CurlFileDownloader::CookieBuket& cookies, CURL * curl)
+CurlHelper::addCookiesToCurl(const HttpFileDownloader::CookieBuket& cookies, CURL * curl)
 {
 	if(!cookies.empty())
 	{
@@ -74,11 +74,11 @@ CurlHelper::addCookiesToCurl(const CurlFileDownloader::CookieBuket& cookies, CUR
 	}
 }
 
-CurlFileDownloader::CookieBuket
+HttpFileDownloader::CookieBuket
 CurlHelper::getCookies(CURL * curl)
 {
 	struct curl_slist * list;
-	CurlFileDownloader::CookieBuket result;
+	HttpFileDownloader::CookieBuket result;
 	curl_easy_getinfo(curl, CURLINFO_COOKIELIST, &list);
 	
 	while(list != nullptr)
@@ -94,7 +94,7 @@ CurlHelper::getCookies(CURL * curl)
 }
 
 void
-CurlHelper::addFormToCurl(const CurlFileDownloader::Form& form, CURL * curl)
+CurlHelper::addFormToCurl(const HttpFileDownloader::Form& form, CURL * curl)
 {
 	if(!form.empty())
 	{
