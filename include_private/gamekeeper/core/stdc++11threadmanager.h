@@ -26,6 +26,7 @@
 #include <atomic>
 #include <map>
 #include <memory>
+#include <mutex>
 #include <thread>
 
 #include <gamekeeper/core/nativethreadhelper.h>
@@ -46,7 +47,10 @@ public:
 	PRIVATE_API GAMEKEEPER_IMPLEMENTATION_OVERRIDE(void createThread(const char * name, ThreadFunction function));
 private:
 	Logger & logger;
+
 	std::map<std::thread::id, std::thread> activeThreads;
+	std::timed_mutex activeThreadsMtx;
+
 	std::shared_ptr<NativeThreadHelper> nativeThreadHelper;
 	std::atomic<bool> interruptionRequested{false};
 };
