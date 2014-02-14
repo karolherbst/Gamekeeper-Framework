@@ -147,7 +147,7 @@ GameLibRuntime::main(int argc, const char* argv[], GameLibUI * gameLibUI)
 	std::shared_ptr<gamelib::core::LoggerFactory> loggerFactory = container->resolve<gamelib::core::LoggerFactory>();
 	loggerFactory->getComponentLogger("main") << gamelib::core::LogLevel::Debug << "firing up gamelib" << gamelib::core::endl;
 
-	this->gameLibUI->init(argc, argv);
+	this->gameLibUI->init(vm);
 	this->gameLibUI->startEventLoop();
 	this->gameLibUI->onShutdown();
 

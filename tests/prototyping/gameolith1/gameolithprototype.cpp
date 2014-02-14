@@ -86,7 +86,7 @@ GameolithPrototype::GameolithPrototype(gamelib::core::Logger& _logger)
 :	logger(_logger){}
 
 void
-GameolithPrototype::init(int argc, const char* argv[])
+GameolithPrototype::init(const ConfigMap &)
 {
 	config["bindings.games"] = "$[*]";
 	config["bindings.game.id"] = "@.slug";

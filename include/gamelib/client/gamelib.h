@@ -27,6 +27,15 @@
 
 #include <Hypodermic/IContainer.h>
 
+namespace boost
+{
+namespace program_options
+{
+class options_description_easy_init;
+class variable_value;
+}
+}
+
 GAMELIB_NAMESPACE_START(core)
 class Logger;
 GAMELIB_NAMESPACE_END(core)
@@ -46,6 +55,7 @@ GAMELIB_NAMESPACE_START(client)
  */
 interface PUBLIC_API GameLibUI
 {
+	typedef std::map<std::string, boost::program_options::variable_value> ConfigMap;
 	/**
 	 * default destructor
 	 *
@@ -62,11 +72,8 @@ interface PUBLIC_API GameLibUI
 	 *
 	 * @author Karol Herbst
 	 * @since 0
-	 *
-	 * @param argc amount of arguments passed
-	 * @param argv array of application arguments
 	 */
-	PUBLIC_API GAMELIB_INTERFACE_METHOD(void init(int argc, const char* argv[]));
+	PUBLIC_API GAMELIB_INTERFACE_METHOD(void init(const ConfigMap & config));
 
 	/**
 	 * shutdown event handling method for GameLib
@@ -88,6 +95,21 @@ interface PUBLIC_API GameLibUI
 	 * @post blocks the current thread of execution
 	 */
 	PUBLIC_API GAMELIB_INTERFACE_METHOD(void startEventLoop());
+
+	/**
+	 * this method will be called to collect options used by the client
+	 *
+	 * @author Karol Herbst
+	 * @since 0
+	 *
+	 * @param[in] oaCmd the OptionAdder object for command line options
+	 * @param[in] oaFile the OptionAdder object for config file options
+	 * @param[in] oaBoth the OptionAdder object for config config file and command line options
+	 */
+	PUBLIC_INLINE GAMELIB_INTERFACE_METHOD_OPTIONAL(void addOptions(
+	                                                boost::program_options::options_description_easy_init & oaCmd,
+	                                                boost::program_options::options_description_easy_init & oaFile,
+	                                                boost::program_options::options_description_easy_init & oaBoth));
 };
 
 /**
