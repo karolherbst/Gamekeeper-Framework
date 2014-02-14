@@ -22,6 +22,8 @@
 
 #include <gamelib/core/common.h>
 
+#include <cstdlib>
+
 #include <gamelib/core/logger.h>
 #include <gamelib/core/loggerStream.h>
 #include <gamelib/client/gamelib.h>
@@ -80,7 +82,7 @@ GameLibRuntime::getUILogger()
 	return HypodermicUtil::getContainer().resolve<gamelib::core::LoggerFactory>()->getComponentLogger("UI.client");
 }
 
-void
+int
 GameLibRuntime::main(int argc, const char* argv[], GameLibUI * gameLibUI)
 {
 	this->gameLibUI = gameLibUI;
@@ -90,6 +92,8 @@ GameLibRuntime::main(int argc, const char* argv[], GameLibUI * gameLibUI)
 	this->gameLibUI->init(argc, argv);
 	this->gameLibUI->startEventLoop();
 	this->gameLibUI->onShutdown();
+
+	return EXIT_SUCCESS;
 }
 
 Hypodermic::IContainer&

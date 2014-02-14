@@ -44,5 +44,5 @@
 PUBLIC_API int main(int argc, const char* argv[])
 {
 	gamelib::client::GameLibRuntime runtime;
-	runtime.main(argc, argv, gamelib::client::newInstance(runtime.getUILogger()));
+	return runtime.main(argc, argv, gamelib::client::newInstance(runtime.getUILogger()));
 }

@@ -41,7 +41,7 @@ public:
 	PUBLIC_API GameLibRuntime();
 	PUBLIC_API ~GameLibRuntime();
 	PUBLIC_API gamelib::core::Logger& getUILogger();
-	PUBLIC_API void main(int argc, const char* argv[], GameLibUI *);
+	PUBLIC_API int main(int argc, const char* argv[], GameLibUI *);
 private:
 	GameLibUI * gameLibUI;
 };
