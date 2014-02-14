@@ -88,18 +88,6 @@ interface PUBLIC_API GameLibUI
 	 * @post blocks the current thread of execution
 	 */
 	PUBLIC_API GAMELIB_INTERFACE_METHOD(void startEventLoop());
-
-	/**
-	 * this method will be called, if the Client is invoked with the -h or --help argument
-	 *
-	 * It should just return a well formatted help string with all possible arguments handled by the client itself.
-	 *
-	 * @author Karol Herbst
-	 * @since 0
-	 *
-	 * @return a well formatted help string
-	 */
-	PUBLIC_INLINE GAMELIB_INTERFACE_METHOD_OPTIONAL(const char* getHelp());
 };
 
 /**
