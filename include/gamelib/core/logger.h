@@ -33,49 +33,49 @@ GAMELIB_NAMESPACE_START(core)
  * @author Karol Herbst
  * @since 0
  */
-enum class LogLevel
+enum class LogLevel : uint8_t
 {
 	/**
 	 * used for trace output
 	 *
 	 * everything can be put into this level as long as the input is useful
 	 */
-	Trace,
+	Trace = 5,
 
 	/**
 	 * used for debug output
 	 *
 	 * only needed info for debugging purposes, less than TRACE
 	 */
-	Debug,
+	Debug = 4,
 
 	/**
 	 * used for info output
 	 *
 	 * inform about special events like a failed login, or successfuly login. No technical information
 	 */
-	Info,
+	Info = 3,
 
 	/**
 	 * used for warning output
 	 *
 	 * warn about data integrity or missing stuff. Only use this if you expect future problems if the concern won't be fixed
 	 */
-	Warn,
+	Warn = 2,
 
 	/**
 	 * used for error output
 	 *
 	 * for unexpected errors (like exceptions)
 	 */
-	Error,
+	Error = 1,
 
 	/**
 	 * used for fatal output
 	 *
 	 * only used for fatal errors which will terminate the plugin/application
 	 */
-	Fatal
+	Fatal = 0
 };
 
 class LoggerStream;
