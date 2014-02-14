@@ -29,6 +29,10 @@
 #include <gamelib/client/gamelib.h>
 #include <gamelib/client/hypodermic.h>
 
+#include <boost/program_options/options_description.hpp>
+#include <boost/program_options/parsers.hpp>
+#include <boost/program_options/variables_map.hpp>
+
 #include <Hypodermic/ContainerBuilder.h>
 #include <Hypodermic/Helpers.h>
 
@@ -43,20 +47,63 @@
 #include <gamelib/core/log4cpploggerFactory.h>
 #include <gamelib/core/xdgpaths.h>
 
+namespace po = boost::program_options;
+
 GAMELIB_NAMESPACE_START(client)
 
+static std::shared_ptr<Hypodermic::IContainer> localContainer;
 static std::shared_ptr<Hypodermic::IContainer> container;
 
 GameLibRuntime::GameLibRuntime()
 {
+	using namespace gamelib::core;
+	Hypodermic::ContainerBuilder containerBuilder;
+
+	// set up IoC container
+	containerBuilder.registerType<Log4cppLoggerFactory>()->
+	        as<LoggerFactory>()->
+	        singleInstance();
+	localContainer = containerBuilder.build();
+}
+
+GameLibRuntime::~GameLibRuntime()
+{
+	delete this->gameLibUI;
+}
+
+gamelib::core::Logger&
+GameLibRuntime::getUILogger()
+{
+	return localContainer->resolve<gamelib::core::LoggerFactory>()->getComponentLogger("UI.client");
+}
+
+int
+GameLibRuntime::main(int argc, const char* argv[], GameLibUI * gameLibUI)
+{
+	this->gameLibUI = gameLibUI;
+
+	po::options_description desc("Global options");
+	desc.add_options()
+		("help", "produce help message");
+	po::variables_map vm;
+	po::store(po::parse_command_line(argc, argv, desc), vm);
+	po::notify(vm);
+
+	if(vm.count("help") > 0)
+	{
+		std::cout << desc << std::endl;
+		return EXIT_SUCCESS;
+	}
+
 	Hypodermic::ContainerBuilder containerBuilder;
 	{
 		using namespace gamelib::core;
 
 		// set up IoC container
-		containerBuilder.registerType<Log4cppLoggerFactory>()->
-		        as<LoggerFactory>()->
-		        singleInstance();
+		containerBuilder.registerInstance<LoggerFactory>(
+			localContainer->resolve<gamelib::core::LoggerFactory>())->
+			as<LoggerFactory>()->
+			singleInstance();
 		containerBuilder.registerType<OSINFORMATIONCLASS>()->
 		        as<OSInformation>()->
 		        singleInstance();
@@ -69,23 +116,7 @@ GameLibRuntime::GameLibRuntime()
 		        singleInstance();
 	}
 	container = containerBuilder.build();
-}
 
-GameLibRuntime::~GameLibRuntime()
-{
-	delete this->gameLibUI;
-}
-
-gamelib::core::Logger&
-GameLibRuntime::getUILogger()
-{
-	return HypodermicUtil::getContainer().resolve<gamelib::core::LoggerFactory>()->getComponentLogger("UI.client");
-}
-
-int
-GameLibRuntime::main(int argc, const char* argv[], GameLibUI * gameLibUI)
-{
-	this->gameLibUI = gameLibUI;
 	std::shared_ptr<gamelib::core::LoggerFactory> loggerFactory = container->resolve<gamelib::core::LoggerFactory>();
 	loggerFactory->getComponentLogger("main") << gamelib::core::LogLevel::Debug << "firing up gamelib" << gamelib::core::endl;
 
