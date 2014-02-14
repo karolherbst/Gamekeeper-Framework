@@ -53,7 +53,7 @@ interface PUBLIC_API GameLibUI
 	 * @since 0
 	 */
 	PUBLIC_INLINE GAMELIB_INTERFACE_DESTRUCTOR(GameLibUI)
-	
+
 	/**
 	 * init method for GameLib
 	 *
@@ -67,7 +67,7 @@ interface PUBLIC_API GameLibUI
 	 * @param argv array of application arguments
 	 */
 	PUBLIC_API GAMELIB_INTERFACE_METHOD(void init(int argc, const char* argv[]));
-	
+
 	/**
 	 * shutdown event handling method for GameLib
 	 *
@@ -77,7 +77,7 @@ interface PUBLIC_API GameLibUI
 	 * @since 0
 	 */
 	PUBLIC_API GAMELIB_INTERFACE_METHOD(void onShutdown());
-	
+
 	/**
 	 * starts the implementation specific event loop
 	 *
@@ -88,15 +88,15 @@ interface PUBLIC_API GameLibUI
 	 * @post blocks the current thread of execution
 	 */
 	PUBLIC_API GAMELIB_INTERFACE_METHOD(void startEventLoop());
-	
+
 	/**
 	 * this method will be called, if the Client is invoked with the -h or --help argument
-	 * 
+	 *
 	 * It should just return a well formatted help string with all possible arguments handled by the client itself.
-	 * 
+	 *
 	 * @author Karol Herbst
 	 * @since 0
-	 * 
+	 *
 	 * @return a well formatted help string
 	 */
 	PUBLIC_INLINE GAMELIB_INTERFACE_METHOD_OPTIONAL(const char* getHelp());

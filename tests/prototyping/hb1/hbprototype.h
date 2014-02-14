@@ -15,7 +15,7 @@ public:
 private:
 	const char* username = nullptr;
 	const char* userpass = nullptr;
-	
+
 	gamelib::core::Logger& logger;
 
 	bool handleRequest(void * const buffer, size_t sz, size_t n);

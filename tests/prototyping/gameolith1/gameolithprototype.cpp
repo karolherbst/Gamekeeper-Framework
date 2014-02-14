@@ -27,10 +27,10 @@ static std::string convertJsonPathToJsonCppPath(std::string path)
 	// we handle root as current
 	boost::replace_all(path, "$", "@");
 	boost::replace_all(path, "@.", ".");
-	
+
 	// we don't have any @. anymore
 	boost::replace_all(path, "@", ".");
-	
+
 	// if we have [*] at the end, it indicates an array only, but we don't use it
 	if(boost::ends_with(path, "[*]"))
 	{
