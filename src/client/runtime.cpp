@@ -82,18 +82,45 @@ GameLibRuntime::main(int argc, const char* argv[], GameLibUI * gameLibUI)
 {
 	this->gameLibUI = gameLibUI;
 
-	po::options_description desc("Global options");
-	desc.add_options()
+	po::options_description descGlobal("Global options");
+
+	descGlobal.add_options()
 		("help", "produce help message");
+
+	po::options_description cmdClient("Client options");
+	po::options_description fileClient;
+	po::options_description bothClient;
+	po::options_description_easy_init cmdClientEasy = cmdClient.add_options();
+	po::options_description_easy_init fileClientEasy = fileClient.add_options();
+	po::options_description_easy_init bothClientEasy = bothClient.add_options();
+
+	this->gameLibUI->addOptions(cmdClientEasy, fileClientEasy, bothClientEasy);
+
+	if(!bothClient.options().empty())
+	{
+		cmdClient.add(bothClient);
+	}
+
+	po::options_description descCmd;
+	descCmd.add(descGlobal);
+	if(!cmdClient.options().empty())
+	{
+		descCmd.add(cmdClient);
+	}
+
 	po::variables_map vm;
-	po::store(po::parse_command_line(argc, argv, desc), vm);
-	po::notify(vm);
+	po::store(po::parse_command_line(argc, argv, descCmd), vm);
 
 	if(vm.count("help") > 0)
 	{
-		std::cout << desc << std::endl;
+		std::cout << descCmd << std::endl;
 		return EXIT_SUCCESS;
 	}
+
+	//po::options_description descFile;
+	//descFile.add(fileClient).add(bothClient);
+	//po::store(po::parse_config_file("", descFile), vm);
+	po::notify(vm);
 
 	Hypodermic::ContainerBuilder containerBuilder;
 	{
