@@ -20,9 +20,8 @@
 
 #include "pch.h"
 
-#include "curlFileDownloader.h"
-#include "curlHelper.h"
-
+#include <gamelib/core/curlfiledownloader.h>
+#include <gamelib/core/curlhelper.h>
 #include <gamelib/core/logger.h>
 #include <gamelib/core/loggerFactory.h>
 #include <gamelib/core/loggerStream.h>
@@ -32,11 +31,11 @@
 GAMELIB_NAMESPACE_START(core)
 
 CurlFileDownloader::CurlFileDownloader(std::shared_ptr<LoggerFactory> loggerFactory)
-:	logger(loggerFactory->getComponentLogger("IO.curl"))
+:	logger(loggerFactory->getComponentLogger("IO.curl")),
+	curlHelper("GameLib/0.1")
 {
 	logger << LogLevel::Debug << "init curl" << endl;
 	curl_global_init(CURL_GLOBAL_SSL);
-	CurlHelper::setUserAgent("GameLib/0.1");
 }
 
 CurlFileDownloader::~CurlFileDownloader()
@@ -54,11 +53,11 @@ void
 CurlFileDownloader::downloadFile(const char * const url, DownloadCallback callback)
 {
 	logger << LogLevel::Debug << "try to download file at: " << url << endl;
-	CURL * curl = CurlHelper::createCURL(url);
+	CURL * curl = this->curlHelper.createCURL(url);
 	curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, &CurlHelper::curlFileDownloadCallback);
 	curl_easy_setopt(curl, CURLOPT_WRITEDATA, &callback);
 	handleCurlError(curl_easy_perform(curl));
-	CurlHelper::deleteCURL(curl);
+	this->curlHelper.deleteCURL(curl);
 }
 
 void
@@ -66,30 +65,30 @@ CurlFileDownloader::downloadFileWithCookies(const char * const url, DownloadCall
                                             const CookieBuket& cookies)
 {
 	logger << LogLevel::Debug << "try to download file at: " << url << endl;
-	CURL * curl = CurlHelper::createCURL(url);
+	CURL * curl = this->curlHelper.createCURL(url);
 	curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, &CurlHelper::curlFileDownloadCallback);
 	curl_easy_setopt(curl, CURLOPT_WRITEDATA, &callback);
-	
-	CurlHelper::addCookiesToCurl(cookies, curl);
-	
+
+	this->curlHelper.addCookiesToCurl(cookies, curl);
+
 	handleCurlError(curl_easy_perform(curl));
-	CurlHelper::deleteCURL(curl);
+	this->curlHelper.deleteCURL(curl);
 }
 
 CurlFileDownloader::CookieBuket
 CurlFileDownloader::doPostRequestForCookies(const char * const url, const Form& form)
 {
 	logger << LogLevel::Debug << "try to fetch cookies at: " << url << endl;
-	CURL * curl = CurlHelper::createCURL(url);
+	CURL * curl = this->curlHelper.createCURL(url);
 	curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, &CurlHelper::emptyCurlFileDownloadCallback);
 	curl_easy_setopt(curl, CURLOPT_COOKIEJAR, nullptr);
 
-	CurlHelper::addFormToCurl(form, curl);
+	this->curlHelper.addFormToCurl(form, curl);
 
 	handleCurlError(curl_easy_perform(curl));
 
-	CurlFileDownloader::CookieBuket result = CurlHelper::getCookies(curl);
-	CurlHelper::deleteCURL(curl);
+	CurlFileDownloader::CookieBuket result = this->curlHelper.getCookies(curl);
+	this->curlHelper.deleteCURL(curl);
 
 	return result;
 }

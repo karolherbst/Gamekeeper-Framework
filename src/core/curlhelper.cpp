@@ -20,14 +20,16 @@
 
 #include "pch.h"
 
-#include "curlHelper.h"
-
 #include <algorithm>
 #include <iostream>
 #include <sstream>
 
+#include <gamelib/core/curlhelper.h>
+
 #include <boost/algorithm/string/classification.hpp>
 #include <boost/algorithm/string/split.hpp>
+
+#include <curl/curl.h>
 
 GAMELIB_NAMESPACE_START(core)
 
@@ -36,12 +38,13 @@ struct CURLPrivateData
 	std::string postData;
 };
 
-std::map<CURL *, CURLPrivateData *> CurlHelper::curlData;
-std::string CurlHelper::userAgent;
+CurlHelper::CurlHelper(std::string newUserAgent)
+:	userAgent(newUserAgent + " libcurl/" + curl_version_info(CURLVERSION_NOW)->version){
+}
 
 int
 CurlHelper::curlFileDownloadCallback(void * const buffer, size_t bufferSize, size_t dataLength,
-                                     CurlFileDownloader::DownloadCallback * func)
+                                     HttpFileDownloader::DownloadCallback * func)
 {
 	if (func->operator()(buffer, bufferSize, dataLength))
 	{
@@ -60,7 +63,7 @@ CurlHelper::emptyCurlFileDownloadCallback(void * const buffer, size_t bufferSize
 }
 
 void
-CurlHelper::addCookiesToCurl(const CurlFileDownloader::CookieBuket& cookies, CURL * curl)
+CurlHelper::addCookiesToCurl(const HttpFileDownloader::CookieBuket& cookies, CURL * curl)
 {
 	if(!cookies.empty())
 	{
@@ -74,13 +77,13 @@ CurlHelper::addCookiesToCurl(const CurlFileDownloader::CookieBuket& cookies, CUR
 	}
 }
 
-CurlFileDownloader::CookieBuket
+HttpFileDownloader::CookieBuket
 CurlHelper::getCookies(CURL * curl)
 {
 	struct curl_slist * list;
-	CurlFileDownloader::CookieBuket result;
+	HttpFileDownloader::CookieBuket result;
 	curl_easy_getinfo(curl, CURLINFO_COOKIELIST, &list);
-	
+
 	while(list != nullptr)
 	{
 		std::vector<std::string> strings;
@@ -88,13 +91,13 @@ CurlHelper::getCookies(CURL * curl)
 		result[strings[5]] = strings[6];
 		list = list->next;
 	}
-	
+
 	curl_slist_free_all(list);
 	return result;
 }
 
 void
-CurlHelper::addFormToCurl(const CurlFileDownloader::Form& form, CURL * curl)
+CurlHelper::addFormToCurl(const HttpFileDownloader::Form& form, CURL * curl)
 {
 	if(!form.empty())
 	{
@@ -124,16 +127,6 @@ CurlHelper::deleteCURL(CURL * curl)
 	delete curlData[curl];
 	curlData.erase(curl);
 	curl_easy_cleanup(curl);
-}
-
-void
-CurlHelper::setUserAgent(std::string newUserAgent)
-{
-	curl_version_info_data *versionData = curl_version_info(CURLVERSION_NOW);
-
-	std::stringstream ss;
-	ss << newUserAgent << " libcurl/" << versionData->version;
-	userAgent = ss.str();
 }
 
 GAMELIB_NAMESPACE_END(core)

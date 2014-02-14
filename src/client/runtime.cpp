@@ -30,7 +30,7 @@
 #include <Hypodermic/ContainerBuilder.h>
 #include <Hypodermic/Helpers.h>
 
-#include <gamelib/core/curlFileDownloader.h>
+#include <gamelib/core/curlfiledownloader.h>
 #ifdef GAMELIB_OS_IS_WINDOWS
   #include <gamelib/core/windowsinformation.h>
   #define OSINFORMATIONCLASS WindowsInformation
