@@ -29,7 +29,12 @@ GAMELIB_NAMESPACE_START(core)
 std::string
 AbstractInformation::getEnv(const char * name)
 {
-	return getenv(name);
+	const char * value = getenv(name);
+	if(value == nullptr)
+	{
+		return std::string();
+	}
+	return value;
 }
 
 GAMELIB_NAMESPACE_END(core)
