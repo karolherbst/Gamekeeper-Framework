@@ -10,6 +10,7 @@ else()
       URL ${LOG4CPP_URL}
       URL_MD5 ${LOG4CPP_MD5}
       UPDATE_COMMAND ""
+      PATCH_COMMAND ${PATCH_EXECUTABLE} -p1 -i ${CMAKE_PATCH_DIR}/log4cpp-mingw.patch
       CONFIGURE_COMMAND ./configure
         --disable-dot
         --disable-doxygen
