@@ -66,3 +66,12 @@ TEST_F(LinuxInformationTest, getEnvConsistency)
 
 	EXPECT_NE(home, path);
 }
+
+TEST_F(LinuxInformationTest, setEnv)
+{
+	constexpr const char * testValue = "dfjakldj";
+	// test doesn't make sense, if the stored variable actually equals our test
+	EXPECT_NE(osInfo->getEnv(testValue), testValue);
+	osInfo->setEnv(testValue, testValue);
+	EXPECT_EQ(osInfo->getEnv(testValue), testValue);
+}
