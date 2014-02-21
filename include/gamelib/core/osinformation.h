@@ -41,7 +41,7 @@ GAMELIB_NAMESPACE_START(core)
  */
 interface PUBLIC_API OSInformation
 {
-	PUBLIC_API GAMELIB_INTERFACE_DESTRUCTOR(OSInformation)
+	PUBLIC_DESTRUCTOR GAMELIB_INTERFACE_DESTRUCTOR(OSInformation)
 
 	/**
 	 * returns the file with the given name from the config paths

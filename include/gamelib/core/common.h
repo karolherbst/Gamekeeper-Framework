@@ -37,17 +37,21 @@
 		#if defined(BUILDING_DLL)
 			#if defined(__GNUC__)
 				#define PUBLIC_API __attribute__ ((dllexport))
+				#define PUBLIC_DESTRUCTOR
 				#define REVERSE_PUBLIC_API __attribute__ ((dllimport))
 			#else
 				#define PUBLIC_API __declspec(dllexport)
+				#define PUBLIC_DESTRUCTOR
 				#define REVERSE_PUBLIC_API __declspec(dllimport)
 			#endif
 		#else
 			#if defined(__GNUC__)
 				#define PUBLIC_API __attribute__ ((dllimport))
+				#define PUBLIC_DESTRUCTOR
 				#define REVERSE_PUBLIC_API __attribute__ ((dllexport))
 			#else
 				#define PUBLIC_API __declspec(dllimport)
+				#define PUBLIC_DESTRUCTOR
 				#define REVERSE_PUBLIC_API __declspec(dllexport)
 			#endif
 		#endif
@@ -56,9 +60,11 @@
 		#if defined(__GNUC__) || defined(__clang__)
 			#if __GNUC__ >= 4
 				#define PUBLIC_API __attribute__ ((visibility ("default")))
+				#define PUBLIC_DESTRUCTOR __attribute__ ((visibility ("default")))
 				#define PRIVATE_API  __attribute__ ((visibility ("hidden")))
 			#else
 				#define PUBLIC_API
+				#define PUBLIC_DESTRUCTOR
 				#define PRIVATE_API
 			#endif
 			#define REVERSE_PUBLIC_API PUBLIC_API
