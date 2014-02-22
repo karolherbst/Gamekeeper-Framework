@@ -20,7 +20,14 @@
 
 #include "defaultfixture.h"
 
-#include <gamelib/core/linuxinformation.h>
+// some platform dependent stuff
+#ifdef GAMELIB_OS_IS_WINDOWS
+  #include <gamelib/core/windowsinformation.h>
+  #define OSINFORMATIONCLASS WindowsInformation
+#else
+  #include <gamelib/core/linuxinformation.h>
+  #define OSINFORMATIONCLASS LinuxInformation
+#endif
 
 #include <Hypodermic/ContainerBuilder.h>
 #include <Hypodermic/Helpers.h>
@@ -34,7 +41,7 @@ DefaultFicture::DefaultFicture()
 		using namespace gamelib::core;
 		
 		// set up IoC container
-		containerBuilder.registerType<LinuxInformation>()->
+		containerBuilder.registerType<OSINFORMATIONCLASS>()->
 		        as<OSInformation>()->
 		        singleInstance();
 	}
