@@ -42,7 +42,7 @@ GAMELIB_NAMESPACE_START(core)
 interface PUBLIC_API LoggerStream
 {
 public:
-	GAMELIB_INTERFACE_DESTRUCTOR(LoggerStream)
+	PUBLIC_DESTRUCTOR GAMELIB_INTERFACE_DESTRUCTOR(LoggerStream)
 	
 	/**
 	 * This methods logs the given string into the logger Stream
