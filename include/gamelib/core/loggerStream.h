@@ -42,7 +42,7 @@ GAMELIB_NAMESPACE_START(core)
 interface PUBLIC_API LoggerStream
 {
 public:
-	PUBLIC_DESTRUCTOR GAMELIB_INTERFACE_DESTRUCTOR(LoggerStream)
+	PUBLIC_INLINE GAMELIB_INTERFACE_DESTRUCTOR(LoggerStream)
 	
 	/**
 	 * This methods logs the given string into the logger Stream
@@ -77,7 +77,7 @@ public:
  * @param t the input
  */
 template <typename T>
-PUBLIC_API LoggerStream& operator<<(LoggerStream& loggerStream, const T& t)
+PUBLIC_INLINE LoggerStream& operator<<(LoggerStream& loggerStream, const T& t)
 {
 	loggerStream << boost::lexical_cast<std::string>(t);
 	return loggerStream;
@@ -93,7 +93,7 @@ PUBLIC_API LoggerStream& operator<<(LoggerStream& loggerStream, const T& t)
  * @param func the function to be called on loggerstream
  * @return loggerstream
  */
-inline PUBLIC_API LoggerStream& operator<<(LoggerStream& loggerstream, LoggerStream& (*func)(LoggerStream&))
+inline PUBLIC_INLINE LoggerStream& operator<<(LoggerStream& loggerstream, LoggerStream& (*func)(LoggerStream&))
 {
 	return func(loggerstream);
 }
@@ -107,7 +107,7 @@ inline PUBLIC_API LoggerStream& operator<<(LoggerStream& loggerstream, LoggerStr
  * @param loggerstream the stream which should be flushed
  * @return loggerstream
  */
-inline PUBLIC_API LoggerStream& endl(LoggerStream& loggerStream)
+inline PUBLIC_INLINE LoggerStream& endl(LoggerStream& loggerStream)
 {
 	return loggerStream.flush();
 }

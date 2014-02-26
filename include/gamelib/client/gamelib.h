@@ -52,7 +52,7 @@ interface PUBLIC_API GameLibUI
 	 * @author Karol Herbst
 	 * @since 0
 	 */
-	PUBLIC_API GAMELIB_INTERFACE_DESTRUCTOR(GameLibUI)
+	PUBLIC_INLINE GAMELIB_INTERFACE_DESTRUCTOR(GameLibUI)
 	
 	/**
 	 * init method for GameLib
@@ -99,7 +99,7 @@ interface PUBLIC_API GameLibUI
 	 * 
 	 * @return a well formatted help string
 	 */
-	PUBLIC_API GAMELIB_INTERFACE_METHOD_OPTIONAL(const char* getHelp());
+	PUBLIC_INLINE GAMELIB_INTERFACE_METHOD_OPTIONAL(const char* getHelp());
 };
 
 /**

@@ -40,14 +40,14 @@ GAMELIB_NAMESPACE_START(client)
  * @param T the type of the autowired variable
  */
 template <typename T>
-class PUBLIC_API Autowire
+class PUBLIC_INLINE Autowire
 {
 public:
-	PUBLIC_API Autowire();
-	PUBLIC_API T & operator*() const noexcept;
-	PUBLIC_API T * operator->() const noexcept;
-	PUBLIC_API operator const std::shared_ptr<T> &() const noexcept;
-	PUBLIC_API operator std::shared_ptr<T> &() noexcept;
+	PUBLIC_INLINE Autowire();
+	PUBLIC_INLINE T & operator*() const noexcept;
+	PUBLIC_INLINE T * operator->() const noexcept;
+	PUBLIC_INLINE operator const std::shared_ptr<T> &() const noexcept;
+	PUBLIC_INLINE operator std::shared_ptr<T> &() noexcept;
 private:
 	std::shared_ptr<T> ptr;
 };
