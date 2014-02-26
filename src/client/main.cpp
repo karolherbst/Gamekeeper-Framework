@@ -24,6 +24,10 @@
 
 #include <gamelib/client/gamelib.h>
 
+#ifdef GAMELIB_OS_IS_WINDOWS
+  #include <Windows.h>
+#endif
+
 /**
  * main entry point of gamelib
  *
@@ -44,5 +48,12 @@
 PUBLIC_API int main(int argc, const char* argv[])
 {
 	gamelib::client::GameLibRuntime runtime;
+// on windows stuff is a bit more complicated
+#ifdef GAMELIB_OS_IS_WINDOWS
+	typedef gamelib::client::GameLibUI * (*NewInstanceFuncPtr)(gamelib::core::Logger& logger);
+	NewInstanceFuncPtr newInstanceFunc = (NewInstanceFuncPtr)::GetProcAddress(GetModuleHandle(NULL), "newInstance");
+	return runtime.main(argc, argv, newInstanceFunc(runtime.getUILogger()));
+#else
 	return runtime.main(argc, argv, gamelib::client::newInstance(runtime.getUILogger()));
+#endif
 }
