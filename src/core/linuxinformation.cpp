@@ -26,6 +26,17 @@
 
 GAMELIB_NAMESPACE_START(core)
 
+std::string
+LinuxInformation::getEnv(const char * name)
+{
+	const char * value = getenv(name);
+	if(value == nullptr)
+	{
+		return std::string();
+	}
+	return value;
+}
+
 void
 LinuxInformation::setEnv(const char * name, const char * value)
 {
