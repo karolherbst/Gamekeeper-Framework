@@ -93,7 +93,7 @@ class LoggerStream;
 interface PUBLIC_API Logger
 {
 public:
-	PUBLIC_DESTRUCTOR GAMELIB_INTERFACE_DESTRUCTOR(Logger)
+	PUBLIC_INLINE GAMELIB_INTERFACE_DESTRUCTOR(Logger)
 
 	/**
 	 * Stream based log method

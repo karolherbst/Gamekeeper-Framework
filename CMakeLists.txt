@@ -105,7 +105,7 @@ if(WITH_CSHARP_BINDINGS OR WITH_JAVA_BINDINGS OR WITH_PYTHON_BINDINGS)
   endif()
   
   if(WITH_PYTHON_BINDINGS)
-    find_package(PythonLibs REQUIRED)
+    find_package(PythonLibs 3 REQUIRED)
   endif()
 endif()
 

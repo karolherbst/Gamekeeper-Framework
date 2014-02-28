@@ -43,7 +43,7 @@ GAMELIB_NAMESPACE_START(core)
  */
 interface PUBLIC_API OSPaths
 {
-	PUBLIC_DESTRUCTOR GAMELIB_INTERFACE_DESTRUCTOR(OSPaths)
+	PUBLIC_INLINE GAMELIB_INTERFACE_DESTRUCTOR(OSPaths)
 
 	/**
 	 * returns the file with the given name from the config paths

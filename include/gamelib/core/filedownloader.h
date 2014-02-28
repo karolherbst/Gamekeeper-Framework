@@ -41,7 +41,7 @@ GAMELIB_NAMESPACE_START(core)
  */
 interface PUBLIC_API FileDownloader
 {
-	PUBLIC_DESTRUCTOR GAMELIB_INTERFACE_DESTRUCTOR(FileDownloader)
+	PUBLIC_INLINE GAMELIB_INTERFACE_DESTRUCTOR(FileDownloader)
 	
 	/**
 	 * the callback function signature primary for lambdas
