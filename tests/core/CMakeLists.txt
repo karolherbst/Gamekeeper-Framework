@@ -7,8 +7,12 @@ include_directories(
 )
 
 if(LINUX)
-  file(GLOB linux_sources
+  file(GLOB platform_sources
     linuxinformation.cpp
+  )
+elseif(WIN32)
+  file(GLOB platform_sources
+    windowsinformation.cpp
   )
 endif()
 
@@ -18,7 +22,7 @@ file(GLOB headers
 
 file(GLOB sources
   defaultfixture.cpp
-  ${linux_sources}
+  ${platform_sources}
 )
 
 add_executable(gamelibUnitTests ${sources} ${headers})
