@@ -23,9 +23,28 @@
 #include "windowsinformation.h"
 
 #include <cstdlib>
+#include <windows.h>
 #include <Shlobj.h>
 
+#include <boost/locale/encoding_utf.hpp>
+
 GAMELIB_NAMESPACE_START(core)
+
+using boost::locale::conv::utf_to_utf;
+
+std::string
+WindowsInformation::getEnv(const char * name)
+{
+	wchar_t buffer[32767];
+	DWORD size = GetEnvironmentVariableW(utf_to_utf<wchar_t>(name).c_str(), buffer, 32767);
+	return utf_to_utf<char>(buffer, &buffer[size]);
+}
+
+void
+WindowsInformation::setEnv(const char * name, const char * value)
+{
+	SetEnvironmentVariableW(utf_to_utf<wchar_t>(name).c_str(), utf_to_utf<wchar_t>(value).c_str());
+}
 
 std::string
 WindowsInformation::getEnvSeperator()

@@ -18,18 +18,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#include "pch.h"
+#define OSINFORMATIONCLASS WindowsInformation
+#define OSINFORMATIONCLASSTEST WindowsInformationTest
 
-#include "abstractinformation.h"
-
-#include <cstdlib>
-
-GAMELIB_NAMESPACE_START(core)
-
-std::string
-AbstractInformation::getEnv(const char * name)
-{
-	return getenv(name);
-}
-
-GAMELIB_NAMESPACE_END(core)
+#include <gamelib/core/windowsinformation.h>
+#include "abstractinformation.cpp"

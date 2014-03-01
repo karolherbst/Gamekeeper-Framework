@@ -44,15 +44,26 @@ interface PUBLIC_API OSInformation
 	PUBLIC_INLINE GAMELIB_INTERFACE_DESTRUCTOR(OSInformation)
 
 	/**
-	 * returns the file with the given name from the config paths
+	 * returns the value of the given environment variable name
 	 *
 	 * @author Karol Herbst
 	 * @since 0
 	 *
 	 * @param name the file name
-	 * @return the resolved file
+	 * @return the resolved value
 	 */
 	PUBLIC_API GAMELIB_INTERFACE_METHOD(std::string getEnv(const char * name));
+
+	/**
+	 * returns the value of the given environment variable name
+	 *
+	 * @author Karol Herbst
+	 * @since 0
+	 *
+	 * @param name the file name
+	 * @return the resolved value
+	 */
+	PUBLIC_API GAMELIB_INTERFACE_METHOD(void setEnv(const char * name, const char * value));
 
 	/**
 	 * This method should return the seperator used in environment variables to seperate multiple paths

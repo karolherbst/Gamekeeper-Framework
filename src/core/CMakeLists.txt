@@ -27,7 +27,6 @@ endif()
 
 file(GLOB headers
   pch.h
-  ${GAMELIB_PRIVATE_INCLUDE_DIR}/gamelib/core/abstractinformation.h
   ${GAMELIB_PRIVATE_INCLUDE_DIR}/gamelib/core/curlfiledownloader.h
   ${GAMELIB_PRIVATE_INCLUDE_DIR}/gamelib/core/curlhelper.h
   ${GAMELIB_PRIVATE_INCLUDE_DIR}/gamelib/core/log4cppLogger.h
@@ -38,7 +37,6 @@ file(GLOB headers
 )
 
 file(GLOB sources
-  abstractinformation.cpp
   curlfiledownloader.cpp
   curlhelper.cpp
   log4cppLogger.cpp
