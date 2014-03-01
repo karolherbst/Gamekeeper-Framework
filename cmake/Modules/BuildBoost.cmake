@@ -10,7 +10,7 @@ else()
   message("BuildBoost isn't supported on this plattform")
 endif()
 
-set(Boost_CONFIGURE_LIBS --with-libraries=system,filesystem,signals)
+set(Boost_CONFIGURE_LIBS --with-libraries=system,filesystem,signals,program_options)
 
 ExternalProject_Add(
   boost
@@ -41,4 +41,5 @@ else()
 endif()
 
 set(Boost_FILESYSTEM_LIBRARY "${Boost_LIBRARY_DIRS}/libboost_filesystem-${Boost_LIB_ADD_STRING}.${Boost_SUFFIX}")
+set(Boost_PROGRAM_OPTIONS_LIBRARY "${Boost_LIBRARY_DIRS}/libboost_program_options-${Boost_LIB_ADD_STRING}.${Boost_SUFFIX}")
 set(Boost_SYSTEM_LIBRARY "${Boost_LIBRARY_DIRS}/libboost_system-${Boost_LIB_ADD_STRING}.${Boost_SUFFIX}")

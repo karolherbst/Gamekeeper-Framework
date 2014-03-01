@@ -1,5 +1,8 @@
 #include "hbprototype.h"
 
+#include <boost/program_options/options_description.hpp>
+#include <boost/program_options/variables_map.hpp>
+
 #include <gamelib/client/autowire.h>
 #include <gamelib/core/httpfiledownloader.h>
 #include <gamelib/core/logger.h>
@@ -14,6 +17,7 @@
 GAMECLIENTUI_CLASS(HBPrototype)
 
 using namespace gamelib::core;
+namespace po = boost::program_options;
 
 typedef HttpFileDownloader::CookieBuket CookieBuket;
 typedef HttpFileDownloader::Cookie Cookie;
@@ -25,17 +29,23 @@ HBPrototype::HBPrototype(gamelib::core::Logger& _logger)
 :	logger(_logger){}
 
 void
-HBPrototype::init(int argc, const char* argv[])
+HBPrototype::addOptions(boost::program_options::options_description_easy_init & oaCmd,
+                        boost::program_options::options_description_easy_init & oaFile,
+                        boost::program_options::options_description_easy_init & oaBoth)
+{
+	oaCmd("hb.accountname", po::value<std::string>()->required(), "HB Account name");
+	oaCmd("hb.password", po::value<std::string>()->required(), "HB Account password");
+}
+
+void
+HBPrototype::init(const ConfigMap & configMap)
 {
 	fileDownloader = gamelib::client::Autowire<gamelib::core::HttpFileDownloader>();
 
 	this->logger << LogLevel::Info << "init" << endl;
 
-	if(argc == 3)
-	{
-		this->username = argv[1];
-		this->userpass = argv[2];
-	}
+	this->username = configMap.at("hb.accountname").as<std::string>().c_str();
+	this->userpass = configMap.at("hb.password").as<std::string>().c_str();
 }
 
 void

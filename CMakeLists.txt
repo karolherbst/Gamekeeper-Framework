@@ -59,7 +59,7 @@ if(NOT HYPODERMIC_FOUND)
 endif()
 
 # boost
-find_package(Boost 1.44 COMPONENTS filesystem system ${boost_ADDITIONAL_COMPONENTS} ${REQUIRED_ON_LINUX})
+find_package(Boost 1.44 COMPONENTS filesystem program_options system ${boost_ADDITIONAL_COMPONENTS} ${REQUIRED_ON_LINUX})
 if(NOT Boost_FOUND)
   set_download_url(Boost http://sourceforge.net/projects/boost/files/boost/1.55.0/boost_1_55_0.zip/download 8aca361a4713a1f491b0a5e33fee0f1f)
   include(BuildBoost)
