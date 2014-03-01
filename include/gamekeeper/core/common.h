@@ -181,6 +181,10 @@
   #else
     #define GAMEKEEPER_ARCH_IS_32BIT 1
   #endif
+
+  #if defined(__MINGW32__)
+    #define GAMEKEEPER_WINDOWS_USED_MINGW 1
+  #endif
 #endif
 
 #if defined(__linux__)
