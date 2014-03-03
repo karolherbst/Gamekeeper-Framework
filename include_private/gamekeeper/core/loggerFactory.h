@@ -1,7 +1,7 @@
 /*
- * libgamelib
+ * GameKeeper Framework
  *
- * Copyright (C) 2013 Karol Herbst <gamelib@karolherbst.de>
+ * Copyright (C) 2013 Karol Herbst <gamekeeper@karolherbst.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -18,19 +18,19 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef GAMELIB_CORE_LOGGERFACTORY_H
-#define GAMELIB_CORE_LOGGERFACTORY_H 1
+#ifndef GAMEKEEPER_CORE_LOGGERFACTORY_H
+#define GAMEKEEPER_CORE_LOGGERFACTORY_H 1
 
-#include <gamelib/core/common.h>
+#include <gamekeeper/core/common.h>
 
-#include <gamelib/core/interface.h>
+#include <gamekeeper/core/interface.h>
 
-GAMELIB_NAMESPACE_START(core)
+GAMEKEEPER_NAMESPACE_START(core)
 
 class Logger;
 
 /**
- * @interface LoggerFactory loggerFactory.h <gamelib/core/loggerFactory.h>
+ * @interface LoggerFactory loggerFactory.h <gamekeeper/core/loggerFactory.h>
  *
  * This interface is used to create Logger instances
  * 
@@ -39,7 +39,7 @@ class Logger;
  */
 interface PRIVATE_API LoggerFactory
 {
-	GAMELIB_INTERFACE_DESTRUCTOR(LoggerFactory)
+	GAMEKEEPER_INTERFACE_DESTRUCTOR(LoggerFactory)
 
 	/**
 	 * @author Karol Herbst
@@ -47,7 +47,7 @@ interface PRIVATE_API LoggerFactory
 	 *
 	 * @return the default logger
 	 */
-	PRIVATE_API GAMELIB_INTERFACE_METHOD(Logger& getDefaultLogger());
+	PRIVATE_API GAMEKEEPER_INTERFACE_METHOD(Logger& getDefaultLogger());
 
 	/**
 	 * @author Karol Herbst
@@ -56,9 +56,9 @@ interface PRIVATE_API LoggerFactory
 	 * @param id the id of the component
 	 * @return a logger with the given id
 	 */
-	PRIVATE_API GAMELIB_INTERFACE_METHOD(Logger& getComponentLogger(const char * const id));
+	PRIVATE_API GAMEKEEPER_INTERFACE_METHOD(Logger& getComponentLogger(const char * const id));
 };
 
-GAMELIB_NAMESPACE_END(core)
+GAMEKEEPER_NAMESPACE_END(core)
 
-#endif //GAMELIB_CORE_LOGGERFACTORY_H
+#endif //GAMEKEEPER_CORE_LOGGERFACTORY_H

@@ -1,7 +1,7 @@
 /*
- * libgamelib
+ * GameKeeper Framework
  *
- * Copyright (C) 2013 Karol Herbst <gamelib@karolherbst.de>
+ * Copyright (C) 2013 Karol Herbst <gamekeeper@karolherbst.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -18,21 +18,21 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef GAMELIB_CORE_LOGGERSTREAM_H
-#define GAMELIB_CORE_LOGGERSTREAM_H 1
+#ifndef GAMEKEEPER_CORE_LOGGERSTREAM_H
+#define GAMEKEEPER_CORE_LOGGERSTREAM_H 1
 
-#include <gamelib/core/common.h>
+#include <gamekeeper/core/common.h>
 
-#include <gamelib/core/interface.h>
+#include <gamekeeper/core/interface.h>
 
 #include <boost/lexical_cast.hpp>
 
-GAMELIB_NAMESPACE_START(core)
+GAMEKEEPER_NAMESPACE_START(core)
 
 /**
- * @interface LoggerStream loggerStrean.h <gamelib/core/loggerStrean.h>
+ * @interface LoggerStream loggerStrean.h <gamekeeper/core/loggerStrean.h>
  *
- * the gamelib logger stream class
+ * the GameKeeper logger stream class
  *
  * this will be used for putting stuff into a logger
  *
@@ -42,7 +42,7 @@ GAMELIB_NAMESPACE_START(core)
 interface PUBLIC_API LoggerStream
 {
 public:
-	PUBLIC_INLINE GAMELIB_INTERFACE_DESTRUCTOR(LoggerStream)
+	PUBLIC_INLINE GAMEKEEPER_INTERFACE_DESTRUCTOR(LoggerStream)
 	
 	/**
 	 * This methods logs the given string into the logger Stream
@@ -53,7 +53,7 @@ public:
 	 * @param str the message to log
 	 * @return the logger stream itself
 	 */
-	PUBLIC_API GAMELIB_INTERFACE_METHOD(LoggerStream& operator<<(const std::string& str));
+	PUBLIC_API GAMEKEEPER_INTERFACE_METHOD(LoggerStream& operator<<(const std::string& str));
 
 	/**
 	 * This methods flushes the stream
@@ -63,7 +63,7 @@ public:
 	 *
 	 * @return the logger stream itself
 	 */
-	PUBLIC_API GAMELIB_INTERFACE_METHOD(LoggerStream& flush());
+	PUBLIC_API GAMEKEEPER_INTERFACE_METHOD(LoggerStream& flush());
 };
 
 /**
@@ -112,6 +112,6 @@ inline PUBLIC_INLINE LoggerStream& endl(LoggerStream& loggerStream)
 	return loggerStream.flush();
 }
 
-GAMELIB_NAMESPACE_END(core)
+GAMEKEEPER_NAMESPACE_END(core)
 
-#endif //GAMELIB_CORE_LOGGERSTREAM_H
+#endif //GAMEKEEPER_CORE_LOGGERSTREAM_H

@@ -1,7 +1,7 @@
 /*
- * libgamelib
+ * GameKeeper Framework
  *
- * Copyright (C) 2013 Karol Herbst <gamelib@karolherbst.de>
+ * Copyright (C) 2013 Karol Herbst <gamekeeper@karolherbst.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -18,10 +18,10 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef GAMELIB_CORE_INTERFACE_H
-#define GAMELIB_CORE_INTERFACE_H 1
+#ifndef GAMEKEEPER_CORE_INTERFACE_H
+#define GAMEKEEPER_CORE_INTERFACE_H 1
 
-#include <gamelib/core/common.h>
+#include <gamekeeper/core/common.h>
 
 #ifndef interface
 	/**
@@ -30,7 +30,7 @@
 	 * Every pure virtual class should be declared with this type instead of class or struct.
 	 * Also members, non pure virtual methods, or any protected or private methods may not be used.
 	 * 
-	 * Use the GAMELIB_INTERFACE_* macros to simplify interface declerations.
+	 * Use the GAMEKEEPER_INTERFACE_* macros to simplify interface declerations.
 	 * 
 	 * @author Karol Herbst
 	 * @since 0
@@ -45,7 +45,7 @@
  * @since 0
  * @param type the name of the interface
  */
-#define GAMELIB_INTERFACE_DESTRUCTOR(type) virtual ~type(){}
+#define GAMEKEEPER_INTERFACE_DESTRUCTOR(type) virtual ~type(){}
 
 /**
  * this method auto creates the pure virtual method given
@@ -54,7 +54,7 @@
  * @since 0
  * @param method the method signature
  */
-#define GAMELIB_INTERFACE_METHOD(method) virtual method = 0
+#define GAMEKEEPER_INTERFACE_METHOD(method) virtual method = 0
 
 /**
  * this method auto creates the optional virtual method given
@@ -63,7 +63,7 @@
  * @since 0
  * @param method the method signature
  */
-#define GAMELIB_INTERFACE_METHOD_OPTIONAL(method) virtual method{}
+#define GAMEKEEPER_INTERFACE_METHOD_OPTIONAL(method) virtual method{}
 
 /**
  * this macro shall be used to override interface methods
@@ -72,6 +72,6 @@
  * @since 0
  * @param method the method signature
  */
-#define GAMELIB_IMPLEMENTATION_OVERRIDE(method) virtual method override
+#define GAMEKEEPER_IMPLEMENTATION_OVERRIDE(method) virtual method override
 
-#endif //GAMELIB_CORE_INTERFACE_H
+#endif //GAMEKEEPER_CORE_INTERFACE_H

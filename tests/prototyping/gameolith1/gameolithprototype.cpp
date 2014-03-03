@@ -1,10 +1,10 @@
 #include "gameolithprototype.h"
 
-#include <gamelib/client/autowire.h>
-#include <gamelib/core/httpfiledownloader.h>
-#include <gamelib/core/logger.h>
-#include <gamelib/core/loggerStream.h>
-#include <gamelib/model/game.h>
+#include <gamekeeper/client/autowire.h>
+#include <gamekeeper/core/httpfiledownloader.h>
+#include <gamekeeper/core/logger.h>
+#include <gamekeeper/core/loggerStream.h>
+#include <gamekeeper/model/game.h>
 
 #include <boost/algorithm/string/predicate.hpp>
 #include <boost/algorithm/string/replace.hpp>
@@ -14,10 +14,10 @@
 
 GAMECLIENTUI_CLASS(GameolithPrototype)
 
-using gamelib::model::Game;
-using namespace gamelib::core;
+using gamekeeper::model::Game;
+using namespace gamekeeper::core;
 
-static std::shared_ptr<gamelib::core::HttpFileDownloader> fileDownloader;
+static std::shared_ptr<gamekeeper::core::HttpFileDownloader> fileDownloader;
 
 // simulate the config file here
 static std::map<std::string, std::string> config;
@@ -45,7 +45,7 @@ static Json::Value getRootForGames(std::string path, Json::Value node)
 	return jsoncppPath.resolve(node);
 }
 
-class GameJSON : public gamelib::model::Game
+class GameJSON : public gamekeeper::model::Game
 {
 	friend class JSONGameResolver;
 private:
@@ -82,7 +82,7 @@ public:
 	}
 };
 
-GameolithPrototype::GameolithPrototype(gamelib::core::Logger& _logger)
+GameolithPrototype::GameolithPrototype(gamekeeper::core::Logger& _logger)
 :	logger(_logger){}
 
 void
@@ -91,7 +91,7 @@ GameolithPrototype::init(const ConfigMap &)
 	config["bindings.games"] = "$[*]";
 	config["bindings.game.id"] = "@.slug";
 	config["bindings.game.name"] = "@.title";
-	fileDownloader = gamelib::client::Autowire<gamelib::core::HttpFileDownloader>();
+	fileDownloader = gamekeeper::client::Autowire<gamekeeper::core::HttpFileDownloader>();
 }
 
 void

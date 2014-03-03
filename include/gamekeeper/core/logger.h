@@ -1,7 +1,7 @@
 /*
- * libgamelib
+ * GameKeeper Framework
  *
- * Copyright (C) 2013 Karol Herbst <gamelib@karolherbst.de>
+ * Copyright (C) 2013 Karol Herbst <gamekeeper@karolherbst.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -18,14 +18,14 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef GAMELIB_CORE_LOGGER_H
-#define GAMELIB_CORE_LOGGER_H 1
+#ifndef GAMEKEEPER_CORE_LOGGER_H
+#define GAMEKEEPER_CORE_LOGGER_H 1
 
-#include <gamelib/core/common.h>
+#include <gamekeeper/core/common.h>
 
-#include <gamelib/core/interface.h>
+#include <gamekeeper/core/interface.h>
 
-GAMELIB_NAMESPACE_START(core)
+GAMEKEEPER_NAMESPACE_START(core)
 
 /**
  * this enum should be used to define the loging level used in the logger
@@ -81,9 +81,9 @@ enum class LogLevel : uint8_t
 class LoggerStream;
 
 /**
- * @interface Logger logger.h <gamelib/core/logger.h>
+ * @interface Logger logger.h <gamekeeper/core/logger.h>
  *
- * the gamelib logger class
+ * the GameKeeper logger class
  *
  * this will be used for any logging functionalities.
  *
@@ -93,7 +93,7 @@ class LoggerStream;
 interface PUBLIC_API Logger
 {
 public:
-	PUBLIC_INLINE GAMELIB_INTERFACE_DESTRUCTOR(Logger)
+	PUBLIC_INLINE GAMEKEEPER_INTERFACE_DESTRUCTOR(Logger)
 
 	/**
 	 * Stream based log method
@@ -106,9 +106,9 @@ public:
 	 * @param logLevel the log Level
 	 * @return a loggerStream
 	 */
-	PUBLIC_API GAMELIB_INTERFACE_METHOD(LoggerStream& operator<<(const LogLevel& logLevel));
+	PUBLIC_API GAMEKEEPER_INTERFACE_METHOD(LoggerStream& operator<<(const LogLevel& logLevel));
 };
 
-GAMELIB_NAMESPACE_END(core)
+GAMEKEEPER_NAMESPACE_END(core)
 
-#endif //GAMELIB_CORE_LOGGER_H
+#endif //GAMEKEEPER_CORE_LOGGER_H

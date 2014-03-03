@@ -9,10 +9,10 @@ endif()
 # some important dependencies
 if(BUILD_TESTS)
   if(NOT GTEST_FOUND)
-    add_dependencies(gamelibUnitTests gtest)
+    add_dependencies(gamekeeperUnitTests gtest)
   endif()
 
   if(NOT HYPODERMIC_FOUND)
-    add_dependencies(gamelibUnitTests hypodermic)
+    add_dependencies(gamekeeperUnitTests hypodermic)
   endif()
 endif()

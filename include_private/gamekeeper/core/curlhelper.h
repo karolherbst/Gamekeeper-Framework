@@ -1,7 +1,7 @@
 /*
- * libgamelib
+ * GameKeeper Framework
  *
- * Copyright (C) 2013 Karol Herbst <gamelib@karolherbst.de>
+ * Copyright (C) 2013 Karol Herbst <gamekeeper@karolherbst.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -18,18 +18,18 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef GAMELIB_CORE_CURLHELPER_H
-#define GAMELIB_CORE_CURLHELPER_H 1
+#ifndef GAMEKEEPER_CORE_CURLHELPER_H
+#define GAMEKEEPER_CORE_CURLHELPER_H 1
 
-#include <gamelib/core/common.h>
+#include <gamekeeper/core/common.h>
 
 #include <map>
 
-#include <gamelib/core/httpfiledownloader.h>
+#include <gamekeeper/core/httpfiledownloader.h>
 
 typedef void CURL;
 
-GAMELIB_NAMESPACE_START(core)
+GAMEKEEPER_NAMESPACE_START(core)
 
 class CURLPrivateData;
 
@@ -54,6 +54,6 @@ private:
 	PRIVATE_API std::string& createUserAgentString();
 };
 
-GAMELIB_NAMESPACE_END(core)
+GAMEKEEPER_NAMESPACE_END(core)
 
-#endif //GAMELIB_CORE_CURLHELPER_H
+#endif //GAMEKEEPER_CORE_CURLHELPER_H

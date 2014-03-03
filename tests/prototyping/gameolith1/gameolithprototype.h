@@ -1,18 +1,18 @@
 #ifndef GAMEOLITHPROTOTYPE_H
 #define GAMEOLITHPROTOTYPE_H 1
 
-#include <gamelib/client/gamelib.h>
+#include <gamekeeper/client/gamekeeper.h>
 
-class GameolithPrototype : public gamelib::client::GameLibUI
+class GameolithPrototype : public gamekeeper::client::GameKeeperUI
 {
 public:
-	GameolithPrototype(gamelib::core::Logger& logger);
-	GAMELIB_IMPLEMENTATION_OVERRIDE(void init(const ConfigMap &));
-	GAMELIB_IMPLEMENTATION_OVERRIDE(void onShutdown());
-	GAMELIB_IMPLEMENTATION_OVERRIDE(void startEventLoop());
+	GameolithPrototype(gamekeeper::core::Logger& logger);
+	GAMEKEEPER_IMPLEMENTATION_OVERRIDE(void init(const ConfigMap &));
+	GAMEKEEPER_IMPLEMENTATION_OVERRIDE(void onShutdown());
+	GAMEKEEPER_IMPLEMENTATION_OVERRIDE(void startEventLoop());
 private:
 	bool handleRequest(void * const buffer, size_t sz, size_t n);
-	gamelib::core::Logger& logger;
+	gamekeeper::core::Logger& logger;
 };
 
 #endif

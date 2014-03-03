@@ -2,18 +2,18 @@
 
 add_custom_target(headers
   SOURCES
-    gamelib/client/autowire.h
-    gamelib/client/gamelib.h
-    gamelib/client/hypodermic.h
+    gamekeeper/client/autowire.h
+    gamekeeper/client/gamekeeper.h
+    gamekeeper/client/hypodermic.h
 
-    gamelib/core/common.h
-    gamelib/core/filedownloader.h
-    gamelib/core/httpfiledownloader.h
-    gamelib/core/interface.h
-    gamelib/core/logger.h
-    gamelib/core/loggerStream.h
-    gamelib/core/osinformation.h
-    gamelib/core/ospaths.h
+    gamekeeper/core/common.h
+    gamekeeper/core/filedownloader.h
+    gamekeeper/core/httpfiledownloader.h
+    gamekeeper/core/interface.h
+    gamekeeper/core/logger.h
+    gamekeeper/core/loggerStream.h
+    gamekeeper/core/osinformation.h
+    gamekeeper/core/ospaths.h
 
-    gamelib/model/game.h
+    gamekeeper/model/game.h
 )

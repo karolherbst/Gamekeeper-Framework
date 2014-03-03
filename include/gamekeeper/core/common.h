@@ -1,7 +1,7 @@
 /*
- * libgamelib
+ * GameKeeper Framework
  *
- * Copyright (C) 2013 Karol Herbst <gamelib@karolherbst.de>
+ * Copyright (C) 2013 Karol Herbst <gamekeeper@karolherbst.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -18,8 +18,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef GAMELIB_CORE_COMMON_H
-#define GAMELIB_CORE_COMMON_H 1
+#ifndef GAMEKEEPER_CORE_COMMON_H
+#define GAMEKEEPER_CORE_COMMON_H 1
 
 // some headers we want to use nearly everywhere
 
@@ -84,7 +84,7 @@
  * This macro creates the following lines for C++ applications:
  * 
  * @code{.cpp}
- * namespace gamelib
+ * namespace gamekeeper
  * {
  * namespace @p name
  * {
@@ -93,13 +93,13 @@
  * @param[in] name of the namespace
  */
 #ifdef __cplusplus
-	#define GAMELIB_NAMESPACE_START(name) \
-	namespace gamelib \
+	#define GAMEKEEPER_NAMESPACE_START(name) \
+	namespace gamekeeper \
 	{ \
 	namespace name \
 	{
 #else
-	#define GAMELIB_NAMESPACE_START(name)
+	#define GAMEKEEPER_NAMESPACE_START(name)
 #endif
 
 /**
@@ -118,11 +118,11 @@
  * @param[in] name of the namespace
  */
 #ifdef __cplusplus
-#define GAMELIB_NAMESPACE_END(name) \
+#define GAMEKEEPER_NAMESPACE_END(name) \
 } \
 }
 #else
-#define GAMELIB_NAMESPACE_END(name)
+#define GAMEKEEPER_NAMESPACE_END(name)
 #endif
 
 // the following stuff is for C++ only
@@ -175,20 +175,20 @@
 
 // OS defines
 #if defined(_WIN32)
-  #define GAMELIB_OS_IS_WINDOWS 1
+  #define GAMEKEEPER_OS_IS_WINDOWS 1
   #if defined(_WIN64)
-    #define GAMELIB_ARCH_IS_64BIT 1
+    #define GAMEKEEPER_ARCH_IS_64BIT 1
   #else
-    #define GAMELIB_ARCH_IS_32BIT 1
+    #define GAMEKEEPER_ARCH_IS_32BIT 1
   #endif
 #endif
 
 #if defined(__linux__)
-  #define GAMELIB_OS_IS_LINUX 1
+  #define GAMEKEEPER_OS_IS_LINUX 1
 #endif
 
 #if defined(__APPLE__) && defined(__MACH__)
-  #define GAMELIB_OS_IS_MACOSX 1
+  #define GAMEKEEPER_OS_IS_MACOSX 1
 #endif
 
-#endif //GAMELIB_CORE_COMMON_H
+#endif //GAMEKEEPER_CORE_COMMON_H

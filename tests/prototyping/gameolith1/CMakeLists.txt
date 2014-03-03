@@ -6,7 +6,7 @@ endif()
 
 include_directories(
   ${CMAKE_CURRENT_SOURCE_DIR}
-  ${GAMELIB_INCLUDE_DIR}
+  ${GAMEKEEPER_INCLUDE_DIR}
   ${Boost_INCLUDE_DIRS}
   ${HYPODERMIC_INCLUDE_DIRS}
   ${JSONCPP_INCLUDE_DIRS}
@@ -22,7 +22,7 @@ file(GLOB sources
 
 add_executable(GameolithPrototype ${sources} ${headers})
 target_link_libraries(GameolithPrototype
-  gamelibClientMain
-  gamelibModelBindings
+  gamekeeperClientMain
+  gamekeeperModelBindings
   ${JSONCPP_LIBRARIES}
 )

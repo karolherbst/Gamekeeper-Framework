@@ -1,5 +1,5 @@
 include_directories(
-  ${GAMELIB_PRIVATE_INCLUDE_DIR}/gamelib/core
+  ${GAMEKEEPER_PRIVATE_INCLUDE_DIR}/gamekeeper/core
   ${CMAKE_CURRENT_SOURCE_DIR}
   ${Boost_INCLUDE_DIRS}
   ${CURL_INCLUDE_DIRS}
@@ -9,7 +9,7 @@ include_directories(
 
 if(WIN32)
   file(GLOB platform_headers
-    ${GAMELIB_PRIVATE_INCLUDE_DIR}/gamelib/core/windowsinformation.h
+    ${GAMEKEEPER_PRIVATE_INCLUDE_DIR}/gamekeeper/core/windowsinformation.h
   )
 
   file(GLOB platform_sources
@@ -17,7 +17,7 @@ if(WIN32)
   )
 elseif(LINUX)
   file(GLOB platform_headers
-    ${GAMELIB_PRIVATE_INCLUDE_DIR}/gamelib/core/linuxinformation.h
+    ${GAMEKEEPER_PRIVATE_INCLUDE_DIR}/gamekeeper/core/linuxinformation.h
   )
 
   file(GLOB platform_sources
@@ -27,12 +27,12 @@ endif()
 
 file(GLOB headers
   pch.h
-  ${GAMELIB_PRIVATE_INCLUDE_DIR}/gamelib/core/curlfiledownloader.h
-  ${GAMELIB_PRIVATE_INCLUDE_DIR}/gamelib/core/curlhelper.h
-  ${GAMELIB_PRIVATE_INCLUDE_DIR}/gamelib/core/log4cppLogger.h
-  ${GAMELIB_PRIVATE_INCLUDE_DIR}/gamelib/core/log4cpploggerFactory.h
-  ${GAMELIB_PRIVATE_INCLUDE_DIR}/gamelib/core/log4cppLoggerStream.h
-  ${GAMELIB_PRIVATE_INCLUDE_DIR}/gamelib/core/xdgpaths.h
+  ${GAMEKEEPER_PRIVATE_INCLUDE_DIR}/gamekeeper/core/curlfiledownloader.h
+  ${GAMEKEEPER_PRIVATE_INCLUDE_DIR}/gamekeeper/core/curlhelper.h
+  ${GAMEKEEPER_PRIVATE_INCLUDE_DIR}/gamekeeper/core/log4cppLogger.h
+  ${GAMEKEEPER_PRIVATE_INCLUDE_DIR}/gamekeeper/core/log4cpploggerFactory.h
+  ${GAMEKEEPER_PRIVATE_INCLUDE_DIR}/gamekeeper/core/log4cppLoggerStream.h
+  ${GAMEKEEPER_PRIVATE_INCLUDE_DIR}/gamekeeper/core/xdgpaths.h
   ${platform_headers}
 )
 
@@ -46,8 +46,8 @@ file(GLOB sources
   ${platform_sources}
 )
 
-add_library(gamelibCore SHARED ${sources} ${headers})
-target_link_libraries(gamelibCore
+add_library(gamekeeperCore SHARED ${sources} ${headers})
+target_link_libraries(gamekeeperCore
   ${Boost_FILESYSTEM_LIBRARY}
   ${CURL_LIBRARIES}
   ${LOG4CPP_LIBRARIES}

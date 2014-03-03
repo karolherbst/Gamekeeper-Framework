@@ -1,7 +1,7 @@
 /*
- * libgamelib
+ * GameKeeper Framework
  *
- * Copyright (C) 2013 Karol Herbst <gamelib@karolherbst.de>
+ * Copyright (C) 2013 Karol Herbst <gamekeeper@karolherbst.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -18,19 +18,19 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef GAMELIB_CORE_FILEDOWNLOADER_H
-#define GAMELIB_CORE_FILEDOWNLOADER_H 1
+#ifndef GAMEKEEPER_CORE_FILEDOWNLOADER_H
+#define GAMEKEEPER_CORE_FILEDOWNLOADER_H 1
 
-#include <gamelib/core/common.h>
+#include <gamekeeper/core/common.h>
 
 #include <functional>
 
-#include <gamelib/core/interface.h>
+#include <gamekeeper/core/interface.h>
 
-GAMELIB_NAMESPACE_START(core)
+GAMEKEEPER_NAMESPACE_START(core)
 
 /**
- * @interface FileDownloader filedownloader.h <gamelib/core/filedownloader.h>
+ * @interface FileDownloader filedownloader.h <gamekeeper/core/filedownloader.h>
  *
  * This interface provides basic operations to download files over a network. It abstracts from protocols and doesn't
  * provide functionality special to a specific protocol. If you want to use a specific protocol you should use a more
@@ -41,7 +41,7 @@ GAMELIB_NAMESPACE_START(core)
  */
 interface PUBLIC_API FileDownloader
 {
-	PUBLIC_INLINE GAMELIB_INTERFACE_DESTRUCTOR(FileDownloader)
+	PUBLIC_INLINE GAMEKEEPER_INTERFACE_DESTRUCTOR(FileDownloader)
 	
 	/**
 	 * the callback function signature primary for lambdas
@@ -66,7 +66,7 @@ interface PUBLIC_API FileDownloader
 	 * @param[in] nameSize the size of @p protocolName
 	 * @return true if the implementation supports @p protocolName
 	 */
-	PUBLIC_API GAMELIB_INTERFACE_METHOD(bool supportsProtocol(const char * const protocolName, size_t nameSize));
+	PUBLIC_API GAMEKEEPER_INTERFACE_METHOD(bool supportsProtocol(const char * const protocolName, size_t nameSize));
 	
 	/**
 	 * downloads the file behind the given location
@@ -77,9 +77,9 @@ interface PUBLIC_API FileDownloader
 	 * @param[in] url the url
 	 * @param[in] callback the callback function
 	 */
-	PUBLIC_API GAMELIB_INTERFACE_METHOD(void downloadFile(const char * const url, DownloadCallback callback));
+	PUBLIC_API GAMEKEEPER_INTERFACE_METHOD(void downloadFile(const char * const url, DownloadCallback callback));
 };
 
-GAMELIB_NAMESPACE_END(core)
+GAMEKEEPER_NAMESPACE_END(core)
 
-#endif //GAMELIB_CORE_FILEDOWNLOADER_H
+#endif //GAMEKEEPER_CORE_FILEDOWNLOADER_H

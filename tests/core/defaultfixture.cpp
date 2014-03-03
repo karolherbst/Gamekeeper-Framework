@@ -1,7 +1,7 @@
 /*
- * libgamelib
+ * GameKeeper Framework
  *
- * Copyright (C) 2013 Karol Herbst <gamelib@karolherbst.de>
+ * Copyright (C) 2013 Karol Herbst <gamekeeper@karolherbst.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -21,24 +21,24 @@
 #include "defaultfixture.h"
 
 // some platform dependent stuff
-#ifdef GAMELIB_OS_IS_WINDOWS
-  #include <gamelib/core/windowsinformation.h>
+#ifdef GAMEKEEPER_OS_IS_WINDOWS
+  #include <gamekeeper/core/windowsinformation.h>
   #define OSINFORMATIONCLASS WindowsInformation
 #else
-  #include <gamelib/core/linuxinformation.h>
+  #include <gamekeeper/core/linuxinformation.h>
   #define OSINFORMATIONCLASS LinuxInformation
 #endif
 
 #include <Hypodermic/ContainerBuilder.h>
 #include <Hypodermic/Helpers.h>
 
-GAMELIB_NAMESPACE_START(test)
+GAMEKEEPER_NAMESPACE_START(test)
 
 DefaultFicture::DefaultFicture()
 {
 	Hypodermic::ContainerBuilder containerBuilder;
 	{
-		using namespace gamelib::core;
+		using namespace gamekeeper::core;
 		
 		// set up IoC container
 		containerBuilder.registerType<OSINFORMATIONCLASS>()->
@@ -50,4 +50,4 @@ DefaultFicture::DefaultFicture()
 	this->container = containerBuilder.build();
 }
 
-GAMELIB_NAMESPACE_END(test)
+GAMEKEEPER_NAMESPACE_END(test)

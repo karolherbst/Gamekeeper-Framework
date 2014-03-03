@@ -1,7 +1,7 @@
 /*
- * libgamelib
+ * GameKeeper Framework
  *
- * Copyright (C) 2013 Karol Herbst <gamelib@karolherbst.de>
+ * Copyright (C) 2013 Karol Herbst <gamekeeper@karolherbst.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -18,17 +18,17 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef GAMELIB_CORE_CURLFILEDOWNLOADER_H
-#define GAMELIB_CORE_CURLFILEDOWNLOADER_H 1
+#ifndef GAMEKEEPER_CORE_CURLFILEDOWNLOADER_H
+#define GAMEKEEPER_CORE_CURLFILEDOWNLOADER_H 1
 
-#include <gamelib/core/common.h>
+#include <gamekeeper/core/common.h>
 
 #include <memory>
 
-#include <gamelib/core/curlhelper.h>
-#include <gamelib/core/httpfiledownloader.h>
+#include <gamekeeper/core/curlhelper.h>
+#include <gamekeeper/core/httpfiledownloader.h>
 
-GAMELIB_NAMESPACE_START(core)
+GAMEKEEPER_NAMESPACE_START(core)
 
 class Logger;
 class LoggerFactory;
@@ -38,12 +38,12 @@ class PUBLIC_API CurlFileDownloader : public HttpFileDownloader
 public:
 	PUBLIC_API CurlFileDownloader(std::shared_ptr<LoggerFactory>);
 	PRIVATE_API ~CurlFileDownloader();
-	PRIVATE_API GAMELIB_IMPLEMENTATION_OVERRIDE(bool supportsProtocol(const char * const protocolName, size_t nameSize));
-	PRIVATE_API GAMELIB_IMPLEMENTATION_OVERRIDE(void downloadFile(const char * const url, DownloadCallback callback));
-	PRIVATE_API GAMELIB_IMPLEMENTATION_OVERRIDE(void downloadFileWithCookies(const char * const url,
+	PRIVATE_API GAMEKEEPER_IMPLEMENTATION_OVERRIDE(bool supportsProtocol(const char * const protocolName, size_t nameSize));
+	PRIVATE_API GAMEKEEPER_IMPLEMENTATION_OVERRIDE(void downloadFile(const char * const url, DownloadCallback callback));
+	PRIVATE_API GAMEKEEPER_IMPLEMENTATION_OVERRIDE(void downloadFileWithCookies(const char * const url,
 	                                                                         DownloadCallback callback,
 	                                                                         const CookieBuket& cookies));
-	PRIVATE_API GAMELIB_IMPLEMENTATION_OVERRIDE(CookieBuket doPostRequestForCookies(const char * const url,
+	PRIVATE_API GAMEKEEPER_IMPLEMENTATION_OVERRIDE(CookieBuket doPostRequestForCookies(const char * const url,
 	                                                                                const Form& form));
 private:
 	Logger & logger;
@@ -52,6 +52,6 @@ private:
 	PRIVATE_API void handleCurlError(int code);
 };
 
-GAMELIB_NAMESPACE_END(core)
+GAMEKEEPER_NAMESPACE_END(core)
 
-#endif //GAMELIB_CORE_CURLFILEDOWNLOADER_H
+#endif //GAMEKEEPER_CORE_CURLFILEDOWNLOADER_H

@@ -1,7 +1,7 @@
 /*
- * libgamelib
+ * GameKeeper Framework
  *
- * Copyright (C) 2013 Karol Herbst <gamelib@karolherbst.de>
+ * Copyright (C) 2013 Karol Herbst <gamekeeper@karolherbst.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -18,15 +18,15 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#include <gamelib/core/common.h>
-#include <gamelib/core/linuxinformation.h>
+#include <gamekeeper/core/common.h>
+#include <gamekeeper/core/linuxinformation.h>
 
 #include <boost/filesystem/operations.hpp>
 #include <boost/filesystem/path.hpp>
 
 #include <gtest/gtest.h>
 
-using namespace gamelib::core;
+using namespace gamekeeper::core;
 using namespace boost::filesystem;
 
 class OSINFORMATIONCLASSTEST : public testing::Test

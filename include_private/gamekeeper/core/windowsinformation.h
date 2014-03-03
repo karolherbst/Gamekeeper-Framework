@@ -1,7 +1,7 @@
 /*
- * libgamelib
+ * GameKeeper Framework
  *
- * Copyright (C) 2013 Karol Herbst <gamelib@karolherbst.de>
+ * Copyright (C) 2013 Karol Herbst <gamekeeper@karolherbst.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -18,25 +18,25 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef GAMELIB_CORE_WINDOWSINFORMATION_H
-#define GAMELIB_CORE_WINDOWSINFORMATION_H 1
+#ifndef GAMEKEEPER_CORE_WINDOWSINFORMATION_H
+#define GAMEKEEPER_CORE_WINDOWSINFORMATION_H 1
 
-#include <gamelib/core/common.h>
+#include <gamekeeper/core/common.h>
 
-#include <gamelib/core/osinformation.h>
+#include <gamekeeper/core/osinformation.h>
 
-GAMELIB_NAMESPACE_START(core)
+GAMEKEEPER_NAMESPACE_START(core)
 
 class PUBLIC_API WindowsInformation : public OSInformation
 {
 public:
-	PRIVATE_API GAMELIB_IMPLEMENTATION_OVERRIDE(std::string getEnv(const char * name));
-	PRIVATE_API GAMELIB_IMPLEMENTATION_OVERRIDE(void setEnv(const char *, const char *));
-	PRIVATE_API GAMELIB_IMPLEMENTATION_OVERRIDE(std::string getEnvSeperator());
-	PRIVATE_API GAMELIB_IMPLEMENTATION_OVERRIDE(boost::filesystem::path getSystemRoot());
-	PRIVATE_API GAMELIB_IMPLEMENTATION_OVERRIDE(boost::filesystem::path getUserPath());
+	PRIVATE_API GAMEKEEPER_IMPLEMENTATION_OVERRIDE(std::string getEnv(const char * name));
+	PRIVATE_API GAMEKEEPER_IMPLEMENTATION_OVERRIDE(void setEnv(const char *, const char *));
+	PRIVATE_API GAMEKEEPER_IMPLEMENTATION_OVERRIDE(std::string getEnvSeperator());
+	PRIVATE_API GAMEKEEPER_IMPLEMENTATION_OVERRIDE(boost::filesystem::path getSystemRoot());
+	PRIVATE_API GAMEKEEPER_IMPLEMENTATION_OVERRIDE(boost::filesystem::path getUserPath());
 };
 
-GAMELIB_NAMESPACE_END(core)
+GAMEKEEPER_NAMESPACE_END(core)
 
-#endif //GAMELIB_CORE_WINDOWSINFORMATION_H
+#endif //GAMEKEEPER_CORE_WINDOWSINFORMATION_H

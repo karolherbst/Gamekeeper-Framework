@@ -1,7 +1,7 @@
 /*
- * libgamelib
+ * GameKeeper Framework
  *
- * Copyright (C) 2013 Karol Herbst <gamelib@karolherbst.de>
+ * Copyright (C) 2013 Karol Herbst <gamekeeper@karolherbst.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -18,12 +18,12 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef GAMELIB_CLIENT_GAMELIBUI_H
-#define GAMELIB_CLIENT_GAMELIBUI_H 1
+#ifndef GAMEKEEPER_CLIENT_GAMEKEEPER_H
+#define GAMEKEEPER_CLIENT_GAMEKEEPER_H 1
 
-#include <gamelib/core/common.h>
+#include <gamekeeper/core/common.h>
 
-#include <gamelib/core/interface.h>
+#include <gamekeeper/core/interface.h>
 
 #include <Hypodermic/IContainer.h>
 
@@ -36,16 +36,16 @@ class variable_value;
 }
 }
 
-GAMELIB_NAMESPACE_START(core)
+GAMEKEEPER_NAMESPACE_START(core)
 class Logger;
-GAMELIB_NAMESPACE_END(core)
+GAMEKEEPER_NAMESPACE_END(core)
 
-GAMELIB_NAMESPACE_START(client)
+GAMEKEEPER_NAMESPACE_START(client)
 
 /**
- * @interface GameLibUI gamelib.h <gamelib/client/gamelib.h>
+ * @interface GameKeeperUI gamekeeper.h <gamekeeper/client/gamekeeper.h>
  *
- * Entry type for the gamelib library
+ * Entry type for the GameKeeper Framework
  *
  * this interface has to be implemented by the specific Language Frontend. This Interface is not intented for client
  * usage at all. Refer to the specific language frontent API you want to use instead.
@@ -53,7 +53,7 @@ GAMELIB_NAMESPACE_START(client)
  * @author Karol Herbst
  * @since 0
  */
-interface PUBLIC_API GameLibUI
+interface PUBLIC_API GameKeeperUI
 {
 	typedef std::map<std::string, boost::program_options::variable_value> ConfigMap;
 	/**
@@ -62,28 +62,28 @@ interface PUBLIC_API GameLibUI
 	 * @author Karol Herbst
 	 * @since 0
 	 */
-	PUBLIC_INLINE GAMELIB_INTERFACE_DESTRUCTOR(GameLibUI)
+	PUBLIC_INLINE GAMEKEEPER_INTERFACE_DESTRUCTOR(GameKeeperUI)
 
 	/**
-	 * init method for GameLib
+	 * init method for GameKeeper
 	 *
-	 * this method should be used to initialize the GameLib client with default options and configurations. Keep sure,
+	 * this method should be used to initialize the GameKeeper client with default options and configurations. Keep sure,
 	 * that after a call to this method, every other method must be ready to use.
 	 *
 	 * @author Karol Herbst
 	 * @since 0
 	 */
-	PUBLIC_API GAMELIB_INTERFACE_METHOD(void init(const ConfigMap & config));
+	PUBLIC_API GAMEKEEPER_INTERFACE_METHOD(void init(const ConfigMap & config));
 
 	/**
-	 * shutdown event handling method for GameLib
+	 * shutdown event handling method for GameKeeper
 	 *
-	 * clean up the GameLib client so that it can be destroyed or reused with a call to {@link #init} again.
+	 * clean up the GameKeeper client so that it can be destroyed or reused with a call to {@link #init} again.
 	 *
 	 * @author Karol Herbst
 	 * @since 0
 	 */
-	PUBLIC_API GAMELIB_INTERFACE_METHOD(void onShutdown());
+	PUBLIC_API GAMEKEEPER_INTERFACE_METHOD(void onShutdown());
 
 	/**
 	 * starts the implementation specific event loop
@@ -94,7 +94,7 @@ interface PUBLIC_API GameLibUI
 	 * @pre {@link #init} was called
 	 * @post blocks the current thread of execution
 	 */
-	PUBLIC_API GAMELIB_INTERFACE_METHOD(void startEventLoop());
+	PUBLIC_API GAMEKEEPER_INTERFACE_METHOD(void startEventLoop());
 
 	/**
 	 * this method will be called to collect options used by the client
@@ -106,36 +106,36 @@ interface PUBLIC_API GameLibUI
 	 * @param[in] oaFile the OptionAdder object for config file options
 	 * @param[in] oaBoth the OptionAdder object for config config file and command line options
 	 */
-	PUBLIC_INLINE GAMELIB_INTERFACE_METHOD_OPTIONAL(void addOptions(
+	PUBLIC_INLINE GAMEKEEPER_INTERFACE_METHOD_OPTIONAL(void addOptions(
 	                                                boost::program_options::options_description_easy_init & oaCmd,
 	                                                boost::program_options::options_description_easy_init & oaFile,
 	                                                boost::program_options::options_description_easy_init & oaBoth));
 };
 
 /**
- * is used by {@link main()} to get a language specific implementation of {@link GameLib}
+ * is used by {@link main()} to get a language specific implementation of {@link GameKeeper}
  *
- * This method is provided by the GUI client, not gamelib itself.
+ * This method is provided by the GUI client, not GameKeeper itself.
  *
  * @author Karol Herbst
  * @since 0
  *
- * @param logger the logger provided by gamelib
- * @return a new created instance of gameLib
+ * @param logger the logger provided by GameKeeper
+ * @return a new created instance of GameKeeper
  */
-extern "C" REVERSE_PUBLIC_API GameLibUI * newInstance(gamelib::core::Logger& logger);
+extern "C" REVERSE_PUBLIC_API GameKeeperUI * newInstance(gamekeeper::core::Logger& logger);
 
 /**
- * declares the Implementation of the {@link GameLibUI} interface
+ * declares the Implementation of the {@link GameKeeperUI} interface
  *
  * use this by the client to provide all the needed things.
  */
 #define GAMECLIENTUI_CLASS(class) \
-extern "C" REVERSE_PUBLIC_API gamelib::client::GameLibUI * newInstance(gamelib::core::Logger& logger) \
+extern "C" REVERSE_PUBLIC_API gamekeeper::client::GameKeeperUI * newInstance(gamekeeper::core::Logger& logger) \
 { \
 	return new class(logger); \
 }
 
-GAMELIB_NAMESPACE_END(client)
+GAMEKEEPER_NAMESPACE_END(client)
 
-#endif //GAMELIB_CLIENT_GAMELIBUI_H
+#endif //GAMEKEEPER_CLIENT_GAMEKEEPER_H

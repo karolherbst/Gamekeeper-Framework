@@ -1,7 +1,7 @@
 /*
- * libgamelib
+ * GameKeeper Framework
  *
- * Copyright (C) 2013 Karol Herbst <gamelib@karolherbst.de>
+ * Copyright (C) 2013 Karol Herbst <gamekeeper@karolherbst.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -20,19 +20,19 @@
 
 #include "pch.h"
 
-#include <gamelib/core/curlfiledownloader.h>
-#include <gamelib/core/curlhelper.h>
-#include <gamelib/core/logger.h>
-#include <gamelib/core/loggerFactory.h>
-#include <gamelib/core/loggerStream.h>
+#include <gamekeeper/core/curlfiledownloader.h>
+#include <gamekeeper/core/curlhelper.h>
+#include <gamekeeper/core/logger.h>
+#include <gamekeeper/core/loggerFactory.h>
+#include <gamekeeper/core/loggerStream.h>
 
 #include <curl/curl.h>
 
-GAMELIB_NAMESPACE_START(core)
+GAMEKEEPER_NAMESPACE_START(core)
 
 CurlFileDownloader::CurlFileDownloader(std::shared_ptr<LoggerFactory> loggerFactory)
 :	logger(loggerFactory->getComponentLogger("IO.curl")),
-	curlHelper("GameLib/0.1")
+	curlHelper("GameKeeper/0.1")
 {
 	logger << LogLevel::Debug << "init curl" << endl;
 	curl_global_init(CURL_GLOBAL_SSL);
@@ -109,4 +109,4 @@ CurlFileDownloader::handleCurlError(int code)
 	}
 }
 
-GAMELIB_NAMESPACE_END(core)
+GAMEKEEPER_NAMESPACE_END(core)

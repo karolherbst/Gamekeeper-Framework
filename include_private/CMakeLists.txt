@@ -2,5 +2,5 @@
 
 add_custom_target(private_headers
   SOURCES
-    gamelib/core/loggerFactory.h
+    gamekeeper/core/loggerFactory.h
 )

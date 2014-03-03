@@ -1,7 +1,7 @@
 /*
- * libgamelib
+ * GameKeeper Framework
  *
- * Copyright (C) 2013 Karol Herbst <gamelib@karolherbst.de>
+ * Copyright (C) 2013 Karol Herbst <gamekeeper@karolherbst.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -18,34 +18,27 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef GAMELIB_CORE_LOG4CPPLOGGER_H
-#define GAMELIB_CORE_LOG4CPPLOGGER_H 1
+#ifndef GAMEKEEPER_CORE_LOG4CPPLOGGERSTREAM_H
+#define GAMEKEEPER_CORE_LOG4CPPLOGGERSTREAM_H 1
 
-#include <gamelib/core/common.h>
+#include <gamekeeper/core/common.h>
 
-#include "log4cppLoggerStream.h"
+#include <gamekeeper/core/loggerStream.h>
 
-#include <map>
+#include <log4cpp/CategoryStream.hh>
 
-#include <gamelib/core/logger.h>
+GAMEKEEPER_NAMESPACE_START(core)
 
-namespace log4cpp
-{
-	class Category;
-}
-
-GAMELIB_NAMESPACE_START(core)
-
-class PRIVATE_API Log4cppLogger : public Logger
+class PRIVATE_API Log4cppLoggerStream : public LoggerStream
 {
 public:
-	PRIVATE_API Log4cppLogger(log4cpp::Category&);
-	PRIVATE_API GAMELIB_IMPLEMENTATION_OVERRIDE(LoggerStream& operator<<(const LogLevel& logLevel));
+	PRIVATE_API Log4cppLoggerStream(log4cpp::CategoryStream);
+	PRIVATE_API GAMEKEEPER_IMPLEMENTATION_OVERRIDE(LoggerStream& operator<<(const std::string& str));
+	PRIVATE_API GAMEKEEPER_IMPLEMENTATION_OVERRIDE(LoggerStream& flush());
 private:
-	log4cpp::Category& category;
-	std::map<const LogLevel, Log4cppLoggerStream> loggerStreams;
+	log4cpp::CategoryStream stream;
 };
 
-GAMELIB_NAMESPACE_END(core)
+GAMEKEEPER_NAMESPACE_END(core)
 
-#endif //GAMELIB_CORE_LOG4CPPLOGGER_H
+#endif //GAMEKEEPER_CORE_LOG4CPPLOGGERSTREAM_H

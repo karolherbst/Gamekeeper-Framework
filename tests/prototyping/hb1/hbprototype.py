@@ -1,4 +1,4 @@
-from GameLibModelPy import Game
+from GameKeeperModelPy import Game
 from bs4 import BeautifulSoup
 
 gameHTMLTree = [""]

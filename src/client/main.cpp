@@ -1,7 +1,7 @@
 /*
- * libgamelib
+ * GameKeeper Framework
  *
- * Copyright (C) 2013 Karol Herbst <gamelib@karolherbst.de>
+ * Copyright (C) 2013 Karol Herbst <gamekeeper@karolherbst.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -22,38 +22,38 @@
 
 #include "runtime.h"
 
-#include <gamelib/client/gamelib.h>
+#include <gamekeeper/client/gamekeeper.h>
 
-#ifdef GAMELIB_OS_IS_WINDOWS
+#ifdef GAMEKEEPER_OS_IS_WINDOWS
   #include <Windows.h>
 #endif
 
 /**
- * main entry point of gamelib
+ * main entry point of GameKeeper
  *
  * these are the steps which are done here:
  *	1. read the configuration file
  *	2. overwrite properties from application arguments
  *	3. initialize/configure global objects
- *	4. create the GameLib implementation provided by the Language Frontend
- *	5. call gamelib.setConfig()
- *	6. call gamelib.init()
- *	7. call gamelib.startEventLoop()
- *	8. call gamelib.shutdown()
- *	9. destroy gamelib
+ *	4. create the GameKeeper implementation provided by the Language Frontend
+ *	5. call GameKeeper.setConfig()
+ *	6. call GameKeeper.init()
+ *	7. call GameKeeper.startEventLoop()
+ *	8. call GameKeeper.shutdown()
+ *	9. destroy GameKeeper
  *
  * @author Karol Herbst
  * @since 0
  */
 PUBLIC_API int main(int argc, const char* argv[])
 {
-	gamelib::client::GameLibRuntime runtime;
+	gamekeeper::client::GameKeeperRuntime runtime;
 // on windows stuff is a bit more complicated
-#ifdef GAMELIB_OS_IS_WINDOWS
-	typedef gamelib::client::GameLibUI * (*NewInstanceFuncPtr)(gamelib::core::Logger& logger);
+#ifdef GAMEKEEPER_OS_IS_WINDOWS
+	typedef gamekeeper::client::GameKeeperUI * (*NewInstanceFuncPtr)(gamekeeper::core::Logger& logger);
 	NewInstanceFuncPtr newInstanceFunc = (NewInstanceFuncPtr)::GetProcAddress(GetModuleHandle(NULL), "newInstance");
 	return runtime.main(argc, argv, newInstanceFunc(runtime.getUILogger()));
 #else
-	return runtime.main(argc, argv, gamelib::client::newInstance(runtime.getUILogger()));
+	return runtime.main(argc, argv, gamekeeper::client::newInstance(runtime.getUILogger()));
 #endif
 }

@@ -1,7 +1,7 @@
 /*
- * libgamelib
+ * GameKeeper Framework
  *
- * Copyright (C) 2013 Karol Herbst <gamelib@karolherbst.de>
+ * Copyright (C) 2013 Karol Herbst <gamekeeper@karolherbst.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -18,34 +18,34 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef GAMELIB_CLIENT_RUNTIME_H
-#define GAMELIB_CLIENT_RUNTIME_H 1
+#ifndef GAMEKEEPER_CLIENT_RUNTIME_H
+#define GAMEKEEPER_CLIENT_RUNTIME_H 1
 
-#include <gamelib/core/common.h>
+#include <gamekeeper/core/common.h>
 
 #include <memory>
 
-GAMELIB_NAMESPACE_START(core)
+GAMEKEEPER_NAMESPACE_START(core)
 
 class Logger;
 
-GAMELIB_NAMESPACE_END(core)
+GAMEKEEPER_NAMESPACE_END(core)
 
-GAMELIB_NAMESPACE_START(client)
+GAMEKEEPER_NAMESPACE_START(client)
 
-class GameLibUI;
+class GameKeeperUI;
 
-class PUBLIC_API GameLibRuntime
+class PUBLIC_API GameKeeperRuntime
 {
 public:
-	PUBLIC_API GameLibRuntime();
-	PUBLIC_API ~GameLibRuntime();
-	PUBLIC_API gamelib::core::Logger& getUILogger();
-	PUBLIC_API int main(int argc, const char* argv[], GameLibUI *);
+	PUBLIC_API GameKeeperRuntime();
+	PUBLIC_API ~GameKeeperRuntime();
+	PUBLIC_API gamekeeper::core::Logger& getUILogger();
+	PUBLIC_API int main(int argc, const char* argv[], GameKeeperUI *);
 private:
-	GameLibUI * gameLibUI;
+	GameKeeperUI * gameKeeperUI;
 };
 
-GAMELIB_NAMESPACE_END(client)
+GAMEKEEPER_NAMESPACE_END(client)
 
-#endif //GAMELIB_CLIENT_RUNTIME_H
+#endif //GAMEKEEPER_CLIENT_RUNTIME_H

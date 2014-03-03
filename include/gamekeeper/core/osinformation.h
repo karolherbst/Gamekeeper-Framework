@@ -1,7 +1,7 @@
 /*
- * libgamelib
+ * GameKeeper Framework
  *
- * Copyright (C) 2013 Karol Herbst <gamelib@karolherbst.de>
+ * Copyright (C) 2013 Karol Herbst <gamekeeper@karolherbst.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -18,21 +18,21 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef GAMELIB_CORE_OSINFORMATION_H
-#define GAMELIB_CORE_OSINFORMATION_H 1
+#ifndef GAMEKEEPER_CORE_OSINFORMATION_H
+#define GAMEKEEPER_CORE_OSINFORMATION_H 1
 
-#include <gamelib/core/common.h>
+#include <gamekeeper/core/common.h>
 
 #include <string>
 
-#include <gamelib/core/interface.h>
+#include <gamekeeper/core/interface.h>
 
 #include <boost/filesystem/path.hpp>
 
-GAMELIB_NAMESPACE_START(core)
+GAMEKEEPER_NAMESPACE_START(core)
 
 /**
- * @interface OSInformation osinformation.h <gamelib/core/osinformation.h>
+ * @interface OSInformation osinformation.h <gamekeeper/core/osinformation.h>
  *
  * this interface provides all methods to get OS specific paths like where should config files be stored
  *
@@ -41,7 +41,7 @@ GAMELIB_NAMESPACE_START(core)
  */
 interface PUBLIC_API OSInformation
 {
-	PUBLIC_INLINE GAMELIB_INTERFACE_DESTRUCTOR(OSInformation)
+	PUBLIC_INLINE GAMEKEEPER_INTERFACE_DESTRUCTOR(OSInformation)
 
 	/**
 	 * returns the value of the given environment variable name
@@ -52,7 +52,7 @@ interface PUBLIC_API OSInformation
 	 * @param name the file name
 	 * @return the resolved value
 	 */
-	PUBLIC_API GAMELIB_INTERFACE_METHOD(std::string getEnv(const char * name));
+	PUBLIC_API GAMEKEEPER_INTERFACE_METHOD(std::string getEnv(const char * name));
 
 	/**
 	 * returns the value of the given environment variable name
@@ -63,7 +63,7 @@ interface PUBLIC_API OSInformation
 	 * @param name the file name
 	 * @return the resolved value
 	 */
-	PUBLIC_API GAMELIB_INTERFACE_METHOD(void setEnv(const char * name, const char * value));
+	PUBLIC_API GAMEKEEPER_INTERFACE_METHOD(void setEnv(const char * name, const char * value));
 
 	/**
 	 * This method should return the seperator used in environment variables to seperate multiple paths
@@ -73,7 +73,7 @@ interface PUBLIC_API OSInformation
 	 *
 	 * @return the seperator
 	 */
-	PUBLIC_API GAMELIB_INTERFACE_METHOD(std::string getEnvSeperator());
+	PUBLIC_API GAMEKEEPER_INTERFACE_METHOD(std::string getEnvSeperator());
 
 	/**
 	 * returns the path to the filesystem root of the system partition
@@ -83,7 +83,7 @@ interface PUBLIC_API OSInformation
 	 *
 	 * @return the path
 	 */
-	PUBLIC_API GAMELIB_INTERFACE_METHOD(boost::filesystem::path getSystemRoot());
+	PUBLIC_API GAMEKEEPER_INTERFACE_METHOD(boost::filesystem::path getSystemRoot());
 
 	/**
 	 * returns the path to the user directory
@@ -93,9 +93,9 @@ interface PUBLIC_API OSInformation
 	 *
 	 * @return the path
 	 */
-	PUBLIC_API GAMELIB_INTERFACE_METHOD(boost::filesystem::path getUserPath());
+	PUBLIC_API GAMEKEEPER_INTERFACE_METHOD(boost::filesystem::path getUserPath());
 };
 
-GAMELIB_NAMESPACE_END(core)
+GAMEKEEPER_NAMESPACE_END(core)
 
-#endif //GAMELIB_CORE_OSINFORMATION_H
+#endif //GAMEKEEPER_CORE_OSINFORMATION_H

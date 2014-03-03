@@ -1,6 +1,6 @@
 include_directories(
   ${CMAKE_CURRENT_SOURCE_DIR}
-  ${GAMELIB_INCLUDE_DIR}
+  ${GAMEKEEPER_INCLUDE_DIR}
   ${HYPODERMIC_INCLUDE_DIRS}
   ${PYTHON_INCLUDE_DIRS}
 )
@@ -25,6 +25,6 @@ add_definitions(
 
 add_executable(HBPrototype ${sources} ${headers} ${otherFiles})
 target_link_libraries(HBPrototype
-  gamelibClientMain
+  gamekeeperClientMain
   ${PYTHON_LIBRARIES}
 )

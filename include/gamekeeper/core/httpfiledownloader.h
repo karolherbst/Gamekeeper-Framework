@@ -1,7 +1,7 @@
 /*
- * libgamelib
+ * GameKeeper Framework
  *
- * Copyright (C) 2013 Karol Herbst <gamelib@karolherbst.de>
+ * Copyright (C) 2013 Karol Herbst <gamekeeper@karolherbst.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -18,20 +18,20 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef GAMELIB_CORE_HTTPFILEDOWNLOADER_H
-#define GAMELIB_CORE_HTTPFILEDOWNLOADER_H 1
+#ifndef GAMEKEEPER_CORE_HTTPFILEDOWNLOADER_H
+#define GAMEKEEPER_CORE_HTTPFILEDOWNLOADER_H 1
 
-#include <gamelib/core/common.h>
+#include <gamekeeper/core/common.h>
 
 #include <unordered_map>
 
-#include <gamelib/core/filedownloader.h>
-#include <gamelib/core/interface.h>
+#include <gamekeeper/core/filedownloader.h>
+#include <gamekeeper/core/interface.h>
 
-GAMELIB_NAMESPACE_START(core)
+GAMEKEEPER_NAMESPACE_START(core)
 
 /**
- * @interface HttpFileDownloader httpfiledownloader.h <gamelib/core/httpfiledownloader.h>
+ * @interface HttpFileDownloader httpfiledownloader.h <gamekeeper/core/httpfiledownloader.h>
  *
  * This interface extends the {@link FileDownloader} interface by Http specific operations
  *
@@ -84,7 +84,7 @@ interface PUBLIC_API HttpFileDownloader : public FileDownloader
 	 * @param[in] callback the callback function
 	 * @param[in] cookies the cookies
 	 */
-	PUBLIC_API GAMELIB_INTERFACE_METHOD(void downloadFileWithCookies(const char * const url, DownloadCallback callback,
+	PUBLIC_API GAMEKEEPER_INTERFACE_METHOD(void downloadFileWithCookies(const char * const url, DownloadCallback callback,
 	                                                                 const CookieBuket& cookies));
 
 	/**
@@ -97,9 +97,9 @@ interface PUBLIC_API HttpFileDownloader : public FileDownloader
 	 * @param[in] form the form
 	 * @return the fetched cookies
 	 */
-	PUBLIC_API GAMELIB_INTERFACE_METHOD(CookieBuket doPostRequestForCookies(const char * const url, const Form& form));
+	PUBLIC_API GAMEKEEPER_INTERFACE_METHOD(CookieBuket doPostRequestForCookies(const char * const url, const Form& form));
 };
 
-GAMELIB_NAMESPACE_END(core)
+GAMEKEEPER_NAMESPACE_END(core)
 
-#endif //GAMELIB_CORE_HTTPFILEDOWNLOADER_H
+#endif //GAMEKEEPER_CORE_HTTPFILEDOWNLOADER_H

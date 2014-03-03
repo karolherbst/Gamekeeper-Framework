@@ -1,7 +1,7 @@
 /*
- * libgamelib
+ * GameKeeper Framework
  *
- * Copyright (C) 2013 Karol Herbst <gamelib@karolherbst.de>
+ * Copyright (C) 2013 Karol Herbst <gamekeeper@karolherbst.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -20,14 +20,14 @@
 
 #include "runtime.h"
 
-#include <gamelib/core/common.h>
+#include <gamekeeper/core/common.h>
 
 #include <cstdlib>
 
-#include <gamelib/core/logger.h>
-#include <gamelib/core/loggerStream.h>
-#include <gamelib/client/gamelib.h>
-#include <gamelib/client/hypodermic.h>
+#include <gamekeeper/core/logger.h>
+#include <gamekeeper/core/loggerStream.h>
+#include <gamekeeper/client/gamekeeper.h>
+#include <gamekeeper/client/hypodermic.h>
 
 #include <boost/program_options/options_description.hpp>
 #include <boost/program_options/parsers.hpp>
@@ -36,27 +36,27 @@
 #include <Hypodermic/ContainerBuilder.h>
 #include <Hypodermic/Helpers.h>
 
-#include <gamelib/core/curlfiledownloader.h>
-#ifdef GAMELIB_OS_IS_WINDOWS
-  #include <gamelib/core/windowsinformation.h>
+#include <gamekeeper/core/curlfiledownloader.h>
+#ifdef GAMEKEEPER_OS_IS_WINDOWS
+  #include <gamekeeper/core/windowsinformation.h>
   #define OSINFORMATIONCLASS WindowsInformation
 #else
-  #include <gamelib/core/linuxinformation.h>
+  #include <gamekeeper/core/linuxinformation.h>
   #define OSINFORMATIONCLASS LinuxInformation
 #endif
-#include <gamelib/core/log4cpploggerFactory.h>
-#include <gamelib/core/xdgpaths.h>
+#include <gamekeeper/core/log4cpploggerFactory.h>
+#include <gamekeeper/core/xdgpaths.h>
 
 namespace po = boost::program_options;
 
-GAMELIB_NAMESPACE_START(client)
+GAMEKEEPER_NAMESPACE_START(client)
 
 static std::shared_ptr<Hypodermic::IContainer> localContainer;
 static std::shared_ptr<Hypodermic::IContainer> container;
 
-GameLibRuntime::GameLibRuntime()
+GameKeeperRuntime::GameKeeperRuntime()
 {
-	using namespace gamelib::core;
+	using namespace gamekeeper::core;
 	Hypodermic::ContainerBuilder containerBuilder;
 
 	// set up IoC container
@@ -66,21 +66,21 @@ GameLibRuntime::GameLibRuntime()
 	localContainer = containerBuilder.build();
 }
 
-GameLibRuntime::~GameLibRuntime()
+GameKeeperRuntime::~GameKeeperRuntime()
 {
-	delete this->gameLibUI;
+	delete this->gameKeeperUI;
 }
 
-gamelib::core::Logger&
-GameLibRuntime::getUILogger()
+gamekeeper::core::Logger&
+GameKeeperRuntime::getUILogger()
 {
-	return localContainer->resolve<gamelib::core::LoggerFactory>()->getComponentLogger("UI.client");
+	return localContainer->resolve<gamekeeper::core::LoggerFactory>()->getComponentLogger("UI.client");
 }
 
 int
-GameLibRuntime::main(int argc, const char* argv[], GameLibUI * gameLibUI)
+GameKeeperRuntime::main(int argc, const char* argv[], GameKeeperUI * gameKeeperUI)
 {
-	this->gameLibUI = gameLibUI;
+	this->gameKeeperUI = gameKeeperUI;
 
 	po::options_description descGlobal("Global options");
 
@@ -94,7 +94,7 @@ GameLibRuntime::main(int argc, const char* argv[], GameLibUI * gameLibUI)
 	po::options_description_easy_init fileClientEasy = fileClient.add_options();
 	po::options_description_easy_init bothClientEasy = bothClient.add_options();
 
-	this->gameLibUI->addOptions(cmdClientEasy, fileClientEasy, bothClientEasy);
+	this->gameKeeperUI->addOptions(cmdClientEasy, fileClientEasy, bothClientEasy);
 
 	if(!bothClient.options().empty())
 	{
@@ -124,11 +124,11 @@ GameLibRuntime::main(int argc, const char* argv[], GameLibUI * gameLibUI)
 
 	Hypodermic::ContainerBuilder containerBuilder;
 	{
-		using namespace gamelib::core;
+		using namespace gamekeeper::core;
 
 		// set up IoC container
 		containerBuilder.registerInstance<LoggerFactory>(
-			localContainer->resolve<gamelib::core::LoggerFactory>())->
+			localContainer->resolve<gamekeeper::core::LoggerFactory>())->
 			as<LoggerFactory>()->
 			singleInstance();
 		containerBuilder.registerType<OSINFORMATIONCLASS>()->
@@ -144,12 +144,12 @@ GameLibRuntime::main(int argc, const char* argv[], GameLibUI * gameLibUI)
 	}
 	container = containerBuilder.build();
 
-	std::shared_ptr<gamelib::core::LoggerFactory> loggerFactory = container->resolve<gamelib::core::LoggerFactory>();
-	loggerFactory->getComponentLogger("main") << gamelib::core::LogLevel::Debug << "firing up gamelib" << gamelib::core::endl;
+	std::shared_ptr<gamekeeper::core::LoggerFactory> loggerFactory = container->resolve<gamekeeper::core::LoggerFactory>();
+	loggerFactory->getComponentLogger("main") << gamekeeper::core::LogLevel::Debug << "firing up GameKeeper" << gamekeeper::core::endl;
 
-	this->gameLibUI->init(vm);
-	this->gameLibUI->startEventLoop();
-	this->gameLibUI->onShutdown();
+	this->gameKeeperUI->init(vm);
+	this->gameKeeperUI->startEventLoop();
+	this->gameKeeperUI->onShutdown();
 
 	return EXIT_SUCCESS;
 }
@@ -160,4 +160,4 @@ HypodermicUtil::getContainer()
 	return *container;
 }
 
-GAMELIB_NAMESPACE_END(client)
+GAMEKEEPER_NAMESPACE_END(client)

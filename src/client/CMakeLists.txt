@@ -17,17 +17,17 @@ file(GLOB main_sources
   main.cpp
 )
 
-add_library(gamelibClient SHARED ${sources} ${headers})
-target_link_libraries(gamelibClient
-  gamelibCore
+add_library(gamekeeperClient SHARED ${sources} ${headers})
+target_link_libraries(gamekeeperClient
+  gamekeeperCore
   ${HYPODERMIC_LIBRARIES}
   ${Boost_PROGRAM_OPTIONS_LIBRARY}
   ${Boost_SYSTEM_LIBRARY}
 )
-install_library(gamelibClient)
+install_library(gamekeeperClient)
 
-add_library(gamelibClientMain STATIC ${main_sources})
-target_link_libraries(gamelibClientMain
-  gamelibClient
+add_library(gamekeeperClientMain STATIC ${main_sources})
+target_link_libraries(gamekeeperClientMain
+  gamekeeperClient
 )
-#install_library(gamelibClientMain)
+#install_library(gamekeeperClientMain)

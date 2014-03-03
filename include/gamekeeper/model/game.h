@@ -1,7 +1,7 @@
 /*
- * libgamelib
+ * GameKeeper Framework
  *
- * Copyright (C) 2013 Karol Herbst <gamelib@karolherbst.de>
+ * Copyright (C) 2013 Karol Herbst <gamekeeper@karolherbst.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -18,20 +18,20 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef GAMELIB_MODEL_GAME_H
-#define GAMELIB_MODEL_GAME_H 1
+#ifndef GAMEKEEPER_MODEL_GAME_H
+#define GAMEKEEPER_MODEL_GAME_H 1
 
-#include <gamelib/core/interface.h>
+#include <gamekeeper/core/interface.h>
 
-GAMELIB_NAMESPACE_START(model)
+GAMEKEEPER_NAMESPACE_START(model)
 
 interface PUBLIC_API Game
 {
-	PUBLIC_INLINE GAMELIB_INTERFACE_DESTRUCTOR(Game)
-	PUBLIC_API GAMELIB_INTERFACE_METHOD(const char * getId() const);
-	PUBLIC_API GAMELIB_INTERFACE_METHOD(const char * getName() const);
+	PUBLIC_INLINE GAMEKEEPER_INTERFACE_DESTRUCTOR(Game)
+	PUBLIC_API GAMEKEEPER_INTERFACE_METHOD(const char * getId() const);
+	PUBLIC_API GAMEKEEPER_INTERFACE_METHOD(const char * getName() const);
 };
 
-GAMELIB_NAMESPACE_END(model)
+GAMEKEEPER_NAMESPACE_END(model)
 
-#endif //GAMELIB_MODEL_GAME_H
+#endif //GAMEKEEPER_MODEL_GAME_H

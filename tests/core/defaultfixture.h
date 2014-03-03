@@ -1,7 +1,7 @@
 /*
- * libgamelib
+ * GameKeeper Framework
  *
- * Copyright (C) 2013 Karol Herbst <gamelib@karolherbst.de>
+ * Copyright (C) 2013 Karol Herbst <gamekeeper@karolherbst.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -18,16 +18,16 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef TEST_GAMELIB_CORE_DEFAULTFICTURE
-#define TEST_GAMELIB_CORE_DEFAULTFICTURE 1
+#ifndef TEST_GAMEKEEPER_CORE_DEFAULTFICTURE
+#define TEST_GAMEKEEPER_CORE_DEFAULTFICTURE 1
 
-#include <gamelib/core/common.h>
+#include <gamekeeper/core/common.h>
 
 #include <gtest/gtest.h>
 
 #include <Hypodermic/IContainer.h>
 
-GAMELIB_NAMESPACE_START(test)
+GAMEKEEPER_NAMESPACE_START(test)
 
 class DefaultFicture : public testing::Test
 {
@@ -37,6 +37,6 @@ protected:
 	std::shared_ptr<Hypodermic::IContainer> container;
 };
 
-GAMELIB_NAMESPACE_END(test)
+GAMEKEEPER_NAMESPACE_END(test)
 
-#endif //TEST_GAMELIB_CORE_DEFAULTFICTURE
+#endif //TEST_GAMEKEEPER_CORE_DEFAULTFICTURE

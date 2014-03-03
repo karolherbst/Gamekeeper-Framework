@@ -1,7 +1,7 @@
 /*
- * libgamelib
+ * GameKeeper Framework
  *
- * Copyright (C) 2013 Karol Herbst <gamelib@karolherbst.de>
+ * Copyright (C) 2013 Karol Herbst <gamekeeper@karolherbst.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -28,7 +28,7 @@
 #include <log4cpp/PatternLayout.hh>
 #include <log4cpp/Priority.hh>
 
-GAMELIB_NAMESPACE_START(core)
+GAMEKEEPER_NAMESPACE_START(core)
 
 Log4cppLoggerFactory::Log4cppLoggerFactory()
 :	rootCategory(log4cpp::Category::getRoot()),
@@ -75,4 +75,4 @@ Log4cppLoggerFactory::~Log4cppLoggerFactory()
 	}
 }
 
-GAMELIB_NAMESPACE_END(core)
+GAMEKEEPER_NAMESPACE_END(core)

@@ -3,11 +3,11 @@
 #include <boost/program_options/options_description.hpp>
 #include <boost/program_options/variables_map.hpp>
 
-#include <gamelib/client/autowire.h>
-#include <gamelib/core/httpfiledownloader.h>
-#include <gamelib/core/logger.h>
-#include <gamelib/core/loggerStream.h>
-#include <gamelib/model/game.h>
+#include <gamekeeper/client/autowire.h>
+#include <gamekeeper/core/httpfiledownloader.h>
+#include <gamekeeper/core/logger.h>
+#include <gamekeeper/core/loggerStream.h>
+#include <gamekeeper/model/game.h>
 
 #include <map>
 #include <iostream>
@@ -16,7 +16,7 @@
 
 GAMECLIENTUI_CLASS(HBPrototype)
 
-using namespace gamelib::core;
+using namespace gamekeeper::core;
 namespace po = boost::program_options;
 
 typedef HttpFileDownloader::CookieBuket CookieBuket;
@@ -25,7 +25,7 @@ typedef HttpFileDownloader::Form Form;
 
 static std::shared_ptr<HttpFileDownloader> fileDownloader;
 
-HBPrototype::HBPrototype(gamelib::core::Logger& _logger)
+HBPrototype::HBPrototype(gamekeeper::core::Logger& _logger)
 :	logger(_logger){}
 
 void
@@ -40,7 +40,7 @@ HBPrototype::addOptions(boost::program_options::options_description_easy_init & 
 void
 HBPrototype::init(const ConfigMap & configMap)
 {
-	fileDownloader = gamelib::client::Autowire<gamelib::core::HttpFileDownloader>();
+	fileDownloader = gamekeeper::client::Autowire<gamekeeper::core::HttpFileDownloader>();
 
 	this->logger << LogLevel::Info << "init" << endl;
 
@@ -84,10 +84,10 @@ typedef struct {
   void *ptr;
 } SwigPyObject;
 
-static gamelib::model::Game * castPyObjectToGame(PyObject *obj)
+static gamekeeper::model::Game * castPyObjectToGame(PyObject *obj)
 {
 	SwigPyObject * swigPyObj = reinterpret_cast<SwigPyObject *>(obj);
-	return static_cast<gamelib::model::Game*>(swigPyObj->ptr);
+	return static_cast<gamekeeper::model::Game*>(swigPyObj->ptr);
 }
 
 void
@@ -131,7 +131,7 @@ HBPrototype::doPythonStuff()
 			if (result != NULL)
 			{
 				this->logger << LogLevel::Info << "call finished, got the game list" << endl;
-				std::map<std::string, gamelib::model::Game*> games;
+				std::map<std::string, gamekeeper::model::Game*> games;
 				
 				for(int i = 0; i < PyList_Size(result); i++)
 				{
@@ -140,7 +140,7 @@ HBPrototype::doPythonStuff()
 					PyObject *resultGame = PyObject_CallObject(funcGetGame, argsGame);
 					if (resultGame != NULL)
 					{
-						gamelib::model::Game * game = castPyObjectToGame(resultGame);
+						gamekeeper::model::Game * game = castPyObjectToGame(resultGame);
 						games[PyUnicode_AsUTF8(PyList_GetItem(result, i))] = game;
 						this->logger << LogLevel::Debug << game->getName() << endl;
 					}

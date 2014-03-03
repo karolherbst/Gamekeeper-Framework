@@ -1,7 +1,7 @@
 /*
- * libgamelib
+ * GameKeeper Framework
  *
- * Copyright (C) 2013 Karol Herbst <gamelib@karolherbst.de>
+ * Copyright (C) 2013 Karol Herbst <gamekeeper@karolherbst.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -18,17 +18,17 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef GAMELIB_CLIENT_HYPODERMIC_H
-#define GAMELIB_CLIENT_HYPODERMIC_H 1
+#ifndef GAMEKEEPER_CLIENT_HYPODERMIC_H
+#define GAMEKEEPER_CLIENT_HYPODERMIC_H 1
 
-#include <gamelib/core/common.h>
+#include <gamekeeper/core/common.h>
 
 #include <Hypodermic/IContainer.h>
 
-GAMELIB_NAMESPACE_START(client)
+GAMEKEEPER_NAMESPACE_START(client)
 
 /**
- * @class HypodermicUtil hypodermic.h <gamelib/client/hypodermic.h>
+ * @class HypodermicUtil hypodermic.h <gamekeeper/client/hypodermic.h>
  *
  * class to optiain a hypodermic container instance
  *
@@ -41,7 +41,7 @@ public:
 	/**
 	 * use this method to get the globale hypodermic container
 	 *
-	 * this method can be only called after the GamelibUI.init method was called
+	 * this method can be only called after the GameKeeperUI.init method was called
 	 *
 	 * @author Karol Herbst
 	 * @since 0
@@ -51,6 +51,6 @@ public:
 	PUBLIC_API static Hypodermic::IContainer& getContainer();
 };
 
-GAMELIB_NAMESPACE_END(client)
+GAMEKEEPER_NAMESPACE_END(client)
 
-#endif //GAMELIB_CLIENT_HYPODERMIC_H
+#endif //GAMEKEEPER_CLIENT_HYPODERMIC_H
