@@ -1,6 +1,6 @@
 include_directories(
   ${CMAKE_CURRENT_SOURCE_DIR}
-  ${GAMELIB_INCLUDE_DIR}
+  ${GAMEKEEPER_INCLUDE_DIR}
 )
 
 file(GLOB headers

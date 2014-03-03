@@ -1,7 +1,7 @@
 # include gloabel directory always
 include_directories(
-  ${GAMELIB_PRIVATE_INCLUDE_DIR}
-  ${GAMELIB_INCLUDE_DIR}
+  ${GAMEKEEPER_PRIVATE_INCLUDE_DIR}
+  ${GAMEKEEPER_INCLUDE_DIR}
 )
 
 # needed for windows
