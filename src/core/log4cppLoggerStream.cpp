@@ -22,7 +22,7 @@
 
 #include "log4cppLoggerStream.h"
 
-GAMELIB_NAMESPACE_START(core)
+GAMEKEEPER_NAMESPACE_START(core)
 
 Log4cppLoggerStream::Log4cppLoggerStream(log4cpp::CategoryStream log4cppStream)
 :	stream(log4cppStream){}
@@ -41,4 +41,4 @@ Log4cppLoggerStream::flush()
 	return *this;
 }
 
-GAMELIB_NAMESPACE_END(core)
+GAMEKEEPER_NAMESPACE_END(core)

@@ -29,7 +29,7 @@
 
 #include <boost/filesystem/path.hpp>
 
-GAMELIB_NAMESPACE_START(core)
+GAMEKEEPER_NAMESPACE_START(core)
 
 /**
  * @interface OSInformation osinformation.h <gamelib/core/osinformation.h>
@@ -96,6 +96,6 @@ interface PUBLIC_API OSInformation
 	PUBLIC_API GAMELIB_INTERFACE_METHOD(boost::filesystem::path getUserPath());
 };
 
-GAMELIB_NAMESPACE_END(core)
+GAMEKEEPER_NAMESPACE_END(core)
 
 #endif //GAMELIB_CORE_OSINFORMATION_H

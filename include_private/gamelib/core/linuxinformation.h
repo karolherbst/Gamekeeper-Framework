@@ -25,7 +25,7 @@
 
 #include <gamelib/core/osinformation.h>
 
-GAMELIB_NAMESPACE_START(core)
+GAMEKEEPER_NAMESPACE_START(core)
 
 class PUBLIC_API LinuxInformation : public OSInformation
 {
@@ -37,6 +37,6 @@ public:
 	PRIVATE_API GAMELIB_IMPLEMENTATION_OVERRIDE(boost::filesystem::path getUserPath());
 };
 
-GAMELIB_NAMESPACE_END(core)
+GAMEKEEPER_NAMESPACE_END(core)
 
 #endif //GAMELIB_CORE_LINUXINFORMATION_H

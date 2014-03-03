@@ -25,7 +25,7 @@
 
 #include <gamelib/core/interface.h>
 
-GAMELIB_NAMESPACE_START(core)
+GAMEKEEPER_NAMESPACE_START(core)
 
 class Logger;
 
@@ -59,6 +59,6 @@ interface PRIVATE_API LoggerFactory
 	PRIVATE_API GAMELIB_INTERFACE_METHOD(Logger& getComponentLogger(const char * const id));
 };
 
-GAMELIB_NAMESPACE_END(core)
+GAMEKEEPER_NAMESPACE_END(core)
 
 #endif //GAMELIB_CORE_LOGGERFACTORY_H

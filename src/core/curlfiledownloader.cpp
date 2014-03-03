@@ -28,7 +28,7 @@
 
 #include <curl/curl.h>
 
-GAMELIB_NAMESPACE_START(core)
+GAMEKEEPER_NAMESPACE_START(core)
 
 CurlFileDownloader::CurlFileDownloader(std::shared_ptr<LoggerFactory> loggerFactory)
 :	logger(loggerFactory->getComponentLogger("IO.curl")),
@@ -109,4 +109,4 @@ CurlFileDownloader::handleCurlError(int code)
 	}
 }
 
-GAMELIB_NAMESPACE_END(core)
+GAMEKEEPER_NAMESPACE_END(core)

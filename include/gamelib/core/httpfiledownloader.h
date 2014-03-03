@@ -28,7 +28,7 @@
 #include <gamelib/core/filedownloader.h>
 #include <gamelib/core/interface.h>
 
-GAMELIB_NAMESPACE_START(core)
+GAMEKEEPER_NAMESPACE_START(core)
 
 /**
  * @interface HttpFileDownloader httpfiledownloader.h <gamelib/core/httpfiledownloader.h>
@@ -100,6 +100,6 @@ interface PUBLIC_API HttpFileDownloader : public FileDownloader
 	PUBLIC_API GAMELIB_INTERFACE_METHOD(CookieBuket doPostRequestForCookies(const char * const url, const Form& form));
 };
 
-GAMELIB_NAMESPACE_END(core)
+GAMEKEEPER_NAMESPACE_END(core)
 
 #endif //GAMELIB_CORE_HTTPFILEDOWNLOADER_H

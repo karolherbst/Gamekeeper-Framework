@@ -31,7 +31,7 @@
 
 #include <curl/curl.h>
 
-GAMELIB_NAMESPACE_START(core)
+GAMEKEEPER_NAMESPACE_START(core)
 
 struct CURLPrivateData
 {
@@ -129,4 +129,4 @@ CurlHelper::deleteCURL(CURL * curl)
 	curl_easy_cleanup(curl);
 }
 
-GAMELIB_NAMESPACE_END(core)
+GAMEKEEPER_NAMESPACE_END(core)

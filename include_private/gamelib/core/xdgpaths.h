@@ -28,7 +28,7 @@
 #include <gamelib/core/osinformation.h>
 #include <gamelib/core/ospaths.h>
 
-GAMELIB_NAMESPACE_START(core)
+GAMEKEEPER_NAMESPACE_START(core)
 
 class PUBLIC_API XDGPaths : public OSPaths
 {
@@ -48,6 +48,6 @@ private:
 	                                                const char *, std::string);
 };
 
-GAMELIB_NAMESPACE_END(core)
+GAMEKEEPER_NAMESPACE_END(core)
 
 #endif //GAMELIB_CORE_XDGPATHS_H

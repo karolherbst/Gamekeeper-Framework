@@ -21,7 +21,7 @@
 #include "defaultfixture.h"
 
 // some platform dependent stuff
-#ifdef GAMELIB_OS_IS_WINDOWS
+#ifdef GAMEKEEPER_OS_IS_WINDOWS
   #include <gamelib/core/windowsinformation.h>
   #define OSINFORMATIONCLASS WindowsInformation
 #else
@@ -32,7 +32,7 @@
 #include <Hypodermic/ContainerBuilder.h>
 #include <Hypodermic/Helpers.h>
 
-GAMELIB_NAMESPACE_START(test)
+GAMEKEEPER_NAMESPACE_START(test)
 
 DefaultFicture::DefaultFicture()
 {
@@ -50,4 +50,4 @@ DefaultFicture::DefaultFicture()
 	this->container = containerBuilder.build();
 }
 
-GAMELIB_NAMESPACE_END(test)
+GAMEKEEPER_NAMESPACE_END(test)

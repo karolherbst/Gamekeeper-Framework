@@ -28,7 +28,7 @@
 
 #include <boost/locale/encoding_utf.hpp>
 
-GAMELIB_NAMESPACE_START(core)
+GAMEKEEPER_NAMESPACE_START(core)
 
 using boost::locale::conv::utf_to_utf;
 
@@ -66,4 +66,4 @@ WindowsInformation::getUserPath()
 	return szPath;
 }
 
-GAMELIB_NAMESPACE_END(core)
+GAMEKEEPER_NAMESPACE_END(core)

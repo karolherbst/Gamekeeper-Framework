@@ -27,7 +27,7 @@
 
 #include <gamelib/core/interface.h>
 
-GAMELIB_NAMESPACE_START(core)
+GAMEKEEPER_NAMESPACE_START(core)
 
 /**
  * @interface FileDownloader filedownloader.h <gamelib/core/filedownloader.h>
@@ -80,6 +80,6 @@ interface PUBLIC_API FileDownloader
 	PUBLIC_API GAMELIB_INTERFACE_METHOD(void downloadFile(const char * const url, DownloadCallback callback));
 };
 
-GAMELIB_NAMESPACE_END(core)
+GAMEKEEPER_NAMESPACE_END(core)
 
 #endif //GAMELIB_CORE_FILEDOWNLOADER_H

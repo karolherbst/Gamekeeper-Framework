@@ -22,7 +22,7 @@
 
 #include "game.h"
 
-GAMELIB_NAMESPACE_START(bindings)
+GAMEKEEPER_NAMESPACE_START(bindings)
 namespace model
 {
 
@@ -51,4 +51,4 @@ Game::setName(const char* n)
 }
 
 }
-GAMELIB_NAMESPACE_END(bindings)
+GAMEKEEPER_NAMESPACE_END(bindings)

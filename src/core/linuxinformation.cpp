@@ -24,7 +24,7 @@
 
 #include <cstdlib>
 
-GAMELIB_NAMESPACE_START(core)
+GAMEKEEPER_NAMESPACE_START(core)
 
 std::string
 LinuxInformation::getEnv(const char * name)
@@ -61,4 +61,4 @@ LinuxInformation::getUserPath()
 	return getEnv("HOME");
 }
 
-GAMELIB_NAMESPACE_END(core)
+GAMEKEEPER_NAMESPACE_END(core)

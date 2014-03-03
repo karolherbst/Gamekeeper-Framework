@@ -23,7 +23,7 @@
 
 #include <gamelib/core/interface.h>
 
-GAMELIB_NAMESPACE_START(model)
+GAMEKEEPER_NAMESPACE_START(model)
 
 interface PUBLIC_API Game
 {
@@ -32,6 +32,6 @@ interface PUBLIC_API Game
 	PUBLIC_API GAMELIB_INTERFACE_METHOD(const char * getName() const);
 };
 
-GAMELIB_NAMESPACE_END(model)
+GAMEKEEPER_NAMESPACE_END(model)
 
 #endif //GAMELIB_MODEL_GAME_H

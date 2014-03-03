@@ -34,7 +34,7 @@ namespace log4cpp
 	class Category;
 }
 
-GAMELIB_NAMESPACE_START(core)
+GAMEKEEPER_NAMESPACE_START(core)
 
 class PRIVATE_API Log4cppLogger : public Logger
 {
@@ -46,6 +46,6 @@ private:
 	std::map<const LogLevel, Log4cppLoggerStream> loggerStreams;
 };
 
-GAMELIB_NAMESPACE_END(core)
+GAMEKEEPER_NAMESPACE_END(core)
 
 #endif //GAMELIB_CORE_LOG4CPPLOGGER_H

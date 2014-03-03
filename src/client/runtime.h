@@ -25,13 +25,13 @@
 
 #include <memory>
 
-GAMELIB_NAMESPACE_START(core)
+GAMEKEEPER_NAMESPACE_START(core)
 
 class Logger;
 
-GAMELIB_NAMESPACE_END(core)
+GAMEKEEPER_NAMESPACE_END(core)
 
-GAMELIB_NAMESPACE_START(client)
+GAMEKEEPER_NAMESPACE_START(client)
 
 class GameLibUI;
 
@@ -46,6 +46,6 @@ private:
 	GameLibUI * gameLibUI;
 };
 
-GAMELIB_NAMESPACE_END(client)
+GAMEKEEPER_NAMESPACE_END(client)
 
 #endif //GAMELIB_CLIENT_RUNTIME_H

@@ -28,7 +28,7 @@
 #include <boost/algorithm/string/split.hpp>
 #include <boost/filesystem/operations.hpp>
 
-GAMELIB_NAMESPACE_START(core)
+GAMEKEEPER_NAMESPACE_START(core)
 
 typedef boost::filesystem::path Path;
 using boost::filesystem::is_regular_file;
@@ -78,4 +78,4 @@ XDGPaths::resolveFile(const char * singlePath, const boost::filesystem::path& si
 	return singleDefault / XDGPaths::prefix / fileName;
 }
 
-GAMELIB_NAMESPACE_END(core)
+GAMEKEEPER_NAMESPACE_END(core)

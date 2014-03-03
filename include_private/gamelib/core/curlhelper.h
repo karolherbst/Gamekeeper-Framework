@@ -29,7 +29,7 @@
 
 typedef void CURL;
 
-GAMELIB_NAMESPACE_START(core)
+GAMEKEEPER_NAMESPACE_START(core)
 
 class CURLPrivateData;
 
@@ -54,6 +54,6 @@ private:
 	PRIVATE_API std::string& createUserAgentString();
 };
 
-GAMELIB_NAMESPACE_END(core)
+GAMEKEEPER_NAMESPACE_END(core)
 
 #endif //GAMELIB_CORE_CURLHELPER_H

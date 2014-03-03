@@ -25,7 +25,7 @@
 
 #include <gamelib/client/hypodermic.h>
 
-GAMELIB_NAMESPACE_START(client)
+GAMEKEEPER_NAMESPACE_START(client)
 
 /**
  * @class HypodermicUtil hypodermic.h <gamelib/client/hypodermic.h>
@@ -90,6 +90,6 @@ Autowire<T>::get() const noexcept
 	return this->ptr.get();
 }
 
-GAMELIB_NAMESPACE_END(client)
+GAMEKEEPER_NAMESPACE_END(client)
 
 #endif //GAMELIB_CLIENT_AUTOWIRE_H

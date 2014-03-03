@@ -27,7 +27,7 @@
 
 #include <gamelib/model/game.h>
 
-GAMELIB_NAMESPACE_START(bindings)
+GAMEKEEPER_NAMESPACE_START(bindings)
 namespace model
 {
 
@@ -46,6 +46,6 @@ public:
 };
 
 }
-GAMELIB_NAMESPACE_END(bindings)
+GAMEKEEPER_NAMESPACE_END(bindings)
 
 #endif //GAMELIB_BINDINGS_MODEL_GAME_H

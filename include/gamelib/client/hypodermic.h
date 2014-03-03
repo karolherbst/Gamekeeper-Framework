@@ -25,7 +25,7 @@
 
 #include <Hypodermic/IContainer.h>
 
-GAMELIB_NAMESPACE_START(client)
+GAMEKEEPER_NAMESPACE_START(client)
 
 /**
  * @class HypodermicUtil hypodermic.h <gamelib/client/hypodermic.h>
@@ -51,6 +51,6 @@ public:
 	PUBLIC_API static Hypodermic::IContainer& getContainer();
 };
 
-GAMELIB_NAMESPACE_END(client)
+GAMEKEEPER_NAMESPACE_END(client)
 
 #endif //GAMELIB_CLIENT_HYPODERMIC_H

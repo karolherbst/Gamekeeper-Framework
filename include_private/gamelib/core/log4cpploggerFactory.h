@@ -33,7 +33,7 @@ namespace log4cpp
 	class Category;
 }
 
-GAMELIB_NAMESPACE_START(core)
+GAMEKEEPER_NAMESPACE_START(core)
 
 class Logger;
 
@@ -52,6 +52,6 @@ private:
 	std::unordered_map<const char *, Logger *> loggers;
 };
 
-GAMELIB_NAMESPACE_END(core)
+GAMEKEEPER_NAMESPACE_END(core)
 
 #endif //GAMELIB_CORE_LOG4CPPLOGGERFACTORY_H

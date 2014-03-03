@@ -27,7 +27,7 @@
 
 #include <boost/lexical_cast.hpp>
 
-GAMELIB_NAMESPACE_START(core)
+GAMEKEEPER_NAMESPACE_START(core)
 
 /**
  * @interface LoggerStream loggerStrean.h <gamelib/core/loggerStrean.h>
@@ -112,6 +112,6 @@ inline PUBLIC_INLINE LoggerStream& endl(LoggerStream& loggerStream)
 	return loggerStream.flush();
 }
 
-GAMELIB_NAMESPACE_END(core)
+GAMEKEEPER_NAMESPACE_END(core)
 
 #endif //GAMELIB_CORE_LOGGERSTREAM_H

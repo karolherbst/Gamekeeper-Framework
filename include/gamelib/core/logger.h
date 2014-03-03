@@ -25,7 +25,7 @@
 
 #include <gamelib/core/interface.h>
 
-GAMELIB_NAMESPACE_START(core)
+GAMEKEEPER_NAMESPACE_START(core)
 
 /**
  * this enum should be used to define the loging level used in the logger
@@ -109,6 +109,6 @@ public:
 	PUBLIC_API GAMELIB_INTERFACE_METHOD(LoggerStream& operator<<(const LogLevel& logLevel));
 };
 
-GAMELIB_NAMESPACE_END(core)
+GAMEKEEPER_NAMESPACE_END(core)
 
 #endif //GAMELIB_CORE_LOGGER_H

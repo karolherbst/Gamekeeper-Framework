@@ -28,7 +28,7 @@
 #include <gamelib/core/curlhelper.h>
 #include <gamelib/core/httpfiledownloader.h>
 
-GAMELIB_NAMESPACE_START(core)
+GAMEKEEPER_NAMESPACE_START(core)
 
 class Logger;
 class LoggerFactory;
@@ -52,6 +52,6 @@ private:
 	PRIVATE_API void handleCurlError(int code);
 };
 
-GAMELIB_NAMESPACE_END(core)
+GAMEKEEPER_NAMESPACE_END(core)
 
 #endif //GAMELIB_CORE_CURLFILEDOWNLOADER_H

@@ -93,13 +93,13 @@
  * @param[in] name of the namespace
  */
 #ifdef __cplusplus
-	#define GAMELIB_NAMESPACE_START(name) \
+	#define GAMEKEEPER_NAMESPACE_START(name) \
 	namespace gamelib \
 	{ \
 	namespace name \
 	{
 #else
-	#define GAMELIB_NAMESPACE_START(name)
+	#define GAMEKEEPER_NAMESPACE_START(name)
 #endif
 
 /**
@@ -118,11 +118,11 @@
  * @param[in] name of the namespace
  */
 #ifdef __cplusplus
-#define GAMELIB_NAMESPACE_END(name) \
+#define GAMEKEEPER_NAMESPACE_END(name) \
 } \
 }
 #else
-#define GAMELIB_NAMESPACE_END(name)
+#define GAMEKEEPER_NAMESPACE_END(name)
 #endif
 
 // the following stuff is for C++ only
@@ -175,20 +175,20 @@
 
 // OS defines
 #if defined(_WIN32)
-  #define GAMELIB_OS_IS_WINDOWS 1
+  #define GAMEKEEPER_OS_IS_WINDOWS 1
   #if defined(_WIN64)
-    #define GAMELIB_ARCH_IS_64BIT 1
+    #define GAMEKEEPER_ARCH_IS_64BIT 1
   #else
-    #define GAMELIB_ARCH_IS_32BIT 1
+    #define GAMEKEEPER_ARCH_IS_32BIT 1
   #endif
 #endif
 
 #if defined(__linux__)
-  #define GAMELIB_OS_IS_LINUX 1
+  #define GAMEKEEPER_OS_IS_LINUX 1
 #endif
 
 #if defined(__APPLE__) && defined(__MACH__)
-  #define GAMELIB_OS_IS_MACOSX 1
+  #define GAMEKEEPER_OS_IS_MACOSX 1
 #endif
 
 #endif //GAMELIB_CORE_COMMON_H

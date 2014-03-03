@@ -37,7 +37,7 @@
 #include <Hypodermic/Helpers.h>
 
 #include <gamelib/core/curlfiledownloader.h>
-#ifdef GAMELIB_OS_IS_WINDOWS
+#ifdef GAMEKEEPER_OS_IS_WINDOWS
   #include <gamelib/core/windowsinformation.h>
   #define OSINFORMATIONCLASS WindowsInformation
 #else
@@ -49,7 +49,7 @@
 
 namespace po = boost::program_options;
 
-GAMELIB_NAMESPACE_START(client)
+GAMEKEEPER_NAMESPACE_START(client)
 
 static std::shared_ptr<Hypodermic::IContainer> localContainer;
 static std::shared_ptr<Hypodermic::IContainer> container;
@@ -160,4 +160,4 @@ HypodermicUtil::getContainer()
 	return *container;
 }
 
-GAMELIB_NAMESPACE_END(client)
+GAMEKEEPER_NAMESPACE_END(client)

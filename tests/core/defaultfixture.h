@@ -27,7 +27,7 @@
 
 #include <Hypodermic/IContainer.h>
 
-GAMELIB_NAMESPACE_START(test)
+GAMEKEEPER_NAMESPACE_START(test)
 
 class DefaultFicture : public testing::Test
 {
@@ -37,6 +37,6 @@ protected:
 	std::shared_ptr<Hypodermic::IContainer> container;
 };
 
-GAMELIB_NAMESPACE_END(test)
+GAMEKEEPER_NAMESPACE_END(test)
 
 #endif //TEST_GAMELIB_CORE_DEFAULTFICTURE

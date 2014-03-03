@@ -27,7 +27,7 @@
 
 #include <log4cpp/CategoryStream.hh>
 
-GAMELIB_NAMESPACE_START(core)
+GAMEKEEPER_NAMESPACE_START(core)
 
 class PRIVATE_API Log4cppLoggerStream : public LoggerStream
 {
@@ -39,6 +39,6 @@ private:
 	log4cpp::CategoryStream stream;
 };
 
-GAMELIB_NAMESPACE_END(core)
+GAMEKEEPER_NAMESPACE_END(core)
 
 #endif //GAMELIB_CORE_LOG4CPPLOGGERSTREAM_H

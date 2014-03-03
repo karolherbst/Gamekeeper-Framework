@@ -27,7 +27,7 @@
 
 #include <boost/filesystem/path.hpp>
 
-GAMELIB_NAMESPACE_START(core)
+GAMEKEEPER_NAMESPACE_START(core)
 
 /**
  * @interface OSPaths ospaths.h <gamelib/core/ospaths.h>
@@ -90,6 +90,6 @@ interface PUBLIC_API OSPaths
 	PUBLIC_API GAMELIB_INTERFACE_METHOD(boost::filesystem::path getRuntimeFile(std::string name));
 };
 
-GAMELIB_NAMESPACE_END(core)
+GAMEKEEPER_NAMESPACE_END(core)
 
 #endif //GAMELIB_CORE_OSPATHS_H
