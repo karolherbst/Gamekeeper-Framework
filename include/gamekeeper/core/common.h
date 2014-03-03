@@ -84,7 +84,7 @@
  * This macro creates the following lines for C++ applications:
  * 
  * @code{.cpp}
- * namespace gamelib
+ * namespace gamekeeper
  * {
  * namespace @p name
  * {
@@ -94,7 +94,7 @@
  */
 #ifdef __cplusplus
 	#define GAMEKEEPER_NAMESPACE_START(name) \
-	namespace gamelib \
+	namespace gamekeeper \
 	{ \
 	namespace name \
 	{

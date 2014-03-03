@@ -40,7 +40,7 @@ class PUBLIC_API GameLibRuntime
 public:
 	PUBLIC_API GameLibRuntime();
 	PUBLIC_API ~GameLibRuntime();
-	PUBLIC_API gamelib::core::Logger& getUILogger();
+	PUBLIC_API gamekeeper::core::Logger& getUILogger();
 	PUBLIC_API int main(int argc, const char* argv[], GameLibUI *);
 private:
 	GameLibUI * gameLibUI;

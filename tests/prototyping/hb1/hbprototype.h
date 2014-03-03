@@ -5,10 +5,10 @@
 
 #include <sstream>
 
-class HBPrototype : public gamelib::client::GameLibUI
+class HBPrototype : public gamekeeper::client::GameLibUI
 {
 public:
-	HBPrototype(gamelib::core::Logger& logger);
+	HBPrototype(gamekeeper::core::Logger& logger);
 	GAMEKEEPER_IMPLEMENTATION_OVERRIDE(void init(const ConfigMap &));
 	GAMEKEEPER_IMPLEMENTATION_OVERRIDE(void onShutdown());
 	GAMEKEEPER_IMPLEMENTATION_OVERRIDE(void addOptions(
@@ -20,7 +20,7 @@ private:
 	const char * username = nullptr;
 	const char * userpass = nullptr;
 
-	gamelib::core::Logger& logger;
+	gamekeeper::core::Logger& logger;
 
 	bool handleRequest(void * const buffer, size_t sz, size_t n);
 	std::stringstream sstream;

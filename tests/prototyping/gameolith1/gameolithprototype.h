@@ -3,16 +3,16 @@
 
 #include <gamekeeper/client/gamelib.h>
 
-class GameolithPrototype : public gamelib::client::GameLibUI
+class GameolithPrototype : public gamekeeper::client::GameLibUI
 {
 public:
-	GameolithPrototype(gamelib::core::Logger& logger);
+	GameolithPrototype(gamekeeper::core::Logger& logger);
 	GAMEKEEPER_IMPLEMENTATION_OVERRIDE(void init(const ConfigMap &));
 	GAMEKEEPER_IMPLEMENTATION_OVERRIDE(void onShutdown());
 	GAMEKEEPER_IMPLEMENTATION_OVERRIDE(void startEventLoop());
 private:
 	bool handleRequest(void * const buffer, size_t sz, size_t n);
-	gamelib::core::Logger& logger;
+	gamekeeper::core::Logger& logger;
 };
 
 #endif

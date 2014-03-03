@@ -5,7 +5,7 @@
 
 %include <attribute.i>
 
-namespace gamelib {
+namespace gamekeeper {
 namespace bindings {
 namespace model {
 struct Game
@@ -22,6 +22,6 @@ struct Game
 
 // generate attribute like getter and setter only for language, where this is common use
 #if defined(SWIGPYTHON) || defined(SWIGCSHARP)
-	%attribute(gamelib::bindings::model::Game, const char*, id, getId, setId);
-	%attribute(gamelib::bindings::model::Game, const char*, name, getName, setName);
+	%attribute(gamekeeper::bindings::model::Game, const char*, id, getId, setId);
+	%attribute(gamekeeper::bindings::model::Game, const char*, name, getName, setName);
 #endif

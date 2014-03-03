@@ -38,7 +38,7 @@ DefaultFicture::DefaultFicture()
 {
 	Hypodermic::ContainerBuilder containerBuilder;
 	{
-		using namespace gamelib::core;
+		using namespace gamekeeper::core;
 		
 		// set up IoC container
 		containerBuilder.registerType<OSINFORMATIONCLASS>()->

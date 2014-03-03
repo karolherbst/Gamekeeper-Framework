@@ -47,13 +47,13 @@
  */
 PUBLIC_API int main(int argc, const char* argv[])
 {
-	gamelib::client::GameLibRuntime runtime;
+	gamekeeper::client::GameLibRuntime runtime;
 // on windows stuff is a bit more complicated
 #ifdef GAMEKEEPER_OS_IS_WINDOWS
-	typedef gamelib::client::GameLibUI * (*NewInstanceFuncPtr)(gamelib::core::Logger& logger);
+	typedef gamekeeper::client::GameLibUI * (*NewInstanceFuncPtr)(gamekeeper::core::Logger& logger);
 	NewInstanceFuncPtr newInstanceFunc = (NewInstanceFuncPtr)::GetProcAddress(GetModuleHandle(NULL), "newInstance");
 	return runtime.main(argc, argv, newInstanceFunc(runtime.getUILogger()));
 #else
-	return runtime.main(argc, argv, gamelib::client::newInstance(runtime.getUILogger()));
+	return runtime.main(argc, argv, gamekeeper::client::newInstance(runtime.getUILogger()));
 #endif
 }

@@ -31,7 +31,7 @@ GAMEKEEPER_NAMESPACE_START(bindings)
 namespace model
 {
 
-class PUBLIC_API Game : public gamelib::model::Game
+class PUBLIC_API Game : public gamekeeper::model::Game
 {
 private:
 	std::string id;

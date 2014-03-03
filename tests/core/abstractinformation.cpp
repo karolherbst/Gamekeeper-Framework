@@ -26,7 +26,7 @@
 
 #include <gtest/gtest.h>
 
-using namespace gamelib::core;
+using namespace gamekeeper::core;
 using namespace boost::filesystem;
 
 class OSINFORMATIONCLASSTEST : public testing::Test

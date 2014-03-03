@@ -56,7 +56,7 @@ static std::shared_ptr<Hypodermic::IContainer> container;
 
 GameLibRuntime::GameLibRuntime()
 {
-	using namespace gamelib::core;
+	using namespace gamekeeper::core;
 	Hypodermic::ContainerBuilder containerBuilder;
 
 	// set up IoC container
@@ -71,10 +71,10 @@ GameLibRuntime::~GameLibRuntime()
 	delete this->gameLibUI;
 }
 
-gamelib::core::Logger&
+gamekeeper::core::Logger&
 GameLibRuntime::getUILogger()
 {
-	return localContainer->resolve<gamelib::core::LoggerFactory>()->getComponentLogger("UI.client");
+	return localContainer->resolve<gamekeeper::core::LoggerFactory>()->getComponentLogger("UI.client");
 }
 
 int
@@ -124,11 +124,11 @@ GameLibRuntime::main(int argc, const char* argv[], GameLibUI * gameLibUI)
 
 	Hypodermic::ContainerBuilder containerBuilder;
 	{
-		using namespace gamelib::core;
+		using namespace gamekeeper::core;
 
 		// set up IoC container
 		containerBuilder.registerInstance<LoggerFactory>(
-			localContainer->resolve<gamelib::core::LoggerFactory>())->
+			localContainer->resolve<gamekeeper::core::LoggerFactory>())->
 			as<LoggerFactory>()->
 			singleInstance();
 		containerBuilder.registerType<OSINFORMATIONCLASS>()->
@@ -144,8 +144,8 @@ GameLibRuntime::main(int argc, const char* argv[], GameLibUI * gameLibUI)
 	}
 	container = containerBuilder.build();
 
-	std::shared_ptr<gamelib::core::LoggerFactory> loggerFactory = container->resolve<gamelib::core::LoggerFactory>();
-	loggerFactory->getComponentLogger("main") << gamelib::core::LogLevel::Debug << "firing up gamelib" << gamelib::core::endl;
+	std::shared_ptr<gamekeeper::core::LoggerFactory> loggerFactory = container->resolve<gamekeeper::core::LoggerFactory>();
+	loggerFactory->getComponentLogger("main") << gamekeeper::core::LogLevel::Debug << "firing up gamelib" << gamekeeper::core::endl;
 
 	this->gameLibUI->init(vm);
 	this->gameLibUI->startEventLoop();
