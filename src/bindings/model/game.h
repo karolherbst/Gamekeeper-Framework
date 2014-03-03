@@ -18,8 +18,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef GAMELIB_BINDINGS_MODEL_GAME_H
-#define GAMELIB_BINDINGS_MODEL_GAME_H 1
+#ifndef GAMEKEEPER_BINDINGS_MODEL_GAME_H
+#define GAMEKEEPER_BINDINGS_MODEL_GAME_H 1
 
 #include <gamelib/core/common.h>
 
@@ -48,4 +48,4 @@ public:
 }
 GAMEKEEPER_NAMESPACE_END(bindings)
 
-#endif //GAMELIB_BINDINGS_MODEL_GAME_H
+#endif //GAMEKEEPER_BINDINGS_MODEL_GAME_H

@@ -18,8 +18,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef GAMELIB_CLIENT_RUNTIME_H
-#define GAMELIB_CLIENT_RUNTIME_H 1
+#ifndef GAMEKEEPER_CLIENT_RUNTIME_H
+#define GAMEKEEPER_CLIENT_RUNTIME_H 1
 
 #include <gamelib/core/common.h>
 
@@ -48,4 +48,4 @@ private:
 
 GAMEKEEPER_NAMESPACE_END(client)
 
-#endif //GAMELIB_CLIENT_RUNTIME_H
+#endif //GAMEKEEPER_CLIENT_RUNTIME_H

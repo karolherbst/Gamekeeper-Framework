@@ -18,8 +18,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef GAMELIB_CORE_COMMON_H
-#define GAMELIB_CORE_COMMON_H 1
+#ifndef GAMEKEEPER_CORE_COMMON_H
+#define GAMEKEEPER_CORE_COMMON_H 1
 
 // some headers we want to use nearly everywhere
 
@@ -191,4 +191,4 @@
   #define GAMEKEEPER_OS_IS_MACOSX 1
 #endif
 
-#endif //GAMELIB_CORE_COMMON_H
+#endif //GAMEKEEPER_CORE_COMMON_H

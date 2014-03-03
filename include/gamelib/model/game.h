@@ -18,8 +18,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef GAMELIB_MODEL_GAME_H
-#define GAMELIB_MODEL_GAME_H 1
+#ifndef GAMEKEEPER_MODEL_GAME_H
+#define GAMEKEEPER_MODEL_GAME_H 1
 
 #include <gamelib/core/interface.h>
 
@@ -34,4 +34,4 @@ interface PUBLIC_API Game
 
 GAMEKEEPER_NAMESPACE_END(model)
 
-#endif //GAMELIB_MODEL_GAME_H
+#endif //GAMEKEEPER_MODEL_GAME_H

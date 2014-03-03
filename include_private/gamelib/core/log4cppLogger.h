@@ -18,8 +18,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef GAMELIB_CORE_LOG4CPPLOGGER_H
-#define GAMELIB_CORE_LOG4CPPLOGGER_H 1
+#ifndef GAMEKEEPER_CORE_LOG4CPPLOGGER_H
+#define GAMEKEEPER_CORE_LOG4CPPLOGGER_H 1
 
 #include <gamelib/core/common.h>
 
@@ -48,4 +48,4 @@ private:
 
 GAMEKEEPER_NAMESPACE_END(core)
 
-#endif //GAMELIB_CORE_LOG4CPPLOGGER_H
+#endif //GAMEKEEPER_CORE_LOG4CPPLOGGER_H

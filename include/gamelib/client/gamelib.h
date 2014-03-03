@@ -18,8 +18,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef GAMELIB_CLIENT_GAMELIBUI_H
-#define GAMELIB_CLIENT_GAMELIBUI_H 1
+#ifndef GAMEKEEPER_CLIENT_GAMELIBUI_H
+#define GAMEKEEPER_CLIENT_GAMELIBUI_H 1
 
 #include <gamelib/core/common.h>
 
@@ -138,4 +138,4 @@ extern "C" REVERSE_PUBLIC_API gamelib::client::GameLibUI * newInstance(gamelib::
 
 GAMEKEEPER_NAMESPACE_END(client)
 
-#endif //GAMELIB_CLIENT_GAMELIBUI_H
+#endif //GAMEKEEPER_CLIENT_GAMELIBUI_H
