@@ -21,9 +21,9 @@
 #ifndef GAMEKEEPER_CORE_LOG4CPPLOGGERSTREAM_H
 #define GAMEKEEPER_CORE_LOG4CPPLOGGERSTREAM_H 1
 
-#include <gamelib/core/common.h>
+#include <gamekeeper/core/common.h>
 
-#include <gamelib/core/loggerStream.h>
+#include <gamekeeper/core/loggerStream.h>
 
 #include <log4cpp/CategoryStream.hh>
 

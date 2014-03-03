@@ -21,12 +21,12 @@
 #ifndef GAMEKEEPER_CORE_CURLFILEDOWNLOADER_H
 #define GAMEKEEPER_CORE_CURLFILEDOWNLOADER_H 1
 
-#include <gamelib/core/common.h>
+#include <gamekeeper/core/common.h>
 
 #include <memory>
 
-#include <gamelib/core/curlhelper.h>
-#include <gamelib/core/httpfiledownloader.h>
+#include <gamekeeper/core/curlhelper.h>
+#include <gamekeeper/core/httpfiledownloader.h>
 
 GAMEKEEPER_NAMESPACE_START(core)
 

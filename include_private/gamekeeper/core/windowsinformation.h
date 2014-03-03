@@ -18,39 +18,25 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef GAMEKEEPER_CLIENT_HYPODERMIC_H
-#define GAMEKEEPER_CLIENT_HYPODERMIC_H 1
+#ifndef GAMEKEEPER_CORE_WINDOWSINFORMATION_H
+#define GAMEKEEPER_CORE_WINDOWSINFORMATION_H 1
 
-#include <gamelib/core/common.h>
+#include <gamekeeper/core/common.h>
 
-#include <Hypodermic/IContainer.h>
+#include <gamekeeper/core/osinformation.h>
 
-GAMEKEEPER_NAMESPACE_START(client)
+GAMEKEEPER_NAMESPACE_START(core)
 
-/**
- * @class HypodermicUtil hypodermic.h <gamelib/client/hypodermic.h>
- *
- * class to optiain a hypodermic container instance
- *
- * @author Karol Herbst
- * @since 0
- */
-class PUBLIC_API HypodermicUtil
+class PUBLIC_API WindowsInformation : public OSInformation
 {
 public:
-	/**
-	 * use this method to get the globale hypodermic container
-	 *
-	 * this method can be only called after the GamelibUI.init method was called
-	 *
-	 * @author Karol Herbst
-	 * @since 0
-	 *
-	 * @return the current hypodermic container instance
-	 */
-	PUBLIC_API static Hypodermic::IContainer& getContainer();
+	PRIVATE_API GAMEKEEPER_IMPLEMENTATION_OVERRIDE(std::string getEnv(const char * name));
+	PRIVATE_API GAMEKEEPER_IMPLEMENTATION_OVERRIDE(void setEnv(const char *, const char *));
+	PRIVATE_API GAMEKEEPER_IMPLEMENTATION_OVERRIDE(std::string getEnvSeperator());
+	PRIVATE_API GAMEKEEPER_IMPLEMENTATION_OVERRIDE(boost::filesystem::path getSystemRoot());
+	PRIVATE_API GAMEKEEPER_IMPLEMENTATION_OVERRIDE(boost::filesystem::path getUserPath());
 };
 
-GAMEKEEPER_NAMESPACE_END(client)
+GAMEKEEPER_NAMESPACE_END(core)
 
-#endif //GAMEKEEPER_CLIENT_HYPODERMIC_H
+#endif //GAMEKEEPER_CORE_WINDOWSINFORMATION_H

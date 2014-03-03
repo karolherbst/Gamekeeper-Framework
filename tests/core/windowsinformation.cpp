@@ -21,5 +21,5 @@
 #define OSINFORMATIONCLASS WindowsInformation
 #define OSINFORMATIONCLASSTEST WindowsInformationTest
 
-#include <gamelib/core/windowsinformation.h>
+#include <gamekeeper/core/windowsinformation.h>
 #include "abstractinformation.cpp"

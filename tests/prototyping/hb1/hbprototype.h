@@ -1,7 +1,7 @@
 #ifndef HBPROTOTYPE_H
 #define HBPROTOTYPE_H
 
-#include <gamelib/client/gamelib.h>
+#include <gamekeeper/client/gamelib.h>
 
 #include <sstream>
 

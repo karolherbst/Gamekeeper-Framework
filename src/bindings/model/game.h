@@ -21,11 +21,11 @@
 #ifndef GAMEKEEPER_BINDINGS_MODEL_GAME_H
 #define GAMEKEEPER_BINDINGS_MODEL_GAME_H 1
 
-#include <gamelib/core/common.h>
+#include <gamekeeper/core/common.h>
 
 #include <string>
 
-#include <gamelib/model/game.h>
+#include <gamekeeper/model/game.h>
 
 GAMEKEEPER_NAMESPACE_START(bindings)
 namespace model

@@ -21,14 +21,14 @@
 #ifndef GAMEKEEPER_CLIENT_AUTOWIRE_H
 #define GAMEKEEPER_CLIENT_AUTOWIRE_H 1
 
-#include <gamelib/core/common.h>
+#include <gamekeeper/core/common.h>
 
-#include <gamelib/client/hypodermic.h>
+#include <gamekeeper/client/hypodermic.h>
 
 GAMEKEEPER_NAMESPACE_START(client)
 
 /**
- * @class HypodermicUtil hypodermic.h <gamelib/client/hypodermic.h>
+ * @class HypodermicUtil hypodermic.h <gamekeeper/client/hypodermic.h>
  *
  * class to optiain a hypodermic container instance
  *

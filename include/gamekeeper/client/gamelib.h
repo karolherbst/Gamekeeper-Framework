@@ -21,9 +21,9 @@
 #ifndef GAMEKEEPER_CLIENT_GAMELIBUI_H
 #define GAMEKEEPER_CLIENT_GAMELIBUI_H 1
 
-#include <gamelib/core/common.h>
+#include <gamekeeper/core/common.h>
 
-#include <gamelib/core/interface.h>
+#include <gamekeeper/core/interface.h>
 
 #include <Hypodermic/IContainer.h>
 
@@ -43,7 +43,7 @@ GAMEKEEPER_NAMESPACE_END(core)
 GAMEKEEPER_NAMESPACE_START(client)
 
 /**
- * @interface GameLibUI gamelib.h <gamelib/client/gamelib.h>
+ * @interface GameLibUI gamelib.h <gamekeeper/client/gamelib.h>
  *
  * Entry type for the gamelib library
  *

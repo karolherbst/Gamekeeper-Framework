@@ -22,10 +22,10 @@
 
 // some platform dependent stuff
 #ifdef GAMEKEEPER_OS_IS_WINDOWS
-  #include <gamelib/core/windowsinformation.h>
+  #include <gamekeeper/core/windowsinformation.h>
   #define OSINFORMATIONCLASS WindowsInformation
 #else
-  #include <gamelib/core/linuxinformation.h>
+  #include <gamekeeper/core/linuxinformation.h>
   #define OSINFORMATIONCLASS LinuxInformation
 #endif
 

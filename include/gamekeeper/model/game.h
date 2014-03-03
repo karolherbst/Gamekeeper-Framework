@@ -21,7 +21,7 @@
 #ifndef GAMEKEEPER_MODEL_GAME_H
 #define GAMEKEEPER_MODEL_GAME_H 1
 
-#include <gamelib/core/interface.h>
+#include <gamekeeper/core/interface.h>
 
 GAMEKEEPER_NAMESPACE_START(model)
 

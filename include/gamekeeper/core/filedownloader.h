@@ -21,16 +21,16 @@
 #ifndef GAMEKEEPER_CORE_FILEDOWNLOADER_H
 #define GAMEKEEPER_CORE_FILEDOWNLOADER_H 1
 
-#include <gamelib/core/common.h>
+#include <gamekeeper/core/common.h>
 
 #include <functional>
 
-#include <gamelib/core/interface.h>
+#include <gamekeeper/core/interface.h>
 
 GAMEKEEPER_NAMESPACE_START(core)
 
 /**
- * @interface FileDownloader filedownloader.h <gamelib/core/filedownloader.h>
+ * @interface FileDownloader filedownloader.h <gamekeeper/core/filedownloader.h>
  *
  * This interface provides basic operations to download files over a network. It abstracts from protocols and doesn't
  * provide functionality special to a specific protocol. If you want to use a specific protocol you should use a more

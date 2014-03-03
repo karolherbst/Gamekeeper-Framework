@@ -18,34 +18,40 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef GAMEKEEPER_CORE_LOG4CPPLOGGER_H
-#define GAMEKEEPER_CORE_LOG4CPPLOGGER_H 1
+#ifndef GAMEKEEPER_CORE_LOG4CPPLOGGERFACTORY_H
+#define GAMEKEEPER_CORE_LOG4CPPLOGGERFACTORY_H 1
 
-#include <gamelib/core/common.h>
+#include <gamekeeper/core/common.h>
 
-#include "log4cppLoggerStream.h"
+#include <unordered_map>
 
-#include <map>
-
-#include <gamelib/core/logger.h>
+#include <gamekeeper/core/loggerFactory.h>
 
 namespace log4cpp
 {
+	class Appender;
 	class Category;
 }
 
 GAMEKEEPER_NAMESPACE_START(core)
 
-class PRIVATE_API Log4cppLogger : public Logger
+class Logger;
+
+class PUBLIC_API Log4cppLoggerFactory : public LoggerFactory
 {
 public:
-	PRIVATE_API Log4cppLogger(log4cpp::Category&);
-	PRIVATE_API GAMEKEEPER_IMPLEMENTATION_OVERRIDE(LoggerStream& operator<<(const LogLevel& logLevel));
+	PUBLIC_API Log4cppLoggerFactory();
+	PRIVATE_API GAMEKEEPER_IMPLEMENTATION_OVERRIDE(Logger& getDefaultLogger());
+	PRIVATE_API GAMEKEEPER_IMPLEMENTATION_OVERRIDE(Logger& getComponentLogger(const char * const id));
+	PRIVATE_API GAMEKEEPER_IMPLEMENTATION_OVERRIDE(~Log4cppLoggerFactory());
 private:
-	log4cpp::Category& category;
-	std::map<const LogLevel, Log4cppLoggerStream> loggerStreams;
+	Logger * rootLogger = nullptr;
+	log4cpp::Category & rootCategory;
+	log4cpp::Appender * appender;
+
+	std::unordered_map<const char *, Logger *> loggers;
 };
 
 GAMEKEEPER_NAMESPACE_END(core)
 
-#endif //GAMEKEEPER_CORE_LOG4CPPLOGGER_H
+#endif //GAMEKEEPER_CORE_LOG4CPPLOGGERFACTORY_H

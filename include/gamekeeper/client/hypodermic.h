@@ -18,47 +18,39 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef GAMEKEEPER_CORE_LOGGERFACTORY_H
-#define GAMEKEEPER_CORE_LOGGERFACTORY_H 1
+#ifndef GAMEKEEPER_CLIENT_HYPODERMIC_H
+#define GAMEKEEPER_CLIENT_HYPODERMIC_H 1
 
-#include <gamelib/core/common.h>
+#include <gamekeeper/core/common.h>
 
-#include <gamelib/core/interface.h>
+#include <Hypodermic/IContainer.h>
 
-GAMEKEEPER_NAMESPACE_START(core)
-
-class Logger;
+GAMEKEEPER_NAMESPACE_START(client)
 
 /**
- * @interface LoggerFactory loggerFactory.h <gamelib/core/loggerFactory.h>
+ * @class HypodermicUtil hypodermic.h <gamekeeper/client/hypodermic.h>
  *
- * This interface is used to create Logger instances
- * 
+ * class to optiain a hypodermic container instance
+ *
  * @author Karol Herbst
  * @since 0
  */
-interface PRIVATE_API LoggerFactory
+class PUBLIC_API HypodermicUtil
 {
-	GAMEKEEPER_INTERFACE_DESTRUCTOR(LoggerFactory)
-
+public:
 	/**
+	 * use this method to get the globale hypodermic container
+	 *
+	 * this method can be only called after the GamelibUI.init method was called
+	 *
 	 * @author Karol Herbst
 	 * @since 0
 	 *
-	 * @return the default logger
+	 * @return the current hypodermic container instance
 	 */
-	PRIVATE_API GAMEKEEPER_INTERFACE_METHOD(Logger& getDefaultLogger());
-
-	/**
-	 * @author Karol Herbst
-	 * @since 0
-	 *
-	 * @param id the id of the component
-	 * @return a logger with the given id
-	 */
-	PRIVATE_API GAMEKEEPER_INTERFACE_METHOD(Logger& getComponentLogger(const char * const id));
+	PUBLIC_API static Hypodermic::IContainer& getContainer();
 };
 
-GAMEKEEPER_NAMESPACE_END(core)
+GAMEKEEPER_NAMESPACE_END(client)
 
-#endif //GAMEKEEPER_CORE_LOGGERFACTORY_H
+#endif //GAMEKEEPER_CLIENT_HYPODERMIC_H

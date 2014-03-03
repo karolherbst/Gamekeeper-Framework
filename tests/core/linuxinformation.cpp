@@ -21,5 +21,5 @@
 #define OSINFORMATIONCLASS LinuxInformation
 #define OSINFORMATIONCLASSTEST LinuxInformationTest
 
-#include <gamelib/core/linuxinformation.h>
+#include <gamekeeper/core/linuxinformation.h>
 #include "abstractinformation.cpp"

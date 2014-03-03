@@ -21,11 +21,11 @@
 #ifndef GAMEKEEPER_CORE_CURLHELPER_H
 #define GAMEKEEPER_CORE_CURLHELPER_H 1
 
-#include <gamelib/core/common.h>
+#include <gamekeeper/core/common.h>
 
 #include <map>
 
-#include <gamelib/core/httpfiledownloader.h>
+#include <gamekeeper/core/httpfiledownloader.h>
 
 typedef void CURL;
 

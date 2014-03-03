@@ -21,12 +21,12 @@
 #ifndef GAMEKEEPER_CORE_XDGPATHS_H
 #define GAMEKEEPER_CORE_XDGPATHS_H 1
 
-#include <gamelib/core/common.h>
+#include <gamekeeper/core/common.h>
 
 #include <memory>
 
-#include <gamelib/core/osinformation.h>
-#include <gamelib/core/ospaths.h>
+#include <gamekeeper/core/osinformation.h>
+#include <gamekeeper/core/ospaths.h>
 
 GAMEKEEPER_NAMESPACE_START(core)
 

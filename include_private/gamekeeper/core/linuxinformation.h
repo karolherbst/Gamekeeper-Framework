@@ -18,16 +18,16 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef GAMEKEEPER_CORE_WINDOWSINFORMATION_H
-#define GAMEKEEPER_CORE_WINDOWSINFORMATION_H 1
+#ifndef GAMEKEEPER_CORE_LINUXINFORMATION_H
+#define GAMEKEEPER_CORE_LINUXINFORMATION_H 1
 
-#include <gamelib/core/common.h>
+#include <gamekeeper/core/common.h>
 
-#include <gamelib/core/osinformation.h>
+#include <gamekeeper/core/osinformation.h>
 
 GAMEKEEPER_NAMESPACE_START(core)
 
-class PUBLIC_API WindowsInformation : public OSInformation
+class PUBLIC_API LinuxInformation : public OSInformation
 {
 public:
 	PRIVATE_API GAMEKEEPER_IMPLEMENTATION_OVERRIDE(std::string getEnv(const char * name));
@@ -39,4 +39,4 @@ public:
 
 GAMEKEEPER_NAMESPACE_END(core)
 
-#endif //GAMEKEEPER_CORE_WINDOWSINFORMATION_H
+#endif //GAMEKEEPER_CORE_LINUXINFORMATION_H

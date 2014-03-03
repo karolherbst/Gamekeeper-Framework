@@ -1,7 +1,7 @@
 #ifndef GAMEOLITHPROTOTYPE_H
 #define GAMEOLITHPROTOTYPE_H 1
 
-#include <gamelib/client/gamelib.h>
+#include <gamekeeper/client/gamelib.h>
 
 class GameolithPrototype : public gamelib::client::GameLibUI
 {

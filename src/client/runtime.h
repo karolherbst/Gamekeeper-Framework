@@ -21,7 +21,7 @@
 #ifndef GAMEKEEPER_CLIENT_RUNTIME_H
 #define GAMEKEEPER_CLIENT_RUNTIME_H 1
 
-#include <gamelib/core/common.h>
+#include <gamekeeper/core/common.h>
 
 #include <memory>
 

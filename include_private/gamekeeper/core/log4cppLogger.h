@@ -18,25 +18,34 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef GAMEKEEPER_CORE_LINUXINFORMATION_H
-#define GAMEKEEPER_CORE_LINUXINFORMATION_H 1
+#ifndef GAMEKEEPER_CORE_LOG4CPPLOGGER_H
+#define GAMEKEEPER_CORE_LOG4CPPLOGGER_H 1
 
-#include <gamelib/core/common.h>
+#include <gamekeeper/core/common.h>
 
-#include <gamelib/core/osinformation.h>
+#include "log4cppLoggerStream.h"
+
+#include <map>
+
+#include <gamekeeper/core/logger.h>
+
+namespace log4cpp
+{
+	class Category;
+}
 
 GAMEKEEPER_NAMESPACE_START(core)
 
-class PUBLIC_API LinuxInformation : public OSInformation
+class PRIVATE_API Log4cppLogger : public Logger
 {
 public:
-	PRIVATE_API GAMEKEEPER_IMPLEMENTATION_OVERRIDE(std::string getEnv(const char * name));
-	PRIVATE_API GAMEKEEPER_IMPLEMENTATION_OVERRIDE(void setEnv(const char *, const char *));
-	PRIVATE_API GAMEKEEPER_IMPLEMENTATION_OVERRIDE(std::string getEnvSeperator());
-	PRIVATE_API GAMEKEEPER_IMPLEMENTATION_OVERRIDE(boost::filesystem::path getSystemRoot());
-	PRIVATE_API GAMEKEEPER_IMPLEMENTATION_OVERRIDE(boost::filesystem::path getUserPath());
+	PRIVATE_API Log4cppLogger(log4cpp::Category&);
+	PRIVATE_API GAMEKEEPER_IMPLEMENTATION_OVERRIDE(LoggerStream& operator<<(const LogLevel& logLevel));
+private:
+	log4cpp::Category& category;
+	std::map<const LogLevel, Log4cppLoggerStream> loggerStreams;
 };
 
 GAMEKEEPER_NAMESPACE_END(core)
 
-#endif //GAMEKEEPER_CORE_LINUXINFORMATION_H
+#endif //GAMEKEEPER_CORE_LOG4CPPLOGGER_H

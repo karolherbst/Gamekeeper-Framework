@@ -20,14 +20,14 @@
 
 #include "runtime.h"
 
-#include <gamelib/core/common.h>
+#include <gamekeeper/core/common.h>
 
 #include <cstdlib>
 
-#include <gamelib/core/logger.h>
-#include <gamelib/core/loggerStream.h>
-#include <gamelib/client/gamelib.h>
-#include <gamelib/client/hypodermic.h>
+#include <gamekeeper/core/logger.h>
+#include <gamekeeper/core/loggerStream.h>
+#include <gamekeeper/client/gamelib.h>
+#include <gamekeeper/client/hypodermic.h>
 
 #include <boost/program_options/options_description.hpp>
 #include <boost/program_options/parsers.hpp>
@@ -36,16 +36,16 @@
 #include <Hypodermic/ContainerBuilder.h>
 #include <Hypodermic/Helpers.h>
 
-#include <gamelib/core/curlfiledownloader.h>
+#include <gamekeeper/core/curlfiledownloader.h>
 #ifdef GAMEKEEPER_OS_IS_WINDOWS
-  #include <gamelib/core/windowsinformation.h>
+  #include <gamekeeper/core/windowsinformation.h>
   #define OSINFORMATIONCLASS WindowsInformation
 #else
-  #include <gamelib/core/linuxinformation.h>
+  #include <gamekeeper/core/linuxinformation.h>
   #define OSINFORMATIONCLASS LinuxInformation
 #endif
-#include <gamelib/core/log4cpploggerFactory.h>
-#include <gamelib/core/xdgpaths.h>
+#include <gamekeeper/core/log4cpploggerFactory.h>
+#include <gamekeeper/core/xdgpaths.h>
 
 namespace po = boost::program_options;
 

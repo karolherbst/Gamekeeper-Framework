@@ -21,18 +21,18 @@
 #ifndef GAMEKEEPER_CORE_OSINFORMATION_H
 #define GAMEKEEPER_CORE_OSINFORMATION_H 1
 
-#include <gamelib/core/common.h>
+#include <gamekeeper/core/common.h>
 
 #include <string>
 
-#include <gamelib/core/interface.h>
+#include <gamekeeper/core/interface.h>
 
 #include <boost/filesystem/path.hpp>
 
 GAMEKEEPER_NAMESPACE_START(core)
 
 /**
- * @interface OSInformation osinformation.h <gamelib/core/osinformation.h>
+ * @interface OSInformation osinformation.h <gamekeeper/core/osinformation.h>
  *
  * this interface provides all methods to get OS specific paths like where should config files be stored
  *

@@ -22,7 +22,7 @@
 
 #include "runtime.h"
 
-#include <gamelib/client/gamelib.h>
+#include <gamekeeper/client/gamelib.h>
 
 #ifdef GAMEKEEPER_OS_IS_WINDOWS
   #include <Windows.h>

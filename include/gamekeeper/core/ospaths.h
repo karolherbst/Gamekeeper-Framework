@@ -21,16 +21,16 @@
 #ifndef GAMEKEEPER_CORE_OSPATHS_H
 #define GAMEKEEPER_CORE_OSPATHS_H 1
 
-#include <gamelib/core/common.h>
+#include <gamekeeper/core/common.h>
 
-#include <gamelib/core/interface.h>
+#include <gamekeeper/core/interface.h>
 
 #include <boost/filesystem/path.hpp>
 
 GAMEKEEPER_NAMESPACE_START(core)
 
 /**
- * @interface OSPaths ospaths.h <gamelib/core/ospaths.h>
+ * @interface OSPaths ospaths.h <gamekeeper/core/ospaths.h>
  *
  * this interface provides all methods to get OS specific paths like where should config files be stored
  *

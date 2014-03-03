@@ -21,9 +21,9 @@
 #ifndef GAMEKEEPER_CORE_LOGGER_H
 #define GAMEKEEPER_CORE_LOGGER_H 1
 
-#include <gamelib/core/common.h>
+#include <gamekeeper/core/common.h>
 
-#include <gamelib/core/interface.h>
+#include <gamekeeper/core/interface.h>
 
 GAMEKEEPER_NAMESPACE_START(core)
 
@@ -81,7 +81,7 @@ enum class LogLevel : uint8_t
 class LoggerStream;
 
 /**
- * @interface Logger logger.h <gamelib/core/logger.h>
+ * @interface Logger logger.h <gamekeeper/core/logger.h>
  *
  * the gamelib logger class
  *

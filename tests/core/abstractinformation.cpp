@@ -18,8 +18,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#include <gamelib/core/common.h>
-#include <gamelib/core/linuxinformation.h>
+#include <gamekeeper/core/common.h>
+#include <gamekeeper/core/linuxinformation.h>
 
 #include <boost/filesystem/operations.hpp>
 #include <boost/filesystem/path.hpp>

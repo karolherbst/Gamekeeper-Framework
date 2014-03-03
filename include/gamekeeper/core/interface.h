@@ -21,7 +21,7 @@
 #ifndef GAMEKEEPER_CORE_INTERFACE_H
 #define GAMEKEEPER_CORE_INTERFACE_H 1
 
-#include <gamelib/core/common.h>
+#include <gamekeeper/core/common.h>
 
 #ifndef interface
 	/**

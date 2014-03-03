@@ -21,17 +21,17 @@
 #ifndef GAMEKEEPER_CORE_HTTPFILEDOWNLOADER_H
 #define GAMEKEEPER_CORE_HTTPFILEDOWNLOADER_H 1
 
-#include <gamelib/core/common.h>
+#include <gamekeeper/core/common.h>
 
 #include <unordered_map>
 
-#include <gamelib/core/filedownloader.h>
-#include <gamelib/core/interface.h>
+#include <gamekeeper/core/filedownloader.h>
+#include <gamekeeper/core/interface.h>
 
 GAMEKEEPER_NAMESPACE_START(core)
 
 /**
- * @interface HttpFileDownloader httpfiledownloader.h <gamelib/core/httpfiledownloader.h>
+ * @interface HttpFileDownloader httpfiledownloader.h <gamekeeper/core/httpfiledownloader.h>
  *
  * This interface extends the {@link FileDownloader} interface by Http specific operations
  *

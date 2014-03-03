@@ -21,7 +21,7 @@
 #ifndef TEST_GAMEKEEPER_CORE_DEFAULTFICTURE
 #define TEST_GAMEKEEPER_CORE_DEFAULTFICTURE 1
 
-#include <gamelib/core/common.h>
+#include <gamekeeper/core/common.h>
 
 #include <gtest/gtest.h>
 

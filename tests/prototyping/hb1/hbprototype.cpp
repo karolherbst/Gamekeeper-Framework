@@ -3,11 +3,11 @@
 #include <boost/program_options/options_description.hpp>
 #include <boost/program_options/variables_map.hpp>
 
-#include <gamelib/client/autowire.h>
-#include <gamelib/core/httpfiledownloader.h>
-#include <gamelib/core/logger.h>
-#include <gamelib/core/loggerStream.h>
-#include <gamelib/model/game.h>
+#include <gamekeeper/client/autowire.h>
+#include <gamekeeper/core/httpfiledownloader.h>
+#include <gamekeeper/core/logger.h>
+#include <gamekeeper/core/loggerStream.h>
+#include <gamekeeper/model/game.h>
 
 #include <map>
 #include <iostream>

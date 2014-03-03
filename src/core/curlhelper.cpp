@@ -24,7 +24,7 @@
 #include <iostream>
 #include <sstream>
 
-#include <gamelib/core/curlhelper.h>
+#include <gamekeeper/core/curlhelper.h>
 
 #include <boost/algorithm/string/classification.hpp>
 #include <boost/algorithm/string/split.hpp>

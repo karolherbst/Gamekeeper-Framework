@@ -18,40 +18,47 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef GAMEKEEPER_CORE_LOG4CPPLOGGERFACTORY_H
-#define GAMEKEEPER_CORE_LOG4CPPLOGGERFACTORY_H 1
+#ifndef GAMEKEEPER_CORE_LOGGERFACTORY_H
+#define GAMEKEEPER_CORE_LOGGERFACTORY_H 1
 
-#include <gamelib/core/common.h>
+#include <gamekeeper/core/common.h>
 
-#include <unordered_map>
-
-#include <gamelib/core/loggerFactory.h>
-
-namespace log4cpp
-{
-	class Appender;
-	class Category;
-}
+#include <gamekeeper/core/interface.h>
 
 GAMEKEEPER_NAMESPACE_START(core)
 
 class Logger;
 
-class PUBLIC_API Log4cppLoggerFactory : public LoggerFactory
+/**
+ * @interface LoggerFactory loggerFactory.h <gamekeeper/core/loggerFactory.h>
+ *
+ * This interface is used to create Logger instances
+ * 
+ * @author Karol Herbst
+ * @since 0
+ */
+interface PRIVATE_API LoggerFactory
 {
-public:
-	PUBLIC_API Log4cppLoggerFactory();
-	PRIVATE_API GAMEKEEPER_IMPLEMENTATION_OVERRIDE(Logger& getDefaultLogger());
-	PRIVATE_API GAMEKEEPER_IMPLEMENTATION_OVERRIDE(Logger& getComponentLogger(const char * const id));
-	PRIVATE_API GAMEKEEPER_IMPLEMENTATION_OVERRIDE(~Log4cppLoggerFactory());
-private:
-	Logger * rootLogger = nullptr;
-	log4cpp::Category & rootCategory;
-	log4cpp::Appender * appender;
+	GAMEKEEPER_INTERFACE_DESTRUCTOR(LoggerFactory)
 
-	std::unordered_map<const char *, Logger *> loggers;
+	/**
+	 * @author Karol Herbst
+	 * @since 0
+	 *
+	 * @return the default logger
+	 */
+	PRIVATE_API GAMEKEEPER_INTERFACE_METHOD(Logger& getDefaultLogger());
+
+	/**
+	 * @author Karol Herbst
+	 * @since 0
+	 *
+	 * @param id the id of the component
+	 * @return a logger with the given id
+	 */
+	PRIVATE_API GAMEKEEPER_INTERFACE_METHOD(Logger& getComponentLogger(const char * const id));
 };
 
 GAMEKEEPER_NAMESPACE_END(core)
 
-#endif //GAMEKEEPER_CORE_LOG4CPPLOGGERFACTORY_H
+#endif //GAMEKEEPER_CORE_LOGGERFACTORY_H

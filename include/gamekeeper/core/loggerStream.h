@@ -21,16 +21,16 @@
 #ifndef GAMEKEEPER_CORE_LOGGERSTREAM_H
 #define GAMEKEEPER_CORE_LOGGERSTREAM_H 1
 
-#include <gamelib/core/common.h>
+#include <gamekeeper/core/common.h>
 
-#include <gamelib/core/interface.h>
+#include <gamekeeper/core/interface.h>
 
 #include <boost/lexical_cast.hpp>
 
 GAMEKEEPER_NAMESPACE_START(core)
 
 /**
- * @interface LoggerStream loggerStrean.h <gamelib/core/loggerStrean.h>
+ * @interface LoggerStream loggerStrean.h <gamekeeper/core/loggerStrean.h>
  *
  * the gamelib logger stream class
  *
