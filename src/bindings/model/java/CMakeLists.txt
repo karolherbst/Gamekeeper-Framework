@@ -4,7 +4,7 @@ include_directories(
   ${JNI_INCLUDE_DIRS}
 )
 
-add_gamelib_swig_binding(java GameLibModelJava Model -package org.gamelib.bindings.model)
+add_gamekeeper_swig_binding(java GameLibModelJava Model -package org.gamelib.bindings.model)
 
 # <cmake-2.8.12 backward compatibility
 set(CMAKE_JAVA_TARGET_OUTPUT_NAME GameLib)

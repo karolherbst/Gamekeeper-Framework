@@ -25,7 +25,7 @@ if(WITH_CSHARP_BINDINGS OR WITH_JAVA_BINDINGS OR WITH_PYTHON_BINDINGS)
   include(${SWIG_USE_FILE})
 endif()
 
-macro(add_gamelib_swig_binding type name module)
+macro(add_gamekeeper_swig_binding type name module)
   set(swigName ${type}_${module})
   set(SWIG_${swigName}_MODULE_PATH ${CMAKE_GEN_DIR}/bindings/${type}/${module} CACHE STRING "The path to the generated ${type} sources")
   set(SWIG_${swigName}_LIBRARY_PATH ${CMAKE_BINDINGS_OUT_DIR}/${type}/${module} CACHE STRING "The path to the compiled ${type} native binary")
