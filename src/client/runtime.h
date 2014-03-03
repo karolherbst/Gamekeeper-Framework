@@ -35,11 +35,11 @@ GAMEKEEPER_NAMESPACE_START(client)
 
 class GameKeeperUI;
 
-class PUBLIC_API GameLibRuntime
+class PUBLIC_API GameKeeperRuntime
 {
 public:
-	PUBLIC_API GameLibRuntime();
-	PUBLIC_API ~GameLibRuntime();
+	PUBLIC_API GameKeeperRuntime();
+	PUBLIC_API ~GameKeeperRuntime();
 	PUBLIC_API gamekeeper::core::Logger& getUILogger();
 	PUBLIC_API int main(int argc, const char* argv[], GameKeeperUI *);
 private:

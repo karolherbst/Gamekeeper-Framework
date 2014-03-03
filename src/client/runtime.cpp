@@ -54,7 +54,7 @@ GAMEKEEPER_NAMESPACE_START(client)
 static std::shared_ptr<Hypodermic::IContainer> localContainer;
 static std::shared_ptr<Hypodermic::IContainer> container;
 
-GameLibRuntime::GameLibRuntime()
+GameKeeperRuntime::GameKeeperRuntime()
 {
 	using namespace gamekeeper::core;
 	Hypodermic::ContainerBuilder containerBuilder;
@@ -66,19 +66,19 @@ GameLibRuntime::GameLibRuntime()
 	localContainer = containerBuilder.build();
 }
 
-GameLibRuntime::~GameLibRuntime()
+GameKeeperRuntime::~GameKeeperRuntime()
 {
 	delete this->gameKeeperUI;
 }
 
 gamekeeper::core::Logger&
-GameLibRuntime::getUILogger()
+GameKeeperRuntime::getUILogger()
 {
 	return localContainer->resolve<gamekeeper::core::LoggerFactory>()->getComponentLogger("UI.client");
 }
 
 int
-GameLibRuntime::main(int argc, const char* argv[], GameKeeperUI * gameKeeperUI)
+GameKeeperRuntime::main(int argc, const char* argv[], GameKeeperUI * gameKeeperUI)
 {
 	this->gameKeeperUI = gameKeeperUI;
 

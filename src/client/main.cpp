@@ -47,7 +47,7 @@
  */
 PUBLIC_API int main(int argc, const char* argv[])
 {
-	gamekeeper::client::GameLibRuntime runtime;
+	gamekeeper::client::GameKeeperRuntime runtime;
 // on windows stuff is a bit more complicated
 #ifdef GAMEKEEPER_OS_IS_WINDOWS
 	typedef gamekeeper::client::GameKeeperUI * (*NewInstanceFuncPtr)(gamekeeper::core::Logger& logger);
