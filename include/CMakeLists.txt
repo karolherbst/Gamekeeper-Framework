@@ -3,7 +3,7 @@
 add_custom_target(headers
   SOURCES
     gamekeeper/client/autowire.h
-    gamekeeper/client/gamelib.h
+    gamekeeper/client/gamekeeper.h
     gamekeeper/client/hypodermic.h
 
     gamekeeper/core/common.h

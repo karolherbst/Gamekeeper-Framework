@@ -26,7 +26,7 @@
 
 #include <gamekeeper/core/logger.h>
 #include <gamekeeper/core/loggerStream.h>
-#include <gamekeeper/client/gamelib.h>
+#include <gamekeeper/client/gamekeeper.h>
 #include <gamekeeper/client/hypodermic.h>
 
 #include <boost/program_options/options_description.hpp>
@@ -68,7 +68,7 @@ GameLibRuntime::GameLibRuntime()
 
 GameLibRuntime::~GameLibRuntime()
 {
-	delete this->gameLibUI;
+	delete this->gameKeeperUI;
 }
 
 gamekeeper::core::Logger&
@@ -78,9 +78,9 @@ GameLibRuntime::getUILogger()
 }
 
 int
-GameLibRuntime::main(int argc, const char* argv[], GameLibUI * gameLibUI)
+GameLibRuntime::main(int argc, const char* argv[], GameKeeperUI * gameKeeperUI)
 {
-	this->gameLibUI = gameLibUI;
+	this->gameKeeperUI = gameKeeperUI;
 
 	po::options_description descGlobal("Global options");
 
@@ -94,7 +94,7 @@ GameLibRuntime::main(int argc, const char* argv[], GameLibUI * gameLibUI)
 	po::options_description_easy_init fileClientEasy = fileClient.add_options();
 	po::options_description_easy_init bothClientEasy = bothClient.add_options();
 
-	this->gameLibUI->addOptions(cmdClientEasy, fileClientEasy, bothClientEasy);
+	this->gameKeeperUI->addOptions(cmdClientEasy, fileClientEasy, bothClientEasy);
 
 	if(!bothClient.options().empty())
 	{
@@ -147,9 +147,9 @@ GameLibRuntime::main(int argc, const char* argv[], GameLibUI * gameLibUI)
 	std::shared_ptr<gamekeeper::core::LoggerFactory> loggerFactory = container->resolve<gamekeeper::core::LoggerFactory>();
 	loggerFactory->getComponentLogger("main") << gamekeeper::core::LogLevel::Debug << "firing up gamelib" << gamekeeper::core::endl;
 
-	this->gameLibUI->init(vm);
-	this->gameLibUI->startEventLoop();
-	this->gameLibUI->onShutdown();
+	this->gameKeeperUI->init(vm);
+	this->gameKeeperUI->startEventLoop();
+	this->gameKeeperUI->onShutdown();
 
 	return EXIT_SUCCESS;
 }

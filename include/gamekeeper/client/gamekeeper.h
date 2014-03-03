@@ -18,8 +18,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef GAMEKEEPER_CLIENT_GAMELIBUI_H
-#define GAMEKEEPER_CLIENT_GAMELIBUI_H 1
+#ifndef GAMEKEEPER_CLIENT_GAMEKEEPER_H
+#define GAMEKEEPER_CLIENT_GAMEKEEPER_H 1
 
 #include <gamekeeper/core/common.h>
 
@@ -43,7 +43,7 @@ GAMEKEEPER_NAMESPACE_END(core)
 GAMEKEEPER_NAMESPACE_START(client)
 
 /**
- * @interface GameLibUI gamelib.h <gamekeeper/client/gamelib.h>
+ * @interface GameKeeperUI gamekeeper.h <gamekeeper/client/gamekeeper.h>
  *
  * Entry type for the gamelib library
  *
@@ -53,7 +53,7 @@ GAMEKEEPER_NAMESPACE_START(client)
  * @author Karol Herbst
  * @since 0
  */
-interface PUBLIC_API GameLibUI
+interface PUBLIC_API GameKeeperUI
 {
 	typedef std::map<std::string, boost::program_options::variable_value> ConfigMap;
 	/**
@@ -62,7 +62,7 @@ interface PUBLIC_API GameLibUI
 	 * @author Karol Herbst
 	 * @since 0
 	 */
-	PUBLIC_INLINE GAMEKEEPER_INTERFACE_DESTRUCTOR(GameLibUI)
+	PUBLIC_INLINE GAMEKEEPER_INTERFACE_DESTRUCTOR(GameKeeperUI)
 
 	/**
 	 * init method for GameLib
@@ -123,19 +123,19 @@ interface PUBLIC_API GameLibUI
  * @param logger the logger provided by gamelib
  * @return a new created instance of gameLib
  */
-extern "C" REVERSE_PUBLIC_API GameLibUI * newInstance(gamekeeper::core::Logger& logger);
+extern "C" REVERSE_PUBLIC_API GameKeeperUI * newInstance(gamekeeper::core::Logger& logger);
 
 /**
- * declares the Implementation of the {@link GameLibUI} interface
+ * declares the Implementation of the {@link GameKeeperUI} interface
  *
  * use this by the client to provide all the needed things.
  */
 #define GAMECLIENTUI_CLASS(class) \
-extern "C" REVERSE_PUBLIC_API gamekeeper::client::GameLibUI * newInstance(gamekeeper::core::Logger& logger) \
+extern "C" REVERSE_PUBLIC_API gamekeeper::client::GameKeeperUI * newInstance(gamekeeper::core::Logger& logger) \
 { \
 	return new class(logger); \
 }
 
 GAMEKEEPER_NAMESPACE_END(client)
 
-#endif //GAMEKEEPER_CLIENT_GAMELIBUI_H
+#endif //GAMEKEEPER_CLIENT_GAMEKEEPER_H

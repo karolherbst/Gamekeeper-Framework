@@ -1,11 +1,11 @@
 #ifndef HBPROTOTYPE_H
 #define HBPROTOTYPE_H
 
-#include <gamekeeper/client/gamelib.h>
+#include <gamekeeper/client/gamekeeper.h>
 
 #include <sstream>
 
-class HBPrototype : public gamekeeper::client::GameLibUI
+class HBPrototype : public gamekeeper::client::GameKeeperUI
 {
 public:
 	HBPrototype(gamekeeper::core::Logger& logger);

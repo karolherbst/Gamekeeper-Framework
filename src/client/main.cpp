@@ -22,7 +22,7 @@
 
 #include "runtime.h"
 
-#include <gamekeeper/client/gamelib.h>
+#include <gamekeeper/client/gamekeeper.h>
 
 #ifdef GAMEKEEPER_OS_IS_WINDOWS
   #include <Windows.h>
@@ -50,7 +50,7 @@ PUBLIC_API int main(int argc, const char* argv[])
 	gamekeeper::client::GameLibRuntime runtime;
 // on windows stuff is a bit more complicated
 #ifdef GAMEKEEPER_OS_IS_WINDOWS
-	typedef gamekeeper::client::GameLibUI * (*NewInstanceFuncPtr)(gamekeeper::core::Logger& logger);
+	typedef gamekeeper::client::GameKeeperUI * (*NewInstanceFuncPtr)(gamekeeper::core::Logger& logger);
 	NewInstanceFuncPtr newInstanceFunc = (NewInstanceFuncPtr)::GetProcAddress(GetModuleHandle(NULL), "newInstance");
 	return runtime.main(argc, argv, newInstanceFunc(runtime.getUILogger()));
 #else

@@ -33,7 +33,7 @@ GAMEKEEPER_NAMESPACE_END(core)
 
 GAMEKEEPER_NAMESPACE_START(client)
 
-class GameLibUI;
+class GameKeeperUI;
 
 class PUBLIC_API GameLibRuntime
 {
@@ -41,9 +41,9 @@ public:
 	PUBLIC_API GameLibRuntime();
 	PUBLIC_API ~GameLibRuntime();
 	PUBLIC_API gamekeeper::core::Logger& getUILogger();
-	PUBLIC_API int main(int argc, const char* argv[], GameLibUI *);
+	PUBLIC_API int main(int argc, const char* argv[], GameKeeperUI *);
 private:
-	GameLibUI * gameLibUI;
+	GameKeeperUI * gameKeeperUI;
 };
 
 GAMEKEEPER_NAMESPACE_END(client)

@@ -1,9 +1,9 @@
 #ifndef GAMEOLITHPROTOTYPE_H
 #define GAMEOLITHPROTOTYPE_H 1
 
-#include <gamekeeper/client/gamelib.h>
+#include <gamekeeper/client/gamekeeper.h>
 
-class GameolithPrototype : public gamekeeper::client::GameLibUI
+class GameolithPrototype : public gamekeeper::client::GameKeeperUI
 {
 public:
 	GameolithPrototype(gamekeeper::core::Logger& logger);
