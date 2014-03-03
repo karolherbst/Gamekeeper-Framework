@@ -42,7 +42,7 @@ GAMEKEEPER_NAMESPACE_START(core)
 interface PUBLIC_API LoggerStream
 {
 public:
-	PUBLIC_INLINE GAMELIB_INTERFACE_DESTRUCTOR(LoggerStream)
+	PUBLIC_INLINE GAMEKEEPER_INTERFACE_DESTRUCTOR(LoggerStream)
 	
 	/**
 	 * This methods logs the given string into the logger Stream
@@ -53,7 +53,7 @@ public:
 	 * @param str the message to log
 	 * @return the logger stream itself
 	 */
-	PUBLIC_API GAMELIB_INTERFACE_METHOD(LoggerStream& operator<<(const std::string& str));
+	PUBLIC_API GAMEKEEPER_INTERFACE_METHOD(LoggerStream& operator<<(const std::string& str));
 
 	/**
 	 * This methods flushes the stream
@@ -63,7 +63,7 @@ public:
 	 *
 	 * @return the logger stream itself
 	 */
-	PUBLIC_API GAMELIB_INTERFACE_METHOD(LoggerStream& flush());
+	PUBLIC_API GAMEKEEPER_INTERFACE_METHOD(LoggerStream& flush());
 };
 
 /**

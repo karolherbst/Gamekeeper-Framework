@@ -84,7 +84,7 @@ interface PUBLIC_API HttpFileDownloader : public FileDownloader
 	 * @param[in] callback the callback function
 	 * @param[in] cookies the cookies
 	 */
-	PUBLIC_API GAMELIB_INTERFACE_METHOD(void downloadFileWithCookies(const char * const url, DownloadCallback callback,
+	PUBLIC_API GAMEKEEPER_INTERFACE_METHOD(void downloadFileWithCookies(const char * const url, DownloadCallback callback,
 	                                                                 const CookieBuket& cookies));
 
 	/**
@@ -97,7 +97,7 @@ interface PUBLIC_API HttpFileDownloader : public FileDownloader
 	 * @param[in] form the form
 	 * @return the fetched cookies
 	 */
-	PUBLIC_API GAMELIB_INTERFACE_METHOD(CookieBuket doPostRequestForCookies(const char * const url, const Form& form));
+	PUBLIC_API GAMEKEEPER_INTERFACE_METHOD(CookieBuket doPostRequestForCookies(const char * const url, const Form& form));
 };
 
 GAMEKEEPER_NAMESPACE_END(core)

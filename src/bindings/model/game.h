@@ -38,8 +38,8 @@ private:
 	std::string name;
 	
 public:
-	PRIVATE_API GAMELIB_IMPLEMENTATION_OVERRIDE(const char* getId() const);
-	PRIVATE_API GAMELIB_IMPLEMENTATION_OVERRIDE(const char* getName() const);
+	PRIVATE_API GAMEKEEPER_IMPLEMENTATION_OVERRIDE(const char* getId() const);
+	PRIVATE_API GAMEKEEPER_IMPLEMENTATION_OVERRIDE(const char* getName() const);
 	
 	PUBLIC_API void setId(const char*);
 	PUBLIC_API void setName(const char*);

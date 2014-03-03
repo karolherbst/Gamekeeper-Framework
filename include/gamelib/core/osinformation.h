@@ -41,7 +41,7 @@ GAMEKEEPER_NAMESPACE_START(core)
  */
 interface PUBLIC_API OSInformation
 {
-	PUBLIC_INLINE GAMELIB_INTERFACE_DESTRUCTOR(OSInformation)
+	PUBLIC_INLINE GAMEKEEPER_INTERFACE_DESTRUCTOR(OSInformation)
 
 	/**
 	 * returns the value of the given environment variable name
@@ -52,7 +52,7 @@ interface PUBLIC_API OSInformation
 	 * @param name the file name
 	 * @return the resolved value
 	 */
-	PUBLIC_API GAMELIB_INTERFACE_METHOD(std::string getEnv(const char * name));
+	PUBLIC_API GAMEKEEPER_INTERFACE_METHOD(std::string getEnv(const char * name));
 
 	/**
 	 * returns the value of the given environment variable name
@@ -63,7 +63,7 @@ interface PUBLIC_API OSInformation
 	 * @param name the file name
 	 * @return the resolved value
 	 */
-	PUBLIC_API GAMELIB_INTERFACE_METHOD(void setEnv(const char * name, const char * value));
+	PUBLIC_API GAMEKEEPER_INTERFACE_METHOD(void setEnv(const char * name, const char * value));
 
 	/**
 	 * This method should return the seperator used in environment variables to seperate multiple paths
@@ -73,7 +73,7 @@ interface PUBLIC_API OSInformation
 	 *
 	 * @return the seperator
 	 */
-	PUBLIC_API GAMELIB_INTERFACE_METHOD(std::string getEnvSeperator());
+	PUBLIC_API GAMEKEEPER_INTERFACE_METHOD(std::string getEnvSeperator());
 
 	/**
 	 * returns the path to the filesystem root of the system partition
@@ -83,7 +83,7 @@ interface PUBLIC_API OSInformation
 	 *
 	 * @return the path
 	 */
-	PUBLIC_API GAMELIB_INTERFACE_METHOD(boost::filesystem::path getSystemRoot());
+	PUBLIC_API GAMEKEEPER_INTERFACE_METHOD(boost::filesystem::path getSystemRoot());
 
 	/**
 	 * returns the path to the user directory
@@ -93,7 +93,7 @@ interface PUBLIC_API OSInformation
 	 *
 	 * @return the path
 	 */
-	PUBLIC_API GAMELIB_INTERFACE_METHOD(boost::filesystem::path getUserPath());
+	PUBLIC_API GAMEKEEPER_INTERFACE_METHOD(boost::filesystem::path getUserPath());
 };
 
 GAMEKEEPER_NAMESPACE_END(core)

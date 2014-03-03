@@ -30,11 +30,11 @@ GAMEKEEPER_NAMESPACE_START(core)
 class PUBLIC_API LinuxInformation : public OSInformation
 {
 public:
-	PRIVATE_API GAMELIB_IMPLEMENTATION_OVERRIDE(std::string getEnv(const char * name));
-	PRIVATE_API GAMELIB_IMPLEMENTATION_OVERRIDE(void setEnv(const char *, const char *));
-	PRIVATE_API GAMELIB_IMPLEMENTATION_OVERRIDE(std::string getEnvSeperator());
-	PRIVATE_API GAMELIB_IMPLEMENTATION_OVERRIDE(boost::filesystem::path getSystemRoot());
-	PRIVATE_API GAMELIB_IMPLEMENTATION_OVERRIDE(boost::filesystem::path getUserPath());
+	PRIVATE_API GAMEKEEPER_IMPLEMENTATION_OVERRIDE(std::string getEnv(const char * name));
+	PRIVATE_API GAMEKEEPER_IMPLEMENTATION_OVERRIDE(void setEnv(const char *, const char *));
+	PRIVATE_API GAMEKEEPER_IMPLEMENTATION_OVERRIDE(std::string getEnvSeperator());
+	PRIVATE_API GAMEKEEPER_IMPLEMENTATION_OVERRIDE(boost::filesystem::path getSystemRoot());
+	PRIVATE_API GAMEKEEPER_IMPLEMENTATION_OVERRIDE(boost::filesystem::path getUserPath());
 };
 
 GAMEKEEPER_NAMESPACE_END(core)

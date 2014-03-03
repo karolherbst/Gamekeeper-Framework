@@ -62,7 +62,7 @@ interface PUBLIC_API GameLibUI
 	 * @author Karol Herbst
 	 * @since 0
 	 */
-	PUBLIC_INLINE GAMELIB_INTERFACE_DESTRUCTOR(GameLibUI)
+	PUBLIC_INLINE GAMEKEEPER_INTERFACE_DESTRUCTOR(GameLibUI)
 
 	/**
 	 * init method for GameLib
@@ -73,7 +73,7 @@ interface PUBLIC_API GameLibUI
 	 * @author Karol Herbst
 	 * @since 0
 	 */
-	PUBLIC_API GAMELIB_INTERFACE_METHOD(void init(const ConfigMap & config));
+	PUBLIC_API GAMEKEEPER_INTERFACE_METHOD(void init(const ConfigMap & config));
 
 	/**
 	 * shutdown event handling method for GameLib
@@ -83,7 +83,7 @@ interface PUBLIC_API GameLibUI
 	 * @author Karol Herbst
 	 * @since 0
 	 */
-	PUBLIC_API GAMELIB_INTERFACE_METHOD(void onShutdown());
+	PUBLIC_API GAMEKEEPER_INTERFACE_METHOD(void onShutdown());
 
 	/**
 	 * starts the implementation specific event loop
@@ -94,7 +94,7 @@ interface PUBLIC_API GameLibUI
 	 * @pre {@link #init} was called
 	 * @post blocks the current thread of execution
 	 */
-	PUBLIC_API GAMELIB_INTERFACE_METHOD(void startEventLoop());
+	PUBLIC_API GAMEKEEPER_INTERFACE_METHOD(void startEventLoop());
 
 	/**
 	 * this method will be called to collect options used by the client
@@ -106,7 +106,7 @@ interface PUBLIC_API GameLibUI
 	 * @param[in] oaFile the OptionAdder object for config file options
 	 * @param[in] oaBoth the OptionAdder object for config config file and command line options
 	 */
-	PUBLIC_INLINE GAMELIB_INTERFACE_METHOD_OPTIONAL(void addOptions(
+	PUBLIC_INLINE GAMEKEEPER_INTERFACE_METHOD_OPTIONAL(void addOptions(
 	                                                boost::program_options::options_description_easy_init & oaCmd,
 	                                                boost::program_options::options_description_easy_init & oaFile,
 	                                                boost::program_options::options_description_easy_init & oaBoth));

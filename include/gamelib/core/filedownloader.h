@@ -41,7 +41,7 @@ GAMEKEEPER_NAMESPACE_START(core)
  */
 interface PUBLIC_API FileDownloader
 {
-	PUBLIC_INLINE GAMELIB_INTERFACE_DESTRUCTOR(FileDownloader)
+	PUBLIC_INLINE GAMEKEEPER_INTERFACE_DESTRUCTOR(FileDownloader)
 	
 	/**
 	 * the callback function signature primary for lambdas
@@ -66,7 +66,7 @@ interface PUBLIC_API FileDownloader
 	 * @param[in] nameSize the size of @p protocolName
 	 * @return true if the implementation supports @p protocolName
 	 */
-	PUBLIC_API GAMELIB_INTERFACE_METHOD(bool supportsProtocol(const char * const protocolName, size_t nameSize));
+	PUBLIC_API GAMEKEEPER_INTERFACE_METHOD(bool supportsProtocol(const char * const protocolName, size_t nameSize));
 	
 	/**
 	 * downloads the file behind the given location
@@ -77,7 +77,7 @@ interface PUBLIC_API FileDownloader
 	 * @param[in] url the url
 	 * @param[in] callback the callback function
 	 */
-	PUBLIC_API GAMELIB_INTERFACE_METHOD(void downloadFile(const char * const url, DownloadCallback callback));
+	PUBLIC_API GAMEKEEPER_INTERFACE_METHOD(void downloadFile(const char * const url, DownloadCallback callback));
 };
 
 GAMEKEEPER_NAMESPACE_END(core)

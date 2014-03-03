@@ -41,9 +41,9 @@ class PUBLIC_API Log4cppLoggerFactory : public LoggerFactory
 {
 public:
 	PUBLIC_API Log4cppLoggerFactory();
-	PRIVATE_API GAMELIB_IMPLEMENTATION_OVERRIDE(Logger& getDefaultLogger());
-	PRIVATE_API GAMELIB_IMPLEMENTATION_OVERRIDE(Logger& getComponentLogger(const char * const id));
-	PRIVATE_API GAMELIB_IMPLEMENTATION_OVERRIDE(~Log4cppLoggerFactory());
+	PRIVATE_API GAMEKEEPER_IMPLEMENTATION_OVERRIDE(Logger& getDefaultLogger());
+	PRIVATE_API GAMEKEEPER_IMPLEMENTATION_OVERRIDE(Logger& getComponentLogger(const char * const id));
+	PRIVATE_API GAMEKEEPER_IMPLEMENTATION_OVERRIDE(~Log4cppLoggerFactory());
 private:
 	Logger * rootLogger = nullptr;
 	log4cpp::Category & rootCategory;

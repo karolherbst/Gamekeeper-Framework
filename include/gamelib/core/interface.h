@@ -45,7 +45,7 @@
  * @since 0
  * @param type the name of the interface
  */
-#define GAMELIB_INTERFACE_DESTRUCTOR(type) virtual ~type(){}
+#define GAMEKEEPER_INTERFACE_DESTRUCTOR(type) virtual ~type(){}
 
 /**
  * this method auto creates the pure virtual method given
@@ -54,7 +54,7 @@
  * @since 0
  * @param method the method signature
  */
-#define GAMELIB_INTERFACE_METHOD(method) virtual method = 0
+#define GAMEKEEPER_INTERFACE_METHOD(method) virtual method = 0
 
 /**
  * this method auto creates the optional virtual method given
@@ -63,7 +63,7 @@
  * @since 0
  * @param method the method signature
  */
-#define GAMELIB_INTERFACE_METHOD_OPTIONAL(method) virtual method{}
+#define GAMEKEEPER_INTERFACE_METHOD_OPTIONAL(method) virtual method{}
 
 /**
  * this macro shall be used to override interface methods
@@ -72,6 +72,6 @@
  * @since 0
  * @param method the method signature
  */
-#define GAMELIB_IMPLEMENTATION_OVERRIDE(method) virtual method override
+#define GAMEKEEPER_IMPLEMENTATION_OVERRIDE(method) virtual method override
 
 #endif //GAMEKEEPER_CORE_INTERFACE_H

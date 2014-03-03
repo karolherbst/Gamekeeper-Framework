@@ -38,12 +38,12 @@ class PUBLIC_API CurlFileDownloader : public HttpFileDownloader
 public:
 	PUBLIC_API CurlFileDownloader(std::shared_ptr<LoggerFactory>);
 	PRIVATE_API ~CurlFileDownloader();
-	PRIVATE_API GAMELIB_IMPLEMENTATION_OVERRIDE(bool supportsProtocol(const char * const protocolName, size_t nameSize));
-	PRIVATE_API GAMELIB_IMPLEMENTATION_OVERRIDE(void downloadFile(const char * const url, DownloadCallback callback));
-	PRIVATE_API GAMELIB_IMPLEMENTATION_OVERRIDE(void downloadFileWithCookies(const char * const url,
+	PRIVATE_API GAMEKEEPER_IMPLEMENTATION_OVERRIDE(bool supportsProtocol(const char * const protocolName, size_t nameSize));
+	PRIVATE_API GAMEKEEPER_IMPLEMENTATION_OVERRIDE(void downloadFile(const char * const url, DownloadCallback callback));
+	PRIVATE_API GAMEKEEPER_IMPLEMENTATION_OVERRIDE(void downloadFileWithCookies(const char * const url,
 	                                                                         DownloadCallback callback,
 	                                                                         const CookieBuket& cookies));
-	PRIVATE_API GAMELIB_IMPLEMENTATION_OVERRIDE(CookieBuket doPostRequestForCookies(const char * const url,
+	PRIVATE_API GAMEKEEPER_IMPLEMENTATION_OVERRIDE(CookieBuket doPostRequestForCookies(const char * const url,
 	                                                                                const Form& form));
 private:
 	Logger & logger;

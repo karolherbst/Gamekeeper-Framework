@@ -39,7 +39,7 @@ class Logger;
  */
 interface PRIVATE_API LoggerFactory
 {
-	GAMELIB_INTERFACE_DESTRUCTOR(LoggerFactory)
+	GAMEKEEPER_INTERFACE_DESTRUCTOR(LoggerFactory)
 
 	/**
 	 * @author Karol Herbst
@@ -47,7 +47,7 @@ interface PRIVATE_API LoggerFactory
 	 *
 	 * @return the default logger
 	 */
-	PRIVATE_API GAMELIB_INTERFACE_METHOD(Logger& getDefaultLogger());
+	PRIVATE_API GAMEKEEPER_INTERFACE_METHOD(Logger& getDefaultLogger());
 
 	/**
 	 * @author Karol Herbst
@@ -56,7 +56,7 @@ interface PRIVATE_API LoggerFactory
 	 * @param id the id of the component
 	 * @return a logger with the given id
 	 */
-	PRIVATE_API GAMELIB_INTERFACE_METHOD(Logger& getComponentLogger(const char * const id));
+	PRIVATE_API GAMEKEEPER_INTERFACE_METHOD(Logger& getComponentLogger(const char * const id));
 };
 
 GAMEKEEPER_NAMESPACE_END(core)

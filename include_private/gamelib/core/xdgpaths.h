@@ -34,10 +34,10 @@ class PUBLIC_API XDGPaths : public OSPaths
 {
 public:
 	PUBLIC_API XDGPaths(std::shared_ptr<OSInformation>);
-	PRIVATE_API GAMELIB_IMPLEMENTATION_OVERRIDE(boost::filesystem::path getConfigFile(std::string name));
-	PRIVATE_API GAMELIB_IMPLEMENTATION_OVERRIDE(boost::filesystem::path getDataFile(std::string name));
-	PRIVATE_API GAMELIB_IMPLEMENTATION_OVERRIDE(boost::filesystem::path getCacheFile(std::string name));
-	PRIVATE_API GAMELIB_IMPLEMENTATION_OVERRIDE(boost::filesystem::path getRuntimeFile(std::string name));
+	PRIVATE_API GAMEKEEPER_IMPLEMENTATION_OVERRIDE(boost::filesystem::path getConfigFile(std::string name));
+	PRIVATE_API GAMEKEEPER_IMPLEMENTATION_OVERRIDE(boost::filesystem::path getDataFile(std::string name));
+	PRIVATE_API GAMEKEEPER_IMPLEMENTATION_OVERRIDE(boost::filesystem::path getCacheFile(std::string name));
+	PRIVATE_API GAMEKEEPER_IMPLEMENTATION_OVERRIDE(boost::filesystem::path getRuntimeFile(std::string name));
 private:
 	static const std::string prefix;
 

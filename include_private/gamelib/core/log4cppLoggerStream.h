@@ -33,8 +33,8 @@ class PRIVATE_API Log4cppLoggerStream : public LoggerStream
 {
 public:
 	PRIVATE_API Log4cppLoggerStream(log4cpp::CategoryStream);
-	PRIVATE_API GAMELIB_IMPLEMENTATION_OVERRIDE(LoggerStream& operator<<(const std::string& str));
-	PRIVATE_API GAMELIB_IMPLEMENTATION_OVERRIDE(LoggerStream& flush());
+	PRIVATE_API GAMEKEEPER_IMPLEMENTATION_OVERRIDE(LoggerStream& operator<<(const std::string& str));
+	PRIVATE_API GAMEKEEPER_IMPLEMENTATION_OVERRIDE(LoggerStream& flush());
 private:
 	log4cpp::CategoryStream stream;
 };

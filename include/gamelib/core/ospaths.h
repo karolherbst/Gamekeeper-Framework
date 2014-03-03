@@ -43,7 +43,7 @@ GAMEKEEPER_NAMESPACE_START(core)
  */
 interface PUBLIC_API OSPaths
 {
-	PUBLIC_INLINE GAMELIB_INTERFACE_DESTRUCTOR(OSPaths)
+	PUBLIC_INLINE GAMEKEEPER_INTERFACE_DESTRUCTOR(OSPaths)
 
 	/**
 	 * returns the file with the given name from the config paths
@@ -54,7 +54,7 @@ interface PUBLIC_API OSPaths
 	 * @param name the file name
 	 * @return the resolved file
 	 */
-	PUBLIC_API GAMELIB_INTERFACE_METHOD(boost::filesystem::path getConfigFile(std::string name));
+	PUBLIC_API GAMEKEEPER_INTERFACE_METHOD(boost::filesystem::path getConfigFile(std::string name));
 
 	/**
 	 * returns the file with the given name from the data paths
@@ -65,7 +65,7 @@ interface PUBLIC_API OSPaths
 	 * @param name the file name
 	 * @return the resolved file
 	 */
-	PUBLIC_API GAMELIB_INTERFACE_METHOD(boost::filesystem::path getDataFile(std::string name));
+	PUBLIC_API GAMEKEEPER_INTERFACE_METHOD(boost::filesystem::path getDataFile(std::string name));
 
 	/**
 	 * returns the file with the given name from the cache paths
@@ -76,7 +76,7 @@ interface PUBLIC_API OSPaths
 	 * @param name the file name
 	 * @return the resolved file
 	 */
-	PUBLIC_API GAMELIB_INTERFACE_METHOD(boost::filesystem::path getCacheFile(std::string name));
+	PUBLIC_API GAMEKEEPER_INTERFACE_METHOD(boost::filesystem::path getCacheFile(std::string name));
 
 	/**
 	 * returns the file with the given name from the runtime paths
@@ -87,7 +87,7 @@ interface PUBLIC_API OSPaths
 	 * @param name the file name
 	 * @return the resolved file
 	 */
-	PUBLIC_API GAMELIB_INTERFACE_METHOD(boost::filesystem::path getRuntimeFile(std::string name));
+	PUBLIC_API GAMEKEEPER_INTERFACE_METHOD(boost::filesystem::path getRuntimeFile(std::string name));
 };
 
 GAMEKEEPER_NAMESPACE_END(core)
