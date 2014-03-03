@@ -145,7 +145,7 @@ GameKeeperRuntime::main(int argc, const char* argv[], GameKeeperUI * gameKeeperU
 	container = containerBuilder.build();
 
 	std::shared_ptr<gamekeeper::core::LoggerFactory> loggerFactory = container->resolve<gamekeeper::core::LoggerFactory>();
-	loggerFactory->getComponentLogger("main") << gamekeeper::core::LogLevel::Debug << "firing up gamelib" << gamekeeper::core::endl;
+	loggerFactory->getComponentLogger("main") << gamekeeper::core::LogLevel::Debug << "firing up GameKeeper" << gamekeeper::core::endl;
 
 	this->gameKeeperUI->init(vm);
 	this->gameKeeperUI->startEventLoop();

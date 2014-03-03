@@ -35,7 +35,7 @@ after_success:
 notifications:
   irc:
     channels:
-      - "irc.freenode.org#gamelib"
+      - "irc.freenode.org#gamekeeper"
     template:
       - "%{repository} (%{commit}) by %{author} : %{message} %{foo} "
       - "Build details: %{build_url}"

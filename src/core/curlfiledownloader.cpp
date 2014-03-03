@@ -32,7 +32,7 @@ GAMEKEEPER_NAMESPACE_START(core)
 
 CurlFileDownloader::CurlFileDownloader(std::shared_ptr<LoggerFactory> loggerFactory)
 :	logger(loggerFactory->getComponentLogger("IO.curl")),
-	curlHelper("GameLib/0.1")
+	curlHelper("GameKeeper/0.1")
 {
 	logger << LogLevel::Debug << "init curl" << endl;
 	curl_global_init(CURL_GLOBAL_SSL);

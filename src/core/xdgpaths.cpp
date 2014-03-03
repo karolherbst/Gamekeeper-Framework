@@ -33,7 +33,7 @@ GAMEKEEPER_NAMESPACE_START(core)
 typedef boost::filesystem::path Path;
 using boost::filesystem::is_regular_file;
 
-const std::string XDGPaths::prefix = "gamelib";
+const std::string XDGPaths::prefix = "gamekeeper";
 
 #define defaultPath(path) this->osInformation->getUserPath() / path
 

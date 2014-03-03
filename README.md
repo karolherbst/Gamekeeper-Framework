@@ -1,6 +1,6 @@
-libgamelib
+GameKeeper Framework
 ==========
 
 Library for hooking up game stors and merging them into one single library
 
-join #gamelib on freenode
+join #gamekeeper on freenode
