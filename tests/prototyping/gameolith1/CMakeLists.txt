@@ -23,6 +23,6 @@ file(GLOB sources
 add_executable(GameolithPrototype ${sources} ${headers})
 target_link_libraries(GameolithPrototype
   gamelibClientMain
-  gamelibModelBindings
+  gamekeeperModelBindings
   ${JSONCPP_LIBRARIES}
 )

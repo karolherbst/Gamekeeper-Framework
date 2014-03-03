@@ -1,4 +1,4 @@
-%module GAMELIB_BINDING_MODULE
+%module GAMEKEEPER_BINDING_MODULE
 %{
 #include "game.h"
 %}
