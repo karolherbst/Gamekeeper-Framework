@@ -14,6 +14,7 @@ add_custom_target(headers
     gamekeeper/core/loggerStream.h
     gamekeeper/core/osinformation.h
     gamekeeper/core/ospaths.h
+    gamekeeper/core/threadfactory.h
 
     gamekeeper/model/game.h
 )

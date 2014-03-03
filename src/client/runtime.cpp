@@ -37,6 +37,11 @@
 #include <Hypodermic/Helpers.h>
 
 #include <gamekeeper/core/curlfiledownloader.h>
+#include <gamekeeper/core/log4cpploggerFactory.h>
+#include <gamekeeper/core/stdc++11threadmanager.h>
+#include <gamekeeper/core/xdgpaths.h>
+
+// some platform dependent stuff
 #ifdef GAMEKEEPER_OS_IS_WINDOWS
   #include <gamekeeper/core/windowsinformation.h>
   #define OSINFORMATIONCLASS WindowsInformation
@@ -44,8 +49,13 @@
   #include <gamekeeper/core/linuxinformation.h>
   #define OSINFORMATIONCLASS LinuxInformation
 #endif
-#include <gamekeeper/core/log4cpploggerFactory.h>
-#include <gamekeeper/core/xdgpaths.h>
+
+#ifdef GAMEKEEPER_PTHREAD
+  #include <gamekeeper/core/pthreadhelper.h>
+  #define THREADHELPERCLASS PthreadHelper
+#else
+  #error only pthread is currently supported
+#endif
 
 namespace po = boost::program_options;
 
@@ -141,6 +151,14 @@ GameKeeperRuntime::main(int argc, const char* argv[], GameKeeperUI * gameKeeperU
 		        as<FileDownloader>()->
 		        as<HttpFileDownloader>()->
 		        singleInstance();
+		containerBuilder.registerType<THREADHELPERCLASS>()->
+		        as<NativeThreadHelper>()->
+		        singleInstance();
+		containerBuilder.registerType<StdCpp11ThreadManager>(CREATE(new StdCpp11ThreadManager(INJECT(NativeThreadHelper),
+		                                                                                      INJECT(LoggerFactory))))->
+		        as<ThreadManager>()->
+		        as<ThreadFactory>()->
+		        singleInstance();
 	}
 	container = containerBuilder.build();
 
@@ -149,6 +167,11 @@ GameKeeperRuntime::main(int argc, const char* argv[], GameKeeperUI * gameKeeperU
 
 	this->gameKeeperUI->init(vm);
 	this->gameKeeperUI->startEventLoop();
+
+	std::shared_ptr<gamekeeper::core::ThreadManager> threadManager = container->resolve<gamekeeper::core::ThreadManager>();
+	threadManager->interruptAll();
+	for(int8_t count = 0; count < 5 && !threadManager->tryJoinFor(2000); count++){}
+
 	this->gameKeeperUI->onShutdown();
 
 	return EXIT_SUCCESS;
