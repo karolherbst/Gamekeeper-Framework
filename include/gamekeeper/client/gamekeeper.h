@@ -45,7 +45,7 @@ GAMEKEEPER_NAMESPACE_START(client)
 /**
  * @interface GameKeeperUI gamekeeper.h <gamekeeper/client/gamekeeper.h>
  *
- * Entry type for the gamelib library
+ * Entry type for the GameKeeper Framework
  *
  * this interface has to be implemented by the specific Language Frontend. This Interface is not intented for client
  * usage at all. Refer to the specific language frontent API you want to use instead.
@@ -65,9 +65,9 @@ interface PUBLIC_API GameKeeperUI
 	PUBLIC_INLINE GAMEKEEPER_INTERFACE_DESTRUCTOR(GameKeeperUI)
 
 	/**
-	 * init method for GameLib
+	 * init method for GameKeeper
 	 *
-	 * this method should be used to initialize the GameLib client with default options and configurations. Keep sure,
+	 * this method should be used to initialize the GameKeeper client with default options and configurations. Keep sure,
 	 * that after a call to this method, every other method must be ready to use.
 	 *
 	 * @author Karol Herbst
@@ -76,9 +76,9 @@ interface PUBLIC_API GameKeeperUI
 	PUBLIC_API GAMEKEEPER_INTERFACE_METHOD(void init(const ConfigMap & config));
 
 	/**
-	 * shutdown event handling method for GameLib
+	 * shutdown event handling method for GameKeeper
 	 *
-	 * clean up the GameLib client so that it can be destroyed or reused with a call to {@link #init} again.
+	 * clean up the GameKeeper client so that it can be destroyed or reused with a call to {@link #init} again.
 	 *
 	 * @author Karol Herbst
 	 * @since 0
@@ -113,15 +113,15 @@ interface PUBLIC_API GameKeeperUI
 };
 
 /**
- * is used by {@link main()} to get a language specific implementation of {@link GameLib}
+ * is used by {@link main()} to get a language specific implementation of {@link GameKeeper}
  *
- * This method is provided by the GUI client, not gamelib itself.
+ * This method is provided by the GUI client, not GameKeeper itself.
  *
  * @author Karol Herbst
  * @since 0
  *
- * @param logger the logger provided by gamelib
- * @return a new created instance of gameLib
+ * @param logger the logger provided by GameKeeper
+ * @return a new created instance of GameKeeper
  */
 extern "C" REVERSE_PUBLIC_API GameKeeperUI * newInstance(gamekeeper::core::Logger& logger);
 

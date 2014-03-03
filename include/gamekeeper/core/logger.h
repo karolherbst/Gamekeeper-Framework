@@ -83,7 +83,7 @@ class LoggerStream;
 /**
  * @interface Logger logger.h <gamekeeper/core/logger.h>
  *
- * the gamelib logger class
+ * the GameKeeper logger class
  *
  * this will be used for any logging functionalities.
  *

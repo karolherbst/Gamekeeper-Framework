@@ -114,14 +114,14 @@ if(WITH_CSHARP_BINDINGS OR WITH_JAVA_BINDINGS OR WITH_PYTHON_BINDINGS)
 endif()
 
 #######################################################################################################################
-# set some cmake variables needed by gamelib build
+# set some cmake variables needed by GameKeeper build
 #######################################################################################################################
 
 set(GAMEKEEPER_PRIVATE_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/include_private")
 set(GAMEKEEPER_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/include")
 
 #######################################################################################################################
-# build libgamelib
+# build GameKeeper Framework
 #######################################################################################################################
 
 add_subdirectory(include_private)

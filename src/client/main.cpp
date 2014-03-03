@@ -29,18 +29,18 @@
 #endif
 
 /**
- * main entry point of gamelib
+ * main entry point of GameKeeper
  *
  * these are the steps which are done here:
  *	1. read the configuration file
  *	2. overwrite properties from application arguments
  *	3. initialize/configure global objects
- *	4. create the GameLib implementation provided by the Language Frontend
- *	5. call gamelib.setConfig()
- *	6. call gamelib.init()
- *	7. call gamelib.startEventLoop()
- *	8. call gamelib.shutdown()
- *	9. destroy gamelib
+ *	4. create the GameKeeper implementation provided by the Language Frontend
+ *	5. call GameKeeper.setConfig()
+ *	6. call GameKeeper.init()
+ *	7. call GameKeeper.startEventLoop()
+ *	8. call GameKeeper.shutdown()
+ *	9. destroy GameKeeper
  *
  * @author Karol Herbst
  * @since 0

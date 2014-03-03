@@ -32,7 +32,7 @@ GAMEKEEPER_NAMESPACE_START(core)
 /**
  * @interface LoggerStream loggerStrean.h <gamekeeper/core/loggerStrean.h>
  *
- * the gamelib logger stream class
+ * the GameKeeper logger stream class
  *
  * this will be used for putting stuff into a logger
  *

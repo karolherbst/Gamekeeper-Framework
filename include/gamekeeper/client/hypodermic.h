@@ -41,7 +41,7 @@ public:
 	/**
 	 * use this method to get the globale hypodermic container
 	 *
-	 * this method can be only called after the GamelibUI.init method was called
+	 * this method can be only called after the GameKeeperUI.init method was called
 	 *
 	 * @author Karol Herbst
 	 * @since 0

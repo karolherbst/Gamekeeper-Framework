@@ -30,7 +30,7 @@
 	 * Every pure virtual class should be declared with this type instead of class or struct.
 	 * Also members, non pure virtual methods, or any protected or private methods may not be used.
 	 * 
-	 * Use the GAMELIB_INTERFACE_* macros to simplify interface declerations.
+	 * Use the GAMEKEEPER_INTERFACE_* macros to simplify interface declerations.
 	 * 
 	 * @author Karol Herbst
 	 * @since 0
