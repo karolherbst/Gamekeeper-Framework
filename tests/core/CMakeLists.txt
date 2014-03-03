@@ -25,12 +25,12 @@ file(GLOB sources
   ${platform_sources}
 )
 
-add_executable(gamelibUnitTests ${sources} ${headers})
-target_link_libraries(gamelibUnitTests
-  gamelibCore
+add_executable(gamekeeperUnitTests ${sources} ${headers})
+target_link_libraries(gamekeeperUnitTests
+  gamekeeperCore
   ${Boost_SYSTEM_LIBRARY}
   ${GTEST_BOTH_LIBRARIES}
   ${HYPODERMIC_LIBRARIES}
 )
 
-add_test(gamelibUnitTests gamelibUnitTests)
+add_test(gamekeeperUnitTests gamekeeperUnitTests)

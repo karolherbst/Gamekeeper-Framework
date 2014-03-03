@@ -46,8 +46,8 @@ file(GLOB sources
   ${platform_sources}
 )
 
-add_library(gamelibCore SHARED ${sources} ${headers})
-target_link_libraries(gamelibCore
+add_library(gamekeeperCore SHARED ${sources} ${headers})
+target_link_libraries(gamekeeperCore
   ${Boost_FILESYSTEM_LIBRARY}
   ${CURL_LIBRARIES}
   ${LOG4CPP_LIBRARIES}

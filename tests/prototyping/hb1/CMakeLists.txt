@@ -25,6 +25,6 @@ add_definitions(
 
 add_executable(HBPrototype ${sources} ${headers} ${otherFiles})
 target_link_libraries(HBPrototype
-  gamelibClientMain
+  gamekeeperClientMain
   ${PYTHON_LIBRARIES}
 )
