@@ -22,6 +22,7 @@ file(GLOB headers
 
 file(GLOB sources
   defaultfixture.cpp
+  xdgpaths.cpp
   ${platform_sources}
 )
 

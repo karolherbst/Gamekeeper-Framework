@@ -30,8 +30,8 @@
 
 GAMEKEEPER_NAMESPACE_START(core)
 
-typedef boost::filesystem::path Path;
-using boost::filesystem::is_regular_file;
+namespace fs = boost::filesystem;
+namespace algo = boost::algorithm;
 
 const std::string XDGPaths::prefix = "gamekeeper";
 
@@ -40,41 +40,93 @@ const std::string XDGPaths::prefix = "gamekeeper";
 XDGPaths::XDGPaths(std::shared_ptr<OSInformation> _osInformation)
 :	osInformation(_osInformation){}
 
-Path
+fs::path
 XDGPaths::getConfigFile(std::string name)
 {
 	return resolveFile("XDG_CONFIG_HOME", defaultPath(".config"), "XDG_CONFIG_DIRS", "/etc/xdg", name);
 }
 
-Path
+fs::path
 XDGPaths::getDataFile(std::string name)
 {
 	return resolveFile("XDG_DATA_HOME", defaultPath(".local" / "share"), "XDG_DATA_DIRS",
 	                   "/usr/local/share/:/usr/share/", name);
 }
 
-Path
+fs::path
 XDGPaths::getCacheFile(std::string name)
 {
 	return resolveFile("XDG_CACHE_HOME", defaultPath(".cache"), name);
 }
 
-Path
+fs::path
 XDGPaths::getRuntimeFile(std::string name)
 {
-	return resolveFile("XDG_RUNTIME_DIR", this->osInformation->getSystemRoot() / "tmp" / XDGPaths::prefix, name);
+	return resolveFile("XDG_RUNTIME_DIR", this->osInformation->getSystemRoot() / "tmp", name);
 }
 
-Path
-XDGPaths::resolveFile(const char * singlePath, const boost::filesystem::path& singleDefault, std::string fileName)
+fs::path
+XDGPaths::resolveFile(const char * singlePath, const fs::path& singleDefault, std::string fileName)
 {
-	return singleDefault / XDGPaths::prefix / fileName;
+	std::string resolvedSinglePath = this->osInformation->getEnv(singlePath);
+	if(resolvedSinglePath.empty())
+	{
+		return singleDefault / XDGPaths::prefix / fileName;
+	}
+	return fs::path(resolvedSinglePath) / XDGPaths::prefix / fileName;
 }
 
-Path
-XDGPaths::resolveFile(const char * singlePath, const boost::filesystem::path& singleDefault, const char * multiPath,
+/**
+ * this method is quite complicated, because it will try to resolve a file in compliance with the XDG desktop
+ * specification
+ *
+ * 1. it tries to resolve the file in $XDG_*_HOME
+ *   a) if there is a file, the path to it will be returned
+ * 2. it tries to resolve a file within $XDG_*_DIRS
+ *   a) if $XDG_*_DIRS is empty and $XDG_*_HOME is not, return a path within the latter
+ *   b) if $XDG_*_DIRS and $XDG_*_HOME are empty, return a path within the default value
+ * 3. iterate over all entries of $XDG_*_DIRS
+ *   a) the first match will be returned
+ *   b) if there is no match, return a path within $XDG_*_HOME, if it isn't empty, return a path  within default otherwise
+ *
+ * @author Karol Herbst
+ */
+fs::path
+XDGPaths::resolveFile(const char * singlePath, const fs::path& singleDefault, const char * multiPath,
                       const char * multiDefaults, std::string fileName)
 {
+	std::string resolvedSinglePath = this->osInformation->getEnv(singlePath);
+	if(!resolvedSinglePath.empty())
+	{
+		fs::path singlePathFile = fs::path(resolvedSinglePath) / XDGPaths::prefix / fileName;
+		if(fs::exists(singlePathFile))
+		{
+			return singlePathFile;
+		}
+	}
+
+	std::string resolvedMultiPath = this->osInformation->getEnv(multiPath);
+	if(resolvedMultiPath.empty())
+	{
+		resolvedMultiPath = multiDefaults;
+	}
+
+	std::forward_list<std::string> splittedPaths;
+	// token_compress_on will merge empty empty entries away (eg: some/path::another/path: => some/path:another/path)
+	algo::split(splittedPaths, resolvedMultiPath, algo::is_any_of(this->osInformation->getEnvSeperator()),
+	            algo::token_compress_on);
+	for(const std::string & path : splittedPaths)
+	{
+		fs::path currentFile = fs::path(path) / XDGPaths::prefix / fileName;
+		if(fs::exists(currentFile))
+		{
+			return currentFile;
+		}
+	}
+	if(!resolvedSinglePath.empty())
+	{
+		return fs::path(resolvedSinglePath) / XDGPaths::prefix / fileName;
+	}
 	return singleDefault / XDGPaths::prefix / fileName;
 }
 
