@@ -59,7 +59,7 @@ Log4cppLoggerFactory::getComponentLogger(const char * const id)
 		this->loggers.insert(std::make_pair(id, newLogger));
 		return *newLogger;
 	}
-	return *this->rootLogger;
+	return *this->loggers.at(id);
 }
 
 Log4cppLoggerFactory::~Log4cppLoggerFactory()
