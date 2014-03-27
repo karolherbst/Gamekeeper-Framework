@@ -4,7 +4,10 @@ include_directories(
   ${Boost_INCLUDE_DIRS}
   ${GTEST_INCLUDE_DIRS}
   ${HYPODERMIC_INCLUDE_DIRS}
+  ${MONGOOSE_INCLUDE_DIR}
 )
+
+add_definitions(-DWEBSERVERPATH=\"${CMAKE_CURRENT_SOURCE_DIR}/webserverfiles\")
 
 if(LINUX)
   file(GLOB platform_sources
@@ -18,10 +21,12 @@ endif()
 
 file(GLOB headers
   defaultfixture.h
+  webserverfixture.h
 )
 
 file(GLOB sources
   defaultfixture.cpp
+  webserverfixture.cpp
   xdgpaths.cpp
   ${platform_sources}
 )
@@ -29,6 +34,7 @@ file(GLOB sources
 add_executable(gamekeeperUnitTests ${sources} ${headers})
 target_link_libraries(gamekeeperUnitTests
   gamekeeperCore
+  mongoose
   ${Boost_SYSTEM_LIBRARY}
   ${GTEST_BOTH_LIBRARIES}
   ${HYPODERMIC_LIBRARIES}
