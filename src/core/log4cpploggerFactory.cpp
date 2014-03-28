@@ -64,12 +64,17 @@ Log4cppLoggerFactory::getComponentLogger(const char * const id)
 
 Log4cppLoggerFactory::~Log4cppLoggerFactory()
 {
-	if (this->rootLogger != nullptr)
+	if(this->appender != nullptr)
+	{
+		this->rootCategory.removeAppender(this->appender);
+	}
+
+	if(this->rootLogger != nullptr)
 	{
 		delete this->rootLogger;
 	}
 
-	for (auto entry : this->loggers)
+	for(auto entry : this->loggers)
 	{
 		delete entry.second;
 	}
