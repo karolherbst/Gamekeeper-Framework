@@ -20,6 +20,8 @@
 
 #include "defaultfixture.h"
 
+#include <gamekeeper/core/log4cpploggerFactory.h>
+
 // some platform dependent stuff
 #ifdef GAMEKEEPER_OS_IS_WINDOWS
   #include <gamekeeper/core/windowsinformation.h>
@@ -41,6 +43,9 @@ DefaultFicture::DefaultFicture()
 		using namespace gamekeeper::core;
 		
 		// set up IoC container
+		containerBuilder.registerType<Log4cppLoggerFactory>()->
+		        as<LoggerFactory>()->
+		        singleInstance();
 		containerBuilder.registerType<OSINFORMATIONCLASS>()->
 		        as<OSInformation>()->
 		        singleInstance();
