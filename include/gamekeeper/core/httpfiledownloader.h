@@ -97,7 +97,8 @@ interface PUBLIC_API HttpFileDownloader : public FileDownloader
 	 * @param[in] form the form
 	 * @return the fetched cookies
 	 */
-	PUBLIC_API GAMEKEEPER_INTERFACE_METHOD(CookieBuket doPostRequestForCookies(const char * const url, const Form& form));
+	PUBLIC_API GAMEKEEPER_INTERFACE_METHOD(CookieBuket doPostRequestForCookies(const char * const url,
+	                                                                           const Form& form = Form()));
 };
 
 GAMEKEEPER_NAMESPACE_END(core)
