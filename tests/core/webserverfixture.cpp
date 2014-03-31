@@ -28,6 +28,7 @@
 #include <boost/filesystem/fstream.hpp>
 #include <boost/filesystem/operations.hpp>
 #include <boost/filesystem/path.hpp>
+#include <boost/lexical_cast.hpp>
 
 #include <mongoose.h>
 
@@ -35,6 +36,7 @@ GAMEKEEPER_NAMESPACE_START(test)
 
 namespace algo = boost::algorithm;
 namespace fs = boost::filesystem;
+using boost::lexical_cast;
 
 static bool stopped = false;
 mg_server * WebServerFicture::server;
@@ -78,6 +80,29 @@ WebServerFicture::SetUpTestCase()
 					return MG_TRUE;
 				}
 				mg_send_status(conn, 404);
+				return MG_TRUE;
+			}
+			else if(splittedPaths[0] == "bigfile")
+			{
+				if(splittedPaths.size() < 2)
+				{
+					mg_send_status(conn, 404);
+					return MG_TRUE;
+				}
+				uint64_t size = lexical_cast<uint64_t>(splittedPaths[1]);
+				mg_send_status(conn, 200);
+				uint64_t chunks = (size / 1024);
+				char buffer[1024];
+				for(uint64_t i = 0; i < chunks; i++)
+				{
+					mg_send_data(conn, buffer, 1024);
+				}
+				uint16_t rest = size - chunks * 1024;
+				if(rest == 0)
+				{
+					return MG_TRUE;
+				}
+				mg_send_data(conn, buffer, rest);
 				return MG_TRUE;
 			}
 			else if(splittedPaths[0] == "cookies")

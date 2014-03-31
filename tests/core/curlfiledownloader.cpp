@@ -81,3 +81,15 @@ TEST_F(CurlFiledownloaderTest, cookieTest)
 	HttpFileDownloader::CookieBuket cb = this->fileDownloader->doPostRequestForCookies("http://localhost:8080/cookies/type/value");
 	EXPECT_EQ("value", cb["type"]);
 }
+
+TEST_F(CurlFiledownloaderTest, bigFile)
+{
+	bool handled = false;
+	this->fileDownloader->downloadFile("http://localhost:8080/bigfile/5000",
+	                                  [&](void * const buffer, size_t bufferSize) -> bool
+	{
+		EXPECT_EQ(5000, bufferSize);
+		handled = true;
+	});
+	EXPECT_TRUE(handled);
+}
