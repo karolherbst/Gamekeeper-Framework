@@ -50,7 +50,7 @@ TEST_F(CurlFiledownloaderTest, loadEmptyFile)
 {
 	bool handled = false;
 	this->fileDownloader->downloadFile("http://localhost:8080/files/emptyfile",
-	                                   [&](void * const buffer, size_t bufferSize, size_t dataLength) -> bool
+	                                   [&](void * const buffer, size_t bufferSize) -> bool
 	{
 		EXPECT_STREQ("", static_cast<const char*>(buffer));
 		handled = true;
@@ -63,9 +63,9 @@ TEST_F(CurlFiledownloaderTest, servertest)
 {
 	bool handled = false;
 	this->fileDownloader->downloadFile("http://localhost:8080/files/fileWithContentHAHa",
-	                                   [&](void * const buffer, size_t bufferSize, size_t dataLength) -> bool
+	                                   [&](void * const buffer, size_t bufferSize) -> bool
 	{
-		EXPECT_LT(4, dataLength);
+		EXPECT_LT(4, bufferSize);
 		// cut line ending
 		std::string value(static_cast<const char*>(buffer), 4);
 		EXPECT_EQ("HAHa", value);

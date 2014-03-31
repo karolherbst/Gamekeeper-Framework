@@ -11,7 +11,7 @@ public:
 	GAMEKEEPER_IMPLEMENTATION_OVERRIDE(void onShutdown());
 	GAMEKEEPER_IMPLEMENTATION_OVERRIDE(void startEventLoop());
 private:
-	bool handleRequest(void * const buffer, size_t sz, size_t n);
+	bool handleRequest(void * const buffer, size_t bufferSize);
 	gamekeeper::core::Logger& logger;
 };
 

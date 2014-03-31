@@ -43,12 +43,13 @@ CurlHelper::CurlHelper(std::string newUserAgent)
 }
 
 int
-CurlHelper::curlFileDownloadCallback(void * const buffer, size_t bufferSize, size_t dataLength,
+CurlHelper::curlFileDownloadCallback(void * const buffer, size_t size, size_t nrMem,
                                      HttpFileDownloader::DownloadCallback * func)
 {
-	if (func->operator()(buffer, bufferSize, dataLength))
+	uint64_t sizeInBytes = size * nrMem;
+	if (func->operator()(buffer, sizeInBytes))
 	{
-		return dataLength;
+		return sizeInBytes;
 	}
 	else
 	{
@@ -57,9 +58,9 @@ CurlHelper::curlFileDownloadCallback(void * const buffer, size_t bufferSize, siz
 }
 
 int
-CurlHelper::emptyCurlFileDownloadCallback(void * const buffer, size_t bufferSize, size_t dataLength, void * func)
+CurlHelper::emptyCurlFileDownloadCallback(void * const buffer, size_t size, size_t nrMem, void * func)
 {
-	return dataLength;
+	return size * nrMem;
 }
 
 void

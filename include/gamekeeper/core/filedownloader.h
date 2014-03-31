@@ -51,10 +51,9 @@ interface PUBLIC_API FileDownloader
 	 *
 	 * @param[in] buffer the buffer with the raw data
 	 * @param[in] bufferSize the size of @p buffer
-	 * @param[in] dataLength the length of the data inside @p buffer
 	 * @return true if there was no error while handling the callback
 	 */
-	typedef std::function<bool (void * const buffer, size_t bufferSize, size_t dataLength)> DownloadCallback;
+	typedef std::function<bool (void * const buffer, size_t bufferSize)> DownloadCallback;
 
 	/**
 	 * checks if the implementation supports the givven protocol

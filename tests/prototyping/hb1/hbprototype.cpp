@@ -55,9 +55,9 @@ HBPrototype::onShutdown()
 }
 
 bool
-HBPrototype::handleRequest(void * const buffer, size_t sz, size_t n)
+HBPrototype::handleRequest(void * const buffer, size_t size)
 {
-	this->sstream.write(static_cast<char*>(buffer), n);
+	this->sstream.write(static_cast<char*>(buffer), size);
 	return true;
 }
 
@@ -71,9 +71,9 @@ HBPrototype::startEventLoop()
 	CookieBuket cookies = fileDownloader->doPostRequestForCookies("https://www.humblebundle.com/login", form);
 
 	fileDownloader->downloadFileWithCookies("https://www.humblebundle.com/home",
-	                                        [this](void * const buffer, size_t bufferSize, size_t dataLength) -> bool
+	                                        [this](void * const buffer, size_t bufferSize) -> bool
 	{
-		return this->handleRequest(buffer, bufferSize, dataLength);
+		return this->handleRequest(buffer, bufferSize);
 	}, cookies);
 	
 	this->doPythonStuff();

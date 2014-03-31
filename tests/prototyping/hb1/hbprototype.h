@@ -22,7 +22,7 @@ private:
 
 	gamekeeper::core::Logger& logger;
 
-	bool handleRequest(void * const buffer, size_t sz, size_t n);
+	bool handleRequest(void * const buffer, size_t bufferSize);
 	std::stringstream sstream;
 	void doPythonStuff();
 };

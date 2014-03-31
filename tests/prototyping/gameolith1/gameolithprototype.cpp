@@ -101,11 +101,11 @@ GameolithPrototype::onShutdown()
 }
 
 bool
-GameolithPrototype::handleRequest(void * const buffer, size_t sz, size_t n)
+GameolithPrototype::handleRequest(void * const buffer, size_t size)
 {
 	Json::Value root;
 	Json::Reader reader;
-	std::string jsonTree(static_cast<const char*>(buffer), n);
+	std::string jsonTree(static_cast<const char*>(buffer), size);
 	if (reader.parse(jsonTree, root, false))
 	{
 		Json::Value gameRoot = getRootForGames(config["bindings.games"], root);
@@ -131,8 +131,8 @@ GameolithPrototype::startEventLoop()
 {
 	this->logger << LogLevel::Debug << "starting gameolith test" << endl;
 	fileDownloader->downloadFile("https://www.gameolith.com/user/karolherbst/games/?format=json",
-	                             [this](void * const buffer, size_t bufferSize, size_t dataLength) -> bool
+	                             [this](void * const buffer, size_t bufferSize) -> bool
 	{
-		return this->handleRequest(buffer, bufferSize, dataLength);
+		return this->handleRequest(buffer, bufferSize);
 	});
 }
