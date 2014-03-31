@@ -160,7 +160,8 @@ GameKeeperRuntime::main(int argc, const char* argv[], GameKeeperUI * gameKeeperU
 		containerBuilder.registerType<XDGPaths>(CREATE(new XDGPaths(INJECT(OSInformation))))->
 		        as<OSPaths>()->
 		        singleInstance();
-		containerBuilder.registerType<CurlFileDownloader>(CREATE(new CurlFileDownloader(INJECT(LoggerFactory))))->
+		containerBuilder.registerType<CurlFileDownloader>(
+			CREATE(new CurlFileDownloader(INJECT(LoggerFactory), INJECT(PropertyResolver), INJECT(OSPaths))))->
 		        as<FileDownloader>()->
 		        as<HttpFileDownloader>()->
 		        singleInstance();

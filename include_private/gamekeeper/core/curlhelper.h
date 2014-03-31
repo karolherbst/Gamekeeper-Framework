@@ -28,6 +28,8 @@
 
 #include <gamekeeper/core/httpfiledownloader.h>
 
+#include <boost/filesystem/path.hpp>
+
 typedef void CURL;
 
 GAMEKEEPER_NAMESPACE_START(core)
@@ -37,8 +39,6 @@ class CURLPrivateData;
 class PRIVATE_API CurlHelper
 {
 public:
-	PRIVATE_API static int curlFileDownloadCallback(void * const buffer, size_t bufferSize, size_t dataLength,
-	                                                FileDownloader::DownloadCallback * func);
 	PRIVATE_API static int emptyCurlFileDownloadCallback(void * const buffer, size_t bufferSize, size_t dataLength,
 	                                              void * func);
 
@@ -46,6 +46,10 @@ public:
 	PRIVATE_API void addCookiesToCurl(const HttpFileDownloader::CookieBuket& cookies, CURL * curl);
 	PRIVATE_API HttpFileDownloader::CookieBuket getCookies(CURL * curl);
 	PRIVATE_API void addFormToCurl(const HttpFileDownloader::Form& form, CURL * curl);
+	PRIVATE_API void setUpFileDownload(CURL * curl, FileDownloader::DownloadCallback * func, uint32_t maxRamBufferSize,
+	                                   const boost::filesystem::path & path);
+	PRIVATE_API void handleFileDownloadResult(CURL * curl);
+
 	PRIVATE_API CURL * createCURL(const char * const url);
 	PRIVATE_API void deleteCURL(CURL * curl);
 private:

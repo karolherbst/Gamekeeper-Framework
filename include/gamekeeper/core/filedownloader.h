@@ -24,6 +24,7 @@
 #include <gamekeeper/core/common.h>
 
 #include <functional>
+#include <istream>
 
 #include <gamekeeper/core/interface.h>
 
@@ -43,6 +44,8 @@ interface PUBLIC_API FileDownloader
 {
 	PUBLIC_INLINE GAMEKEEPER_INTERFACE_DESTRUCTOR(FileDownloader)
 
+	typedef std::basic_istream<gkbyte_t> ByteIstream;
+
 	/**
 	 * the callback function signature primary for lambdas
 	 *
@@ -53,7 +56,7 @@ interface PUBLIC_API FileDownloader
 	 * @param[in] bufferSize the size of @p buffer
 	 * @return true if there was no error while handling the callback
 	 */
-	typedef std::function<bool (void * const buffer, size_t bufferSize)> DownloadCallback;
+	typedef std::function<bool (ByteIstream &)> DownloadCallback;
 
 	/**
 	 * checks if the implementation supports the givven protocol

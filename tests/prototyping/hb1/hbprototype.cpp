@@ -8,6 +8,7 @@
 #include <gamekeeper/core/logger.h>
 #include <gamekeeper/core/loggerStream.h>
 #include <gamekeeper/model/game.h>
+#include <gamekeeper/utils/stringutils.h>
 
 #include <map>
 #include <iostream>
@@ -17,6 +18,7 @@
 GAMECLIENTUI_CLASS(HBPrototype)
 
 using namespace gamekeeper::core;
+using namespace gamekeeper::utils;
 namespace po = boost::program_options;
 
 typedef HttpFileDownloader::CookieBuket CookieBuket;
@@ -55,27 +57,23 @@ HBPrototype::onShutdown()
 }
 
 bool
-HBPrototype::handleRequest(void * const buffer, size_t size)
+HBPrototype::handleRequest(FileDownloader::ByteIstream & is)
 {
-	this->sstream.write(static_cast<char*>(buffer), size);
+	this->content = String::createFromStream(is);
 	return true;
 }
 
 void
 HBPrototype::startEventLoop()
 {
+	namespace p = std::placeholders;
 	Form form;
 	form["username"] = this->username;
 	form["password"] = this->userpass;
-	
-	CookieBuket cookies = fileDownloader->doPostRequestForCookies("https://www.humblebundle.com/login", form);
 
+	CookieBuket cookies = fileDownloader->doPostRequestForCookies("https://www.humblebundle.com/login", form);
 	fileDownloader->downloadFileWithCookies("https://www.humblebundle.com/home",
-	                                        [this](void * const buffer, size_t bufferSize) -> bool
-	{
-		return this->handleRequest(buffer, bufferSize);
-	}, cookies);
-	
+	                                        std::bind(&HBPrototype::handleRequest, this, p::_1), cookies);
 	this->doPythonStuff();
 }
 
@@ -113,7 +111,7 @@ HBPrototype::doPythonStuff()
 		        && PyCallable_Check(funcGetGame))
 		{
 			PyObject *args = PyTuple_New(1);
-			PyObject *domTree = PyUnicode_FromString(this->sstream.str().c_str());
+			PyObject *domTree = PyUnicode_FromString(this->content.c_str());
 			if(!domTree)
 			{
 				Py_DECREF(args);

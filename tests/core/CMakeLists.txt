@@ -7,6 +7,7 @@ include_directories(
   ${MONGOOSE_INCLUDE_DIR}
 )
 
+add_definitions(-DTESTPATH=\"${CMAKE_CURRENT_BINARY_DIR}/test_runtime\")
 add_definitions(-DWEBSERVERPATH=\"${CMAKE_CURRENT_SOURCE_DIR}/webserverfiles\")
 
 if(LINUX)

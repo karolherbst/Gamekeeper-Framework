@@ -3,6 +3,8 @@
 
 #include <gamekeeper/client/gamekeeper.h>
 
+#include <istream>
+
 class GameolithPrototype : public gamekeeper::client::GameKeeperUI
 {
 public:
@@ -11,7 +13,7 @@ public:
 	GAMEKEEPER_IMPLEMENTATION_OVERRIDE(void onShutdown());
 	GAMEKEEPER_IMPLEMENTATION_OVERRIDE(void startEventLoop());
 private:
-	bool handleRequest(void * const buffer, size_t bufferSize);
+	bool handleRequest(std::basic_istream<gkbyte_t> &);
 	gamekeeper::core::Logger& logger;
 };
 

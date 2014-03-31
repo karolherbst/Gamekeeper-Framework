@@ -26,12 +26,20 @@
 #include <gamekeeper/core/loggerFactory.h>
 #include <gamekeeper/core/loggerStream.h>
 
+#include <boost/algorithm/string/replace.hpp>
+
 #include <curl/curl.h>
+
+namespace algo = boost::algorithm;
 
 GAMEKEEPER_NAMESPACE_START(core)
 
-CurlFileDownloader::CurlFileDownloader(std::shared_ptr<LoggerFactory> loggerFactory)
-:	logger(loggerFactory->getComponentLogger("IO.curl")),
+CurlFileDownloader::CurlFileDownloader(std::shared_ptr<LoggerFactory> loggerFactory,
+                                       std::shared_ptr<PropertyResolver> _propertyResolver,
+                                       std::shared_ptr<OSPaths> _ospaths)
+:	propertyResolver(_propertyResolver),
+	ospaths(_ospaths),
+	logger(loggerFactory->getComponentLogger("IO.curl")),
 	curlHelper("GameKeeper/0.1")
 {
 	logger << LogLevel::Debug << "init curl" << endl;
@@ -52,11 +60,14 @@ CurlFileDownloader::supportsProtocol(const char * const protocolName, size_t nam
 void
 CurlFileDownloader::downloadFile(const char * const url, DownloadCallback callback)
 {
-	logger << LogLevel::Debug << "try to download file at: " << url << endl;
+	boost::filesystem::path downloadPath = this->resolveDownloadPath(url);
+	logger << LogLevel::Debug << "try to download file from: " << url << " at: " << downloadPath.string() << endl;
 	CURL * curl = this->curlHelper.createCURL(url);
-	curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, &CurlHelper::curlFileDownloadCallback);
-	curl_easy_setopt(curl, CURLOPT_WRITEDATA, &callback);
+	this->curlHelper.setUpFileDownload(curl, &callback,
+	                                   this->propertyResolver->get<uint32_t>("network.download.max_buffer_size"),
+	                                   resolveDownloadPath(url));
 	handleCurlError(curl_easy_perform(curl));
+	this->curlHelper.handleFileDownloadResult(curl);
 	this->curlHelper.deleteCURL(curl);
 }
 
@@ -64,14 +75,17 @@ void
 CurlFileDownloader::downloadFileWithCookies(const char * const url, DownloadCallback callback,
                                             const CookieBuket& cookies)
 {
-	logger << LogLevel::Debug << "try to download file at: " << url << endl;
+	boost::filesystem::path downloadPath = this->resolveDownloadPath(url);
+	logger << LogLevel::Debug << "try to download file from: " << url << " at: " << downloadPath.string() << endl;
 	CURL * curl = this->curlHelper.createCURL(url);
-	curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, &CurlHelper::curlFileDownloadCallback);
-	curl_easy_setopt(curl, CURLOPT_WRITEDATA, &callback);
+	this->curlHelper.setUpFileDownload(curl, &callback,
+	                                   this->propertyResolver->get<uint32_t>("network.download.max_buffer_size"),
+	                                   resolveDownloadPath(url));
 
 	this->curlHelper.addCookiesToCurl(cookies, curl);
 
 	handleCurlError(curl_easy_perform(curl));
+	this->curlHelper.handleFileDownloadResult(curl);
 	this->curlHelper.deleteCURL(curl);
 }
 
@@ -107,6 +121,18 @@ CurlFileDownloader::handleCurlError(int code)
 			logger << LogLevel::Fatal << "CURL return code " << code << " unhandled, please report a bug" << endl;
 			break;
 	}
+}
+
+boost::filesystem::path
+CurlFileDownloader::resolveDownloadPath(const char * const url)
+{
+	std::string uri = url;
+	// frist cut the protocoll
+	size_t pos = uri.find("://");
+	uri.erase(0, pos + 3);
+	// now replace some unsupported characters
+	algo::replace_all(uri, ":", "_");
+	return this->ospaths->getCacheFile(std::string("downloads/" + uri));
 }
 
 GAMEKEEPER_NAMESPACE_END(core)
