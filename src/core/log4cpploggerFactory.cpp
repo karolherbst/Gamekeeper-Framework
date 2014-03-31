@@ -31,7 +31,7 @@
 GAMEKEEPER_NAMESPACE_START(core)
 
 Log4cppLoggerFactory::Log4cppLoggerFactory()
-:	rootCategory(log4cpp::Category::getRoot()),
+:	rootCategory(log4cpp::Category::getInstance("GameKeeper")),
 	appender(new log4cpp::OstreamAppender("console", &std::cout))
 {
 	log4cpp::PatternLayout * layout = new log4cpp::PatternLayout();
@@ -47,7 +47,7 @@ Log4cppLoggerFactory::Log4cppLoggerFactory()
 Logger&
 Log4cppLoggerFactory::getDefaultLogger()
 {
-	return getComponentLogger("Default");
+	return getComponentLogger("GameKeeper.Default");
 }
 
 Logger&
@@ -55,7 +55,9 @@ Log4cppLoggerFactory::getComponentLogger(const char * const id)
 {
 	if(this->loggers.find(id) == this->loggers.end())
 	{
-		Logger * newLogger = new Log4cppLogger(log4cpp::Category::getInstance(id));
+		std::string log4cppname = "GameKeeper.";
+		log4cppname += id;
+		Logger * newLogger = new Log4cppLogger(log4cpp::Category::getInstance(log4cppname));
 		this->loggers.insert(std::make_pair(id, newLogger));
 		return *newLogger;
 	}
