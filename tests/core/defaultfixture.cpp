@@ -74,6 +74,9 @@ DefaultFicture::DefaultFicture() {
 	
 	// left out not implemented stuff yet
 	this->container = containerBuilder.build();
+
+	// set default properties
+	this->setProperty("network.download.max_buffer_size", (uint32_t)2048);
 }
 
 void

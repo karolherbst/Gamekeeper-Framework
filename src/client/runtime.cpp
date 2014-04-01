@@ -82,11 +82,17 @@ static void
 fillProperties(po::options_description & cmd, po::options_description & file)
 {
 	po::options_description descGlobalCmd("Global options");
+	po::options_description descNetwork("Network options");
 
 	descGlobalCmd.add_options()
 		("help,h", "produce help message");
 
+	descNetwork.add_options()
+		("network.download.max_buffer_size", po::value<uint32_t>()->default_value(2048));
+
 	cmd.add(descGlobalCmd);
+	cmd.add(descNetwork);
+	file.add(descNetwork);
 }
 
 int
