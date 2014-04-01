@@ -83,7 +83,7 @@ fillProperties(po::options_description & cmd, po::options_description & file)
 	po::options_description descGlobalCmd("Global options");
 
 	descGlobalCmd.add_options()
-		("help", "produce help message");
+		("help,h", "produce help message");
 
 	cmd.add(descGlobalCmd);
 }
