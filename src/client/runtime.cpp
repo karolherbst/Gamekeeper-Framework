@@ -77,19 +77,26 @@ GameKeeperRuntime::getUILogger()
 	return localContainer->resolve<gamekeeper::core::LoggerFactory>()->getComponentLogger("UI.client");
 }
 
-int
-GameKeeperRuntime::main(int argc, const char* argv[], GameKeeperUI * gameKeeperUI)
+static void
+fillProperties(po::options_description & cmd, po::options_description & file)
 {
-	this->gameKeeperUI = gameKeeperUI;
-
 	po::options_description descGlobalCmd("Global options");
 
 	descGlobalCmd.add_options()
 		("help", "produce help message");
 
+	cmd.add(descGlobalCmd);
+}
+
+int
+GameKeeperRuntime::main(int argc, const char* argv[], GameKeeperUI * gameKeeperUI)
+{
+	this->gameKeeperUI = gameKeeperUI;
+
 	po::options_description descCmd;
 	po::options_description descFile;
-	descCmd.add(descGlobalCmd);
+
+	fillProperties(descCmd, descFile);
 
 	po::options_description cmdClient("Client options");
 	po::options_description fileClient;
