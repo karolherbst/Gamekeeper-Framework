@@ -24,6 +24,7 @@
 #include <gamekeeper/core/common.h>
 
 #include <map>
+#include <string>
 
 #include <gamekeeper/core/httpfiledownloader.h>
 

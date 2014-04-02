@@ -18,41 +18,33 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
+#ifndef TEST_GAMEKEEPER_CORE_WEBSERVERFICTURE
+#define TEST_GAMEKEEPER_CORE_WEBSERVERFICTURE 1
+
+#include <gamekeeper/core/common.h>
+
 #include "defaultfixture.h"
 
-#include <gamekeeper/core/log4cpploggerFactory.h>
+#define WEBSERVERFICTUREMETHODSDEF \
+	static void SetUpTestCase(); \
+	static void TearDownTestCase();
+#define WEBSERVERFICTUREMETHODSIMPL(clazz) \
+void clazz::SetUpTestCase() { gamekeeper::test::WebServerFicture::SetUpTestCase();} \
+void clazz::TearDownTestCase() { gamekeeper::test::WebServerFicture::TearDownTestCase();} \
 
-// some platform dependent stuff
-#ifdef GAMEKEEPER_OS_IS_WINDOWS
-  #include <gamekeeper/core/windowsinformation.h>
-  #define OSINFORMATIONCLASS WindowsInformation
-#else
-  #include <gamekeeper/core/linuxinformation.h>
-  #define OSINFORMATIONCLASS LinuxInformation
-#endif
-
-#include <Hypodermic/ContainerBuilder.h>
-#include <Hypodermic/Helpers.h>
+struct mg_server;
 
 GAMEKEEPER_NAMESPACE_START(test)
 
-DefaultFicture::DefaultFicture()
+class WebServerFicture : public DefaultFicture
 {
-	Hypodermic::ContainerBuilder containerBuilder;
-	{
-		using namespace gamekeeper::core;
-		
-		// set up IoC container
-		containerBuilder.registerType<Log4cppLoggerFactory>()->
-		        as<LoggerFactory>()->
-		        singleInstance();
-		containerBuilder.registerType<OSINFORMATIONCLASS>()->
-		        as<OSInformation>()->
-		        singleInstance();
-	}
-	
-	// left out not implemented stuff yet
-	this->container = containerBuilder.build();
-}
+public:
+	static void SetUpTestCase();
+	static void TearDownTestCase();
+private:
+	static mg_server * server;
+};
 
 GAMEKEEPER_NAMESPACE_END(test)
+
+#endif //TEST_GAMEKEEPER_CORE_WEBSERVERFICTURE
