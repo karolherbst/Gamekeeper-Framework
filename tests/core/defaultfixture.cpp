@@ -30,14 +30,32 @@
   #include <gamekeeper/core/linuxinformation.h>
   #define OSINFORMATIONCLASS LinuxInformation
 #endif
+#include <gamekeeper/core/propertyresolver.h>
 
 #include <Hypodermic/ContainerBuilder.h>
 #include <Hypodermic/Helpers.h>
 
 GAMEKEEPER_NAMESPACE_START(test)
 
-DefaultFicture::DefaultFicture()
+class TestPropertyResolver : public gamekeeper::core::PropertyResolver
 {
+public:
+	TestPropertyResolver(std::map<std::string, boost::any> & _props);
+	GAMEKEEPER_IMPLEMENTATION_OVERRIDE(boost::any get(const std::string& key));
+private:
+	std::map<std::string, boost::any> & props;
+};
+
+TestPropertyResolver::TestPropertyResolver(std::map<std::string, boost::any> & _props)
+:	props(_props){}
+
+boost::any
+TestPropertyResolver::get(const std::string& key)
+{
+	return this->props[key];
+}
+
+DefaultFicture::DefaultFicture() {
 	Hypodermic::ContainerBuilder containerBuilder;
 	{
 		using namespace gamekeeper::core;
@@ -49,10 +67,19 @@ DefaultFicture::DefaultFicture()
 		containerBuilder.registerType<OSINFORMATIONCLASS>()->
 		        as<OSInformation>()->
 		        singleInstance();
+		containerBuilder.registerType<TestPropertyResolver>(CREATE_CAPTURED([this], new TestPropertyResolver(this->props)))->
+			as<PropertyResolver>()->
+			singleInstance();
 	}
 	
 	// left out not implemented stuff yet
 	this->container = containerBuilder.build();
+}
+
+void
+DefaultFicture::setProperty(const std::string & key, boost::any value)
+{
+	this->props[key] = value;
 }
 
 GAMEKEEPER_NAMESPACE_END(test)

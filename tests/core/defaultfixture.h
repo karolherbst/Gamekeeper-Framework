@@ -23,6 +23,8 @@
 
 #include <gamekeeper/core/common.h>
 
+#include <boost/any.hpp>
+
 #include <gtest/gtest.h>
 
 #include <Hypodermic/IContainer.h>
@@ -35,6 +37,10 @@ public:
 	DefaultFicture();
 protected:
 	std::shared_ptr<Hypodermic::IContainer> container;
+
+	void setProperty(const std::string & key, boost::any value);
+private:
+	std::map<std::string, boost::any> props;
 };
 
 GAMEKEEPER_NAMESPACE_END(test)
