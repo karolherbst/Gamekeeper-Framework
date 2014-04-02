@@ -36,6 +36,7 @@
 #include <Hypodermic/ContainerBuilder.h>
 #include <Hypodermic/Helpers.h>
 
+#include <gamekeeper/core/boostpopropertyresolver.h>
 #include <gamekeeper/core/curlfiledownloader.h>
 #ifdef GAMEKEEPER_OS_IS_WINDOWS
   #include <gamekeeper/core/windowsinformation.h>
@@ -143,6 +144,9 @@ GameKeeperRuntime::main(int argc, const char* argv[], GameKeeperUI * gameKeeperU
 		containerBuilder.registerInstance<LoggerFactory>(
 			localContainer->resolve<gamekeeper::core::LoggerFactory>())->
 			as<LoggerFactory>()->
+			singleInstance();
+		containerBuilder.registerType<BoostPOPropertyResolver>(CREATE_CAPTURED([&vm], new BoostPOPropertyResolver(vm)))->
+			as<PropertyResolver>()->
 			singleInstance();
 		containerBuilder.registerType<OSINFORMATIONCLASS>()->
 		        as<OSInformation>()->
