@@ -73,7 +73,7 @@ XDGPaths::resolveFile(const char * singlePath, const fs::path& singleDefault, st
 	{
 		return singleDefault / XDGPaths::prefix / fileName;
 	}
-	return fs::path(resolvedSinglePath) / XDGPaths::prefix / fileName;
+	return (fs::path(resolvedSinglePath) / XDGPaths::prefix / fileName).make_preferred();
 }
 
 /**
