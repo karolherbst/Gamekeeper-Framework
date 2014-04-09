@@ -20,19 +20,165 @@
 
 #include "pch.h"
 
+#include <algorithm>
+#include <iostream>
+#include <iterator>
+#include <sstream>
+#include <vector>
+
 #include <gamekeeper/core/curlfiledownloader.h>
-#include <gamekeeper/core/curlhelper.h>
 #include <gamekeeper/core/logger.h>
 #include <gamekeeper/core/loggerFactory.h>
 #include <gamekeeper/core/loggerStream.h>
 
+#include <boost/algorithm/string/classification.hpp>
 #include <boost/algorithm/string/replace.hpp>
+#include <boost/algorithm/string/split.hpp>
+#include <boost/filesystem/fstream.hpp>
+#include <boost/filesystem/operations.hpp>
+#include <boost/filesystem/path.hpp>
+#include <boost/iostreams/device/array.hpp>
+#include <boost/iostreams/stream.hpp>
 
 #include <curl/curl.h>
 
 namespace algo = boost::algorithm;
+namespace fs = boost::filesystem;
 
 GAMEKEEPER_NAMESPACE_START(core)
+
+class PRIVATE_API CurlFileDownloadInfo
+{
+public:
+	PRIVATE_API CurlFileDownloadInfo(const FileDownloader::DownloadCallback * _func, uint64_t _maxBufferSize, const fs::path & _path)
+	:	maxBufferSize(_maxBufferSize),
+		func(_func),
+		path(_path){}
+
+	PRIVATE_API uint64_t bytesDownloaded();
+	PRIVATE_API bool addData(void * const buffer, uint64_t bytes);
+	PRIVATE_API void callback();
+
+private:
+	const uint64_t maxBufferSize;
+	const FileDownloader::DownloadCallback * func;
+	const fs::path path;
+	std::vector<gkbyte_t> dataBuffer;
+	uint64_t _bytesDownloaded = 0;
+};
+
+uint64_t
+CurlFileDownloadInfo::bytesDownloaded()
+{
+	return this->_bytesDownloaded;
+}
+
+bool
+CurlFileDownloadInfo::addData(void * const buffer, uint64_t bytes)
+{
+	gkbyte_t * newData = static_cast<gkbyte_t *>(buffer);
+	// check amount of downloaded bytes to know if we use a file or buffer stream
+	if(this->bytesDownloaded() <= (this->maxBufferSize * 1024))
+	{
+		// the buffer might be too small for the new data, so check it before
+		if((this->dataBuffer.size() + bytes) > (this->maxBufferSize * 1024))
+		{
+			// first create directories
+			if(!fs::exists(this->path.parent_path()))
+			{
+				fs::create_directories(this->path.parent_path());
+			}
+			fs::basic_ofstream<gkbyte_t> ofs(this->path, std::ios_base::trunc | std::ios_base::binary);
+			ofs.write(this->dataBuffer.data(), this->dataBuffer.size());
+			ofs.write(newData, bytes);
+			ofs.close();
+			// clear internal buffer
+			this->dataBuffer.clear();
+		}
+		else
+		{
+			this->dataBuffer.insert(this->dataBuffer.end(), newData, &newData[bytes]);
+		}
+	}
+	else
+	{
+		fs::basic_ofstream<gkbyte_t> ofs(this->path, std::ios_base::app | std::ios_base::binary);
+		ofs.write(newData, bytes);
+	}
+	this->_bytesDownloaded += bytes;
+	return true;
+}
+
+void
+CurlFileDownloadInfo::callback()
+{
+	if(bytesDownloaded() <= (this->maxBufferSize * 1024))
+	{
+		namespace bio = boost::iostreams;
+		bio::stream<bio::basic_array_source<gkbyte_t>> stream(this->dataBuffer.data(), this->dataBuffer.size());
+		(*this->func)(stream);
+	}
+	else
+	{
+		fs::basic_ifstream<gkbyte_t> ifs(this->path);
+		(*this->func)(ifs);
+		ifs.close();
+		fs::remove(this->path);
+	}
+}
+
+class PRIVATE_API CURLPrivateData
+{
+public:
+	PRIVATE_API CURLPrivateData(const char * const url, const std::string & userAgent);
+	PRIVATE_API ~CURLPrivateData();
+
+	CURL * handle;
+	std::string postData;
+	CurlFileDownloadInfo * downloadInfo = nullptr;
+
+};
+
+CURLPrivateData::CURLPrivateData(const char * const url, const std::string & userAgent)
+:	handle(curl_easy_init())
+{
+	curl_easy_setopt(this->handle, CURLOPT_URL, url);
+	curl_easy_setopt(this->handle, CURLOPT_USERAGENT, userAgent.c_str());
+}
+
+CURLPrivateData::~CURLPrivateData()
+{
+	if(this->downloadInfo != nullptr)
+	{
+		delete downloadInfo;
+	}
+	curl_easy_cleanup(this->handle);
+}
+
+static int
+curlFileDownloadCallback(void * const buffer, size_t size, size_t nrMem,
+                         CURLPrivateData * data)
+{
+	uint64_t sizeInBytes = size * nrMem;
+	CurlFileDownloadInfo * info = data->downloadInfo;
+	if(!info->addData(buffer, sizeInBytes))
+	{
+		return -1;
+	}
+	return sizeInBytes;
+}
+
+static int
+emptyCurlFileDownloadCallback(void * const buffer, size_t size, size_t nrMem, void * func)
+{
+	return size * nrMem;
+}
+
+static std::string
+buildUserAgentString()
+{
+	return std::string("GameKeeper/0.1 libcurl/") + curl_version_info(CURLVERSION_NOW)->version;
+}
 
 CurlFileDownloader::CurlFileDownloader(std::shared_ptr<LoggerFactory> loggerFactory,
                                        std::shared_ptr<PropertyResolver> _propertyResolver,
@@ -40,7 +186,7 @@ CurlFileDownloader::CurlFileDownloader(std::shared_ptr<LoggerFactory> loggerFact
 :	propertyResolver(_propertyResolver),
 	ospaths(_ospaths),
 	logger(loggerFactory->getComponentLogger("IO.curl")),
-	curlHelper("GameKeeper/0.1")
+	userAgent(buildUserAgentString())
 {
 	logger << LogLevel::Debug << "init curl" << endl;
 	curl_global_init(CURL_GLOBAL_SSL);
@@ -49,6 +195,69 @@ CurlFileDownloader::CurlFileDownloader(std::shared_ptr<LoggerFactory> loggerFact
 CurlFileDownloader::~CurlFileDownloader()
 {
 	curl_global_cleanup();
+}
+
+void
+CurlFileDownloader::handleFileDownload(CURLPrivateData & curl, FileDownloader::DownloadCallback * func, const char * const url)
+{
+	boost::filesystem::path downloadPath = this->resolveDownloadPath(url);
+	this->logger << LogLevel::Debug << "try to download file from: " << url << " at: " << downloadPath.string() << endl;
+	curl.downloadInfo =
+		new CurlFileDownloadInfo(func, this->propertyResolver->get<uint32_t>("network.download.max_buffer_size"),
+		                         downloadPath);
+	curl_easy_setopt(curl.handle, CURLOPT_WRITEFUNCTION, &curlFileDownloadCallback);
+	curl_easy_setopt(curl.handle, CURLOPT_WRITEDATA, &curl);
+	this->handleCurlError(curl_easy_perform(curl.handle));
+	curl.downloadInfo->callback();
+}
+
+static void
+addCookiesToCurl(const HttpFileDownloader::CookieBuket& cookies, CURLPrivateData & curl)
+{
+	if(!cookies.empty())
+	{
+		std::ostringstream cookieLineBuilder;
+		for (const HttpFileDownloader::Cookie cookie : cookies)
+		{
+			cookieLineBuilder << cookie.first << '=' << cookie.second << ";";
+		}
+		std::string cookieLine = cookieLineBuilder.str();
+		curl_easy_setopt(curl.handle, CURLOPT_COOKIE, cookieLine.c_str());
+	}
+}
+
+static HttpFileDownloader::CookieBuket
+getCookies(CURLPrivateData & curl)
+{
+	struct curl_slist * list;
+	HttpFileDownloader::CookieBuket result;
+	curl_easy_getinfo(curl.handle, CURLINFO_COOKIELIST, &list);
+
+	while(list != nullptr)
+	{
+		std::vector<std::string> strings;
+		boost::split(strings, list->data, boost::is_any_of("\t"));
+		result[strings[5]] = strings[6];
+		list = list->next;
+	}
+
+	curl_slist_free_all(list);
+	return result;
+}
+
+static void
+addFormToCurl(const HttpFileDownloader::Form& form, CURLPrivateData & curl)
+{
+	if(!form.empty())
+	{
+		std::ostringstream cookieLineBuilder;
+		for (const HttpFileDownloader::FormField formField : form)
+		{
+			cookieLineBuilder << formField.first << '=' << formField.second << '&';
+		}
+		curl.postData = cookieLineBuilder.str();
+		curl_easy_setopt(curl.handle, CURLOPT_POSTFIELDS, curl.postData.c_str());
+	}
 }
 
 bool
@@ -60,49 +269,32 @@ CurlFileDownloader::supportsProtocol(const char * const protocolName, size_t nam
 void
 CurlFileDownloader::downloadFile(const char * const url, DownloadCallback callback)
 {
-	boost::filesystem::path downloadPath = this->resolveDownloadPath(url);
-	logger << LogLevel::Debug << "try to download file from: " << url << " at: " << downloadPath.string() << endl;
-	CURL * curl = this->curlHelper.createCURL(url);
-	this->curlHelper.setUpFileDownload(curl, &callback,
-	                                   this->propertyResolver->get<uint32_t>("network.download.max_buffer_size"),
-	                                   resolveDownloadPath(url));
-	handleCurlError(curl_easy_perform(curl));
-	this->curlHelper.handleFileDownloadResult(curl);
-	this->curlHelper.deleteCURL(curl);
+	CURLPrivateData curl(url, this->userAgent);
+	this->handleFileDownload(curl, &callback, url);
 }
 
 void
 CurlFileDownloader::downloadFileWithCookies(const char * const url, DownloadCallback callback,
                                             const CookieBuket& cookies)
 {
-	boost::filesystem::path downloadPath = this->resolveDownloadPath(url);
-	logger << LogLevel::Debug << "try to download file from: " << url << " at: " << downloadPath.string() << endl;
-	CURL * curl = this->curlHelper.createCURL(url);
-	this->curlHelper.setUpFileDownload(curl, &callback,
-	                                   this->propertyResolver->get<uint32_t>("network.download.max_buffer_size"),
-	                                   resolveDownloadPath(url));
-
-	this->curlHelper.addCookiesToCurl(cookies, curl);
-
-	handleCurlError(curl_easy_perform(curl));
-	this->curlHelper.handleFileDownloadResult(curl);
-	this->curlHelper.deleteCURL(curl);
+	CURLPrivateData curl(url, this->userAgent);
+	addCookiesToCurl(cookies, curl);
+	this->handleFileDownload(curl, &callback, url);
 }
 
 CurlFileDownloader::CookieBuket
 CurlFileDownloader::doPostRequestForCookies(const char * const url, const Form& form)
 {
-	logger << LogLevel::Debug << "try to fetch cookies at: " << url << endl;
-	CURL * curl = this->curlHelper.createCURL(url);
-	curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, &CurlHelper::emptyCurlFileDownloadCallback);
-	curl_easy_setopt(curl, CURLOPT_COOKIEJAR, nullptr);
+	this->logger << LogLevel::Debug << "try to fetch cookies at: " << url << endl;
+	CURLPrivateData curl(url, this->userAgent);
+	curl_easy_setopt(curl.handle, CURLOPT_WRITEFUNCTION, &emptyCurlFileDownloadCallback);
+	curl_easy_setopt(curl.handle, CURLOPT_COOKIEJAR, nullptr);
 
-	this->curlHelper.addFormToCurl(form, curl);
+	addFormToCurl(form, curl);
 
-	handleCurlError(curl_easy_perform(curl));
+	this->handleCurlError(curl_easy_perform(curl.handle));
 
-	CurlFileDownloader::CookieBuket result = this->curlHelper.getCookies(curl);
-	this->curlHelper.deleteCURL(curl);
+	CurlFileDownloader::CookieBuket result = getCookies(curl);
 
 	return result;
 }
@@ -114,11 +306,11 @@ CurlFileDownloader::handleCurlError(int code)
 	{
 		case CURLE_OK:
 			// everything okay
-			logger << LogLevel::Trace << "CURL returned with CURLE_OK" << endl;
+			this->logger << LogLevel::Trace << "CURL returned with CURLE_OK" << endl;
 			break;
 		default:
 			// unhandled error
-			logger << LogLevel::Fatal << "CURL return code " << code << " unhandled, please report a bug" << endl;
+			this->logger << LogLevel::Fatal << "CURL return code " << code << " unhandled, please report a bug" << endl;
 			break;
 	}
 }

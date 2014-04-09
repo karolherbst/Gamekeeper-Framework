@@ -25,7 +25,6 @@
 
 #include <memory>
 
-#include <gamekeeper/core/curlhelper.h>
 #include <gamekeeper/core/httpfiledownloader.h>
 #include <gamekeeper/core/ospaths.h>
 #include <gamekeeper/core/propertyresolver.h>
@@ -34,6 +33,7 @@
 
 GAMEKEEPER_NAMESPACE_START(core)
 
+class CURLPrivateData;
 class Logger;
 class LoggerFactory;
 
@@ -53,9 +53,11 @@ private:
 	std::shared_ptr<PropertyResolver> propertyResolver;
 	std::shared_ptr<OSPaths> ospaths;
 	Logger & logger;
-	CurlHelper curlHelper;
+	const std::string userAgent;
 
 	PRIVATE_API void handleCurlError(int code);
+	PRIVATE_API void handleFileDownload(CURLPrivateData & curl, FileDownloader::DownloadCallback * func,
+	                                    const char * const url);
 	PRIVATE_API boost::filesystem::path resolveDownloadPath(const char * const url);
 };
 
