@@ -7,6 +7,7 @@ include_directories(
 # needed for windows
 add_definitions(-DBUILDING_DLL)
 
+add_subdirectory(utils)
 add_subdirectory(client)
 add_subdirectory(core)
 add_subdirectory(frontend)
