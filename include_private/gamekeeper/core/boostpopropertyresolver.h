@@ -18,31 +18,35 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef TEST_GAMEKEEPER_CORE_DEFAULTFICTURE
-#define TEST_GAMEKEEPER_CORE_DEFAULTFICTURE 1
+#ifndef GAMEKEEPER_CORE_BOOSTPOPROPERTYRESOLVER_H
+#define GAMEKEEPER_CORE_BOOSTPOPROPERTYRESOLVER_H 1
 
 #include <gamekeeper/core/common.h>
 
-#include <boost/any.hpp>
+#include <map>
+#include <string>
 
-#include <gtest/gtest.h>
+#include <gamekeeper/core/propertyresolver.h>
 
-#include <Hypodermic/IContainer.h>
+namespace boost
+{
+namespace program_options
+{
+	class variables_map;
+}
+}
 
-GAMEKEEPER_NAMESPACE_START(test)
+GAMEKEEPER_NAMESPACE_START(core)
 
-class DefaultFicture : public testing::Test
+class PUBLIC_API BoostPOPropertyResolver : public PropertyResolver
 {
 public:
-	DefaultFicture();
-protected:
-	std::shared_ptr<Hypodermic::IContainer> container;
-
-	void setProperty(const std::string & key, boost::any value);
+	PUBLIC_API BoostPOPropertyResolver(const boost::program_options::variables_map &);
+	PRIVATE_API GAMEKEEPER_IMPLEMENTATION_OVERRIDE(boost::any get(const std::string& key));
 private:
-	std::map<std::string, boost::any> props;
+	std::map<std::string, boost::any> values;
 };
 
-GAMEKEEPER_NAMESPACE_END(test)
+GAMEKEEPER_NAMESPACE_END(core)
 
-#endif //TEST_GAMEKEEPER_CORE_DEFAULTFICTURE
+#endif //GAMEKEEPER_CORE_BOOSTPOPROPERTYRESOLVER_H

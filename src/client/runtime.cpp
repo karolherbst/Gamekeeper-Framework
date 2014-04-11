@@ -36,6 +36,7 @@
 #include <Hypodermic/ContainerBuilder.h>
 #include <Hypodermic/Helpers.h>
 
+#include <gamekeeper/core/boostpopropertyresolver.h>
 #include <gamekeeper/core/curlfiledownloader.h>
 #ifdef GAMEKEEPER_OS_IS_WINDOWS
   #include <gamekeeper/core/windowsinformation.h>
@@ -77,15 +78,26 @@ GameKeeperRuntime::getUILogger()
 	return localContainer->resolve<gamekeeper::core::LoggerFactory>()->getComponentLogger("UI.client");
 }
 
+static void
+fillProperties(po::options_description & cmd, po::options_description & file)
+{
+	po::options_description descGlobalCmd("Global options");
+
+	descGlobalCmd.add_options()
+		("help,h", "produce help message");
+
+	cmd.add(descGlobalCmd);
+}
+
 int
 GameKeeperRuntime::main(int argc, const char* argv[], GameKeeperUI * gameKeeperUI)
 {
 	this->gameKeeperUI = gameKeeperUI;
 
-	po::options_description descGlobal("Global options");
+	po::options_description descCmd;
+	po::options_description descFile;
 
-	descGlobal.add_options()
-		("help", "produce help message");
+	fillProperties(descCmd, descFile);
 
 	po::options_description cmdClient("Client options");
 	po::options_description fileClient;
@@ -99,17 +111,22 @@ GameKeeperRuntime::main(int argc, const char* argv[], GameKeeperUI * gameKeeperU
 	if(!bothClient.options().empty())
 	{
 		cmdClient.add(bothClient);
+		fileClient.add(bothClient);
 	}
 
-	po::options_description descCmd;
-	descCmd.add(descGlobal);
 	if(!cmdClient.options().empty())
 	{
 		descCmd.add(cmdClient);
 	}
 
+	if(!fileClient.options().empty())
+	{
+		descFile.add(fileClient);
+	}
+
 	po::variables_map vm;
 	po::store(po::parse_command_line(argc, argv, descCmd), vm);
+	//po::store(po::parse_config_file("", descFile), vm);
 
 	if(vm.count("help") > 0)
 	{
@@ -117,9 +134,6 @@ GameKeeperRuntime::main(int argc, const char* argv[], GameKeeperUI * gameKeeperU
 		return EXIT_SUCCESS;
 	}
 
-	//po::options_description descFile;
-	//descFile.add(fileClient).add(bothClient);
-	//po::store(po::parse_config_file("", descFile), vm);
 	po::notify(vm);
 
 	Hypodermic::ContainerBuilder containerBuilder;
@@ -130,6 +144,9 @@ GameKeeperRuntime::main(int argc, const char* argv[], GameKeeperUI * gameKeeperU
 		containerBuilder.registerInstance<LoggerFactory>(
 			localContainer->resolve<gamekeeper::core::LoggerFactory>())->
 			as<LoggerFactory>()->
+			singleInstance();
+		containerBuilder.registerType<BoostPOPropertyResolver>(CREATE_CAPTURED([&vm], new BoostPOPropertyResolver(vm)))->
+			as<PropertyResolver>()->
 			singleInstance();
 		containerBuilder.registerType<OSINFORMATIONCLASS>()->
 		        as<OSInformation>()->
