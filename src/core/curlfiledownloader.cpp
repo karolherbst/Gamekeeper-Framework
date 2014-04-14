@@ -145,6 +145,7 @@ CURLPrivateData::CURLPrivateData(const char * const url, const std::string & use
 :	handle(curl_easy_init())
 {
 	curl_easy_setopt(this->handle, CURLOPT_URL, url);
+	curl_easy_setopt(this->handle, CURLOPT_NOSIGNAL, 1);
 	curl_easy_setopt(this->handle, CURLOPT_USERAGENT, userAgent.c_str());
 	curl_easy_setopt(this->handle, CURLOPT_CONNECTTIMEOUT_MS, pr->get<uint16_t>("network.connection.timeout"));
 }
