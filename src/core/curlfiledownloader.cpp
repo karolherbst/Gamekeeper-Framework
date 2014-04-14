@@ -309,13 +309,14 @@ CurlFileDownloader::performCurl(CURLPrivateData & curl)
 	CURLcode code = curl_easy_perform(curl.handle);
 	switch (code)
 	{
-		case CURLE_OK:
+		case CURLE_OK: // 0
 			// everything okay
-			this->logger << LogLevel::Trace << "CURL returned with CURLE_OK" << endl;
+			this->logger << LogLevel::Trace << "CURL returned without errors" << endl;
 			break;
 		default:
 			// unhandled error
-			this->logger << LogLevel::Fatal << "CURL return code " << code << " unhandled, please report a bug" << endl;
+			this->logger << LogLevel::Fatal << "CURL error \"" << curl_easy_strerror(code) << "\" (" << code <<
+				") unhandled, please report a bug" << endl;
 			break;
 	}
 }
