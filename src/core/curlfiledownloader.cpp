@@ -130,7 +130,8 @@ CurlFileDownloadInfo::callback()
 class PRIVATE_API CURLPrivateData
 {
 public:
-	PRIVATE_API CURLPrivateData(const char * const url, const std::string & userAgent);
+	PRIVATE_API CURLPrivateData(const char * const url, const std::string & userAgent,
+	                            std::shared_ptr<PropertyResolver>);
 	PRIVATE_API ~CURLPrivateData();
 
 	CURL * handle;
@@ -139,11 +140,13 @@ public:
 
 };
 
-CURLPrivateData::CURLPrivateData(const char * const url, const std::string & userAgent)
+CURLPrivateData::CURLPrivateData(const char * const url, const std::string & userAgent,
+                                 std::shared_ptr<PropertyResolver> pr)
 :	handle(curl_easy_init())
 {
 	curl_easy_setopt(this->handle, CURLOPT_URL, url);
 	curl_easy_setopt(this->handle, CURLOPT_USERAGENT, userAgent.c_str());
+	curl_easy_setopt(this->handle, CURLOPT_CONNECTTIMEOUT_MS, pr->get<uint16_t>("network.connection.timeout"));
 }
 
 CURLPrivateData::~CURLPrivateData()
@@ -269,7 +272,7 @@ CurlFileDownloader::supportsProtocol(const char * const protocolName, size_t nam
 void
 CurlFileDownloader::downloadFile(const char * const url, DownloadCallback callback)
 {
-	CURLPrivateData curl(url, this->userAgent);
+	CURLPrivateData curl(url, this->userAgent, this->propertyResolver);
 	this->handleFileDownload(curl, &callback, url);
 }
 
@@ -277,7 +280,7 @@ void
 CurlFileDownloader::downloadFileWithCookies(const char * const url, DownloadCallback callback,
                                             const CookieBuket& cookies)
 {
-	CURLPrivateData curl(url, this->userAgent);
+	CURLPrivateData curl(url, this->userAgent, this->propertyResolver);
 	addCookiesToCurl(cookies, curl);
 	this->handleFileDownload(curl, &callback, url);
 }
@@ -286,7 +289,7 @@ CurlFileDownloader::CookieBuket
 CurlFileDownloader::doPostRequestForCookies(const char * const url, const Form& form)
 {
 	this->logger << LogLevel::Debug << "try to fetch cookies at: " << url << endl;
-	CURLPrivateData curl(url, this->userAgent);
+	CURLPrivateData curl(url, this->userAgent, this->propertyResolver);
 	curl_easy_setopt(curl.handle, CURLOPT_WRITEFUNCTION, &emptyCurlFileDownloadCallback);
 	curl_easy_setopt(curl.handle, CURLOPT_COOKIEJAR, nullptr);
 
