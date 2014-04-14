@@ -66,17 +66,16 @@ WebServerFicture::SetUpTestCase()
 					fs::ifstream fs(fileResource);
 					mg_send_status(conn, 200);
 
-					if(fs.peek() == std::ifstream::traits_type::eof())
+					if(fs.peek() != std::ifstream::traits_type::eof())
 					{
-						mg_send_data(conn, "", 1);
+						char buffer[8192];
+						while(fs)
+						{
+							fs.read(buffer, 8192);
+							mg_send_data(conn, buffer, fs.gcount());
+						}
 					}
-
-					char buffer[8192];
-					while(fs)
-					{
-						fs.read(buffer, 8192);
-						mg_send_data(conn, buffer, fs.gcount());
-					}
+					mg_send_data(conn, nullptr, 0);
 					return MG_TRUE;
 				}
 				mg_send_status(conn, 404);
@@ -98,11 +97,11 @@ WebServerFicture::SetUpTestCase()
 					mg_send_data(conn, buffer, 1024);
 				}
 				uint16_t rest = size - chunks * 1024;
-				if(rest == 0)
+				if(rest != 0)
 				{
-					return MG_TRUE;
+					mg_send_data(conn, buffer, rest);
 				}
-				mg_send_data(conn, buffer, rest);
+				mg_send_data(conn, nullptr, 0);
 				return MG_TRUE;
 			}
 			else if(splittedPaths[0] == "cookies")
