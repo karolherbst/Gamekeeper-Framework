@@ -138,6 +138,7 @@ public:
 	std::string postData;
 	CurlFileDownloadInfo * downloadInfo = nullptr;
 	uint16_t resolveFailed = 0;
+	uint16_t connectFailed = 0;
 };
 
 CURLPrivateData::CURLPrivateData(const char * const url, const std::string & userAgent,
@@ -323,6 +324,18 @@ CurlFileDownloader::performCurl(CURLPrivateData & curl)
 			else
 			{
 				this->logger << LogLevel::Error << "CURL couldn't resolve host after " << curl.resolveFailed << " retries" << endl;
+			}
+			break;
+		case CURLE_COULDNT_CONNECT: // 7
+			curl.connectFailed++;
+			if(curl.connectFailed < this->propertyResolver->get<uint16_t>("network.connection.retries"))
+			{
+				this->logger << LogLevel::Warn << "CURL couldn't connect to host, retrying" << endl;
+				this->performCurl(curl);
+			}
+			else
+			{
+				this->logger << LogLevel::Error << "CURL couldn't connect to host after " << curl.connectFailed << " retries" << endl;
 			}
 			break;
 		default:
