@@ -207,7 +207,7 @@ CurlFileDownloader::handleFileDownload(CURLPrivateData & curl, FileDownloader::D
 		                         downloadPath);
 	curl_easy_setopt(curl.handle, CURLOPT_WRITEFUNCTION, &curlFileDownloadCallback);
 	curl_easy_setopt(curl.handle, CURLOPT_WRITEDATA, &curl);
-	this->handleCurlError(curl_easy_perform(curl.handle));
+	this->performCurl(curl);
 	curl.downloadInfo->callback();
 }
 
@@ -292,7 +292,7 @@ CurlFileDownloader::doPostRequestForCookies(const char * const url, const Form& 
 
 	addFormToCurl(form, curl);
 
-	this->handleCurlError(curl_easy_perform(curl.handle));
+	this->performCurl(curl);
 
 	CurlFileDownloader::CookieBuket result = getCookies(curl);
 
@@ -300,8 +300,9 @@ CurlFileDownloader::doPostRequestForCookies(const char * const url, const Form& 
 }
 
 void
-CurlFileDownloader::handleCurlError(int code)
+CurlFileDownloader::performCurl(CURLPrivateData & curl)
 {
+	CURLcode code = curl_easy_perform(curl.handle);
 	switch (code)
 	{
 		case CURLE_OK:
