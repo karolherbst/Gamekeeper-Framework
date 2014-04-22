@@ -33,8 +33,6 @@ using namespace gamekeeper::utils;
 
 class CurlFiledownloaderTest : public gamekeeper::test::WebServerFicture
 {
-public:
-	WEBSERVERFICTUREMETHODSDEF
 protected:
 	HttpFileDownloader * fileDownloader = nullptr;
 
@@ -50,8 +48,6 @@ protected:
 		delete this->fileDownloader;
 	}
 };
-
-WEBSERVERFICTUREMETHODSIMPL(CurlFiledownloaderTest)
 
 TEST_F(CurlFiledownloaderTest, loadEmptyFile)
 {

@@ -25,13 +25,6 @@
 
 #include "defaultfixture.h"
 
-#define WEBSERVERFICTUREMETHODSDEF \
-	static void SetUpTestCase(); \
-	static void TearDownTestCase();
-#define WEBSERVERFICTUREMETHODSIMPL(clazz) \
-void clazz::SetUpTestCase() { gamekeeper::test::WebServerFicture::SetUpTestCase();} \
-void clazz::TearDownTestCase() { gamekeeper::test::WebServerFicture::TearDownTestCase();} \
-
 struct mg_server;
 
 GAMEKEEPER_NAMESPACE_START(test)
@@ -39,10 +32,10 @@ GAMEKEEPER_NAMESPACE_START(test)
 class WebServerFicture : public DefaultFicture
 {
 public:
-	static void SetUpTestCase();
-	static void TearDownTestCase();
+	WebServerFicture();
+	~WebServerFicture();
 private:
-	static mg_server * server;
+	mg_server * server = nullptr;
 };
 
 GAMEKEEPER_NAMESPACE_END(test)
