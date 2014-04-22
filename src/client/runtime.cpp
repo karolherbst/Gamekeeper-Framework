@@ -23,6 +23,7 @@
 #include <gamekeeper/core/common.h>
 
 #include <cstdlib>
+#include <iostream>
 
 #include <gamekeeper/core/logger.h>
 #include <gamekeeper/core/loggerStream.h>
