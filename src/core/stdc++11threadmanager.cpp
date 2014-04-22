@@ -35,6 +35,40 @@ StdCpp11ThreadManager::StdCpp11ThreadManager(std::shared_ptr<NativeThreadHelper>
 :	nativeThreadHelper(_nativeThreadHelper),
 	logger(loggerFactory->getComponentLogger("Threads")){}
 
+StdCpp11ThreadManager::~StdCpp11ThreadManager()
+{
+	if(!this->activeThreads.empty())
+	{
+		if(!this->interruptionRequested)
+		{
+			this->logger << LogLevel::Error << "destructing manager without interrupting threads. This can cause"
+				"undefined behaviour in running threads" << endl;
+		}
+
+		for(ThreadMap::reference it : this->activeThreads)
+		{
+			std::thread & t = it.second;
+			try
+			{
+				this->logger << LogLevel::Debug << "detaching thread \"" << this->nativeThreadHelper->getNameOfThread(t)
+					<< "\"" << endl;
+				t.detach();
+			}
+			catch (std::system_error & se)
+			{
+				const std::error_code & ec = se.code();
+				if(ec == std::errc::invalid_argument || ec == std::errc::no_such_process)
+				{
+					this->logger << LogLevel::Error << "thread \"" << this->nativeThreadHelper->getNameOfThread(t) <<
+						"\" couldn't be detached" << endl;
+				}
+				// something really bad happened here
+				else throw se;
+			}
+		}
+	}
+}
+
 bool
 StdCpp11ThreadManager::tryJoinFor(int64_t milliseconds)
 {

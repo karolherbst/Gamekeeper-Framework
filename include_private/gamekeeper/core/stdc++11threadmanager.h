@@ -47,6 +47,7 @@ class PUBLIC_API StdCpp11ThreadManager : public ThreadManager, public ThreadFact
 {
 public:
 	PUBLIC_API StdCpp11ThreadManager(std::shared_ptr<NativeThreadHelper>, std::shared_ptr<LoggerFactory>);
+	PRIVATE_API ~StdCpp11ThreadManager();
 	PRIVATE_API GAMEKEEPER_IMPLEMENTATION_OVERRIDE(bool tryJoinFor(int64_t seconds));
 	PRIVATE_API GAMEKEEPER_IMPLEMENTATION_OVERRIDE(void interruptAll());
 	PRIVATE_API GAMEKEEPER_IMPLEMENTATION_OVERRIDE(void createThread(const char * name, ThreadFunction function));
