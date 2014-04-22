@@ -24,6 +24,7 @@
 #include <gamekeeper/core/common.h>
 
 #include <functional>
+#include <istream>
 
 #include <gamekeeper/core/interface.h>
 
@@ -42,7 +43,9 @@ GAMEKEEPER_NAMESPACE_START(core)
 interface PUBLIC_API FileDownloader
 {
 	PUBLIC_INLINE GAMEKEEPER_INTERFACE_DESTRUCTOR(FileDownloader)
-	
+
+	typedef std::basic_istream<gkbyte_t> ByteIstream;
+
 	/**
 	 * the callback function signature primary for lambdas
 	 *
@@ -51,23 +54,22 @@ interface PUBLIC_API FileDownloader
 	 *
 	 * @param[in] buffer the buffer with the raw data
 	 * @param[in] bufferSize the size of @p buffer
-	 * @param[in] dataLength the length of the data inside @p buffer
 	 * @return true if there was no error while handling the callback
 	 */
-	typedef std::function<bool (void * const buffer, size_t bufferSize, size_t dataLength)> DownloadCallback;
-	
+	typedef std::function<bool (ByteIstream &)> DownloadCallback;
+
 	/**
 	 * checks if the implementation supports the givven protocol
-	 * 
+	 *
 	 * @author Karol Herbst
 	 * @since 0
-	 * 
+	 *
 	 * @param[in] protocolName the name of the protocol
 	 * @param[in] nameSize the size of @p protocolName
 	 * @return true if the implementation supports @p protocolName
 	 */
 	PUBLIC_API GAMEKEEPER_INTERFACE_METHOD(bool supportsProtocol(const char * const protocolName, size_t nameSize));
-	
+
 	/**
 	 * downloads the file behind the given location
 	 *

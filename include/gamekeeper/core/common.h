@@ -30,6 +30,9 @@
 	#include <stdint.h>
 #endif
 
+// some global datatypes
+typedef char gkbyte_t;
+
 // for C++ we have to handle visibility and importing exporting
 #ifdef __cplusplus
 	// dllexport, dllimport and visibility flags for Win32 and Unix

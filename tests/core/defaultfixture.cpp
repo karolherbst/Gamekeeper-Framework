@@ -30,12 +30,63 @@
   #include <gamekeeper/core/linuxinformation.h>
   #define OSINFORMATIONCLASS LinuxInformation
 #endif
+#include <gamekeeper/core/ospaths.h>
 #include <gamekeeper/core/propertyresolver.h>
+
+#include <boost/filesystem/operations.hpp>
 
 #include <Hypodermic/ContainerBuilder.h>
 #include <Hypodermic/Helpers.h>
 
 GAMEKEEPER_NAMESPACE_START(test)
+
+class TestOSPaths : public gamekeeper::core::OSPaths
+{
+public:
+	TestOSPaths();
+	GAMEKEEPER_IMPLEMENTATION_OVERRIDE(boost::filesystem::path getConfigFile(std::string name));
+	GAMEKEEPER_IMPLEMENTATION_OVERRIDE(boost::filesystem::path getDataFile(std::string name));
+	GAMEKEEPER_IMPLEMENTATION_OVERRIDE(boost::filesystem::path getCacheFile(std::string name));
+	GAMEKEEPER_IMPLEMENTATION_OVERRIDE(boost::filesystem::path getRuntimeFile(std::string name));
+private:
+	static boost::filesystem::path testPath;
+};
+
+boost::filesystem::path
+TestOSPaths::testPath = TESTPATH;
+
+TestOSPaths::TestOSPaths()
+{
+	if(boost::filesystem::exists(testPath))
+	{
+		boost::filesystem::remove_all(testPath);
+	}
+	boost::filesystem::create_directories(testPath);
+}
+
+boost::filesystem::path
+TestOSPaths::getConfigFile(std::string name)
+{
+	return testPath / "config" / name;
+}
+
+boost::filesystem::path
+TestOSPaths::getDataFile(std::string name)
+{
+	return testPath / "data" / name;
+}
+
+boost::filesystem::path
+TestOSPaths::getCacheFile(std::string name)
+{
+	return testPath / "cache" / name;
+}
+
+boost::filesystem::path
+TestOSPaths::getRuntimeFile(std::string name)
+{
+	return testPath / "runtime" / name;
+}
 
 class TestPropertyResolver : public gamekeeper::core::PropertyResolver
 {
@@ -59,7 +110,7 @@ DefaultFicture::DefaultFicture() {
 	Hypodermic::ContainerBuilder containerBuilder;
 	{
 		using namespace gamekeeper::core;
-		
+
 		// set up IoC container
 		containerBuilder.registerType<Log4cppLoggerFactory>()->
 		        as<LoggerFactory>()->
@@ -67,13 +118,19 @@ DefaultFicture::DefaultFicture() {
 		containerBuilder.registerType<OSINFORMATIONCLASS>()->
 		        as<OSInformation>()->
 		        singleInstance();
+		containerBuilder.registerType<TestOSPaths>()->
+			as<OSPaths>()->
+			singleInstance();
 		containerBuilder.registerType<TestPropertyResolver>(CREATE_CAPTURED([this], new TestPropertyResolver(this->props)))->
 			as<PropertyResolver>()->
 			singleInstance();
 	}
-	
+
 	// left out not implemented stuff yet
 	this->container = containerBuilder.build();
+
+	// set default properties
+	this->setProperty("network.download.max_buffer_size", (uint32_t)2048);
 }
 
 void

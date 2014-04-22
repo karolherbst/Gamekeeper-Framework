@@ -19,12 +19,17 @@
  */
 
 #include <gamekeeper/core/common.h>
+
+#include <sstream>
+
 #include <gamekeeper/core/curlfiledownloader.h>
 #include <gamekeeper/core/log4cpploggerFactory.h>
+#include <gamekeeper/utils/stringutils.h>
 
 #include "webserverfixture.h"
 
 using namespace gamekeeper::core;
+using namespace gamekeeper::utils;
 
 class CurlFiledownloaderTest : public gamekeeper::test::WebServerFicture
 {
@@ -35,7 +40,9 @@ protected:
 
 	virtual void SetUp() override
 	{
-		this->fileDownloader = new CurlFileDownloader(this->container->resolve<LoggerFactory>());
+		this->fileDownloader = new CurlFileDownloader(this->container->resolve<LoggerFactory>(),
+		                                              this->container->resolve<PropertyResolver>(),
+		                                              this->container->resolve<OSPaths>());
 	}
 
 	virtual void TearDown() override
@@ -50,9 +57,10 @@ TEST_F(CurlFiledownloaderTest, loadEmptyFile)
 {
 	bool handled = false;
 	this->fileDownloader->downloadFile("http://localhost:8080/files/emptyfile",
-	                                   [&](void * const buffer, size_t bufferSize, size_t dataLength) -> bool
+	                                   [&](FileDownloader::ByteIstream & is) -> bool
 	{
-		EXPECT_STREQ("", static_cast<const char*>(buffer));
+		const std::string data = String::createFromStream(is);
+		EXPECT_EQ("", data);
 		handled = true;
 		return true;
 	});
@@ -63,12 +71,12 @@ TEST_F(CurlFiledownloaderTest, servertest)
 {
 	bool handled = false;
 	this->fileDownloader->downloadFile("http://localhost:8080/files/fileWithContentHAHa",
-	                                   [&](void * const buffer, size_t bufferSize, size_t dataLength) -> bool
+	                                   [&](FileDownloader::ByteIstream & is) -> bool
 	{
-		EXPECT_LT(4, dataLength);
+		const std::string data = String::createFromStream(is);
+		EXPECT_LT(4, data.size());
 		// cut line ending
-		std::string value(static_cast<const char*>(buffer), 4);
-		EXPECT_EQ("HAHa", value);
+		EXPECT_EQ("HAHa", data.substr(0, 4));
 		handled = true;
 		return true;
 	});
@@ -80,4 +88,19 @@ TEST_F(CurlFiledownloaderTest, cookieTest)
 	bool handled = false;
 	HttpFileDownloader::CookieBuket cb = this->fileDownloader->doPostRequestForCookies("http://localhost:8080/cookies/type/value");
 	EXPECT_EQ("value", cb["type"]);
+}
+
+TEST_F(CurlFiledownloaderTest, bigFile)
+{
+	// set buffer size to 0 to disable buffering at all
+	setProperty("network.download", (uint64_t)0);
+	bool handled = false;
+	this->fileDownloader->downloadFile("http://localhost:8080/bigfile/5000",
+	                                  [&](FileDownloader::ByteIstream & is) -> bool
+	{
+		std::string data = String::createFromStream(is);
+		EXPECT_EQ(5000, data.size());
+		handled = true;
+	});
+	EXPECT_TRUE(handled);
 }
