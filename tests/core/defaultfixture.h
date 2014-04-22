@@ -35,6 +35,7 @@ class DefaultFicture : public testing::Test
 {
 public:
 	DefaultFicture();
+	~DefaultFicture();
 protected:
 	std::shared_ptr<Hypodermic::IContainer> container;
 
