@@ -21,9 +21,11 @@
 #include "pch.h"
 
 #include <algorithm>
+#include <chrono>
 #include <iostream>
 #include <iterator>
 #include <sstream>
+#include <thread>
 #include <vector>
 
 #include <gamekeeper/core/curlfiledownloader.h>
@@ -305,8 +307,13 @@ CurlFileDownloader::doPostRequestForCookies(const char * const url, const Form& 
 }
 
 void
-CurlFileDownloader::performCurl(CURLPrivateData & curl)
+CurlFileDownloader::performCurl(CURLPrivateData & curl, uint32_t timeout)
 {
+	if(timeout > 0)
+	{
+		std::this_thread::sleep_for(std::chrono::milliseconds(timeout));
+	}
+
 	CURLcode code = curl_easy_perform(curl.handle);
 	switch (code)
 	{
@@ -319,7 +326,7 @@ CurlFileDownloader::performCurl(CURLPrivateData & curl)
 			if(curl.resolveFailed < this->propertyResolver->get<uint16_t>("network.resolve.retries"))
 			{
 				this->logger << LogLevel::Warn << "CURL couldn't resolve host, retrying" << endl;
-				this->performCurl(curl);
+				this->performCurl(curl, this->propertyResolver->get<uint16_t>("network.time_between_retries"));
 			}
 			else
 			{
@@ -331,7 +338,7 @@ CurlFileDownloader::performCurl(CURLPrivateData & curl)
 			if(curl.connectFailed < this->propertyResolver->get<uint16_t>("network.connection.retries"))
 			{
 				this->logger << LogLevel::Warn << "CURL couldn't connect to host, retrying" << endl;
-				this->performCurl(curl);
+				this->performCurl(curl, this->propertyResolver->get<uint16_t>("network.time_between_retries"));
 			}
 			else
 			{

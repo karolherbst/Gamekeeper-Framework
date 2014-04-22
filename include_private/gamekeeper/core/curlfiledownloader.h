@@ -55,7 +55,7 @@ private:
 	Logger & logger;
 	const std::string userAgent;
 
-	PRIVATE_API void performCurl(CURLPrivateData & curl);
+	PRIVATE_API void performCurl(CURLPrivateData & curl, uint32_t timeout = 0);
 	PRIVATE_API void handleFileDownload(CURLPrivateData & curl, FileDownloader::DownloadCallback * func,
 	                                    const char * const url);
 	PRIVATE_API boost::filesystem::path resolveDownloadPath(const char * const url);
