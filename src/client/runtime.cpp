@@ -89,6 +89,11 @@ fillProperties(po::options_description & cmd, po::options_description & file)
 		("help,h", "produce help message");
 
 	descNetwork.add_options()
+		("network.time_between_retries", po::value<uint16_t>()->default_value(300))
+		("network.resolve.retries", po::value<uint16_t>()->default_value(3))
+		("network.resolve.timeout", po::value<uint16_t>()->default_value(5000))
+		("network.connection.retries", po::value<uint16_t>()->default_value(3))
+		("network.connection.timeout", po::value<uint16_t>()->default_value(30000))
 		("network.download.max_buffer_size", po::value<uint32_t>()->default_value(2048));
 
 	cmd.add(descGlobalCmd);

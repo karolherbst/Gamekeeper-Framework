@@ -21,9 +21,11 @@
 #include "pch.h"
 
 #include <algorithm>
+#include <chrono>
 #include <iostream>
 #include <iterator>
 #include <sstream>
+#include <thread>
 #include <vector>
 
 #include <gamekeeper/core/curlfiledownloader.h>
@@ -130,20 +132,25 @@ CurlFileDownloadInfo::callback()
 class PRIVATE_API CURLPrivateData
 {
 public:
-	PRIVATE_API CURLPrivateData(const char * const url, const std::string & userAgent);
+	PRIVATE_API CURLPrivateData(const char * const url, const std::string & userAgent,
+	                            std::shared_ptr<PropertyResolver>);
 	PRIVATE_API ~CURLPrivateData();
 
 	CURL * handle;
 	std::string postData;
 	CurlFileDownloadInfo * downloadInfo = nullptr;
-
+	uint16_t resolveFailed = 0;
+	uint16_t connectFailed = 0;
 };
 
-CURLPrivateData::CURLPrivateData(const char * const url, const std::string & userAgent)
+CURLPrivateData::CURLPrivateData(const char * const url, const std::string & userAgent,
+                                 std::shared_ptr<PropertyResolver> pr)
 :	handle(curl_easy_init())
 {
 	curl_easy_setopt(this->handle, CURLOPT_URL, url);
+	curl_easy_setopt(this->handle, CURLOPT_NOSIGNAL, 1);
 	curl_easy_setopt(this->handle, CURLOPT_USERAGENT, userAgent.c_str());
+	curl_easy_setopt(this->handle, CURLOPT_CONNECTTIMEOUT_MS, pr->get<uint16_t>("network.connection.timeout"));
 }
 
 CURLPrivateData::~CURLPrivateData()
@@ -207,7 +214,7 @@ CurlFileDownloader::handleFileDownload(CURLPrivateData & curl, FileDownloader::D
 		                         downloadPath);
 	curl_easy_setopt(curl.handle, CURLOPT_WRITEFUNCTION, &curlFileDownloadCallback);
 	curl_easy_setopt(curl.handle, CURLOPT_WRITEDATA, &curl);
-	this->handleCurlError(curl_easy_perform(curl.handle));
+	this->performCurl(curl);
 	curl.downloadInfo->callback();
 }
 
@@ -269,7 +276,7 @@ CurlFileDownloader::supportsProtocol(const char * const protocolName, size_t nam
 void
 CurlFileDownloader::downloadFile(const char * const url, DownloadCallback callback)
 {
-	CURLPrivateData curl(url, this->userAgent);
+	CURLPrivateData curl(url, this->userAgent, this->propertyResolver);
 	this->handleFileDownload(curl, &callback, url);
 }
 
@@ -277,7 +284,7 @@ void
 CurlFileDownloader::downloadFileWithCookies(const char * const url, DownloadCallback callback,
                                             const CookieBuket& cookies)
 {
-	CURLPrivateData curl(url, this->userAgent);
+	CURLPrivateData curl(url, this->userAgent, this->propertyResolver);
 	addCookiesToCurl(cookies, curl);
 	this->handleFileDownload(curl, &callback, url);
 }
@@ -286,13 +293,13 @@ CurlFileDownloader::CookieBuket
 CurlFileDownloader::doPostRequestForCookies(const char * const url, const Form& form)
 {
 	this->logger << LogLevel::Debug << "try to fetch cookies at: " << url << endl;
-	CURLPrivateData curl(url, this->userAgent);
+	CURLPrivateData curl(url, this->userAgent, this->propertyResolver);
 	curl_easy_setopt(curl.handle, CURLOPT_WRITEFUNCTION, &emptyCurlFileDownloadCallback);
 	curl_easy_setopt(curl.handle, CURLOPT_COOKIEJAR, nullptr);
 
 	addFormToCurl(form, curl);
 
-	this->handleCurlError(curl_easy_perform(curl.handle));
+	this->performCurl(curl);
 
 	CurlFileDownloader::CookieBuket result = getCookies(curl);
 
@@ -300,17 +307,48 @@ CurlFileDownloader::doPostRequestForCookies(const char * const url, const Form& 
 }
 
 void
-CurlFileDownloader::handleCurlError(int code)
+CurlFileDownloader::performCurl(CURLPrivateData & curl, uint32_t timeout)
 {
+	if(timeout > 0)
+	{
+		std::this_thread::sleep_for(std::chrono::milliseconds(timeout));
+	}
+
+	CURLcode code = curl_easy_perform(curl.handle);
 	switch (code)
 	{
-		case CURLE_OK:
+		case CURLE_OK: // 0
 			// everything okay
-			this->logger << LogLevel::Trace << "CURL returned with CURLE_OK" << endl;
+			this->logger << LogLevel::Trace << "CURL returned without errors" << endl;
+			break;
+		case CURLE_COULDNT_RESOLVE_HOST: // 6
+			curl.resolveFailed++;
+			if(curl.resolveFailed < this->propertyResolver->get<uint16_t>("network.resolve.retries"))
+			{
+				this->logger << LogLevel::Warn << "CURL couldn't resolve host, retrying" << endl;
+				this->performCurl(curl, this->propertyResolver->get<uint16_t>("network.time_between_retries"));
+			}
+			else
+			{
+				this->logger << LogLevel::Error << "CURL couldn't resolve host after " << curl.resolveFailed << " retries" << endl;
+			}
+			break;
+		case CURLE_COULDNT_CONNECT: // 7
+			curl.connectFailed++;
+			if(curl.connectFailed < this->propertyResolver->get<uint16_t>("network.connection.retries"))
+			{
+				this->logger << LogLevel::Warn << "CURL couldn't connect to host, retrying" << endl;
+				this->performCurl(curl, this->propertyResolver->get<uint16_t>("network.time_between_retries"));
+			}
+			else
+			{
+				this->logger << LogLevel::Error << "CURL couldn't connect to host after " << curl.connectFailed << " retries" << endl;
+			}
 			break;
 		default:
 			// unhandled error
-			this->logger << LogLevel::Fatal << "CURL return code " << code << " unhandled, please report a bug" << endl;
+			this->logger << LogLevel::Fatal << "CURL error \"" << curl_easy_strerror(code) << "\" (" << code <<
+				") unhandled, please report a bug" << endl;
 			break;
 	}
 }

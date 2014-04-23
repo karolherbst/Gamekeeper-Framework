@@ -130,7 +130,12 @@ DefaultFicture::DefaultFicture() {
 	this->container = containerBuilder.build();
 
 	// set default properties
+	this->setProperty("network.connection.retries", (uint16_t)3);
+	this->setProperty("network.connection.timeout", (uint16_t)30000);
 	this->setProperty("network.download.max_buffer_size", (uint32_t)2048);
+	this->setProperty("network.resolve.retries", (uint16_t)3);
+	this->setProperty("network.resolve.timeout", (uint16_t)5000);
+	this->setProperty("network.time_between_retries", (uint16_t)300);
 }
 
 void
