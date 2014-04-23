@@ -2,8 +2,6 @@ if(WIN32 AND NOT MINGW)
   message(FATAL_ERROR "windows build is currently only supported with mingw")
 else()
   if(MINGW)
-    set(CMAKE_THREAD_PREFER_PTHREAD TRUE)
-    find_package(Threads REQUIRED)
     set(LOG4CPP_INSTALL_DIR ${CMAKE_EXTERNAL_BINARY_DIR}/log4cpp)
     ExternalProject_Add(
       log4cpp

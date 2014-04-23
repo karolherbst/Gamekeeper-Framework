@@ -23,6 +23,8 @@
 #include <forward_list>
 #include <future>
 
+#include <gamekeeper/core/threadfactory.h>
+
 #include <boost/algorithm/string/classification.hpp>
 #include <boost/algorithm/string/split.hpp>
 #include <boost/filesystem/fstream.hpp>
@@ -37,15 +39,13 @@ GAMEKEEPER_NAMESPACE_START(test)
 namespace algo = boost::algorithm;
 namespace fs = boost::filesystem;
 using boost::lexical_cast;
+using gamekeeper::core::ThreadFactory;
 
-static bool stopped = false;
-mg_server * WebServerFicture::server;
 static const fs::path fileServerRoot = WEBSERVERPATH;
 
-void
-WebServerFicture::SetUpTestCase()
+WebServerFicture::WebServerFicture()
 {
-	server = mg_create_server(nullptr, [](mg_connection * conn, mg_event event) -> int
+	this->server = mg_create_server(nullptr, [](mg_connection * conn, mg_event event) -> int
 	{
 		if(event == MG_REQUEST)
 		{
@@ -124,22 +124,25 @@ WebServerFicture::SetUpTestCase()
 		}
 		return MG_TRUE;
 	});
-	mg_set_option(server, "listening_port", "8080");
-	mg_start_thread([](void*) -> void*
+	mg_set_option(this->server, "listening_port", "8080");
+	this->container->resolve<ThreadFactory>()->createThread("mongoose server thread",
+		[this](ThreadFactory::ThreadFunction::argument_type interrupted) -> void
 	{
-		while(!stopped)
+		mg_server * copyServer = this->server;
+		while(!interrupted)
 		{
-			mg_poll_server(server, 1000);
+			mg_poll_server(copyServer, 1000);
 		}
-		mg_destroy_server(&server);
-		return nullptr;
-	}, nullptr);
+		mg_destroy_server(&this->server);
+	});
 }
 
-void
-WebServerFicture::TearDownTestCase()
+WebServerFicture::~WebServerFicture()
 {
-	stopped = true;
+	if(this->server != nullptr)
+	{
+		mg_destroy_server(&this->server);
+	}
 }
 
 GAMEKEEPER_NAMESPACE_END(test)

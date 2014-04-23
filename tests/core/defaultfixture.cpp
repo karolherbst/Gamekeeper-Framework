@@ -32,6 +32,14 @@
 #endif
 #include <gamekeeper/core/ospaths.h>
 #include <gamekeeper/core/propertyresolver.h>
+#include <gamekeeper/core/stdc++11threadmanager.h>
+
+#ifdef GAMEKEEPER_PTHREAD
+  #include <gamekeeper/core/pthreadhelper.h>
+  #define THREADHELPERCLASS PthreadHelper
+#else
+  #error only pthread is currently supported
+#endif
 
 #include <boost/filesystem/operations.hpp>
 
@@ -124,6 +132,14 @@ DefaultFicture::DefaultFicture() {
 		containerBuilder.registerType<TestPropertyResolver>(CREATE_CAPTURED([this], new TestPropertyResolver(this->props)))->
 			as<PropertyResolver>()->
 			singleInstance();
+		containerBuilder.registerType<THREADHELPERCLASS>()->
+			as<NativeThreadHelper>()->
+			singleInstance();
+		containerBuilder.registerType<StdCpp11ThreadManager>(CREATE(new StdCpp11ThreadManager(INJECT(NativeThreadHelper),
+		                                                                                      INJECT(LoggerFactory))))->
+			as<ThreadManager>()->
+			as<ThreadFactory>()->
+			singleInstance();
 	}
 
 	// left out not implemented stuff yet
@@ -136,6 +152,14 @@ DefaultFicture::DefaultFicture() {
 	this->setProperty("network.resolve.retries", (uint16_t)3);
 	this->setProperty("network.resolve.timeout", (uint16_t)5000);
 	this->setProperty("network.time_between_retries", (uint16_t)300);
+}
+
+DefaultFicture::~DefaultFicture()
+{
+	using namespace gamekeeper::core;
+	auto tm = this->container->resolve<ThreadManager>();
+	tm->interruptAll();
+	for(int8_t count = 0; count < 5 && !tm->tryJoinFor(100); count++){}
 }
 
 void

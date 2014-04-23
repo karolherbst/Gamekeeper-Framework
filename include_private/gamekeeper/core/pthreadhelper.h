@@ -18,26 +18,27 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef TEST_GAMEKEEPER_CORE_WEBSERVERFICTURE
-#define TEST_GAMEKEEPER_CORE_WEBSERVERFICTURE 1
+#ifndef GAMEKEEPER_CORE_PTHREADHELPER_H
+#define GAMEKEEPER_CORE_PTHREADHELPER_H 1
 
 #include <gamekeeper/core/common.h>
 
-#include "defaultfixture.h"
+#include <map>
 
-struct mg_server;
+#include <gamekeeper/core/nativethreadhelper.h>
 
-GAMEKEEPER_NAMESPACE_START(test)
+GAMEKEEPER_NAMESPACE_START(core)
 
-class WebServerFicture : public DefaultFicture
+class PUBLIC_API PthreadHelper : public NativeThreadHelper
 {
 public:
-	WebServerFicture();
-	~WebServerFicture();
+	PRIVATE_API GAMEKEEPER_IMPLEMENTATION_OVERRIDE(void setNameOfThread(std::thread & thread, const char * name));
+	PRIVATE_API GAMEKEEPER_IMPLEMENTATION_OVERRIDE(std::string getNameOfThread(std::thread & thread));
 private:
-	mg_server * server = nullptr;
+	// because we can use only 15 char long names on the OS side, we will store the actual names
+	std::map<std::thread *, std::string> threadNames;
 };
 
-GAMEKEEPER_NAMESPACE_END(test)
+GAMEKEEPER_NAMESPACE_END(core)
 
-#endif //TEST_GAMEKEEPER_CORE_WEBSERVERFICTURE
+#endif //GAMEKEEPER_CORE_PTHREADHELPER_H

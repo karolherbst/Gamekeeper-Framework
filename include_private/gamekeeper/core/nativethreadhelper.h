@@ -18,26 +18,26 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef TEST_GAMEKEEPER_CORE_WEBSERVERFICTURE
-#define TEST_GAMEKEEPER_CORE_WEBSERVERFICTURE 1
+#ifndef GAMEKEEPER_CORE_NATIVETHREADHELPER_H
+#define GAMEKEEPER_CORE_NATIVETHREADHELPER_H 1
 
 #include <gamekeeper/core/common.h>
 
-#include "defaultfixture.h"
+#include <gamekeeper/core/interface.h>
 
-struct mg_server;
-
-GAMEKEEPER_NAMESPACE_START(test)
-
-class WebServerFicture : public DefaultFicture
+namespace std
 {
-public:
-	WebServerFicture();
-	~WebServerFicture();
-private:
-	mg_server * server = nullptr;
+	class thread;
+}
+
+GAMEKEEPER_NAMESPACE_START(core)
+
+interface PRIVATE_API NativeThreadHelper
+{
+	PRIVATE_API GAMEKEEPER_INTERFACE_METHOD(void setNameOfThread(std::thread & thread, const char * name));
+	PRIVATE_API GAMEKEEPER_INTERFACE_METHOD(std::string getNameOfThread(std::thread & thread));
 };
 
-GAMEKEEPER_NAMESPACE_END(test)
+GAMEKEEPER_NAMESPACE_END(core)
 
-#endif //TEST_GAMEKEEPER_CORE_WEBSERVERFICTURE
+#endif //GAMEKEEPER_CORE_NATIVETHREADHELPER_H

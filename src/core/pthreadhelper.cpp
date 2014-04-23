@@ -18,26 +18,29 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef TEST_GAMEKEEPER_CORE_WEBSERVERFICTURE
-#define TEST_GAMEKEEPER_CORE_WEBSERVERFICTURE 1
+#include "pch.h"
 
-#include <gamekeeper/core/common.h>
+#include "pthreadhelper.h"
 
-#include "defaultfixture.h"
+#include <pthread.h>
+#include <thread>
 
-struct mg_server;
+GAMEKEEPER_NAMESPACE_START(core)
 
-GAMEKEEPER_NAMESPACE_START(test)
+static constexpr uint16_t THREAD_NAME_MAX_LENGTH = 15;
 
-class WebServerFicture : public DefaultFicture
+void
+PthreadHelper::setNameOfThread(std::thread & thread, const char * name)
 {
-public:
-	WebServerFicture();
-	~WebServerFicture();
-private:
-	mg_server * server = nullptr;
-};
+	this->threadNames[&thread] = name;
+	std::string cutedName(name, THREAD_NAME_MAX_LENGTH);
+	pthread_setname_np(thread.native_handle(), cutedName.c_str());
+}
 
-GAMEKEEPER_NAMESPACE_END(test)
+std::string
+PthreadHelper::getNameOfThread(std::thread & thread)
+{
+	return this->threadNames[&thread];
+}
 
-#endif //TEST_GAMEKEEPER_CORE_WEBSERVERFICTURE
+GAMEKEEPER_NAMESPACE_END(core)
