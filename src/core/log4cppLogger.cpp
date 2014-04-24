@@ -30,34 +30,39 @@ GAMEKEEPER_NAMESPACE_START(core)
 Log4cppLogger::Log4cppLogger(log4cpp::Category& cat)
 :	category(cat){}
 
+static log4cpp::Priority::PriorityLevel
+getFromLogLevel(const LogLevel& l)
+{
+	switch (l) {
+		case LogLevel::Debug:
+		case LogLevel::Trace:
+			return log4cpp::Priority::DEBUG;
+		case LogLevel::Error:
+			return log4cpp::Priority::ERROR;
+		case LogLevel::Fatal:
+			return log4cpp::Priority::FATAL;
+		case LogLevel::Info:
+			return log4cpp::Priority::INFO;
+		case LogLevel::Warn:
+		default:
+			return log4cpp::Priority::WARN;
+	}
+}
+
 LoggerStream&
 Log4cppLogger::operator<<(const LogLevel& logLevel)
 {
 	if(this->loggerStreams.find(logLevel) == this->loggerStreams.end())
 	{
-		log4cpp::Priority::PriorityLevel level;
-		switch (logLevel) {
-			case LogLevel::Debug:
-			case LogLevel::Trace:
-				level = log4cpp::Priority::DEBUG;
-				break;
-			case LogLevel::Error:
-				level = log4cpp::Priority::ERROR;
-				break;
-			case LogLevel::Fatal:
-				level = log4cpp::Priority::FATAL;
-				break;
-			case LogLevel::Info:
-				level = log4cpp::Priority::INFO;
-				break;
-			case LogLevel::Warn:
-				level = log4cpp::Priority::WARN;
-				break;
-		}
-		this->loggerStreams.insert(std::make_pair(logLevel, Log4cppLoggerStream(this->category.getStream(level))));
+		this->loggerStreams.insert(std::make_pair(logLevel, Log4cppLoggerStream(this->category.getStream(getFromLogLevel(logLevel)))));
 	}
 	return this->loggerStreams.at(logLevel);
 }
-	
+
+bool
+Log4cppLogger::isEnabled(const LogLevel & loglevel)
+{
+	return this->category.isPriorityEnabled(getFromLogLevel(loglevel));
+}
 
 GAMEKEEPER_NAMESPACE_END(core)

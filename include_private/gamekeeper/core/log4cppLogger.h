@@ -41,6 +41,7 @@ class PRIVATE_API Log4cppLogger : public Logger
 public:
 	PRIVATE_API Log4cppLogger(log4cpp::Category&);
 	PRIVATE_API GAMEKEEPER_IMPLEMENTATION_OVERRIDE(LoggerStream& operator<<(const LogLevel& logLevel));
+	PRIVATE_API GAMEKEEPER_IMPLEMENTATION_OVERRIDE(bool isEnabled(const LogLevel & loglevel));
 private:
 	log4cpp::Category& category;
 	std::map<const LogLevel, Log4cppLoggerStream> loggerStreams;
