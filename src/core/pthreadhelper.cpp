@@ -18,6 +18,12 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
+/* TODO:
+ * let old entries be autocleared from threadNames. We might be able to do so with thread_local objects. If we don't do
+ *   it, we might ending with a huge map, but I doubt it, because there won't be more than 1000 threads creating through
+ *   this interface ever.
+ */
+
 #include "pch.h"
 
 #include "pthreadhelper.h"
