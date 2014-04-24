@@ -174,6 +174,26 @@ typedef char gkbyte_t;
 		#endif
 	// we don't need to check msvc, because we require msvc10 anyway
 	#endif
+
+	// declare thread_local if the compiler does not understand it
+	#if defined(__clang__)
+		#if !__has_feature(cxx_thread_local)
+			#define thread_local __thread
+		#endif
+	#elif defined(__GNUC__)
+		// supported since gcc-4.8
+		#if ((GNUC_MAJOR == 4 && GNUC_MINOR < 8) || GNUC_MAJOR < 4)
+			#define thread_local __thread
+		#endif
+	#elif defined(__INTEL_COMPILER)
+		#if defined(_WIN32) || defined (__CYGWIN__)
+			#define thread_local __declspec(thread)
+		#else
+			#define thread_local __thread
+		#endif
+	#elif defined(_MSC_VER)
+		#define thread_local __declspec(thread)
+	#endif
 #endif
 
 // OS defines
