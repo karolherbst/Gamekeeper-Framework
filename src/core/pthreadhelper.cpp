@@ -18,12 +18,6 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-/* TODO:
- * let old entries be autocleared from threadNames. We might be able to do so with thread_local objects. If we don't do
- *   it, we might ending with a huge map, but I doubt it, because there won't be more than 1000 threads creating through
- *   this interface ever.
- */
-
 #include "pch.h"
 
 #include "pthreadhelper.h"
@@ -33,20 +27,21 @@
 
 GAMEKEEPER_NAMESPACE_START(core)
 
-static constexpr uint16_t THREAD_NAME_MAX_LENGTH = 15;
+static constexpr uint16_t THREAD_NAME_MAX_LENGTH = 16;
 
 void
 PthreadHelper::setNameOfThread(std::thread & thread, const char * name)
 {
-	this->threadNames[&thread] = name;
-	std::string cutedName(name, THREAD_NAME_MAX_LENGTH);
+	std::string cutedName(name, THREAD_NAME_MAX_LENGTH - 1);
 	pthread_setname_np(thread.native_handle(), cutedName.c_str());
 }
 
 std::string
 PthreadHelper::getNameOfThread(std::thread & thread)
 {
-	return this->threadNames[&thread];
+	char buffer[THREAD_NAME_MAX_LENGTH];
+	pthread_getname_np(thread.native_handle(), buffer, THREAD_NAME_MAX_LENGTH);
+	return buffer;
 }
 
 GAMEKEEPER_NAMESPACE_END(core)

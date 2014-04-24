@@ -23,8 +23,6 @@
 
 #include <gamekeeper/core/common.h>
 
-#include <map>
-
 #include <gamekeeper/core/nativethreadhelper.h>
 
 GAMEKEEPER_NAMESPACE_START(core)
@@ -34,9 +32,6 @@ class PUBLIC_API PthreadHelper : public NativeThreadHelper
 public:
 	PRIVATE_API GAMEKEEPER_IMPLEMENTATION_OVERRIDE(void setNameOfThread(std::thread & thread, const char * name));
 	PRIVATE_API GAMEKEEPER_IMPLEMENTATION_OVERRIDE(std::string getNameOfThread(std::thread & thread));
-private:
-	// because we can use only 15 char long names on the OS side, we will store the actual names
-	std::map<std::thread *, std::string> threadNames;
 };
 
 GAMEKEEPER_NAMESPACE_END(core)
