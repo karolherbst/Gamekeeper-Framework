@@ -28,6 +28,7 @@ file(GLOB headers
 file(GLOB sources
   curlfiledownloader.cpp
   defaultfixture.cpp
+  stringutils.cpp
   webserverfixture.cpp
   xdgpaths.cpp
   ${platform_sources}
