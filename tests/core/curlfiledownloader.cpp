@@ -97,6 +97,7 @@ TEST_F(CurlFiledownloaderTest, bigFile)
 		std::string data = String::createFromStream(is);
 		EXPECT_EQ(5000, data.size());
 		handled = true;
+		return true;
 	});
 	EXPECT_TRUE(handled);
 }
