@@ -24,8 +24,9 @@
 #include <gamekeeper/core/common.h>
 
 #include <gamekeeper/core/interface.h>
+#include <gamekeeper/utils/stringutils.h>
 
-#include <boost/lexical_cast.hpp>
+#include <type_traits>
 
 GAMEKEEPER_NAMESPACE_START(core)
 
@@ -77,10 +78,10 @@ public:
  * @param t the input
  */
 template <typename T>
-PUBLIC_INLINE LoggerStream& operator<<(LoggerStream& loggerStream, const T& t)
+PUBLIC_INLINE
+LoggerStream& operator<<(LoggerStream& loggerStream, const T& t)
 {
-	loggerStream << boost::lexical_cast<std::string>(t);
-	return loggerStream;
+	return loggerStream.operator<<(utils::String::toString(t));
 }
 
 /**

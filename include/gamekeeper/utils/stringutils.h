@@ -23,7 +23,10 @@
 
 #include <gamekeeper/core/common.h>
 
+#include <cstdint>
 #include <string>
+
+#include <boost/lexical_cast.hpp>
 
 namespace std
 {
@@ -44,8 +47,48 @@ GAMEKEEPER_NAMESPACE_START(utils)
  */
 namespace String
 {
+	template <class T>
+	struct Is8BitInt : std::integral_constant<bool,
+		std::is_same<T, int8_t>::value || std::is_same<T, uint8_t>::value>{};
+
+	template <class T>
+	struct Is16BitOrHigherInt : std::integral_constant<bool,
+		std::is_arithmetic<T>::value && !std::is_same<T, char>::value && !Is8BitInt<T>::value>{};
+
 	template <class charT, class traits >
 	PUBLIC_INLINE std::basic_string<charT, traits> createFromStream(std::basic_istream<charT, traits> & istream);
+
+	template <class T>
+	PUBLIC_INLINE
+	typename std::enable_if<std::is_constructible<std::string, T>::value, const T &>::type
+	toString(const T &);
+
+	template <class T>
+	PUBLIC_INLINE
+	typename std::enable_if<Is8BitInt<T>::value, std::string>::type
+	toString(const T &);
+
+	template <class T>
+	PUBLIC_INLINE
+	typename std::enable_if<Is16BitOrHigherInt<T>::value, std::string>::type
+	toString(const T &);
+
+	template <class T>
+	PUBLIC_INLINE
+	typename std::enable_if<std::is_enum<T>::value, std::string>::type
+	toString(const T &);
+
+	template <class T>
+	PUBLIC_INLINE
+	typename std::enable_if<std::is_same<T, char>::value, std::string>::type
+	toString(const T &);
+
+	template <class T>
+	PUBLIC_INLINE
+	typename std::enable_if<std::is_pointer<T>::value,
+	                        typename std::enable_if<!std::is_same<typename std::remove_cv<typename std::remove_pointer<T>::type>::type,
+	                                                              char>::value, std::string>::type>::type
+	toString(const T &);
 }
 
 template <class charT, class traits>
@@ -57,6 +100,54 @@ String::createFromStream(std::basic_istream<charT, traits> & is)
 		return std::basic_string<charT, traits>();
 	}
 	return std::basic_string<charT, traits>(std::istreambuf_iterator<charT>(is), std::istreambuf_iterator<charT>());
+}
+
+template <class T>
+typename std::enable_if<std::is_constructible<std::string, T>::value, const T &>::type
+String::toString(const T & t)
+{
+	return t;
+}
+
+template <class T>
+PUBLIC_INLINE
+typename std::enable_if<String::Is8BitInt<T>::value, std::string>::type
+String::toString(const T &t)
+{
+	// lexical_cast treats (u)int8_t as char
+	return std::to_string(t);
+}
+
+template <class T>
+typename std::enable_if<String::Is16BitOrHigherInt<T>::value, std::string>::type
+String::toString(const T & t)
+{
+	return boost::lexical_cast<std::string>(t);
+}
+
+template <class T>
+typename std::enable_if<std::is_enum<T>::value, std::string>::type
+String::toString(const T & t)
+{
+	// just refer to the implementation of the underlying_type
+	typedef typename std::underlying_type<T>::type UT;
+	return String::toString<UT>(static_cast<UT>(t));
+}
+
+template <class T>
+typename std::enable_if<std::is_same<T, char>::value, std::string>::type
+String::toString(const T & t)
+{
+	return std::string(1, t);
+}
+
+template <class T>
+typename std::enable_if<std::is_pointer<T>::value,
+                        typename std::enable_if<!std::is_same<typename std::remove_cv<typename std::remove_pointer<T>::type>::type,
+                                                              char>::value, std::string>::type>::type
+String::toString(const T & t)
+{
+	return boost::lexical_cast<std::string>(t);
 }
 
 GAMEKEEPER_NAMESPACE_END(core)

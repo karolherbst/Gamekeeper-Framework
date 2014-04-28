@@ -159,7 +159,7 @@ DefaultFicture::~DefaultFicture()
 	using namespace gamekeeper::core;
 	auto tm = this->container->resolve<ThreadManager>();
 	tm->interruptAll();
-	for(int8_t count = 0; count < 5 && !tm->tryJoinFor(100); count++){}
+	for(int8_t count = 0; count < 10 && !tm->tryJoinFor(250); count++){}
 }
 
 void

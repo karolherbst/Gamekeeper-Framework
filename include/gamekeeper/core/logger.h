@@ -107,6 +107,19 @@ public:
 	 * @return a loggerStream
 	 */
 	PUBLIC_API GAMEKEEPER_INTERFACE_METHOD(LoggerStream& operator<<(const LogLevel& logLevel));
+
+	/**
+	 * method to check whether a loglevel is enabled or not
+	 *
+	 * this is usefull to avoid computation o
+	 *
+	 * @author Karol Herbst
+	 * @since 0
+	 *
+	 * @param logLevel the log level to check
+	 * @return true if the loglevel is enabled
+	 */
+	PUBLIC_API GAMEKEEPER_INTERFACE_METHOD(bool isEnabled(const LogLevel & loglevel));
 };
 
 GAMEKEEPER_NAMESPACE_END(core)
