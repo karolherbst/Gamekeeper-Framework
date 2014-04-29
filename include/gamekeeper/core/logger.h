@@ -78,7 +78,7 @@ enum class LogLevel : uint8_t
 	Fatal = 0
 };
 
-class LoggerStream;
+interface LoggerStream;
 
 /**
  * @interface Logger logger.h <gamekeeper/core/logger.h>
@@ -93,7 +93,7 @@ class LoggerStream;
 interface PUBLIC_API Logger
 {
 public:
-	PUBLIC_INLINE GAMEKEEPER_INTERFACE_DESTRUCTOR(Logger)
+	GAMEKEEPER_INTERFACE_METHODS(Logger);
 
 	/**
 	 * Stream based log method

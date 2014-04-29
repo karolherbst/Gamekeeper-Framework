@@ -27,7 +27,7 @@
 
 GAMEKEEPER_NAMESPACE_START(core)
 
-class Logger;
+interface Logger;
 
 /**
  * @interface LoggerFactory loggerFactory.h <gamekeeper/core/loggerFactory.h>
@@ -39,7 +39,7 @@ class Logger;
  */
 interface PRIVATE_API LoggerFactory
 {
-	GAMEKEEPER_INTERFACE_DESTRUCTOR(LoggerFactory)
+	GAMEKEEPER_INTERFACE_METHODS(LoggerFactory);
 
 	/**
 	 * @author Karol Herbst

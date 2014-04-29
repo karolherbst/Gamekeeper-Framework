@@ -23,29 +23,18 @@
 
 #include <gamekeeper/core/common.h>
 
-#ifndef interface
-	/**
-	 * fake type for interfaces.
-	 * 
-	 * Every pure virtual class should be declared with this type instead of class or struct.
-	 * Also members, non pure virtual methods, or any protected or private methods may not be used.
-	 * 
-	 * Use the GAMEKEEPER_INTERFACE_* macros to simplify interface declerations.
-	 * 
-	 * @author Karol Herbst
-	 * @since 0
-	 */
-	#define interface struct
-#endif
-
 /**
- * this method auto creates the destructor for interface types
+ * this method auto creates all needed methods for interfaces
  * 
  * @author Karol Herbst
  * @since 0
  * @param type the name of the interface
  */
-#define GAMEKEEPER_INTERFACE_DESTRUCTOR(type) virtual ~type(){}
+#define GAMEKEEPER_INTERFACE_METHODS(type) \
+	PUBLIC_API virtual ~type(){} \
+	PUBLIC_API type() = default; \
+	PRIVATE_API type(const type&) = delete; \
+	PRIVATE_API type & operator=(const type &) = delete
 
 /**
  * this method auto creates the pure virtual method given
@@ -55,15 +44,6 @@
  * @param method the method signature
  */
 #define GAMEKEEPER_INTERFACE_METHOD(method) virtual method = 0
-
-/**
- * this method auto creates the optional virtual method given
- * 
- * @author Karol Herbst
- * @since 0
- * @param method the method signature
- */
-#define GAMEKEEPER_INTERFACE_METHOD_OPTIONAL(method) virtual method{}
 
 /**
  * this macro shall be used to override interface methods

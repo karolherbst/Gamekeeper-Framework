@@ -39,9 +39,9 @@ Game::getName() const
 }
 
 void
-Game::setId(const char* id)
+Game::setId(const char* _id)
 {
-	this->id = id;
+	this->id = _id;
 }
 
 void

@@ -27,13 +27,13 @@
 
 GAMEKEEPER_NAMESPACE_START(core)
 
-class Logger;
+interface Logger;
 
 GAMEKEEPER_NAMESPACE_END(core)
 
 GAMEKEEPER_NAMESPACE_START(client)
 
-class GameKeeperUI;
+interface GameKeeperUI;
 
 class PUBLIC_API GameKeeperRuntime
 {

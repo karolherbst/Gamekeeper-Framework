@@ -162,7 +162,7 @@ CURLPrivateData::~CURLPrivateData()
 	curl_easy_cleanup(this->handle);
 }
 
-static int
+static uint64_t
 curlFileDownloadCallback(void * const buffer, size_t size, size_t nrMem,
                          CURLPrivateData * data)
 {
@@ -175,8 +175,8 @@ curlFileDownloadCallback(void * const buffer, size_t size, size_t nrMem,
 	return sizeInBytes;
 }
 
-static int
-emptyCurlFileDownloadCallback(void * const buffer, size_t size, size_t nrMem, void * func)
+static uint64_t
+emptyCurlFileDownloadCallback(void * const, size_t size, size_t nrMem, void *)
 {
 	return size * nrMem;
 }
@@ -186,6 +186,9 @@ buildUserAgentString()
 {
 	return std::string("GameKeeper/0.1 libcurl/") + curl_version_info(CURLVERSION_NOW)->version;
 }
+
+const std::unordered_set<std::string>
+CurlFileDownloader::supportedProtocols = {"http", "https", "ftp", "ftps", "sftp"};
 
 CurlFileDownloader::CurlFileDownloader(std::shared_ptr<LoggerFactory> loggerFactory,
                                        std::shared_ptr<PropertyResolver> _propertyResolver,
@@ -268,9 +271,9 @@ addFormToCurl(const HttpFileDownloader::Form& form, CURLPrivateData & curl)
 }
 
 bool
-CurlFileDownloader::supportsProtocol(const char * const protocolName, size_t nameSize)
+CurlFileDownloader::supportsProtocol(const char * const protocolName)
 {
-	return true;
+	return supportedProtocols.find(protocolName) != supportedProtocols.end();
 }
 
 void

@@ -39,7 +39,7 @@ GAMEKEEPER_NAMESPACE_START(core)
  */
 interface PUBLIC_API ThreadManager
 {
-	PUBLIC_API GAMEKEEPER_INTERFACE_DESTRUCTOR(ThreadManager)
+	GAMEKEEPER_INTERFACE_METHODS(ThreadManager);
 	/**
 	 * this method will be called whenever all current threads (except the main one) should be joined.
 	 *

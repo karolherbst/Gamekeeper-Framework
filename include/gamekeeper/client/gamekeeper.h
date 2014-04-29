@@ -37,7 +37,7 @@ class variable_value;
 }
 
 GAMEKEEPER_NAMESPACE_START(core)
-class Logger;
+interface Logger;
 GAMEKEEPER_NAMESPACE_END(core)
 
 GAMEKEEPER_NAMESPACE_START(client)
@@ -55,14 +55,9 @@ GAMEKEEPER_NAMESPACE_START(client)
  */
 interface PUBLIC_API GameKeeperUI
 {
+	GAMEKEEPER_INTERFACE_METHODS(GameKeeperUI);
+	
 	typedef std::map<std::string, boost::program_options::variable_value> ConfigMap;
-	/**
-	 * default destructor
-	 *
-	 * @author Karol Herbst
-	 * @since 0
-	 */
-	PUBLIC_INLINE GAMEKEEPER_INTERFACE_DESTRUCTOR(GameKeeperUI)
 
 	/**
 	 * init method for GameKeeper
@@ -106,10 +101,10 @@ interface PUBLIC_API GameKeeperUI
 	 * @param[in] oaFile the OptionAdder object for config file options
 	 * @param[in] oaBoth the OptionAdder object for config config file and command line options
 	 */
-	PUBLIC_INLINE GAMEKEEPER_INTERFACE_METHOD_OPTIONAL(void addOptions(
-	                                                boost::program_options::options_description_easy_init & oaCmd,
-	                                                boost::program_options::options_description_easy_init & oaFile,
-	                                                boost::program_options::options_description_easy_init & oaBoth));
+	PUBLIC_INLINE GAMEKEEPER_INTERFACE_METHOD(void addOptions(
+	                                          boost::program_options::options_description_easy_init & oaCmd,
+	                                          boost::program_options::options_description_easy_init & oaFile,
+	                                          boost::program_options::options_description_easy_init & oaBoth));
 };
 
 /**

@@ -43,7 +43,7 @@ GAMEKEEPER_NAMESPACE_START(core)
  */
 interface PUBLIC_API OSPaths
 {
-	PUBLIC_INLINE GAMEKEEPER_INTERFACE_DESTRUCTOR(OSPaths)
+	GAMEKEEPER_INTERFACE_METHODS(OSPaths);
 
 	/**
 	 * returns the file with the given name from the config paths

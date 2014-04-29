@@ -42,7 +42,7 @@ GAMEKEEPER_NAMESPACE_START(core)
  */
 interface PUBLIC_API FileDownloader
 {
-	PUBLIC_INLINE GAMEKEEPER_INTERFACE_DESTRUCTOR(FileDownloader)
+	GAMEKEEPER_INTERFACE_METHODS(FileDownloader);
 
 	typedef std::basic_istream<gkbyte_t> ByteIstream;
 
@@ -65,10 +65,9 @@ interface PUBLIC_API FileDownloader
 	 * @since 0
 	 *
 	 * @param[in] protocolName the name of the protocol
-	 * @param[in] nameSize the size of @p protocolName
 	 * @return true if the implementation supports @p protocolName
 	 */
-	PUBLIC_API GAMEKEEPER_INTERFACE_METHOD(bool supportsProtocol(const char * const protocolName, size_t nameSize));
+	PUBLIC_API GAMEKEEPER_INTERFACE_METHOD(bool supportsProtocol(const char * const protocolName));
 
 	/**
 	 * downloads the file behind the given location

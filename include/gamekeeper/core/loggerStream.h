@@ -43,7 +43,7 @@ GAMEKEEPER_NAMESPACE_START(core)
 interface PUBLIC_API LoggerStream
 {
 public:
-	PUBLIC_INLINE GAMEKEEPER_INTERFACE_DESTRUCTOR(LoggerStream)
+	GAMEKEEPER_INTERFACE_METHODS(LoggerStream);
 	
 	/**
 	 * This methods logs the given string into the logger Stream
