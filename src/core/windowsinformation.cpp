@@ -23,8 +23,9 @@
 #include "windowsinformation.h"
 
 #include <cstdlib>
+
 #include <windows.h>
-#include <Shlobj.h>
+#include <shlobj.h>
 
 #include <boost/locale/encoding_utf.hpp>
 
