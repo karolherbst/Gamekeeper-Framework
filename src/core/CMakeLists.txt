@@ -9,10 +9,12 @@ include_directories(
 
 if(WIN32)
   file(GLOB platform_headers
+    ${GAMEKEEPER_PRIVATE_INCLUDE_DIR}/gamekeeper/core/win32threadhelper.h
     ${GAMEKEEPER_PRIVATE_INCLUDE_DIR}/gamekeeper/core/windowsinformation.h
   )
 
   file(GLOB platform_sources
+    win32threadhelper.cpp
     windowsinformation.cpp
   )
 elseif(LINUX)

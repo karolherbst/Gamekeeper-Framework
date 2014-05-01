@@ -24,22 +24,20 @@
 
 // some platform dependent stuff
 #ifdef GAMEKEEPER_OS_IS_WINDOWS
+  #include <gamekeeper/core/win32threadhelper.h>
   #include <gamekeeper/core/windowsinformation.h>
   #define OSINFORMATIONCLASS WindowsInformation
+  #define THREADHELPERCLASS Win32ThreadHelper
 #else
   #include <gamekeeper/core/linuxinformation.h>
+  #include <gamekeeper/core/pthreadhelper.h>
   #define OSINFORMATIONCLASS LinuxInformation
+  #define THREADHELPERCLASS PthreadHelper
 #endif
+
 #include <gamekeeper/core/ospaths.h>
 #include <gamekeeper/core/propertyresolver.h>
 #include <gamekeeper/core/stdc++11threadmanager.h>
-
-#ifdef GAMEKEEPER_PTHREAD
-  #include <gamekeeper/core/pthreadhelper.h>
-  #define THREADHELPERCLASS PthreadHelper
-#else
-  #error only pthread is currently supported
-#endif
 
 #include <boost/filesystem/operations.hpp>
 
