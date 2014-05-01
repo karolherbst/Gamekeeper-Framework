@@ -18,6 +18,8 @@ add_custom_target(headers
     gamekeeper/core/threadfactory.h
 
     gamekeeper/model/game.h
+
+    gamekeeper/utils/stringutils.h
 )
 
 install(DIRECTORY gamekeeper
