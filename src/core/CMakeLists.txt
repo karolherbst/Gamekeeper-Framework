@@ -59,3 +59,11 @@ target_link_libraries(gamekeeperCore
   ${Boost_SYSTEM_LIBRARY}
   ${CMAKE_THREAD_LIBS_INIT}
 )
+
+if(MINGW)
+  add_definitions(-DBOOST_THREAD_USE_LIB)
+  target_link_libraries(gamekeeperCore
+    ${Boost_CHRONO_LIBRARY}
+    ${Boost_THREAD_LIBRARY}
+  )
+endif()

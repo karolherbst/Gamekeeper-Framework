@@ -82,7 +82,11 @@ endif()
 
 find_package(Hypodermic)
 if(NOT HYPODERMIC_FOUND)
-  set(boost_ADDITIONAL_COMPONENTS signals)
+  list(APPEND boost_ADDITIONAL_COMPONENTS signals)
+endif()
+
+if(MINGW)
+  list(APPEND boost_ADDITIONAL_COMPONENTS chrono thread)
 endif()
 
 # boost
