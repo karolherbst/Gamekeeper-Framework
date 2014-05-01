@@ -39,7 +39,7 @@ GAMEKEEPER_NAMESPACE_START(core)
  */
 interface PUBLIC_API PropertyResolver
 {
-	PUBLIC_INLINE GAMEKEEPER_INTERFACE_DESTRUCTOR(PropertyResolver)
+	GAMEKEEPER_INTERFACE_METHODS(PropertyResolver);
 
 	/**
 	 * returns the typed property of the given key

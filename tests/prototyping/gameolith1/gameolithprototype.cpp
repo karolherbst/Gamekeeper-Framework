@@ -86,6 +86,13 @@ GameolithPrototype::GameolithPrototype(gamekeeper::core::Logger& _logger)
 :	logger(_logger){}
 
 void
+GameolithPrototype::addOptions(boost::program_options::options_description_easy_init &,
+                               boost::program_options::options_description_easy_init &,
+                               boost::program_options::options_description_easy_init &)
+{
+}
+
+void
 GameolithPrototype::init(const ConfigMap &)
 {
 	config["bindings.games"] = "$[*]";

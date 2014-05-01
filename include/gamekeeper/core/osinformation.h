@@ -41,7 +41,7 @@ GAMEKEEPER_NAMESPACE_START(core)
  */
 interface PUBLIC_API OSInformation
 {
-	PUBLIC_INLINE GAMEKEEPER_INTERFACE_DESTRUCTOR(OSInformation)
+	GAMEKEEPER_INTERFACE_METHODS(OSInformation);
 
 	/**
 	 * returns the value of the given environment variable name

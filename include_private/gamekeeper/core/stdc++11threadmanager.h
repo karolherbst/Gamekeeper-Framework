@@ -40,8 +40,8 @@
 
 GAMEKEEPER_NAMESPACE_START(core)
 
-class Logger;
-class LoggerFactory;
+interface Logger;
+interface LoggerFactory;
 
 class PUBLIC_API StdCpp11ThreadManager : public ThreadManager, public ThreadFactory
 {

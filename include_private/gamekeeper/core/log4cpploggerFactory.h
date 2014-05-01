@@ -35,7 +35,7 @@ namespace log4cpp
 
 GAMEKEEPER_NAMESPACE_START(core)
 
-class Logger;
+interface Logger;
 
 class PUBLIC_API Log4cppLoggerFactory : public LoggerFactory
 {

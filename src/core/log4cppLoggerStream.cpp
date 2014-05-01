@@ -27,6 +27,9 @@ GAMEKEEPER_NAMESPACE_START(core)
 Log4cppLoggerStream::Log4cppLoggerStream(log4cpp::CategoryStream log4cppStream)
 :	stream(log4cppStream){}
 
+Log4cppLoggerStream::Log4cppLoggerStream(const Log4cppLoggerStream & l)
+:	Log4cppLoggerStream(l.stream){}
+
 LoggerStream&
 Log4cppLoggerStream::operator<<(const std::string& str)
 {

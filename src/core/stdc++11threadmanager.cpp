@@ -32,8 +32,8 @@ GAMEKEEPER_NAMESPACE_START(core)
 
 StdCpp11ThreadManager::StdCpp11ThreadManager(std::shared_ptr<NativeThreadHelper> _nativeThreadHelper,
                                              std::shared_ptr<LoggerFactory> loggerFactory)
-:	nativeThreadHelper(_nativeThreadHelper),
-	logger(loggerFactory->getComponentLogger("Threads")){}
+:	logger(loggerFactory->getComponentLogger("Threads")),
+	nativeThreadHelper(_nativeThreadHelper){}
 
 StdCpp11ThreadManager::~StdCpp11ThreadManager()
 {
@@ -133,7 +133,7 @@ StdCpp11ThreadManager::createThread(const char * name, ThreadFunction function)
 			"\" finished" << endl;
 		// we have to detach here, because otherwise terminate() is called within this thread in erase()
 		t.detach();
-		std::lock_guard<std::timed_mutex> activeThreadsLock(activeThreadsMtx);
+		std::lock_guard<std::timed_mutex> newThreadsLock(activeThreadsMtx);
 		this->activeThreads.erase(std::this_thread::get_id());
 	});
 	// sadly :( gcc 4.7 doesn't know emplace

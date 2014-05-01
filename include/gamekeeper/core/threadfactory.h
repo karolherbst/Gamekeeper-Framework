@@ -43,7 +43,7 @@ GAMEKEEPER_NAMESPACE_START(core)
  */
 interface PUBLIC_API ThreadFactory
 {
-	PUBLIC_API GAMEKEEPER_INTERFACE_DESTRUCTOR(ThreadFactory)
+	GAMEKEEPER_INTERFACE_METHODS(ThreadFactory);
 
 	/**
 	 * Signature of functions used for creating Threads.

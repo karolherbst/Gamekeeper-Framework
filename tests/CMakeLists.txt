@@ -1,3 +1,6 @@
+# disable warnings and stuff, because test aren't about clean programming
+add_compiler_flags(-w)
+
 if(BUILD_TESTS)
   add_subdirectory(core)
 endif()

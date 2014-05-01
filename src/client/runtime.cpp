@@ -112,9 +112,9 @@ fillProperties(po::options_description & cmd, po::options_description & file)
 }
 
 int
-GameKeeperRuntime::main(int argc, const char* argv[], GameKeeperUI * gameKeeperUI)
+GameKeeperRuntime::main(int argc, const char* argv[], GameKeeperUI * newGameKeeperUI)
 {
-	this->gameKeeperUI = gameKeeperUI;
+	this->gameKeeperUI = newGameKeeperUI;
 
 	po::options_description descCmd;
 	po::options_description descFile;
@@ -160,8 +160,9 @@ GameKeeperRuntime::main(int argc, const char* argv[], GameKeeperUI * gameKeeperU
 
 	Hypodermic::ContainerBuilder containerBuilder;
 	{
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-parameter"
 		using namespace gamekeeper::core;
-
 		// set up IoC container
 		containerBuilder.registerInstance<LoggerFactory>(
 			localContainer->resolve<gamekeeper::core::LoggerFactory>())->
@@ -171,24 +172,26 @@ GameKeeperRuntime::main(int argc, const char* argv[], GameKeeperUI * gameKeeperU
 			as<PropertyResolver>()->
 			singleInstance();
 		containerBuilder.registerType<OSINFORMATIONCLASS>()->
-		        as<OSInformation>()->
-		        singleInstance();
+			as<OSInformation>()->
+			singleInstance();
 		containerBuilder.registerType<XDGPaths>(CREATE(new XDGPaths(INJECT(OSInformation))))->
-		        as<OSPaths>()->
-		        singleInstance();
+			as<OSPaths>()->
+			singleInstance();
 		containerBuilder.registerType<CurlFileDownloader>(
 			CREATE(new CurlFileDownloader(INJECT(LoggerFactory), INJECT(PropertyResolver), INJECT(OSPaths))))->
-		        as<FileDownloader>()->
-		        as<HttpFileDownloader>()->
-		        singleInstance();
+			as<FileDownloader>()->
+			as<HttpFileDownloader>()->
+			singleInstance();
 		containerBuilder.registerType<THREADHELPERCLASS>()->
-		        as<NativeThreadHelper>()->
+			as<NativeThreadHelper>()->
 		        singleInstance();
-		containerBuilder.registerType<StdCpp11ThreadManager>(CREATE(new StdCpp11ThreadManager(INJECT(NativeThreadHelper),
-		                                                                                      INJECT(LoggerFactory))))->
-		        as<ThreadManager>()->
-		        as<ThreadFactory>()->
-		        singleInstance();
+		containerBuilder.registerType<StdCpp11ThreadManager>(
+			CREATE(new StdCpp11ThreadManager(INJECT(NativeThreadHelper),
+		                                     INJECT(LoggerFactory))))->
+			as<ThreadManager>()->
+			as<ThreadFactory>()->
+			singleInstance();
+#pragma GCC diagnostic pop
 	}
 	container = containerBuilder.build();
 

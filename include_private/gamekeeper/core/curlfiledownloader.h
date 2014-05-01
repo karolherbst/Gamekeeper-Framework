@@ -24,6 +24,7 @@
 #include <gamekeeper/core/common.h>
 
 #include <memory>
+#include <unordered_set>
 
 #include <gamekeeper/core/httpfiledownloader.h>
 #include <gamekeeper/core/ospaths.h>
@@ -34,15 +35,15 @@
 GAMEKEEPER_NAMESPACE_START(core)
 
 class CURLPrivateData;
-class Logger;
-class LoggerFactory;
+interface Logger;
+interface LoggerFactory;
 
 class PUBLIC_API CurlFileDownloader : public HttpFileDownloader
 {
 public:
 	PUBLIC_API CurlFileDownloader(std::shared_ptr<LoggerFactory>, std::shared_ptr<PropertyResolver>, std::shared_ptr<OSPaths>);
 	PRIVATE_API ~CurlFileDownloader();
-	PRIVATE_API GAMEKEEPER_IMPLEMENTATION_OVERRIDE(bool supportsProtocol(const char * const protocolName, size_t nameSize));
+	PRIVATE_API GAMEKEEPER_IMPLEMENTATION_OVERRIDE(bool supportsProtocol(const char * const protocolName));
 	PRIVATE_API GAMEKEEPER_IMPLEMENTATION_OVERRIDE(void downloadFile(const char * const url, DownloadCallback callback));
 	PRIVATE_API GAMEKEEPER_IMPLEMENTATION_OVERRIDE(void downloadFileWithCookies(const char * const url,
 	                                                                         DownloadCallback callback,
@@ -59,6 +60,8 @@ private:
 	PRIVATE_API void handleFileDownload(CURLPrivateData & curl, FileDownloader::DownloadCallback * func,
 	                                    const char * const url);
 	PRIVATE_API boost::filesystem::path resolveDownloadPath(const char * const url);
+	
+	static const std::unordered_set<std::string> supportedProtocols;
 };
 
 GAMEKEEPER_NAMESPACE_END(core)

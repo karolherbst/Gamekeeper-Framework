@@ -15,3 +15,15 @@ endif()
 
 # having as-needed enabled is good practise
 add_linker_flags(-Wl,--as-needed)
+
+# disable some warnings
+add_compiler_flags(
+  -Wno-padded
+  -Wno-sign-conversion
+  -Wno-switch-enum
+)
+
+# enable warnings we want to enforce
+add_compiler_flags(-Werror
+  -Wswitch
+)
