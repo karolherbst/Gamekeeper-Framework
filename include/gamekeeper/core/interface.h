@@ -25,20 +25,20 @@
 
 /**
  * this method auto creates all needed methods for interfaces
- * 
+ *
  * @author Karol Herbst
  * @since 0
  * @param type the name of the interface
  */
 #define GAMEKEEPER_INTERFACE_METHODS(type) \
-	PUBLIC_API virtual ~type(){} \
-	PUBLIC_API type() = default; \
+	PUBLIC_INLINE virtual ~type(){} \
+	PUBLIC_INLINE type() = default; \
 	PRIVATE_API type(const type&) = delete; \
 	PRIVATE_API type & operator=(const type &) = delete
 
 /**
  * this method auto creates the pure virtual method given
- * 
+ *
  * @author Karol Herbst
  * @since 0
  * @param method the method signature
@@ -47,7 +47,7 @@
 
 /**
  * this macro shall be used to override interface methods
- * 
+ *
  * @author Karol Herbst
  * @since 0
  * @param method the method signature
