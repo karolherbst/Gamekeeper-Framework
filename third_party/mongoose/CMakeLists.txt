@@ -19,3 +19,9 @@ add_library(mongoose ${sources} ${headers})
 target_link_libraries(mongoose
   ${CMAKE_DL_LIBS}
 )
+
+if(WIN32)
+  target_link_libraries(mongoose
+    ws2_32
+  )
+endif()
