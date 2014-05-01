@@ -23,9 +23,6 @@
 #include <gamekeeper/core/osinformation.h>
 #include <gamekeeper/core/xdgpaths.h>
 
-#include <pwd.h>
-#include <sys/stat.h>
-
 #include <boost/filesystem/fstream.hpp>
 #include <boost/filesystem/operations.hpp>
 
@@ -77,13 +74,13 @@ TEST_F(XDGPathsTest, XDG_DATA_notSet)
 
 TEST_F(XDGPathsTest, XDG_DATA_HOME_notSet_XDG_DATA_DIRS_set_butEmpty)
 {
-	this->osInfo->setEnv("XDG_DATA_DIRS", this->currentTestPathMulti1.c_str());
+	this->osInfo->setEnv("XDG_DATA_DIRS", this->currentTestPathMulti1.string().c_str());
 	EXPECT_TRUE(Path(this->osInfo->getEnv("HOME")) / ".local" / "share" / "gamekeeper" / "test.file" == this->osPaths->getDataFile("test.file"));
 }
 
 TEST_F(XDGPathsTest, XDG_DATA_HOME_notSet_XDG_DATA_DIRS_set_notEmpty)
 {
-	this->osInfo->setEnv("XDG_DATA_DIRS", this->currentTestPathMulti1.c_str());
+	this->osInfo->setEnv("XDG_DATA_DIRS", this->currentTestPathMulti1.string().c_str());
 	fs::create_directories(this->currentTestPathMulti1 / "gamekeeper");
 	fs::ofstream stream(this->currentTestPathMulti1 / "gamekeeper" / "test.file");
 	// if the file is open it was already created
@@ -93,21 +90,21 @@ TEST_F(XDGPathsTest, XDG_DATA_HOME_notSet_XDG_DATA_DIRS_set_notEmpty)
 
 TEST_F(XDGPathsTest, XDG_DATA_HOME_set_XDG_DATA_DIRS_notSet)
 {
-	this->osInfo->setEnv("XDG_DATA_HOME", this->currentTestPathMulti1.c_str());
+	this->osInfo->setEnv("XDG_DATA_HOME", this->currentTestPathMulti1.string().c_str());
 	EXPECT_TRUE(this->currentTestPathMulti1 / "gamekeeper" / "test.file" == this->osPaths->getDataFile("test.file"));
 }
 
 TEST_F(XDGPathsTest, XDG_DATA_HOME_set_XDG_DATA_DIRS_set_butEmpty)
 {
-	this->osInfo->setEnv("XDG_DATA_HOME", this->currentTestPathSingle.c_str());
-	this->osInfo->setEnv("XDG_DATA_DIRS", this->currentTestPathMulti1.c_str());
+	this->osInfo->setEnv("XDG_DATA_HOME", this->currentTestPathSingle.string().c_str());
+	this->osInfo->setEnv("XDG_DATA_DIRS", this->currentTestPathMulti1.string().c_str());
 	EXPECT_TRUE(this->currentTestPathSingle / "gamekeeper" / "test.file" == this->osPaths->getDataFile("test.file"));
 }
 
 TEST_F(XDGPathsTest, XDG_DATA_HOME_set_butEmpty_XDG_DATA_DIRS_set_notEmpty)
 {
-	this->osInfo->setEnv("XDG_DATA_HOME", this->currentTestPathSingle.c_str());
-	this->osInfo->setEnv("XDG_DATA_DIRS", this->currentTestPathMulti1.c_str());
+	this->osInfo->setEnv("XDG_DATA_HOME", this->currentTestPathSingle.string().c_str());
+	this->osInfo->setEnv("XDG_DATA_DIRS", this->currentTestPathMulti1.string().c_str());
 	fs::create_directories(this->currentTestPathMulti1 / "gamekeeper");
 	fs::ofstream stream(this->currentTestPathMulti1 / "gamekeeper" / "test.file");
 	// if the file is open it was already created
@@ -117,8 +114,8 @@ TEST_F(XDGPathsTest, XDG_DATA_HOME_set_butEmpty_XDG_DATA_DIRS_set_notEmpty)
 
 TEST_F(XDGPathsTest, XDG_DATA_HOME_set_notEmpty_XDG_DATA_DIRS_set_notEmpty)
 {
-	this->osInfo->setEnv("XDG_DATA_HOME", this->currentTestPathSingle.c_str());
-	this->osInfo->setEnv("XDG_DATA_DIRS", this->currentTestPathMulti1.c_str());
+	this->osInfo->setEnv("XDG_DATA_HOME", this->currentTestPathSingle.string().c_str());
+	this->osInfo->setEnv("XDG_DATA_DIRS", this->currentTestPathMulti1.string().c_str());
 	fs::create_directories(this->currentTestPathSingle / "gamekeeper");
 	fs::create_directories(this->currentTestPathMulti1 / "gamekeeper");
 	fs::ofstream streamSingle(this->currentTestPathSingle / "gamekeeper" / "test.file");
@@ -161,13 +158,13 @@ TEST_F(XDGPathsTest, XDG_CONFIG_notSet)
 
 TEST_F(XDGPathsTest, XDG_CONFIG_HOME_notSet_XDG_CONFIG_DIRS_set_butEmpty)
 {
-	this->osInfo->setEnv("XDG_CONFIG_DIRS", this->currentTestPathMulti1.c_str());
+	this->osInfo->setEnv("XDG_CONFIG_DIRS", this->currentTestPathMulti1.string().c_str());
 	EXPECT_TRUE(Path(this->osInfo->getEnv("HOME")) / ".config" / "gamekeeper" / "test.file" == this->osPaths->getConfigFile("test.file"));
 }
 
 TEST_F(XDGPathsTest, XDG_CONFIG_HOME_notSet_XDG_CONFIG_DIRS_set_notEmpty)
 {
-	this->osInfo->setEnv("XDG_CONFIG_DIRS", this->currentTestPathMulti1.c_str());
+	this->osInfo->setEnv("XDG_CONFIG_DIRS", this->currentTestPathMulti1.string().c_str());
 	fs::create_directories(this->currentTestPathMulti1 / "gamekeeper");
 	fs::ofstream stream(this->currentTestPathMulti1 / "gamekeeper" / "test.file");
 	// if the file is open it was already created
@@ -177,21 +174,21 @@ TEST_F(XDGPathsTest, XDG_CONFIG_HOME_notSet_XDG_CONFIG_DIRS_set_notEmpty)
 
 TEST_F(XDGPathsTest, XDG_CONFIG_HOME_set_XDG_CONFIG_DIRS_notSet)
 {
-	this->osInfo->setEnv("XDG_CONFIG_HOME", this->currentTestPathSingle.c_str());
+	this->osInfo->setEnv("XDG_CONFIG_HOME", this->currentTestPathSingle.string().c_str());
 	EXPECT_TRUE(this->currentTestPathSingle / "gamekeeper" / "test.file" == this->osPaths->getConfigFile("test.file"));
 }
 
 TEST_F(XDGPathsTest, XDG_CONFIG_HOME_set_XDG_CONFIG_DIRS_set_butEmpty)
 {
-	this->osInfo->setEnv("XDG_CONFIG_HOME", this->currentTestPathSingle.c_str());
-	this->osInfo->setEnv("XDG_CONFIG_DIRS", this->currentTestPathMulti1.c_str());
+	this->osInfo->setEnv("XDG_CONFIG_HOME", this->currentTestPathSingle.string().c_str());
+	this->osInfo->setEnv("XDG_CONFIG_DIRS", this->currentTestPathMulti1.string().c_str());
 	EXPECT_TRUE(this->currentTestPathSingle / "gamekeeper" / "test.file" == this->osPaths->getConfigFile("test.file"));
 }
 
 TEST_F(XDGPathsTest, XDG_CONFIG_HOME_set_butEmpty_XDG_CONFIG_DIRS_set_notEmpty)
 {
-	this->osInfo->setEnv("XDG_CONFIG_HOME", this->currentTestPathSingle.c_str());
-	this->osInfo->setEnv("XDG_CONFIG_DIRS", this->currentTestPathMulti1.c_str());
+	this->osInfo->setEnv("XDG_CONFIG_HOME", this->currentTestPathSingle.string().c_str());
+	this->osInfo->setEnv("XDG_CONFIG_DIRS", this->currentTestPathMulti1.string().c_str());
 	fs::create_directories(this->currentTestPathMulti1 / "gamekeeper");
 	fs::ofstream stream(this->currentTestPathMulti1 / "gamekeeper" / "test.file");
 	// if the file is open it was already created
@@ -201,8 +198,8 @@ TEST_F(XDGPathsTest, XDG_CONFIG_HOME_set_butEmpty_XDG_CONFIG_DIRS_set_notEmpty)
 
 TEST_F(XDGPathsTest, XDG_CONFIG_HOME_set_notEmpty_XDG_CONFIG_DIRS_set_notEmpty)
 {
-	this->osInfo->setEnv("XDG_CONFIG_HOME", this->currentTestPathSingle.c_str());
-	this->osInfo->setEnv("XDG_CONFIG_DIRS", this->currentTestPathMulti1.c_str());
+	this->osInfo->setEnv("XDG_CONFIG_HOME", this->currentTestPathSingle.string().c_str());
+	this->osInfo->setEnv("XDG_CONFIG_DIRS", this->currentTestPathMulti1.string().c_str());
 	fs::create_directories(this->currentTestPathSingle / "gamekeeper");
 	fs::create_directories(this->currentTestPathMulti1 / "gamekeeper");
 	fs::ofstream streamSingle(this->currentTestPathSingle / "gamekeeper" / "test.file");
@@ -245,7 +242,7 @@ TEST_F(XDGPathsTest, XDG_CACHE_HOME_notSet)
 
 TEST_F(XDGPathsTest, XDG_CACHE_HOME_set)
 {
-	this->osInfo->setEnv("XDG_CACHE_HOME", this->currentTestPathSingle.c_str());
+	this->osInfo->setEnv("XDG_CACHE_HOME", this->currentTestPathSingle.string().c_str());
 	EXPECT_TRUE(this->currentTestPathSingle / "gamekeeper" / "test.file" == this->osPaths->getCacheFile("test.file"));
 }
 
@@ -266,6 +263,6 @@ TEST_F(XDGPathsTest, XDG_RUNTIME_DIR_notSet)
 
 TEST_F(XDGPathsTest, XDG_RUNTIME_DIR_set)
 {
-	this->osInfo->setEnv("XDG_RUNTIME_DIR", this->currentTestPathSingle.c_str());
+	this->osInfo->setEnv("XDG_RUNTIME_DIR", this->currentTestPathSingle.string().c_str());
 	EXPECT_TRUE(this->currentTestPathSingle / "gamekeeper" / "test.file" == this->osPaths->getRuntimeFile("test.file"));
 }
