@@ -1,0 +1,66 @@
+/*
+ * GameKeeper Framework
+ *
+ * Copyright (C) 2013 Karol Herbst <gamekeeper@karolherbst.de>
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ */
+
+#ifndef GAMEKEEPER_STD_COMPAT_THREAD
+#define GAMEKEEPER_STD_COMPAT_THREAD 1
+
+#include <gamekeeper/core/common.h>
+
+#include <thread>
+
+#if defined(__GNUC__) && !defined(__clang__) && (!defined(_GLIBCXX_HAS_GTHREADS) || !defined(_GLIBCXX_USE_C99_STDINT_TR1))
+
+#include <boost/chrono/duration.hpp>
+#include <boost/thread/thread.hpp>
+
+namespace std
+{
+	class PUBLIC_API thread : public boost::thread
+	{
+	public:
+		template<typename Callable>
+		PUBLIC_INLINE thread (Callable func) : boost::thread(func){};
+	};
+
+namespace this_thread
+{
+	PUBLIC_INLINE inline thread::id get_id() noexcept
+	{
+		return boost::this_thread::get_id();
+	}
+
+	template <class Rep, class Period>
+	PUBLIC_INLINE inline void sleep_for (const chrono::duration<Rep,Period>& rel_time)
+	{
+		typedef boost::chrono::duration<Rep, boost::ratio<Period::num, Period::den>> BDuration;
+		boost::this_thread::sleep_for(BDuration(rel_time.count()));
+	}
+
+	template <class Clock, class Duration>
+	PUBLIC_INLINE inline void sleep_until (const chrono::time_point<Clock,Duration>& abs_time)
+	{
+		sleep_for(abs_time - Clock::now());
+	}
+}
+}
+
+#endif
+
+#endif //GAMEKEEPER_STD_COMPAT_THREAD

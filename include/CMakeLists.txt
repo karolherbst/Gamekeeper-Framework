@@ -2,6 +2,9 @@
 
 add_custom_target(headers
   SOURCES
+    std_compat/mutex
+    std_compat/thread
+
     gamekeeper/client/autowire.h
     gamekeeper/client/gamekeeper.h
     gamekeeper/client/hypodermic.h

@@ -25,8 +25,9 @@
 #include <iostream>
 #include <iterator>
 #include <sstream>
-#include <thread>
 #include <vector>
+
+#include <std_compat/thread>
 
 #include <gamekeeper/core/curlfiledownloader.h>
 #include <gamekeeper/core/logger.h>
