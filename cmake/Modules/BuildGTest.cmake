@@ -35,4 +35,4 @@ endif()
 
 set(GTEST_BOTH_LIBRARIES ${GTEST_LIBRARIES} ${GTEST_MAIN_LIBRARIES})
 
-install_external_library(gtest ${GTEST_INSTALL_LIB} ${GTEST_INSTALL_MAIN_LIB})
+install_external_library(gtest FALSE ${GTEST_INSTALL_LIB} ${GTEST_INSTALL_MAIN_LIB})
