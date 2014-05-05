@@ -87,7 +87,7 @@ endfunction()
 function(install_external_library target system_wide)
   foreach(file ${ARGN})
     if(${system_wide})
-      install(CODE "get_filename_component(resolved_file \"${file}\" REALPATH)\n get_filename_component(file_name \"${file}\" NAME)\n file(INSTALL DESTINATION ${LIB_INSTALL_DIR} TYPE FILE RENAME \${file_name} FILES \"\${resolved_file}\" )")
+      install(CODE "get_filename_component(resolved_file \"${file}\" REALPATH)\n get_filename_component(file_name \"${file}\" NAME)\n file(INSTALL DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR} TYPE FILE RENAME \${file_name} FILES \"\${resolved_file}\" )")
     endif()
     add_copy_target_file_step(${target} "${file}")
   endforeach()
@@ -96,8 +96,8 @@ endfunction()
 function(install_library target)
   # dlls are runtime targets, import libs are archive, but we don't need them
   install(TARGETS "${target}"
-          RUNTIME DESTINATION "${LIB_INSTALL_DIR}"
-          LIBRARY DESTINATION "${LIB_INSTALL_DIR}")
+          RUNTIME DESTINATION "${CMAKE_INSTALL_FULL_LIBDIR}"
+          LIBRARY DESTINATION "${CMAKE_INSTALL_FULL_LIBDIR}")
   add_copy_target_step(${target})
 endfunction()
 

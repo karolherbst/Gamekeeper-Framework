@@ -19,3 +19,7 @@ add_custom_target(headers
 
     gamekeeper/model/game.h
 )
+
+install(DIRECTORY gamekeeper
+  DESTINATION ${CMAKE_INSTALL_FULL_INCLUDEDIR}
+)
