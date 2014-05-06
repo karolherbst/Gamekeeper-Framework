@@ -10,8 +10,6 @@ add_definitions(-DBUILDING_DLL)
 add_subdirectory(utils)
 add_subdirectory(client)
 add_subdirectory(core)
-add_subdirectory(frontend)
-add_subdirectory(model)
 add_subdirectory(bindings)
 
 # some important dependencies
