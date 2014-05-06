@@ -3,21 +3,9 @@ include_directories(
   ${GAMEKEEPER_INCLUDE_DIR}
 )
 
-file(GLOB headers
-  pch.h
-  game.h
-)
-
-file(GLOB sources
-  game.cpp
-)
-
 set(swig_sources
   ../game.i
 )
-
-add_library(gamekeeperModelBindings SHARED ${sources} ${headers})
-install_library(gamekeeperModelBindings)
 
 # only include SWIG if we build our bindings
 if(WITH_CSHARP_BINDINGS OR WITH_JAVA_BINDINGS OR WITH_PYTHON_BINDINGS)
@@ -33,7 +21,6 @@ macro(add_gamekeeper_swig_binding type name module)
   set_source_files_properties(${swig_sources} PROPERTIES CPLUSPLUS ON)
   set_source_files_properties(${swig_sources} PROPERTIES SWIG_FLAGS "-DGAMEKEEPER_BINDING_MODULE=${name};${ARGN}")
   swig_add_module(${name} ${type} ${swig_sources})
-  swig_link_libraries(${name} gamekeeper${module}Bindings)
   set_target_properties(${SWIG_MODULE_${name}_REAL_NAME} PROPERTIES LIBRARY_OUTPUT_DIRECTORY "${SWIG_${swigName}_LIBRARY_PATH}")
 endmacro()
 
