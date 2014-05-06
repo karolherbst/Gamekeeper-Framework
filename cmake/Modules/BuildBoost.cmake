@@ -14,8 +14,8 @@ set(Boost_CONFIGURE_LIBS --with-libraries=system,filesystem,signals,program_opti
 
 ExternalProject_Add(
   boost
-  URL "${Boost_URL}"
-  URL_MD5 ${Boost_MD5}
+  URL "${BOOST_URL}"
+  URL_MD5 ${BOOST_MD5}
   UPDATE_COMMAND ""
   BUILD_IN_SOURCE 1
   CONFIGURE_COMMAND ${Boost_CONFIGURE_COMMAND} ${Boost_CONFIGURE_FLAGS} ${Boost_CONFIGURE_LIBS}
