@@ -5,6 +5,8 @@
 # global Object documentation
 #  BUILD_TESTS          OFF          all      enables the build of unit tests
 #  BUILD_PROTOTYPES     OFF          all      enables the build of prototypes
+#  GENERATE_DOCS        OFF          all      generates documentation (needs doxygen)
+#  INSTALL_DOCS         OFF          all      installs the generated documentation
 #
 # control of bindings
 #  WITH_CSHARP_BINDINGS OFF          all      enables C# bindings (currently broken)
@@ -149,6 +151,7 @@ set(GAMEKEEPER_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/include")
 # build GameKeeper Framework
 #######################################################################################################################
 
+add_subdirectory(doc)
 add_subdirectory(third_party)
 add_subdirectory(include_private)
 add_subdirectory(include)
