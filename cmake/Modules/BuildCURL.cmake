@@ -79,7 +79,7 @@ set(CURL_INCLUDE_DIRS ${CURL_INSTALL_DIR}/include)
 
 if(WIN32 AND NOT MINGW)
   list(APPEND CURL_LIBRARIES "${CURL_LIBRARY_DIR}/libcurl.lib")
-  install_external_library(curl TRUE "${CURL_BIN_DIRS}/libcurl.dll")
+  install_external_library(curl "${CURL_BIN_DIRS}/libcurl.dll")
 else()
   list(APPEND CURL_LIBRARIES "${OPENSSL_LIBRARIES}")
   if(MINGW)
