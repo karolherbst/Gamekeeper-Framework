@@ -18,12 +18,7 @@ if(WIN32)
   set(RUNTIME_LIBDIR "${BINDIR}\\bin")
   set(DATADIR "${BINDIR}\\data")
 else()
-  set(BINDIR ""
-      CACHE STRING "${CMAKE_PROJECT_NAME} Bin Install Dir")
-  set(RUNTIME_LIBDIR "lib"
-      CACHE STRING "${CMAKE_PROJECT_NAME} Lib Dir")
-  set(DATADIR ""
-      CACHE STRING "${CMAKE_PROJECT_NAME} Data Install Dir")
+  include(GNUInstallDirs)
   set(DESKTOPDIR "/usr/share/applications"
       CACHE STRING "Desktop installation directory")
 endif()

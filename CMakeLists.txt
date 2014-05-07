@@ -1,8 +1,27 @@
 #######################################################################################################################
+# list of all option used in this project
+#  name                 default      arch     description
+#
 # global Object documentation
-# name              default      description
-# BUILD_TESTS       OFF          enables the build of unit tests
-# BUILD_PROTOTYPES  OFF          enables the build of prototypes
+#  BUILD_TESTS          OFF          all      enables the build of unit tests
+#  BUILD_PROTOTYPES     OFF          all      enables the build of prototypes
+#  GENERATE_DOCS        OFF          all      generates documentation (needs doxygen)
+#  INSTALL_DOCS         OFF          all      installs the generated documentation
+#
+# control of bindings
+#  WITH_CSHARP_BINDINGS OFF          all      enables C# bindings (currently broken)
+#  WITH_JAVA_BINDINGS   OFF          all      enables Java bindings
+#  WITH_PYTHON_BINDINGS OFF          all      enables Python bindings
+#
+# flags for external libraries
+#  BOOST_URL                         win/mac  Path to the boost archive
+#  BOOST_MD5                         win/mac  md5sum of the used archive
+#  CURL_URL                          win      Path to the curl archive
+#  CURL_MD5                          win      md5sum of the used archive
+#  GTEST_URL                         all      Path to the Gtest archive
+#  GTEST_MD5                         all      md5sum of the used archive
+#  JSONCPP_URL                       win/mac  Path to the JsonCPP archive
+#  JSONCPP_MD5                       win/mac  md5sum of the used archive
 #######################################################################################################################
 
 project(gamekeeper)
@@ -69,7 +88,7 @@ endif()
 # boost
 find_package(Boost 1.44 COMPONENTS filesystem program_options system ${boost_ADDITIONAL_COMPONENTS} ${REQUIRED_ON_LINUX})
 if(NOT Boost_FOUND)
-  set_download_url(Boost http://sourceforge.net/projects/boost/files/boost/1.55.0/boost_1_55_0.zip/download 8aca361a4713a1f491b0a5e33fee0f1f)
+  set_download_url(BOOST http://sourceforge.net/projects/boost/files/boost/1.55.0/boost_1_55_0.zip/download 8aca361a4713a1f491b0a5e33fee0f1f)
   include(BuildBoost)
 endif()
 
@@ -132,6 +151,7 @@ set(GAMEKEEPER_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/include")
 # build GameKeeper Framework
 #######################################################################################################################
 
+add_subdirectory(doc)
 add_subdirectory(third_party)
 add_subdirectory(include_private)
 add_subdirectory(include)

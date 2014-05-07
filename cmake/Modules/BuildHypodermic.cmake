@@ -5,7 +5,6 @@ ExternalProject_Add(
   URL https://github.com/karolherbst/hypodermic/archive/master.zip
   CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${HYPODERMIC_INSTALL_DIR} -DBT=SHARED -DBOOST_INCLUDEDIR=${Boost_INCLUDE_DIRS} -DBOOST_LIBRARYDIR=${Boost_LIBRARY_DIRS}
   BUILD_IN_SOURCE 0
-  SOURCE_DIR <prefix>/src/<name>/hypodermic-master/
 )
 
 if(MINGW)
@@ -14,3 +13,5 @@ else()
   set(HYPODERMIC_LIBRARIES ${HYPODERMIC_INSTALL_DIR}/lib/libhypodermic.so)
 endif()
 set(HYPODERMIC_INCLUDE_DIRS ${HYPODERMIC_INSTALL_DIR}/include)
+install_external_library(hypodermic ${HYPODERMIC_LIBRARIES})
+install(DIRECTORY ${HYPODERMIC_INCLUDE_DIRS}/Hypodermic DESTINATION ${CMAKE_INSTALL_FULL_INCLUDEDIR})
