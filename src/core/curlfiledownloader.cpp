@@ -119,6 +119,7 @@ CurlFileDownloadInfo::callback()
 	{
 		namespace bio = boost::iostreams;
 		bio::stream<bio::basic_array_source<gkbyte_t>> stream(this->dataBuffer.data(), this->dataBuffer.size());
+		stream.peek();
 		(*this->func)(stream);
 	}
 	else
