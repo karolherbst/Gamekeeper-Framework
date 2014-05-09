@@ -43,4 +43,4 @@ target_link_libraries(gamekeeperUnitTests
   ${HYPODERMIC_LIBRARIES}
 )
 
-add_test(gamekeeperUnitTests gamekeeperUnitTests)
+add_test(gamekeeperUnitTests gamekeeperUnitTests${CMAKE_EXECUTABLE_SUFFIX})
