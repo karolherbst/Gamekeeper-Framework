@@ -20,6 +20,7 @@
 
 #include <gamekeeper/core/common.h>
 
+#include <exception>
 #include <sstream>
 
 #include <gamekeeper/core/curlfiledownloader.h>
@@ -34,10 +35,16 @@ using namespace gamekeeper::utils;
 #define CURL_DOWNLOAD_TEST(url, body) \
 { \
 	bool handled = false; \
-	this->fileDownloader->downloadFile(url, [&](FileDownloader::ByteIstream & is) -> bool {body}); \
+	std::exception_ptr ex; \
+	this->fileDownloader->downloadFile(url, [&](FileDownloader::ByteIstream & is) -> bool \
+	{ \
+		try { body } catch (...) { ex = std::current_exception(); } \
+	}); \
 	EXPECT_TRUE(handled); \
+	if(ex) std::rethrow_exception(ex); \
 }
-	
+
+
 class CurlFiledownloaderTest : public gamekeeper::test::WebServerFicture
 {
 protected:
