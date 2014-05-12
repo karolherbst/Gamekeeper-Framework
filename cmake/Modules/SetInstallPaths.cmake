@@ -1,61 +1,20 @@
 if(UNIX)
   set(DEFAULT_INSTALL_DIR "/usr/local")
 elseif(WIN32)
-  set(DEFAULT_INSTALL_DIR "install")
-endif()
-
-if(CMAKE_HOST_WIN32)
-  set(SYSTEM_ROOT_DIR "C:/")
-else()
-  set(SYSTEM_ROOT_DIR "/")
+  set(DEFAULT_INSTALL_DIR "${CMAKE_SOURCE_DIR}/install")
 endif()
 
 set(CMAKE_INSTALL_PREFIX ${DEFAULT_INSTALL_DIR}
     CACHE STRING "${CMAKE_PROJECT_NAME} Install Prefix")
 
-if(WIN32)
-  set(BINDIR "${CMAKE_BUILD_TYPE}_Out")
-  set(RUNTIME_LIBDIR "${BINDIR}\\bin")
-  set(DATADIR "${BINDIR}\\data")
+# on mingw someone might get the idea to install it in mingw system root
+if(WIN32 AND NOT MINGW)
+  # use GNUInstallDirs compatibility layer on win32
+  set(CMAKE_INSTALL_FULL_BINDIR "${CMAKE_INSTALL_PREFIX}/bin")
+  set(CMAKE_INSTALL_FULL_INCLUDEDIR "${CMAKE_INSTALL_PREFIX}/include")
+  set(CMAKE_INSTALL_FULL_LIBDIR "${CMAKE_INSTALL_PREFIX}/lib")
 else()
   include(GNUInstallDirs)
   set(DESKTOPDIR "/usr/share/applications"
       CACHE STRING "Desktop installation directory")
 endif()
-
-# set variables used by cmake
-if(IS_ABSOLUTE ${BINDIR})
-  set(BIN_INSTALL_DIR ${BINDIR})
-  set(BIN_INSOURCE_DIR ${BINDIR})
-else()
-  set(BIN_INSTALL_DIR ${CMAKE_INSTALL_PREFIX}/${BINDIR})
-  file(RELATIVE_PATH BIN_INSOURCE_DIR ${SYSTEM_ROOT_DIR} ${BIN_INSTALL_DIR})
-endif()
-
-if(IS_ABSOLUTE ${RUNTIME_LIBDIR})
-  set(LIB_INSTALL_DIR ${RUNTIME_LIBDIR}/${CMAKE_PROJECT_NAME})
-  set(RUNTIME_LIB_INSOURCE_DIR ${RUNTIME_LIBDIR}/${CMAKE_PROJECT_NAME})
-else()
-  set(LIB_INSTALL_DIR ${CMAKE_INSTALL_PREFIX}/${RUNTIME_LIBDIR})
-  file(RELATIVE_PATH RUNTIME_LIB_INSOURCE_DIR ${BIN_INSTALL_DIR} ${LIB_INSTALL_DIR})
-endif()
-
-if(IS_ABSOLUTE ${DATADIR})
-  set(DATA_INSTALL_DIR ${DATADIR}/${CMAKE_PROJECT_NAME})
-  set(DATA_INSOURCE_DIR ${DATADIR}/${CMAKE_PROJECT_NAME})
-else()
-  set(DATA_INSTALL_DIR ${CMAKE_INSTALL_PREFIX}/${DATADIR})
-  if(WIN32)
-    file(RELATIVE_PATH DATA_INSOURCE_DIR ${BIN_INSTALL_DIR} ${DATA_INSTALL_DIR})
-  else()
-    file(RELATIVE_PATH DATA_INSOURCE_DIR ${LIB_INSTALL_DIR} ${DATA_INSTALL_DIR})
-  endif()
-endif()
-
-if(UNIX AND NOT APPLE)
-  if(IS_ABSOLUTE ${DESKTOPDIR})
-    set(DESKTOP_INSTALL_DIR ${DESKTOPDIR})
-  else()
-    message(FATAL_ERROR "DESKTOPDIR has to be absolute, anything else doesn't make sense")
-  endif()
-endif()	

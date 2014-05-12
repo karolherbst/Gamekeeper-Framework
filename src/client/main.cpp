@@ -25,7 +25,7 @@
 #include <gamekeeper/client/gamekeeper.h>
 
 #ifdef GAMEKEEPER_OS_IS_WINDOWS
-  #include <Windows.h>
+  #include <windows.h>
 #endif
 
 /**

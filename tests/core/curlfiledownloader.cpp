@@ -20,6 +20,7 @@
 
 #include <gamekeeper/core/common.h>
 
+#include <exception>
 #include <sstream>
 
 #include <gamekeeper/core/curlfiledownloader.h>
@@ -30,6 +31,19 @@
 
 using namespace gamekeeper::core;
 using namespace gamekeeper::utils;
+
+#define CURL_DOWNLOAD_TEST(url, body) \
+{ \
+	bool handled = false; \
+	std::exception_ptr ex; \
+	this->fileDownloader->downloadFile(url, [&](FileDownloader::ByteIstream & is) -> bool \
+	{ \
+		try { body } catch (...) { ex = std::current_exception(); } \
+	}); \
+	EXPECT_TRUE(handled); \
+	if(ex) std::rethrow_exception(ex); \
+}
+
 
 class CurlFiledownloaderTest : public gamekeeper::test::WebServerFicture
 {
@@ -51,23 +65,18 @@ protected:
 
 TEST_F(CurlFiledownloaderTest, loadEmptyFile)
 {
-	bool handled = false;
-	this->fileDownloader->downloadFile("http://localhost:8080/files/emptyfile",
-	                                   [&](FileDownloader::ByteIstream & is) -> bool
+	CURL_DOWNLOAD_TEST("http://localhost:8080/files/emptyfile",
 	{
 		const std::string data = String::createFromStream(is);
 		EXPECT_EQ("", data);
 		handled = true;
 		return true;
 	});
-	EXPECT_TRUE(handled);
 }
 
 TEST_F(CurlFiledownloaderTest, servertest)
 {
-	bool handled = false;
-	this->fileDownloader->downloadFile("http://localhost:8080/files/fileWithContentHAHa",
-	                                   [&](FileDownloader::ByteIstream & is) -> bool
+	CURL_DOWNLOAD_TEST("http://localhost:8080/files/fileWithContentHAHa",
 	{
 		const std::string data = String::createFromStream(is);
 		EXPECT_LT(4, data.size());
@@ -76,7 +85,6 @@ TEST_F(CurlFiledownloaderTest, servertest)
 		handled = true;
 		return true;
 	});
-	EXPECT_TRUE(handled);
 }
 
 TEST_F(CurlFiledownloaderTest, cookieTest)
@@ -90,14 +98,11 @@ TEST_F(CurlFiledownloaderTest, bigFile)
 {
 	// set buffer size to 0 to disable buffering at all
 	setProperty("network.download", (uint64_t)0);
-	bool handled = false;
-	this->fileDownloader->downloadFile("http://localhost:8080/bigfile/5000",
-	                                  [&](FileDownloader::ByteIstream & is) -> bool
+	CURL_DOWNLOAD_TEST("http://localhost:8080/bigfile/5000",
 	{
 		std::string data = String::createFromStream(is);
 		EXPECT_EQ(5000, data.size());
 		handled = true;
 		return true;
 	});
-	EXPECT_TRUE(handled);
 }

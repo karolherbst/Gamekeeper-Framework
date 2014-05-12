@@ -45,18 +45,15 @@
 
 // some platform dependent stuff
 #ifdef GAMEKEEPER_OS_IS_WINDOWS
+  #include <gamekeeper/core/win32threadhelper.h>
   #include <gamekeeper/core/windowsinformation.h>
   #define OSINFORMATIONCLASS WindowsInformation
+  #define THREADHELPERCLASS Win32ThreadHelper
 #else
   #include <gamekeeper/core/linuxinformation.h>
-  #define OSINFORMATIONCLASS LinuxInformation
-#endif
-
-#ifdef GAMEKEEPER_PTHREAD
   #include <gamekeeper/core/pthreadhelper.h>
+  #define OSINFORMATIONCLASS LinuxInformation
   #define THREADHELPERCLASS PthreadHelper
-#else
-  #error only pthread is currently supported
 #endif
 
 namespace po = boost::program_options;

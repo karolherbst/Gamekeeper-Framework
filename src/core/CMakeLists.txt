@@ -9,10 +9,12 @@ include_directories(
 
 if(WIN32)
   file(GLOB platform_headers
+    ${GAMEKEEPER_PRIVATE_INCLUDE_DIR}/gamekeeper/core/win32threadhelper.h
     ${GAMEKEEPER_PRIVATE_INCLUDE_DIR}/gamekeeper/core/windowsinformation.h
   )
 
   file(GLOB platform_sources
+    win32threadhelper.cpp
     windowsinformation.cpp
   )
 elseif(LINUX)
@@ -59,3 +61,11 @@ target_link_libraries(gamekeeperCore
   ${Boost_SYSTEM_LIBRARY}
   ${CMAKE_THREAD_LIBS_INIT}
 )
+
+if(MINGW)
+  add_definitions(-DBOOST_THREAD_USE_LIB)
+  target_link_libraries(gamekeeperCore
+    ${Boost_CHRONO_LIBRARY}
+    ${Boost_THREAD_LIBRARY}
+  )
+endif()

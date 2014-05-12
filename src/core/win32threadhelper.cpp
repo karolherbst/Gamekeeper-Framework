@@ -20,51 +20,21 @@
 
 #include "pch.h"
 
-#include "windowsinformation.h"
+#include "win32threadhelper.h"
 
-#include <cstdlib>
-
-#include <windows.h>
-#include <shlobj.h>
-
-#include <boost/locale/encoding_utf.hpp>
+#include <std_compat/thread>
 
 GAMEKEEPER_NAMESPACE_START(core)
 
-using boost::locale::conv::utf_to_utf;
-
-std::string
-WindowsInformation::getEnv(const char * name)
-{
-	wchar_t buffer[32767];
-	DWORD size = GetEnvironmentVariableW(utf_to_utf<wchar_t>(name).c_str(), buffer, 32767);
-	return utf_to_utf<char>(buffer, &buffer[size]);
-}
-
 void
-WindowsInformation::setEnv(const char * name, const char * value)
+Win32ThreadHelper::setNameOfThread(std::thread & thread, const char * name)
 {
-	SetEnvironmentVariableW(utf_to_utf<wchar_t>(name).c_str(), utf_to_utf<wchar_t>(value).c_str());
 }
 
 std::string
-WindowsInformation::getEnvSeperator()
+Win32ThreadHelper::getNameOfThread(std::thread & thread)
 {
-	return ";";
-}
-
-boost::filesystem::path
-WindowsInformation::getSystemRoot()
-{
-	return "C:\\";
-}
-
-boost::filesystem::path
-WindowsInformation::getUserPath()
-{
-	TCHAR szPath[MAX_PATH];
-	SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, szPath);
-	return szPath;
+	return "";
 }
 
 GAMEKEEPER_NAMESPACE_END(core)

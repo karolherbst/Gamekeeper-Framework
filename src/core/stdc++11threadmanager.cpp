@@ -22,7 +22,7 @@
 
 #include "stdc++11threadmanager.h"
 
-#include <mutex>
+#include <std_compat/mutex>
 
 #include <gamekeeper/core/logger.h>
 #include <gamekeeper/core/loggerFactory.h>

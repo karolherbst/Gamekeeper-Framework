@@ -18,53 +18,22 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#include "pch.h"
+#ifndef GAMEKEEPER_CORE_WIN32THREADHELPER_H
+#define GAMEKEEPER_CORE_WIN32THREADHELPER_H 1
 
-#include "windowsinformation.h"
+#include <gamekeeper/core/common.h>
 
-#include <cstdlib>
-
-#include <windows.h>
-#include <shlobj.h>
-
-#include <boost/locale/encoding_utf.hpp>
+#include <gamekeeper/core/nativethreadhelper.h>
 
 GAMEKEEPER_NAMESPACE_START(core)
 
-using boost::locale::conv::utf_to_utf;
-
-std::string
-WindowsInformation::getEnv(const char * name)
+class PUBLIC_API Win32ThreadHelper : public NativeThreadHelper
 {
-	wchar_t buffer[32767];
-	DWORD size = GetEnvironmentVariableW(utf_to_utf<wchar_t>(name).c_str(), buffer, 32767);
-	return utf_to_utf<char>(buffer, &buffer[size]);
-}
-
-void
-WindowsInformation::setEnv(const char * name, const char * value)
-{
-	SetEnvironmentVariableW(utf_to_utf<wchar_t>(name).c_str(), utf_to_utf<wchar_t>(value).c_str());
-}
-
-std::string
-WindowsInformation::getEnvSeperator()
-{
-	return ";";
-}
-
-boost::filesystem::path
-WindowsInformation::getSystemRoot()
-{
-	return "C:\\";
-}
-
-boost::filesystem::path
-WindowsInformation::getUserPath()
-{
-	TCHAR szPath[MAX_PATH];
-	SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, szPath);
-	return szPath;
-}
+public:
+	PRIVATE_API GAMEKEEPER_IMPLEMENTATION_OVERRIDE(void setNameOfThread(std::thread & thread, const char * name));
+	PRIVATE_API GAMEKEEPER_IMPLEMENTATION_OVERRIDE(std::string getNameOfThread(std::thread & thread));
+};
 
 GAMEKEEPER_NAMESPACE_END(core)
+
+#endif //GAMEKEEPER_CORE_WIN32THREADHELPER_H

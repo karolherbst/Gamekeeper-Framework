@@ -45,15 +45,21 @@ protected:
 	OSInformation * osInfo = nullptr;
 };
 
+#if defined(GAMEKEEPER_OS_IS_WINDOWS)
+  const char * ENV_PATH = "SYSTEMROOT";
+#else
+  const char * ENV_PATH = "HOME";
+#endif
+
 TEST_F(OSINFORMATIONCLASSTEST, getEnvNotEmpty)
 {
-	std::string home = osInfo->getEnv("HOME");
+	std::string home = osInfo->getEnv(ENV_PATH);
 	EXPECT_FALSE(home.empty());
 }
 
 TEST_F(OSINFORMATIONCLASSTEST, getEnvHomeReturnsFile)
 {
-	path homePath(osInfo->getEnv("HOME"));
+	path homePath(osInfo->getEnv(ENV_PATH));
 	EXPECT_TRUE(exists(homePath));
 	EXPECT_TRUE(is_directory(homePath));
 }
@@ -61,7 +67,7 @@ TEST_F(OSINFORMATIONCLASSTEST, getEnvHomeReturnsFile)
 TEST_F(OSINFORMATIONCLASSTEST, getEnvConsistency)
 {
 	// test that the stored char is not the same
-	std::string home = osInfo->getEnv("HOME");
+	std::string home = osInfo->getEnv(ENV_PATH);
 	std::string path = osInfo->getEnv("PATH");
 
 	EXPECT_NE(home, path);

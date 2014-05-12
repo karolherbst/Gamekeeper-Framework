@@ -25,8 +25,9 @@
 #include <iostream>
 #include <iterator>
 #include <sstream>
-#include <thread>
 #include <vector>
+
+#include <std_compat/thread>
 
 #include <gamekeeper/core/curlfiledownloader.h>
 #include <gamekeeper/core/logger.h>
@@ -118,6 +119,7 @@ CurlFileDownloadInfo::callback()
 	{
 		namespace bio = boost::iostreams;
 		bio::stream<bio::basic_array_source<gkbyte_t>> stream(this->dataBuffer.data(), this->dataBuffer.size());
+		stream.peek();
 		(*this->func)(stream);
 	}
 	else

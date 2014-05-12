@@ -71,7 +71,8 @@ include(SetInstallPaths)
 find_package(Threads REQUIRED)
 if(CMAKE_USE_PTHREADS_INIT)
   add_definitions(-DGAMEKEEPER_PTHREAD)
-elseif(CMAKE_USE_WIN32_THREADS_INIT)
+endif()
+if(CMAKE_USE_WIN32_THREADS_INIT)
   add_definitions(-DGAMEKEEPER_WIN32_THREAD)
 endif()
 
@@ -82,7 +83,11 @@ endif()
 
 find_package(Hypodermic)
 if(NOT HYPODERMIC_FOUND)
-  set(boost_ADDITIONAL_COMPONENTS signals)
+  list(APPEND boost_ADDITIONAL_COMPONENTS signals)
+endif()
+
+if(MINGW)
+  list(APPEND boost_ADDITIONAL_COMPONENTS chrono thread)
 endif()
 
 # boost

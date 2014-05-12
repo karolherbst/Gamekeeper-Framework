@@ -23,7 +23,8 @@
 #include "pthreadhelper.h"
 
 #include <pthread.h>
-#include <thread>
+
+#include <std_compat/thread>
 
 GAMEKEEPER_NAMESPACE_START(core)
 

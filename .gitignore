@@ -13,8 +13,7 @@
 *.a
 
 # cmake stuff
-build/
-qt-build/
+/*build*/
 
 # python stuff
 __pycache__

@@ -23,16 +23,12 @@
 
 #include <gamekeeper/core/common.h>
 
-// hopefully gcc 4.9 will have std::threads on windows
-#if defined(GAMEKEEPER_WINDOWS_USED_MINGW) && defined(__GNUC__) && (GNUC_MAJOR < 4 || (GNUC_MAJOR == 4 && GNUC_MINOR < 8))
-  #error StdCpp11ThreadManager not suppored on this platform
-#endif
-
 #include <atomic>
 #include <map>
 #include <memory>
-#include <mutex>
-#include <thread>
+
+#include <std_compat/mutex>
+#include <std_compat/thread>
 
 #include <gamekeeper/core/nativethreadhelper.h>
 #include <gamekeeper/core/threadfactory.h>

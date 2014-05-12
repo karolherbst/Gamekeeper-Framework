@@ -115,7 +115,12 @@ typename std::enable_if<String::Is8BitInt<T>::value, std::string>::type
 String::toString(const T &t)
 {
 	// lexical_cast treats (u)int8_t as char
-	return std::to_string(t);
+	#if defined(_GLIBCXX_HAVE_BROKEN_VSWPRINTF)
+		// if _GLIBCXX_HAVE_BROKEN_VSWPRINTF is defined we can't use std::to_string
+		return boost::lexical_cast<std::string>(static_cast<int16_t>(t));
+	#else
+		return std::to_string(t);
+	#endif
 }
 
 template <class T>

@@ -33,7 +33,6 @@ class WebServerFicture : public DefaultFicture
 {
 public:
 	WebServerFicture();
-	~WebServerFicture();
 private:
 	mg_server * server = nullptr;
 };

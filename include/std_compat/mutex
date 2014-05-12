@@ -1,0 +1,76 @@
+/*
+ * GameKeeper Framework
+ *
+ * Copyright (C) 2013 Karol Herbst <gamekeeper@karolherbst.de>
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ */
+
+#ifndef GAMEKEEPER_STD_COMPAT_MUTEX
+#define GAMEKEEPER_STD_COMPAT_MUTEX 1
+
+#include <gamekeeper/core/common.h>
+
+#include <mutex>
+
+#if defined(__GNUC__) && !defined(__clang__) && (!defined(_GLIBCXX_HAS_GTHREADS) || !defined(_GLIBCXX_USE_C99_STDINT_TR1))
+
+#include <chrono>
+
+#include <boost/chrono/time_point.hpp>
+#include <boost/ratio/ratio.hpp>
+#include <boost/thread/mutex.hpp>
+
+namespace std
+{
+	class PUBLIC_API mutex : public boost::mutex{};
+	class PUBLIC_API timed_mutex : public boost::timed_mutex
+	{
+	public:
+		template <class Clock, class Duration>
+		struct PUBLIC_API BoostStdClockBridge
+		{
+			typedef chrono::time_point<Clock, Duration> StdTP;
+
+			typedef typename Duration::rep rep;
+			typedef boost::ratio<StdTP::period::num, StdTP::period::den> period;
+			typedef boost::chrono::duration<typename StdTP::rep, period> duration;
+			typedef boost::chrono::time_point<BoostStdClockBridge<Clock, Duration>> time_point;
+
+			static constexpr bool is_steady = Clock::is_steady;
+			PUBLIC_INLINE inline static time_point now() noexcept
+			{
+				return time_point(duration(Clock::now().time_since_epoch().count()));
+			}
+		};
+		
+		template <class Clock, class Duration>
+		PUBLIC_INLINE inline bool try_lock_until (const chrono::time_point<Clock,Duration>& abs_time)
+		{
+			typedef BoostStdClockBridge<Clock, Duration> BClock;
+			return boost::timed_mutex::try_lock_until
+			(
+				typename BClock::time_point
+				(
+					typename BClock::duration(abs_time.time_since_epoch().count())
+				)
+			);
+		}
+	};
+}
+
+#endif
+
+#endif //GAMEKEEPER_STD_COMPAT_MUTEX

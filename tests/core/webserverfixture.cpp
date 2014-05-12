@@ -137,12 +137,4 @@ WebServerFicture::WebServerFicture()
 	});
 }
 
-WebServerFicture::~WebServerFicture()
-{
-	if(this->server != nullptr)
-	{
-		mg_destroy_server(&this->server);
-	}
-}
-
 GAMEKEEPER_NAMESPACE_END(test)

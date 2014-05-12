@@ -32,44 +32,17 @@ else()
     set(CURL_SSL_SWITCH --with-ssl)
   endif()
   set(CURL_INSTALL_DIR ${CMAKE_EXTERNAL_BINARY_DIR}/curl)
+
+  if(DEFINED CMAKE_TOOLCHAIN_FILE)
+    set(CROSSCOMPILE_OPTIONS -DCMAKE_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_FILE})
+  endif()
   ExternalProject_Add(
     curl
     URL ${CURL_URL}
     URL_MD5 ${CURL_MD5}
     UPDATE_COMMAND ""
-    BUILD_IN_SOURCE 1
-    CONFIGURE_COMMAND ./configure
-        --disable-curldebug
-        --disable-ldap
-        --without-librtmp
-        --disable-rtsp
-        --with-zlib
-        ${CURL_SSL_SWITCH}
-        
-        --disable-manual
-        --enable-static=no 
-        --enable-shared=yes
-        --disable-pop3
-        --disable-imap
-        --disable-dict
-        --disable-gopher
-        --disable-verbose
-        --disable-smtp
-        --disable-telnet
-        --disable-tftp
-        --disable-file
-        --without-libidn
-        --without-gnutls
-        --without-nss
-        --without-cyassl
-        --without-axtls
-        --without-libssh2
-        --disable-hidden-symbols
-        --enable-cookies
-        --without-sspi
-        --disable-manual
-        --disable-ares
-        --prefix=${CURL_INSTALL_DIR}
+    CMAKE_ARGS ${CROSSCOMPILE_OPTIONS} -DBUILD_SHARED_LIBS=ON -DCMAKE_CXX_FLAGS=${ADD_CXX_FLAGS} -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE} -DCMAKE_INSTALL_PREFIX=${CURL_INSTALL_DIR}
+      -DBUILD_CURL_EXE=OFF -DBUILD_CURL_TESTS=OFF -DCURL_DISABLE_LDAP=ON -DCURL_DISABLE_TELNET=ON -DCURL_DISABLE_DICT=ON -DCURL_DISABLE_FILE=ON -DCURL_DISABLE_TFTP=ON -DCURL_DISABLE_LDAPS=ON
   )
 endif()
 
@@ -83,7 +56,7 @@ if(WIN32 AND NOT MINGW)
 else()
   list(APPEND CURL_LIBRARIES "${OPENSSL_LIBRARIES}")
   if(MINGW)
-    list(APPEND CURL_LIBRARIES "${CURL_LIBRARY_DIR}/libcurl.dll.a")
+    list(APPEND CURL_LIBRARIES "${CURL_LIBRARY_DIR}/libcurl_imp.lib")
     list(APPEND CURL_LIBRARIES "ws2_32")
   else()
     list(APPEND CURL_LIBRARIES "${CURL_LIBRARY_DIR}/libcurl.a")
