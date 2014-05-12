@@ -36,7 +36,7 @@ using namespace gamekeeper::utils;
 { \
 	bool handled = false; \
 	std::exception_ptr ex; \
-	this->fileDownloader->downloadFile(url, [&](FileDownloader::ByteIstream & is) -> bool \
+	this->fileDownloader->downloadFile(url, [&,&ex](FileDownloader::ByteIstream & is) -> bool \
 	{ \
 		try { body } catch (...) { ex = std::current_exception(); } \
 	}); \
