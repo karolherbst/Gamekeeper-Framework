@@ -30,7 +30,6 @@
 namespace log4cpp
 {
 	class Appender;
-	class Category;
 }
 
 GAMEKEEPER_NAMESPACE_START(core)
@@ -47,7 +46,7 @@ public:
 	PRIVATE_API GAMEKEEPER_IMPLEMENTATION_OVERRIDE(~Log4cppLoggerFactory());
 private:
 	Logger * rootLogger = nullptr;
-	log4cpp::Category & rootCategory;
+
 	log4cpp::Appender * appender;
 
 	std::unordered_map<const char *, Logger *> loggers;
