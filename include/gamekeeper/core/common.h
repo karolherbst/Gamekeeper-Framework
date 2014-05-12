@@ -30,6 +30,11 @@
 	#include <stdint.h>
 #endif
 
+// define GCC version
+#if defined(__GNUC__) && !defined(__clang__)
+  #define GCC_VERSION (__GNUC__ * 10000 + __GNUC_MINOR__ * 100 + __GNUC_PATCHLEVEL__)
+#endif
+
 // some global datatypes
 typedef char gkbyte_t;
 
@@ -142,9 +147,9 @@ typedef char gkbyte_t;
 			#define override
 			#define final
 		#endif
-	#elif defined(__GNUC__)
+	#elif defined(GCC_VERSION)
 		// supported since gcc-4.7
-		#if ((GNUC_MAJOR == 4 && GNUC_MINOR < 7) || GNUC_MAJOR < 4)
+		#if GCC_VERSION < 40700
 			#define override
 			#define final
 		#endif
@@ -158,7 +163,7 @@ typedef char gkbyte_t;
 			#define final sealed
 		#endif
 	#endif
-	
+
 	// declare nullptr if the compiler does not understand it
 	// we don't need to check clang, because we require 3.1 anyway
 	#if defined(__INTEL_COMPILER)
@@ -166,9 +171,9 @@ typedef char gkbyte_t;
 			#include <stddef.h>
 			#define nullptr NULL
 		#endif
-	#elif defined(__GNUC__) && !defined(__clang__)
+	#elif defined(GCC_VERSION)
 		// supported since gcc-4.6
-		#if ((GNUC_MAJOR == 4 && GNUC_MINOR < 6) || GNUC_MAJOR < 4)
+		#if GCC_VERSION < 40600
 			#include <stddef.h>
 			#define nullptr NULL
 		#endif
@@ -180,9 +185,9 @@ typedef char gkbyte_t;
 		#if !__has_feature(cxx_thread_local)
 			#define thread_local __thread
 		#endif
-	#elif defined(__GNUC__)
+	#elif defined(GCC_VERSION)
 		// supported since gcc-4.8
-		#if ((GNUC_MAJOR == 4 && GNUC_MINOR < 8) || GNUC_MAJOR < 4)
+		#if GCC_VERSION < 40800
 			#define thread_local __thread
 		#endif
 	#elif defined(__INTEL_COMPILER)
