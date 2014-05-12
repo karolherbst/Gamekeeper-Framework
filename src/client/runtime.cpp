@@ -75,7 +75,7 @@ GameKeeperRuntime::GameKeeperRuntime()
 	containerBuilder.registerType<XDGPaths>(CREATE(new XDGPaths(INJECT(OSInformation))))->
 		as<OSPaths>()->
 		singleInstance();
-	containerBuilder.registerType<Log4cppLoggerFactory>()->
+	containerBuilder.registerType<Log4cppLoggerFactory>(CREATE(new Log4cppLoggerFactory(INJECT(OSPaths))))->
 	        as<LoggerFactory>()->
 	        singleInstance();
 	localContainer = containerBuilder.build();

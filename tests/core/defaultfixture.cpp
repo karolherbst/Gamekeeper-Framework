@@ -118,15 +118,15 @@ DefaultFicture::DefaultFicture() {
 		using namespace gamekeeper::core;
 
 		// set up IoC container
-		containerBuilder.registerType<Log4cppLoggerFactory>()->
-		        as<LoggerFactory>()->
-		        singleInstance();
 		containerBuilder.registerType<OSINFORMATIONCLASS>()->
 		        as<OSInformation>()->
 		        singleInstance();
 		containerBuilder.registerType<TestOSPaths>()->
 			as<OSPaths>()->
 			singleInstance();
+		containerBuilder.registerType<Log4cppLoggerFactory>(CREATE(new Log4cppLoggerFactory(INJECT(OSPaths))))->
+		        as<LoggerFactory>()->
+		        singleInstance();
 		containerBuilder.registerType<TestPropertyResolver>(CREATE_CAPTURED([this], new TestPropertyResolver(this->props)))->
 			as<PropertyResolver>()->
 			singleInstance();

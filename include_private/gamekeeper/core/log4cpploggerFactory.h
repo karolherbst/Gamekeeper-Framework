@@ -36,11 +36,12 @@ namespace log4cpp
 GAMEKEEPER_NAMESPACE_START(core)
 
 interface Logger;
+interface OSPaths;
 
 class PUBLIC_API Log4cppLoggerFactory : public LoggerFactory
 {
 public:
-	PUBLIC_API Log4cppLoggerFactory();
+	PUBLIC_API Log4cppLoggerFactory(std::shared_ptr<OSPaths>);
 	PRIVATE_API GAMEKEEPER_IMPLEMENTATION_OVERRIDE(Logger& getDefaultLogger());
 	PRIVATE_API GAMEKEEPER_IMPLEMENTATION_OVERRIDE(Logger& getComponentLogger(const char * const id));
 	PRIVATE_API GAMEKEEPER_IMPLEMENTATION_OVERRIDE(~Log4cppLoggerFactory());

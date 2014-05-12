@@ -20,8 +20,9 @@
 
 #include "pch.h"
 
-#include "log4cppLogger.h"
-#include "log4cpploggerFactory.h"
+#include <gamekeeper/core/log4cppLogger.h>
+#include <gamekeeper/core/log4cpploggerFactory.h>
+#include <gamekeeper/core/ospaths.h>
 
 #include <log4cpp/Category.hh>
 #include <log4cpp/OstreamAppender.hh>
@@ -30,7 +31,7 @@
 
 GAMEKEEPER_NAMESPACE_START(core)
 
-Log4cppLoggerFactory::Log4cppLoggerFactory()
+Log4cppLoggerFactory::Log4cppLoggerFactory(std::shared_ptr<OSPaths> _ospaths)
 :	rootCategory(log4cpp::Category::getInstance("GameKeeper")),
 	appender(new log4cpp::OstreamAppender("console", &std::cout))
 {
