@@ -117,8 +117,6 @@ fillProperties(po::options_description & cmd, po::options_description & file)
 int
 GameKeeperRuntime::main(int argc, const char* argv[], NewInstanceFuncPtr instanceFuncPtr, AddOptionsFuncPtr optionsFuncPtr)
 {
-	this->gameKeeperUI = instanceFuncPtr(this->getUILogger());
-
 	po::options_description descCmd;
 	po::options_description descFile;
 
@@ -209,6 +207,7 @@ GameKeeperRuntime::main(int argc, const char* argv[], NewInstanceFuncPtr instanc
 	std::shared_ptr<gamekeeper::core::LoggerFactory> loggerFactory = container->resolve<gamekeeper::core::LoggerFactory>();
 	loggerFactory->getComponentLogger("main") << gamekeeper::core::LogLevel::Debug << "firing up GameKeeper" << gamekeeper::core::endl;
 
+	this->gameKeeperUI = instanceFuncPtr(this->getUILogger());
 	this->gameKeeperUI->init(vm);
 	this->gameKeeperUI->startEventLoop();
 
