@@ -52,8 +52,8 @@ PUBLIC_API int main(int argc, const char* argv[])
 #ifdef GAMEKEEPER_OS_IS_WINDOWS
 	typedef gamekeeper::client::GameKeeperUI * (*NewInstanceFuncPtr)(gamekeeper::core::Logger& logger);
 	NewInstanceFuncPtr newInstanceFunc = (NewInstanceFuncPtr)::GetProcAddress(GetModuleHandle(NULL), "newInstance");
-	return runtime.main(argc, argv, newInstanceFunc(runtime.getUILogger()));
+	return runtime.main(argc, argv, newInstanceFunc);
 #else
-	return runtime.main(argc, argv, gamekeeper::client::newInstance(runtime.getUILogger()));
+	return runtime.main(argc, argv, &gamekeeper::client::newInstance);
 #endif
 }

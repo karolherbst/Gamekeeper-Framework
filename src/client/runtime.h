@@ -38,10 +38,12 @@ interface GameKeeperUI;
 class PUBLIC_API GameKeeperRuntime
 {
 public:
+	typedef GameKeeperUI * (*NewInstanceFuncPtr)(gamekeeper::core::Logger& logger);
+
 	PUBLIC_API GameKeeperRuntime();
 	PUBLIC_API ~GameKeeperRuntime();
 	PUBLIC_API gamekeeper::core::Logger& getUILogger();
-	PUBLIC_API int main(int argc, const char* argv[], GameKeeperUI *);
+	PUBLIC_API int main(int argc, const char* argv[], NewInstanceFuncPtr);
 private:
 	GameKeeperUI * gameKeeperUI;
 };

@@ -115,9 +115,9 @@ fillProperties(po::options_description & cmd, po::options_description & file)
 }
 
 int
-GameKeeperRuntime::main(int argc, const char* argv[], GameKeeperUI * newGameKeeperUI)
+GameKeeperRuntime::main(int argc, const char* argv[], NewInstanceFuncPtr funcPtr)
 {
-	this->gameKeeperUI = newGameKeeperUI;
+	this->gameKeeperUI = funcPtr(this->getUILogger());
 
 	po::options_description descCmd;
 	po::options_description descFile;
