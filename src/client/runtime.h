@@ -25,6 +25,14 @@
 
 #include <memory>
 
+namespace boost
+{
+namespace program_options
+{
+class options_description_easy_init;
+}
+}
+
 GAMEKEEPER_NAMESPACE_START(core)
 
 interface Logger;
@@ -39,11 +47,14 @@ class PUBLIC_API GameKeeperRuntime
 {
 public:
 	typedef GameKeeperUI * (*NewInstanceFuncPtr)(gamekeeper::core::Logger& logger);
+	typedef void (*AddOptionsFuncPtr)(boost::program_options::options_description_easy_init &,
+                                          boost::program_options::options_description_easy_init &,
+                                          boost::program_options::options_description_easy_init &);
 
 	PUBLIC_API GameKeeperRuntime();
 	PUBLIC_API ~GameKeeperRuntime();
 	PUBLIC_API gamekeeper::core::Logger& getUILogger();
-	PUBLIC_API int main(int argc, const char* argv[], NewInstanceFuncPtr);
+	PUBLIC_API int main(int argc, const char* argv[], NewInstanceFuncPtr, AddOptionsFuncPtr);
 private:
 	GameKeeperUI * gameKeeperUI;
 };

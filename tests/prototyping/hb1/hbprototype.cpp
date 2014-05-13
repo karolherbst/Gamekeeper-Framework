@@ -30,14 +30,10 @@ static std::shared_ptr<HttpFileDownloader> fileDownloader;
 HBPrototype::HBPrototype(gamekeeper::core::Logger& _logger)
 :	logger(_logger){}
 
-void
-HBPrototype::addOptions(boost::program_options::options_description_easy_init & oaCmd,
-                        boost::program_options::options_description_easy_init & oaFile,
-                        boost::program_options::options_description_easy_init & oaBoth)
-{
-	oaCmd("hb.accountname", po::value<std::string>()->required(), "HB Account name");
-	oaCmd("hb.password", po::value<std::string>()->required(), "HB Account password");
-}
+GAMECLIENT_ADD_OPTIONS({
+	cmd("hb.accountname", po::value<std::string>()->required(), "HB Account name");
+	cmd("hb.password", po::value<std::string>()->required(), "HB Account password");
+})
 
 void
 HBPrototype::init(const ConfigMap & configMap)

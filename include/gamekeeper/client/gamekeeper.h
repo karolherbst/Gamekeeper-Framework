@@ -56,7 +56,7 @@ GAMEKEEPER_NAMESPACE_START(client)
 interface PUBLIC_API GameKeeperUI
 {
 	GAMEKEEPER_INTERFACE_METHODS(GameKeeperUI);
-	
+
 	typedef std::map<std::string, boost::program_options::variable_value> ConfigMap;
 
 	/**
@@ -90,21 +90,6 @@ interface PUBLIC_API GameKeeperUI
 	 * @post blocks the current thread of execution
 	 */
 	PUBLIC_API GAMEKEEPER_INTERFACE_METHOD(void startEventLoop());
-
-	/**
-	 * this method will be called to collect options used by the client
-	 *
-	 * @author Karol Herbst
-	 * @since 0
-	 *
-	 * @param[in] oaCmd the OptionAdder object for command line options
-	 * @param[in] oaFile the OptionAdder object for config file options
-	 * @param[in] oaBoth the OptionAdder object for config config file and command line options
-	 */
-	PUBLIC_INLINE GAMEKEEPER_INTERFACE_METHOD(void addOptions(
-	                                          boost::program_options::options_description_easy_init & oaCmd,
-	                                          boost::program_options::options_description_easy_init & oaFile,
-	                                          boost::program_options::options_description_easy_init & oaBoth));
 };
 
 /**
@@ -130,6 +115,26 @@ extern "C" REVERSE_PUBLIC_API gamekeeper::client::GameKeeperUI * newInstance(gam
 { \
 	return new class(logger); \
 }
+
+/**
+ * this method will be called to collect options used by the client
+ *
+ * @author Karol Herbst
+ * @since 0
+ *
+ * @param[in] oaCmd the OptionAdder object for command line options
+ * @param[in] oaFile the OptionAdder object for config file options
+ * @param[in] oaBoth the OptionAdder object for config config file and command line options
+ */
+extern "C" REVERSE_PUBLIC_API void addOptions(boost::program_options::options_description_easy_init & oaCmd,
+                                              boost::program_options::options_description_easy_init & oaFile,
+                                              boost::program_options::options_description_easy_init & oaBoth);
+
+#define GAMECLIENT_ADD_OPTIONS(body) \
+extern "C" REVERSE_PUBLIC_API void \
+addOptions(boost::program_options::options_description_easy_init & cmd, \
+           boost::program_options::options_description_easy_init & file, \
+           boost::program_options::options_description_easy_init & both) body
 
 GAMEKEEPER_NAMESPACE_END(client)
 

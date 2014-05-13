@@ -115,9 +115,9 @@ fillProperties(po::options_description & cmd, po::options_description & file)
 }
 
 int
-GameKeeperRuntime::main(int argc, const char* argv[], NewInstanceFuncPtr funcPtr)
+GameKeeperRuntime::main(int argc, const char* argv[], NewInstanceFuncPtr instanceFuncPtr, AddOptionsFuncPtr optionsFuncPtr)
 {
-	this->gameKeeperUI = funcPtr(this->getUILogger());
+	this->gameKeeperUI = instanceFuncPtr(this->getUILogger());
 
 	po::options_description descCmd;
 	po::options_description descFile;
@@ -131,7 +131,10 @@ GameKeeperRuntime::main(int argc, const char* argv[], NewInstanceFuncPtr funcPtr
 	po::options_description_easy_init fileClientEasy = fileClient.add_options();
 	po::options_description_easy_init bothClientEasy = bothClient.add_options();
 
-	this->gameKeeperUI->addOptions(cmdClientEasy, fileClientEasy, bothClientEasy);
+	if(optionsFuncPtr != nullptr)
+	{
+		optionsFuncPtr(cmdClientEasy, fileClientEasy, bothClientEasy);
+	}
 
 	if(!bothClient.options().empty())
 	{
