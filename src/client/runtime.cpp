@@ -78,11 +78,6 @@ GameKeeperRuntime::GameKeeperRuntime()
 	localContainer = containerBuilder.build();
 }
 
-GameKeeperRuntime::~GameKeeperRuntime()
-{
-	delete this->gameKeeperUI;
-}
-
 static void
 fillProperties(po::options_description & cmd, po::options_description & file)
 {
@@ -205,6 +200,7 @@ GameKeeperRuntime::main(int argc, const char* argv[], NewInstanceFuncPtr instanc
 	for(int8_t count = 0; count < 5 && !threadManager->tryJoinFor(2000); count++){}
 
 	this->gameKeeperUI->onShutdown();
+	delete this->gameKeeperUI;
 
 	return EXIT_SUCCESS;
 }

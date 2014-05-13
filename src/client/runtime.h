@@ -52,7 +52,6 @@ public:
                                           boost::program_options::options_description_easy_init &);
 
 	PUBLIC_API GameKeeperRuntime();
-	PUBLIC_API ~GameKeeperRuntime();
 	PUBLIC_API int main(int argc, const char* argv[], NewInstanceFuncPtr, AddOptionsFuncPtr);
 private:
 	GameKeeperUI * gameKeeperUI;
