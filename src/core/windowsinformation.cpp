@@ -25,6 +25,7 @@
 #include <cstdlib>
 
 #include <windows.h>
+#include <lmcons.h>
 #include <shlobj.h>
 
 #include <boost/locale/encoding_utf.hpp>
@@ -65,6 +66,15 @@ WindowsInformation::getUserPath()
 	TCHAR szPath[MAX_PATH];
 	SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, szPath);
 	return szPath;
+}
+
+std::string
+WindowsInformation::getUserName()
+{
+	WCHAR buffer[UNLEN + 1];
+	DWORD size = UNLEN + 1;
+	GetUserNameW(buffer, &size);
+	return utf_to_utf<char>(buffer, &buffer[size]);
 }
 
 GAMEKEEPER_NAMESPACE_END(core)

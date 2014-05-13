@@ -22,7 +22,9 @@
 
 #include "linuxinformation.h"
 
+#include <climits>
 #include <cstdlib>
+#include <unistd.h>
 
 GAMEKEEPER_NAMESPACE_START(core)
 
@@ -59,6 +61,14 @@ boost::filesystem::path
 LinuxInformation::getUserPath()
 {
 	return getEnv("HOME");
+}
+
+std::string
+LinuxInformation::getUserName()
+{
+	char buffer[LOGIN_NAME_MAX];
+	getlogin_r(buffer, LOGIN_NAME_MAX);
+	return buffer;
 }
 
 GAMEKEEPER_NAMESPACE_END(core)
