@@ -23,6 +23,7 @@
 
 #include <gamekeeper/core/common.h>
 
+#include <gamekeeper/core/exception.h>
 #include <gamekeeper/core/interface.h>
 
 #include <boost/filesystem/path.hpp>
@@ -90,6 +91,11 @@ interface PUBLIC_API OSPaths
 	 * @return the resolved file
 	 */
 	PUBLIC_API GAMEKEEPER_INTERFACE_METHOD(boost::filesystem::path getRuntimeFile(std::string name));
+
+	/**
+	 * exception class
+	 */
+	class PUBLIC_API GAMEKEEPER_EXCEPTION(OSPathException);
 };
 
 GAMEKEEPER_NAMESPACE_END(core)
