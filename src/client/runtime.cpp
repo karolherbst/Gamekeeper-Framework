@@ -75,9 +75,6 @@ GameKeeperRuntime::GameKeeperRuntime()
 	containerBuilder.registerType<XDGPaths>(CREATE(new XDGPaths(INJECT(OSInformation))))->
 		as<OSPaths>()->
 		singleInstance();
-	containerBuilder.registerType<Log4cppLoggerFactory>(CREATE(new Log4cppLoggerFactory(INJECT(OSPaths))))->
-	        as<LoggerFactory>()->
-	        singleInstance();
 	localContainer = containerBuilder.build();
 }
 
@@ -89,7 +86,7 @@ GameKeeperRuntime::~GameKeeperRuntime()
 gamekeeper::core::Logger&
 GameKeeperRuntime::getUILogger()
 {
-	return localContainer->resolve<gamekeeper::core::LoggerFactory>()->getComponentLogger("UI.client");
+	return container->resolve<gamekeeper::core::LoggerFactory>()->getComponentLogger("UI.client");
 }
 
 static void
@@ -178,11 +175,9 @@ GameKeeperRuntime::main(int argc, const char* argv[], NewInstanceFuncPtr instanc
 			localContainer->resolve<OSPaths>())->
 			as<OSPaths>()->
 			singleInstance();
-		containerBuilder.registerInstance<LoggerFactory>(
-			localContainer->resolve<gamekeeper::core::LoggerFactory>())->
-			as<LoggerFactory>()->
-			singleInstance();
-
+		containerBuilder.registerType<Log4cppLoggerFactory>(CREATE(new Log4cppLoggerFactory(INJECT(OSPaths))))->
+		        as<LoggerFactory>()->
+		        singleInstance();
 		containerBuilder.registerType<BoostPOPropertyResolver>(CREATE_CAPTURED([&vm], new BoostPOPropertyResolver(vm)))->
 			as<PropertyResolver>()->
 			singleInstance();
