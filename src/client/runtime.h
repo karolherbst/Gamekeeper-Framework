@@ -53,7 +53,6 @@ public:
 
 	PUBLIC_API GameKeeperRuntime();
 	PUBLIC_API ~GameKeeperRuntime();
-	PUBLIC_API gamekeeper::core::Logger& getUILogger();
 	PUBLIC_API int main(int argc, const char* argv[], NewInstanceFuncPtr, AddOptionsFuncPtr);
 private:
 	GameKeeperUI * gameKeeperUI;

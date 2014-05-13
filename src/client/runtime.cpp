@@ -83,12 +83,6 @@ GameKeeperRuntime::~GameKeeperRuntime()
 	delete this->gameKeeperUI;
 }
 
-gamekeeper::core::Logger&
-GameKeeperRuntime::getUILogger()
-{
-	return container->resolve<gamekeeper::core::LoggerFactory>()->getComponentLogger("UI.client");
-}
-
 static void
 fillProperties(po::options_description & cmd, po::options_description & file)
 {
@@ -202,7 +196,7 @@ GameKeeperRuntime::main(int argc, const char* argv[], NewInstanceFuncPtr instanc
 	std::shared_ptr<gamekeeper::core::LoggerFactory> loggerFactory = container->resolve<gamekeeper::core::LoggerFactory>();
 	loggerFactory->getComponentLogger("main") << gamekeeper::core::LogLevel::Debug << "firing up GameKeeper" << gamekeeper::core::endl;
 
-	this->gameKeeperUI = instanceFuncPtr(this->getUILogger());
+	this->gameKeeperUI = instanceFuncPtr(loggerFactory->getComponentLogger("UI.client"));
 	this->gameKeeperUI->init(vm);
 	this->gameKeeperUI->startEventLoop();
 
