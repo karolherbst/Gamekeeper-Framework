@@ -32,11 +32,17 @@
 using namespace gamekeeper::core;
 using namespace gamekeeper::utils;
 
+#if defined(GCC_VERSION) && (GCC_VERSION < 40704 || GCC_VERSION == 40800)
+# define CURL_DOWNLOAD_TEST_CAPTURE &,&ex
+#else
+# define CURL_DOWNLOAD_TEST_CAPTURE &
+#endif
+
 #define CURL_DOWNLOAD_TEST(url, body) \
 { \
 	bool handled = false; \
 	std::exception_ptr ex; \
-	this->fileDownloader->downloadFile(url, [&,&ex](FileDownloader::ByteIstream & is) -> bool \
+	this->fileDownloader->downloadFile(url, [CURL_DOWNLOAD_TEST_CAPTURE](FileDownloader::ByteIstream & is) -> bool \
 	{ \
 		try { body } catch (...) { ex = std::current_exception(); } \
 	}); \
