@@ -38,6 +38,8 @@ GAMEKEEPER_NAMESPACE_START(core)
  * resolve files relative to the home directory of the current user first and only in system wide paths if no files were
  * found (optional).
  *
+ * Not existent standard paths have to be created according to the standard before the first call returns.
+ *
  * @author Karol Herbst
  * @since 0
  */
