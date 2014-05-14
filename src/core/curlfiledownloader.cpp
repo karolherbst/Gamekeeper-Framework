@@ -328,6 +328,14 @@ CurlFileDownloader::doPostRequestForCookies(const char * const url, const Form& 
 }
 
 void
+CurlFileDownloader::downloadFileWithForm(const char * const url, DownloadCallback callback, const Form & form)
+{
+	CURLPrivateData curl(url, this->userAgent, this->propertyResolver);
+	addFormToCurl(form, curl);
+	this->handleFileDownload(curl, &callback, url);
+}
+
+void
 CurlFileDownloader::performCurl(CURLPrivateData & curl, uint32_t timeout)
 {
 	if(timeout > 0)

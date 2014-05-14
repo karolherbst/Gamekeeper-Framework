@@ -47,7 +47,7 @@ interface PUBLIC_API HttpFileDownloader : public FileDownloader
 	 * @since 0
 	 */
 	typedef std::unordered_map<std::string, std::string> CookieBuket;
-	
+
 	/**
 	 * The signature of one Cookie
 	 *
@@ -99,6 +99,19 @@ interface PUBLIC_API HttpFileDownloader : public FileDownloader
 	 */
 	PUBLIC_API GAMEKEEPER_INTERFACE_METHOD(CookieBuket doPostRequestForCookies(const char * const url,
 	                                                                           const Form& form = Form()));
+
+	/**
+	 * downloads the file with the given POST form
+	 *
+	 * @author Karol Herbst
+	 * @since 0
+	 *
+	 * @param[in] url the url
+	 * @param[in] callback the callback function
+	 * @param[in] form the form
+	 */
+	PUBLIC_API GAMEKEEPER_INTERFACE_METHOD(void downloadFileWithForm(const char * const url, DownloadCallback callback,
+	                                                                 const Form & form));
 };
 
 GAMEKEEPER_NAMESPACE_END(core)

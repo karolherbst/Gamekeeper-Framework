@@ -50,6 +50,8 @@ public:
 	                                                                         const CookieBuket& cookies));
 	PRIVATE_API GAMEKEEPER_IMPLEMENTATION_OVERRIDE(CookieBuket doPostRequestForCookies(const char * const url,
 	                                                                                const Form& form));
+	PRIVATE_API GAMEKEEPER_IMPLEMENTATION_OVERRIDE(void downloadFileWithForm(const char * const url,
+	                                                                         DownloadCallback callback, const Form & form));
 private:
 	std::shared_ptr<PropertyResolver> propertyResolver;
 	std::shared_ptr<OSPaths> ospaths;
@@ -60,7 +62,7 @@ private:
 	PRIVATE_API void handleFileDownload(CURLPrivateData & curl, FileDownloader::DownloadCallback * func,
 	                                    const char * const url);
 	PRIVATE_API boost::filesystem::path resolveDownloadPath(const char * const url);
-	
+
 	static const std::unordered_set<std::string> supportedProtocols;
 };
 
