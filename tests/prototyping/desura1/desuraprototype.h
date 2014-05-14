@@ -12,6 +12,9 @@ public:
 	GAMEKEEPER_IMPLEMENTATION_OVERRIDE(void startEventLoop());
 private:
 	gamekeeper::core::Logger& logger;
+
+	const char * username = nullptr;
+	const char * userpass = nullptr;
 };
 
 #endif
