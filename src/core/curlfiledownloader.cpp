@@ -188,7 +188,9 @@ buildUserAgentString(const boost::any & configValue)
 {
 	if(configValue.empty())
 	{
-		return std::string("GameKeeper/0.1 libcurl/") + curl_version_info(CURLVERSION_NOW)->version;
+		curl_version_info_data * data = curl_version_info(CURLVERSION_NOW);
+		return std::string("GameKeeper/0.1 libcurl/") + data->version + ' ' + data->ssl_version +
+			" zlib/" + data->libz_version;
 	}
 	return boost::any_cast<std::string>(configValue);
 }
