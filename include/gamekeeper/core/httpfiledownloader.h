@@ -112,6 +112,21 @@ interface PUBLIC_API HttpFileDownloader : public FileDownloader
 	 */
 	PUBLIC_API GAMEKEEPER_INTERFACE_METHOD(void downloadFileWithForm(const char * const url, DownloadCallback callback,
 	                                                                 const Form & form));
+
+	/**
+	 * downloads the file and fetch cookies with the given POST form
+	 *
+	 * @author Karol Herbst
+	 * @since 0
+	 *
+	 * @param[in] url the url
+	 * @param[in] callback the callback function
+	 * @param[in] form the form
+	 * @return the fetched cookies
+	 */
+	PUBLIC_API GAMEKEEPER_INTERFACE_METHOD(CookieBuket downloadFileAndCookiesWithForm(const char * const url,
+	                                                                                  DownloadCallback callback,
+	                                                                                  const Form & form));
 };
 
 GAMEKEEPER_NAMESPACE_END(core)

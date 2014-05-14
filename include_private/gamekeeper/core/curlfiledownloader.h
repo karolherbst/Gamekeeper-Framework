@@ -52,6 +52,9 @@ public:
 	                                                                                const Form& form));
 	PRIVATE_API GAMEKEEPER_IMPLEMENTATION_OVERRIDE(void downloadFileWithForm(const char * const url,
 	                                                                         DownloadCallback callback, const Form & form));
+	PRIVATE_API GAMEKEEPER_IMPLEMENTATION_OVERRIDE(CookieBuket downloadFileAndCookiesWithForm(const char * const url,
+	                                                                                          DownloadCallback callback,
+                                                                                                  const Form & form));
 private:
 	std::shared_ptr<PropertyResolver> propertyResolver;
 	std::shared_ptr<OSPaths> ospaths;

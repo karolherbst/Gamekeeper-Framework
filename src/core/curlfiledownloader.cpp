@@ -240,6 +240,12 @@ CurlFileDownloader::handleFileDownload(CURLPrivateData & curl, FileDownloader::D
 }
 
 static void
+enableCookies(CURLPrivateData & curl)
+{
+	curl_easy_setopt(curl.handle, CURLOPT_COOKIEJAR, nullptr);
+}
+
+static void
 addCookiesToCurl(const HttpFileDownloader::CookieBuket& cookies, CURLPrivateData & curl)
 {
 	if(!cookies.empty())
@@ -316,8 +322,8 @@ CurlFileDownloader::doPostRequestForCookies(const char * const url, const Form& 
 	this->logger << LogLevel::Debug << "try to fetch cookies at: " << url << endl;
 	CURLPrivateData curl(url, this->userAgent, this->propertyResolver);
 	curl_easy_setopt(curl.handle, CURLOPT_WRITEFUNCTION, &emptyCurlFileDownloadCallback);
-	curl_easy_setopt(curl.handle, CURLOPT_COOKIEJAR, nullptr);
 
+	enableCookies(curl);
 	addFormToCurl(form, curl);
 
 	this->performCurl(curl);
@@ -333,6 +339,16 @@ CurlFileDownloader::downloadFileWithForm(const char * const url, DownloadCallbac
 	CURLPrivateData curl(url, this->userAgent, this->propertyResolver);
 	addFormToCurl(form, curl);
 	this->handleFileDownload(curl, &callback, url);
+}
+
+CurlFileDownloader::CookieBuket
+CurlFileDownloader::downloadFileAndCookiesWithForm(const char * const url, DownloadCallback callback, const Form & form)
+{
+	CURLPrivateData curl(url, this->userAgent, this->propertyResolver);
+	enableCookies(curl);
+	addFormToCurl(form, curl);
+	this->handleFileDownload(curl, &callback, url);
+	return getCookies(curl);
 }
 
 void
