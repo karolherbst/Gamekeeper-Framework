@@ -23,6 +23,7 @@
 
 #include <gamekeeper/core/common.h>
 
+#include <gamekeeper/core/exception.h>
 #include <gamekeeper/core/interface.h>
 
 #include <boost/filesystem/path.hpp>
@@ -37,6 +38,8 @@ GAMEKEEPER_NAMESPACE_START(core)
  * All methods can return a path to a non existing file, which can be written to at any time. All methods will try to
  * resolve files relative to the home directory of the current user first and only in system wide paths if no files were
  * found (optional).
+ *
+ * Not existent standard paths have to be created according to the standard before the first call returns.
  *
  * @author Karol Herbst
  * @since 0
@@ -88,6 +91,11 @@ interface PUBLIC_API OSPaths
 	 * @return the resolved file
 	 */
 	PUBLIC_API GAMEKEEPER_INTERFACE_METHOD(boost::filesystem::path getRuntimeFile(std::string name));
+
+	/**
+	 * exception class
+	 */
+	class PUBLIC_API GAMEKEEPER_EXCEPTION(OSPathException);
 };
 
 GAMEKEEPER_NAMESPACE_END(core)

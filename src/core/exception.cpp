@@ -20,55 +20,27 @@
 
 #include "pch.h"
 
-#include "linuxinformation.h"
-
-#include <climits>
-#include <cstdlib>
-#include <unistd.h>
+#include <gamekeeper/core/exception.h>
 
 GAMEKEEPER_NAMESPACE_START(core)
 
-std::string
-LinuxInformation::getEnv(const char * name)
+GameKeeperException::GameKeeperException(const std::string& message)
+:	errorMessage(message){}
+
+GameKeeperException::GameKeeperException(std::string&& message) noexcept
+:	errorMessage(message){}
+
+const char *
+GameKeeperException::what() const noexcept
 {
-	const char * value = getenv(name);
-	if(value == nullptr)
-	{
-		return std::string();
-	}
-	return value;
+	return this->errorMessage.c_str();
 }
 
-void
-LinuxInformation::setEnv(const char * name, const char * value)
+GameKeeperException&
+GameKeeperException::operator=(const std::exception& ex)
 {
-	setenv(name, value, 1);
-}
-
-std::string
-LinuxInformation::getEnvSeperator()
-{
-	return ":";
-}
-
-boost::filesystem::path
-LinuxInformation::getSystemRoot()
-{
-	return "/";
-}
-
-boost::filesystem::path
-LinuxInformation::getUserPath()
-{
-	return getEnv("HOME");
-}
-
-std::string
-LinuxInformation::getUserName()
-{
-	char buffer[LOGIN_NAME_MAX];
-	getlogin_r(buffer, LOGIN_NAME_MAX);
-	return buffer;
+	this->errorMessage = ex.what();
+	return *this;
 }
 
 GAMEKEEPER_NAMESPACE_END(core)

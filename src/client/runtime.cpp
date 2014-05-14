@@ -68,8 +68,14 @@ GameKeeperRuntime::GameKeeperRuntime()
 	using namespace gamekeeper::core;
 	Hypodermic::ContainerBuilder containerBuilder;
 
-	// set up IoC container
-	containerBuilder.registerType<Log4cppLoggerFactory>()->
+	// set up pre IoC container
+	containerBuilder.registerType<OSINFORMATIONCLASS>()->
+		as<OSInformation>()->
+		singleInstance();
+	containerBuilder.registerType<XDGPaths>(CREATE(new XDGPaths(INJECT(OSInformation))))->
+		as<OSPaths>()->
+		singleInstance();
+	containerBuilder.registerType<Log4cppLoggerFactory>(CREATE(new Log4cppLoggerFactory(INJECT(OSPaths))))->
 	        as<LoggerFactory>()->
 	        singleInstance();
 	localContainer = containerBuilder.build();
@@ -160,19 +166,24 @@ GameKeeperRuntime::main(int argc, const char* argv[], GameKeeperUI * newGameKeep
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-parameter"
 		using namespace gamekeeper::core;
-		// set up IoC container
+		// set up the real IoC container
+
+		// reuse instances from the pre container
+		containerBuilder.registerInstance<OSInformation>(
+			localContainer->resolve<OSInformation>())->
+			as<OSInformation>()->
+			singleInstance();
+		containerBuilder.registerInstance<OSPaths>(
+			localContainer->resolve<OSPaths>())->
+			as<OSPaths>()->
+			singleInstance();
 		containerBuilder.registerInstance<LoggerFactory>(
 			localContainer->resolve<gamekeeper::core::LoggerFactory>())->
 			as<LoggerFactory>()->
 			singleInstance();
+
 		containerBuilder.registerType<BoostPOPropertyResolver>(CREATE_CAPTURED([&vm], new BoostPOPropertyResolver(vm)))->
 			as<PropertyResolver>()->
-			singleInstance();
-		containerBuilder.registerType<OSINFORMATIONCLASS>()->
-			as<OSInformation>()->
-			singleInstance();
-		containerBuilder.registerType<XDGPaths>(CREATE(new XDGPaths(INJECT(OSInformation))))->
-			as<OSPaths>()->
 			singleInstance();
 		containerBuilder.registerType<CurlFileDownloader>(
 			CREATE(new CurlFileDownloader(INJECT(LoggerFactory), INJECT(PropertyResolver), INJECT(OSPaths))))->

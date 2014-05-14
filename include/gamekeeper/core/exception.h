@@ -18,40 +18,44 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef GAMEKEEPER_CORE_LOG4CPPLOGGERFACTORY_H
-#define GAMEKEEPER_CORE_LOG4CPPLOGGERFACTORY_H 1
+#ifndef GAMEKEEPER_CORE_EXCEPTION_H
+#define GAMEKEEPER_CORE_EXCEPTION_H 1
 
 #include <gamekeeper/core/common.h>
 
-#include <unordered_map>
-
-#include <gamekeeper/core/loggerFactory.h>
-
-namespace log4cpp
-{
-	class Appender;
-}
+#include <exception>
 
 GAMEKEEPER_NAMESPACE_START(core)
 
-interface Logger;
-interface OSPaths;
+/**
+ * Basic Exception type used in GameKeeper
+ *
+ * Every thrown exception should be wraped by this class (or any subclasses), so that unhandled exceptionc can be
+ * easily catched globally
+ *
+ * @author Karol Herbst
+ * @since 0.1
+ */
 
-class PUBLIC_API Log4cppLoggerFactory : public LoggerFactory
+class PUBLIC_API GameKeeperException : std::exception
 {
 public:
-	PUBLIC_API Log4cppLoggerFactory(std::shared_ptr<OSPaths>);
-	PRIVATE_API GAMEKEEPER_IMPLEMENTATION_OVERRIDE(Logger& getDefaultLogger());
-	PRIVATE_API GAMEKEEPER_IMPLEMENTATION_OVERRIDE(Logger& getComponentLogger(const char * const id));
-	PRIVATE_API GAMEKEEPER_IMPLEMENTATION_OVERRIDE(~Log4cppLoggerFactory());
+	GameKeeperException(const std::string& message);
+	GameKeeperException(std::string&& message) noexcept;
+	virtual const char * what() const noexcept override;
+	GameKeeperException& operator=(const exception&);
 private:
-	Logger * rootLogger = nullptr;
-
-	log4cpp::Appender * appender;
-
-	std::unordered_map<const char *, Logger *> loggers;
+	std::string errorMessage;
 };
+
+#define GAMEKEEPER_EXCEPTION(name) \
+name : public gamekeeper::core::GameKeeperException \
+{ \
+public: \
+	name(const std::string & message) : gamekeeper::core::GameKeeperException(message){} \
+	name(std::string&& message) noexcept : gamekeeper::core::GameKeeperException(message){} \
+}
 
 GAMEKEEPER_NAMESPACE_END(core)
 
-#endif //GAMEKEEPER_CORE_LOG4CPPLOGGERFACTORY_H
+#endif //GAMEKEEPER_CORE_EXCEPTION_H

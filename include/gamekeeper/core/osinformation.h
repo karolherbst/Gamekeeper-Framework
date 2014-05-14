@@ -94,6 +94,16 @@ interface PUBLIC_API OSInformation
 	 * @return the path
 	 */
 	PUBLIC_API GAMEKEEPER_INTERFACE_METHOD(boost::filesystem::path getUserPath());
+
+	/**
+	 * returns the name of the current user
+	 *
+	 * @author Karol Herbst
+	 * @since 0
+	 *
+	 * @return the name
+	 */
+	PUBLIC_API GAMEKEEPER_INTERFACE_METHOD(std::string getUserName());
 };
 
 GAMEKEEPER_NAMESPACE_END(core)

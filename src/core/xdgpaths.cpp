@@ -33,12 +33,36 @@ GAMEKEEPER_NAMESPACE_START(core)
 namespace fs = boost::filesystem;
 namespace algo = boost::algorithm;
 
+static const std::string COULD_NOT_CREATE_DIRECTORY{"Couldn't create directories for "};
+
 const std::string XDGPaths::prefix = "gamekeeper";
 
 #define defaultPath(path) this->osInformation->getUserPath() / path
 
+static bool
+createDirectories(const fs::path & p)
+{
+	bool directoryCreated = fs::create_directories(p);
+	if(!directoryCreated && !fs::is_directory(p))
+	{
+		throw OSPaths::OSPathException(COULD_NOT_CREATE_DIRECTORY + "XDG_CONFIG_HOME");
+	}
+	return directoryCreated;
+}
+
 XDGPaths::XDGPaths(std::shared_ptr<OSInformation> _osInformation)
-:	osInformation(_osInformation){}
+:	osInformation(_osInformation)
+{
+	createDirectories(this->getConfigFile(""));
+	createDirectories(this->getDataFile(""));
+	createDirectories(this->getCacheFile(""));
+	// special case for XDG_RUNTIME_DIR
+	fs::path p = this->getRuntimeFile("");
+	if(createDirectories(p))
+	{
+		fs::permissions(p, fs::owner_all);
+	}
+}
 
 fs::path
 XDGPaths::getConfigFile(std::string name)
@@ -62,7 +86,7 @@ XDGPaths::getCacheFile(std::string name)
 fs::path
 XDGPaths::getRuntimeFile(std::string name)
 {
-	return resolveFile("XDG_RUNTIME_DIR", this->osInformation->getSystemRoot() / "tmp", name);
+	return resolveFile("XDG_RUNTIME_DIR", this->osInformation->getSystemRoot() / "tmp" / this->osInformation->getUserName(), name);
 }
 
 fs::path
