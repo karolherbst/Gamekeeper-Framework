@@ -5,6 +5,7 @@ include_directories(
 # builtin gives us a performance boost
 # http://www.swig.org/Doc2.0/Python.html#Python_builtin_types
 add_gamekeeper_swig_binding(python GameKeeperModelPy Model -builtin)
+swig_link_libraries(GameKeeperModelPy ${PYTHON_LIBRARIES})
 # we copy the generated python file for now, later we should use compiled python modules
 add_custom_command(
   TARGET ${SWIG_MODULE_GameKeeperModelPy_REAL_NAME}
