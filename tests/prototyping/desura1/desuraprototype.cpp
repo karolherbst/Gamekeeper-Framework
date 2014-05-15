@@ -4,6 +4,8 @@
 
 #include <boost/program_options/options_description.hpp>
 #include <boost/program_options/variables_map.hpp>
+#include <boost/property_tree/ptree.hpp>
+#include <boost/property_tree/ini_parser.hpp>
 
 #include <gamekeeper/backend/xmlgamelistparser.h>
 #include <gamekeeper/client/autowire.h>
@@ -20,6 +22,7 @@ namespace client = gamekeeper::client;
 namespace core = gamekeeper::core;
 namespace model = gamekeeper::model;
 namespace po = boost::program_options;
+namespace prop = boost::property_tree;
 namespace utils = gamekeeper::utils;
 
 GAMECLIENT_ADD_OPTIONS({
@@ -28,16 +31,16 @@ GAMECLIENT_ADD_OPTIONS({
 })
 
 static std::unordered_set<std::unique_ptr<model::Game>>
-resolveAllGames(std::basic_istream<gkbyte_t> & is)
+resolveAllGames(std::basic_istream<gkbyte_t> & is, const prop::ptree & config)
 {
 	std::map<std::string,std::unique_ptr<model::Game>> games;
-	std::map<std::string, std::string> config
+	std::map<std::string, std::string> xmlConfig
 	{
-		{"games.list", "/memberdata/games//game"},
-		{"game.id", "nameid/text()"},
-		{"game.name", "name/text()"}
+		{"games.list", config.get<std::string>("games.list")},
+		{"game.id", config.get<std::string>("game.id")},
+		{"game.name", config.get<std::string>("game.name")}
 	};
-	std::unique_ptr<backend::GameListParser> glp(new backend::XMLGameListParser(config));
+	std::unique_ptr<backend::GameListParser> glp(new backend::XMLGameListParser(xmlConfig));
 	return glp->parseGameList(is);
 }
 
@@ -59,18 +62,19 @@ DesuraPrototype::onShutdown()
 void
 DesuraPrototype::startEventLoop()
 {
+	prop::ptree config;
+	prop::read_ini(CONFIG_FILE_PATH, config);
+
 	std::shared_ptr<core::HttpFileDownloader> hfd = client::Autowire<core::HttpFileDownloader>();
 	core::HttpFileDownloader::Form form;
-	form["username"] = this->username;
-	form["password"] = this->userpass;
-	core::HttpFileDownloader::CookieBuket cookies = hfd->doPostRequestForCookies("https://secure.desura.com/3/memberlogin", form);
-	this->logger << core::LogLevel::Debug << "freeman: " << cookies["freeman"] << core::endl;
-	this->logger << core::LogLevel::Debug << "masterchief: " << cookies["masterchief"] << core::endl;
+	form[config.get<std::string>("authfield.username")] = this->username;
+	form[config.get<std::string>("authfield.password")] = this->userpass;
+	core::HttpFileDownloader::CookieBuket cookies = hfd->doPostRequestForCookies(config.get<std::string>("auth.loginurl").c_str(), form);
 
-	hfd->downloadFileWithCookies("http://api.desura.com/1/memberdata",
-	[this](std::basic_istream<gkbyte_t> & is) -> bool
+	hfd->downloadFileWithCookies(config.get<std::string>("games.url").c_str(),
+	[this, &config](std::basic_istream<gkbyte_t> & is) -> bool
 	{
-		std::unordered_set<std::unique_ptr<model::Game>> games = resolveAllGames(is);
+		std::unordered_set<std::unique_ptr<model::Game>> games = resolveAllGames(is, config);
 		for(const auto & g : games)
 		{
 			this->logger << core::LogLevel::Debug << g->getName() << core::endl;
@@ -78,7 +82,7 @@ DesuraPrototype::startEventLoop()
 		return true;
 	}, cookies);
 
-	hfd->downloadFileWithCookies("http://api.desura.com/1/memberlogout",
+	hfd->downloadFileWithCookies(config.get<std::string>("auth.logouturl").c_str(),
 	[](std::basic_istream<gkbyte_t> & is) -> bool
 	{
 		return true;
