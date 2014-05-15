@@ -14,6 +14,7 @@ file(GLOB sources
   desuraprototype.cpp
 )
 
+add_definitions(-DCONFIG_FILE_PATH="${CMAKE_CURRENT_SOURCE_DIR}/desura.ini")
 add_executable(DesuraPrototype ${sources} ${headers})
 target_link_libraries(DesuraPrototype
   gamekeeperBackend

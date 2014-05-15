@@ -8,6 +8,8 @@
 #include <gamekeeper/backend/xmlgamelistparser.h>
 #include <gamekeeper/client/autowire.h>
 #include <gamekeeper/core/httpfiledownloader.h>
+#include <gamekeeper/core/logger.h>
+#include <gamekeeper/core/loggerStream.h>
 #include <gamekeeper/model/game.h>
 #include <gamekeeper/utils/stringutils.h>
 
@@ -62,16 +64,16 @@ DesuraPrototype::startEventLoop()
 	form["username"] = this->username;
 	form["password"] = this->userpass;
 	core::HttpFileDownloader::CookieBuket cookies = hfd->doPostRequestForCookies("https://secure.desura.com/3/memberlogin", form);
-	std::cout << "freeman: " << cookies["freeman"] << std::endl;
-	std::cout << "masterchief: " << cookies["masterchief"] << std::endl;
+	this->logger << core::LogLevel::Debug << "freeman: " << cookies["freeman"] << core::endl;
+	this->logger << core::LogLevel::Debug << "masterchief: " << cookies["masterchief"] << core::endl;
 
 	hfd->downloadFileWithCookies("http://api.desura.com/1/memberdata",
-	[](std::basic_istream<gkbyte_t> & is) -> bool
+	[this](std::basic_istream<gkbyte_t> & is) -> bool
 	{
 		std::unordered_set<std::unique_ptr<model::Game>> games = resolveAllGames(is);
 		for(const auto & g : games)
 		{
-			std::cout << g->getName() << std::endl;
+			this->logger << core::LogLevel::Debug << g->getName() << core::endl;
 		}
 		return true;
 	}, cookies);
