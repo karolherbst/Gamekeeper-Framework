@@ -29,5 +29,6 @@ install_library(gamekeeperClient)
 add_library(gamekeeperClientMain STATIC ${main_sources})
 target_link_libraries(gamekeeperClientMain
   gamekeeperClient
+  ${CMAKE_DL_LIBS}
 )
 #install_library(gamekeeperClientMain)

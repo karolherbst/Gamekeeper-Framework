@@ -26,6 +26,8 @@
 
 #ifdef GAMEKEEPER_OS_IS_WINDOWS
   #include <windows.h>
+#else
+  #include <dlfcn.h>
 #endif
 
 /**
@@ -47,13 +49,15 @@
  */
 PUBLIC_API int main(int argc, const char* argv[])
 {
+	typedef gamekeeper::client::GameKeeperRuntime::AddOptionsFuncPtr AddOptionsFuncPtr;
+
 	gamekeeper::client::GameKeeperRuntime runtime;
-// on windows stuff is a bit more complicated
 #ifdef GAMEKEEPER_OS_IS_WINDOWS
-	typedef gamekeeper::client::GameKeeperUI * (*NewInstanceFuncPtr)(gamekeeper::core::Logger& logger);
+	typedef gamekeeper::client::GameKeeperRuntime::NewInstanceFuncPtr NewInstanceFuncPtr;
 	NewInstanceFuncPtr newInstanceFunc = (NewInstanceFuncPtr)::GetProcAddress(GetModuleHandle(NULL), "newInstance");
-	return runtime.main(argc, argv, newInstanceFunc(runtime.getUILogger()));
+	AddOptionsFuncPtr addOptionsFuncPtr = (AddOptionsFuncPtr)::GetProcAddress(GetModuleHandle(NULL), "addOptions");
+	return runtime.main(argc, argv, newInstanceFunc, addOptionsFuncPtr);
 #else
-	return runtime.main(argc, argv, gamekeeper::client::newInstance(runtime.getUILogger()));
+	return runtime.main(argc, argv, &gamekeeper::client::newInstance, (AddOptionsFuncPtr)dlsym(dlopen(nullptr, RTLD_LAZY), "addOptions"));
 #endif
 }

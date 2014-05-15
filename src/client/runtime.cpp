@@ -75,21 +75,7 @@ GameKeeperRuntime::GameKeeperRuntime()
 	containerBuilder.registerType<XDGPaths>(CREATE(new XDGPaths(INJECT(OSInformation))))->
 		as<OSPaths>()->
 		singleInstance();
-	containerBuilder.registerType<Log4cppLoggerFactory>(CREATE(new Log4cppLoggerFactory(INJECT(OSPaths))))->
-	        as<LoggerFactory>()->
-	        singleInstance();
 	localContainer = containerBuilder.build();
-}
-
-GameKeeperRuntime::~GameKeeperRuntime()
-{
-	delete this->gameKeeperUI;
-}
-
-gamekeeper::core::Logger&
-GameKeeperRuntime::getUILogger()
-{
-	return localContainer->resolve<gamekeeper::core::LoggerFactory>()->getComponentLogger("UI.client");
 }
 
 static void
@@ -115,10 +101,8 @@ fillProperties(po::options_description & cmd, po::options_description & file)
 }
 
 int
-GameKeeperRuntime::main(int argc, const char* argv[], GameKeeperUI * newGameKeeperUI)
+GameKeeperRuntime::main(int argc, const char* argv[], NewInstanceFuncPtr instanceFuncPtr, AddOptionsFuncPtr optionsFuncPtr)
 {
-	this->gameKeeperUI = newGameKeeperUI;
-
 	po::options_description descCmd;
 	po::options_description descFile;
 
@@ -131,7 +115,10 @@ GameKeeperRuntime::main(int argc, const char* argv[], GameKeeperUI * newGameKeep
 	po::options_description_easy_init fileClientEasy = fileClient.add_options();
 	po::options_description_easy_init bothClientEasy = bothClient.add_options();
 
-	this->gameKeeperUI->addOptions(cmdClientEasy, fileClientEasy, bothClientEasy);
+	if(optionsFuncPtr != nullptr)
+	{
+		optionsFuncPtr(cmdClientEasy, fileClientEasy, bothClientEasy);
+	}
 
 	if(!bothClient.options().empty())
 	{
@@ -177,11 +164,9 @@ GameKeeperRuntime::main(int argc, const char* argv[], GameKeeperUI * newGameKeep
 			localContainer->resolve<OSPaths>())->
 			as<OSPaths>()->
 			singleInstance();
-		containerBuilder.registerInstance<LoggerFactory>(
-			localContainer->resolve<gamekeeper::core::LoggerFactory>())->
-			as<LoggerFactory>()->
-			singleInstance();
-
+		containerBuilder.registerType<Log4cppLoggerFactory>(CREATE(new Log4cppLoggerFactory(INJECT(OSPaths))))->
+		        as<LoggerFactory>()->
+		        singleInstance();
 		containerBuilder.registerType<BoostPOPropertyResolver>(CREATE_CAPTURED([&vm], new BoostPOPropertyResolver(vm)))->
 			as<PropertyResolver>()->
 			singleInstance();
@@ -206,6 +191,7 @@ GameKeeperRuntime::main(int argc, const char* argv[], GameKeeperUI * newGameKeep
 	std::shared_ptr<gamekeeper::core::LoggerFactory> loggerFactory = container->resolve<gamekeeper::core::LoggerFactory>();
 	loggerFactory->getComponentLogger("main") << gamekeeper::core::LogLevel::Debug << "firing up GameKeeper" << gamekeeper::core::endl;
 
+	this->gameKeeperUI = instanceFuncPtr(loggerFactory->getComponentLogger("UI.client"));
 	this->gameKeeperUI->init(vm);
 	this->gameKeeperUI->startEventLoop();
 
@@ -214,6 +200,7 @@ GameKeeperRuntime::main(int argc, const char* argv[], GameKeeperUI * newGameKeep
 	for(int8_t count = 0; count < 5 && !threadManager->tryJoinFor(2000); count++){}
 
 	this->gameKeeperUI->onShutdown();
+	delete this->gameKeeperUI;
 
 	return EXIT_SUCCESS;
 }
