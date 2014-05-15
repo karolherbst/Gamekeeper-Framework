@@ -127,6 +127,9 @@ if(NOT LOG4CPP_FOUND)
   include(Buildlog4cpp)
 endif()
 
+# pugixml
+find_package(PugiXML)
+
 # swig
 if(WITH_CSHARP_BINDINGS OR WITH_JAVA_BINDINGS OR WITH_PYTHON_BINDINGS)
   find_package(SWIG ${REQUIRED_ON_UNIX})

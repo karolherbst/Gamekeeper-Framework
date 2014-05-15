@@ -5,8 +5,7 @@
 #include <boost/program_options/options_description.hpp>
 #include <boost/program_options/variables_map.hpp>
 
-#include <pugixml.hpp>
-
+#include <gamekeeper/backend/xmlgamelistparser.h>
 #include <gamekeeper/client/autowire.h>
 #include <gamekeeper/core/httpfiledownloader.h>
 #include <gamekeeper/model/game.h>
@@ -14,6 +13,7 @@
 
 GAMECLIENTUI_CLASS(DesuraPrototype)
 
+namespace backend = gamekeeper::backend;
 namespace client = gamekeeper::client;
 namespace core = gamekeeper::core;
 namespace model = gamekeeper::model;
@@ -25,56 +25,19 @@ GAMECLIENT_ADD_OPTIONS({
 	cmd("desura.password", po::value<std::string>()->required(), "Desura Account password");
 })
 
-class GameXML : public model::Game
+static std::unordered_set<std::unique_ptr<model::Game>>
+resolveAllGames(std::basic_istream<gkbyte_t> & is)
 {
-	friend class XMLGameResolver;
-private:
-	std::string id;
-	std::string name;
-public:
-	const char * getId() const
+	std::map<std::string,std::unique_ptr<model::Game>> games;
+	std::map<std::string, std::string> config
 	{
-		return this->id.c_str();
-	}
-
-	const char * getName() const
-	{
-		return this->name.c_str();
-	}
-};
-
-class XMLGameResolver
-{
-public:
-	std::map<std::string,model::Game*> resolveAllGames(std::basic_istream<gkbyte_t> & is)
-	{
-		pugi::xml_document doc;
-		std::map<std::string,model::Game*> games;
-
-		if(doc.load(is))
-		{
-			std::cout << "loading XML finished" << std::endl;
-			pugi::xpath_query gameQuery("/memberdata/games//game");
-			pugi::xpath_query idQuery("nameid/text()");
-			pugi::xpath_query nameQuery("name/text()");
-
-			pugi::xpath_node_set result = gameQuery.evaluate_node_set(doc.document_element());
-			for(size_t i = 0; i < result.size(); i++)
-			{
-				GameXML * game = new GameXML();
-				game->id = idQuery.evaluate_string(result[i]);
-				game->name = nameQuery.evaluate_string(result[i]);
-				games[game->getId()] = game;
-			}
-		}
-		else
-		{
-			std::cout << "loading XML failed" << std::endl;
-		}
-
-		return games;
-	}
-};
+		{"games.list", "/memberdata/games//game"},
+		{"game.id", "nameid/text()"},
+		{"game.name", "name/text()"}
+	};
+	std::unique_ptr<backend::GameListParser> glp(new backend::XMLGameListParser(config));
+	return glp->parseGameList(is);
+}
 
 DesuraPrototype::DesuraPrototype(gamekeeper::core::Logger& _logger)
 :	logger(_logger){}
@@ -105,11 +68,10 @@ DesuraPrototype::startEventLoop()
 	hfd->downloadFileWithCookies("http://api.desura.com/1/memberdata",
 	[](std::basic_istream<gkbyte_t> & is) -> bool
 	{
-		XMLGameResolver resolver;
-		std::map<std::string,model::Game*> games = resolver.resolveAllGames(is);
-		for(auto it : games)
+		std::unordered_set<std::unique_ptr<model::Game>> games = resolveAllGames(is);
+		for(const auto & g : games)
 		{
-			std::cout << it.second->getName() << std::endl;
+			std::cout << g->getName() << std::endl;
 		}
 		return true;
 	}, cookies);

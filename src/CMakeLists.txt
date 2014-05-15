@@ -11,6 +11,7 @@ add_subdirectory(utils)
 add_subdirectory(client)
 add_subdirectory(core)
 add_subdirectory(bindings)
+add_subdirectory(backend)
 
 # some important dependencies
 if(NOT CURL_FOUND)
