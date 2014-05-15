@@ -120,6 +120,13 @@ if(BUILD_TESTS)
   endif()
 endif()
 
+# jsoncpp
+find_package(Jsoncpp ${REQUIRED_ON_LINUX})
+if(NOT JSONCPP_FOUND)
+  set_download_url(JSONCPP http://sourceforge.net/projects/jsoncpp/files/jsoncpp/0.6.0-rc2/jsoncpp-src-0.6.0-rc2.tar.gz/download 363e2f4cbd3aeb63bf4e571f377400fb)
+  include(BuildJSONCpp)
+endif()
+
 # log4cpp
 find_package(log4cpp ${REQUIRED_ON_LINUX})
 if(NOT LOG4CPP_FOUND)
