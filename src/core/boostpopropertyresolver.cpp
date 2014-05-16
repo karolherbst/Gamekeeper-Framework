@@ -40,7 +40,7 @@ BoostPOPropertyResolver::get(const std::string& key)
 	auto it = this->values.find(key);
 	if(it == this->values.end())
 	{
-		return nullptr;
+		return boost::any();
 	}
 	return (*it).second;
 }

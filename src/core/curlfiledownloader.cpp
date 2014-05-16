@@ -184,9 +184,15 @@ emptyCurlFileDownloadCallback(void * const, size_t size, size_t nrMem, void *)
 }
 
 static std::string
-buildUserAgentString()
+buildUserAgentString(const boost::any & configValue)
 {
-	return std::string("GameKeeper/0.1 libcurl/") + curl_version_info(CURLVERSION_NOW)->version;
+	if(configValue.empty())
+	{
+		curl_version_info_data * data = curl_version_info(CURLVERSION_NOW);
+		return std::string("GameKeeper/0.1 libcurl/") + data->version + ' ' + data->ssl_version +
+			" zlib/" + data->libz_version;
+	}
+	return boost::any_cast<std::string>(configValue);
 }
 
 const std::unordered_set<std::string>
@@ -198,9 +204,9 @@ CurlFileDownloader::CurlFileDownloader(std::shared_ptr<LoggerFactory> loggerFact
 :	propertyResolver(_propertyResolver),
 	ospaths(_ospaths),
 	logger(loggerFactory->getComponentLogger("IO.curl")),
-	userAgent(buildUserAgentString())
+	userAgent(buildUserAgentString(_propertyResolver->get("network.user_agent")))
 {
-	logger << LogLevel::Debug << "init curl" << endl;
+	logger << LogLevel::Debug << "init curl with user-agent: " << this->userAgent << endl;
 	curl_global_init(CURL_GLOBAL_SSL);
 }
 

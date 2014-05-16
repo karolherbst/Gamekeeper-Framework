@@ -30,6 +30,7 @@
 #include <gamekeeper/client/gamekeeper.h>
 #include <gamekeeper/client/hypodermic.h>
 
+#include <boost/filesystem/operations.hpp>
 #include <boost/program_options/options_description.hpp>
 #include <boost/program_options/parsers.hpp>
 #include <boost/program_options/variables_map.hpp>
@@ -56,6 +57,7 @@
   #define THREADHELPERCLASS PthreadHelper
 #endif
 
+namespace fs = boost::filesystem;
 namespace po = boost::program_options;
 
 GAMEKEEPER_NAMESPACE_START(client)
@@ -89,6 +91,7 @@ fillProperties(po::options_description & cmd, po::options_description & file)
 
 	descNetwork.add_options()
 		("network.time_between_retries", po::value<uint16_t>()->default_value(300))
+		("network.user_agent", po::value<std::string>())
 		("network.resolve.retries", po::value<uint16_t>()->default_value(3))
 		("network.resolve.timeout", po::value<uint16_t>()->default_value(5000))
 		("network.connection.retries", po::value<uint16_t>()->default_value(3))
@@ -103,6 +106,8 @@ fillProperties(po::options_description & cmd, po::options_description & file)
 int
 GameKeeperRuntime::main(int argc, const char* argv[], NewInstanceFuncPtr instanceFuncPtr, AddOptionsFuncPtr optionsFuncPtr)
 {
+	using namespace gamekeeper::core;
+
 	po::options_description descCmd;
 	po::options_description descFile;
 
@@ -138,7 +143,12 @@ GameKeeperRuntime::main(int argc, const char* argv[], NewInstanceFuncPtr instanc
 
 	po::variables_map vm;
 	po::store(po::parse_command_line(argc, argv, descCmd), vm);
-	//po::store(po::parse_config_file("", descFile), vm);
+
+	fs::path configFile = localContainer->resolve<OSPaths>()->getConfigFile("properties.conf");
+	if(fs::exists(configFile))
+	{
+		po::store(po::parse_config_file<char>(configFile.string().c_str(), descFile, true), vm);
+	}
 
 	if(vm.count("help") > 0)
 	{
@@ -149,43 +159,40 @@ GameKeeperRuntime::main(int argc, const char* argv[], NewInstanceFuncPtr instanc
 	po::notify(vm);
 
 	Hypodermic::ContainerBuilder containerBuilder;
-	{
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-parameter"
-		using namespace gamekeeper::core;
-		// set up the real IoC container
+	// set up the real IoC container
 
-		// reuse instances from the pre container
-		containerBuilder.registerInstance<OSInformation>(
-			localContainer->resolve<OSInformation>())->
-			as<OSInformation>()->
-			singleInstance();
-		containerBuilder.registerInstance<OSPaths>(
-			localContainer->resolve<OSPaths>())->
-			as<OSPaths>()->
-			singleInstance();
-		containerBuilder.registerType<Log4cppLoggerFactory>(CREATE(new Log4cppLoggerFactory(INJECT(OSPaths))))->
-		        as<LoggerFactory>()->
-		        singleInstance();
-		containerBuilder.registerType<BoostPOPropertyResolver>(CREATE_CAPTURED([&vm], new BoostPOPropertyResolver(vm)))->
-			as<PropertyResolver>()->
-			singleInstance();
-		containerBuilder.registerType<CurlFileDownloader>(
-			CREATE(new CurlFileDownloader(INJECT(LoggerFactory), INJECT(PropertyResolver), INJECT(OSPaths))))->
-			as<FileDownloader>()->
-			as<HttpFileDownloader>()->
-			singleInstance();
-		containerBuilder.registerType<THREADHELPERCLASS>()->
-			as<NativeThreadHelper>()->
-		        singleInstance();
-		containerBuilder.registerType<StdCpp11ThreadManager>(
-			CREATE(new StdCpp11ThreadManager(INJECT(NativeThreadHelper),
-		                                     INJECT(LoggerFactory))))->
-			as<ThreadManager>()->
-			as<ThreadFactory>()->
-			singleInstance();
+	// reuse instances from the pre container
+	containerBuilder.registerInstance<OSInformation>(
+		localContainer->resolve<OSInformation>())->
+		as<OSInformation>()->
+		singleInstance();
+	containerBuilder.registerInstance<OSPaths>(
+		localContainer->resolve<OSPaths>())->
+		as<OSPaths>()->
+		singleInstance();
+	containerBuilder.registerType<Log4cppLoggerFactory>(CREATE(new Log4cppLoggerFactory(INJECT(OSPaths))))->
+	        as<LoggerFactory>()->
+	        singleInstance();
+	containerBuilder.registerType<BoostPOPropertyResolver>(CREATE_CAPTURED([&vm], new BoostPOPropertyResolver(vm)))->
+		as<PropertyResolver>()->
+		singleInstance();
+	containerBuilder.registerType<CurlFileDownloader>(
+		CREATE(new CurlFileDownloader(INJECT(LoggerFactory), INJECT(PropertyResolver), INJECT(OSPaths))))->
+		as<FileDownloader>()->
+		as<HttpFileDownloader>()->
+		singleInstance();
+	containerBuilder.registerType<THREADHELPERCLASS>()->
+		as<NativeThreadHelper>()->
+	        singleInstance();
+	containerBuilder.registerType<StdCpp11ThreadManager>(
+		CREATE(new StdCpp11ThreadManager(INJECT(NativeThreadHelper),
+	                                     INJECT(LoggerFactory))))->
+		as<ThreadManager>()->
+		as<ThreadFactory>()->
+		singleInstance();
 #pragma GCC diagnostic pop
-	}
 	container = containerBuilder.build();
 
 	std::shared_ptr<gamekeeper::core::LoggerFactory> loggerFactory = container->resolve<gamekeeper::core::LoggerFactory>();
