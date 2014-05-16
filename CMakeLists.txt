@@ -129,7 +129,11 @@ endif()
 
 # swig
 if(WITH_CSHARP_BINDINGS OR WITH_JAVA_BINDINGS OR WITH_PYTHON_BINDINGS)
-  find_package(SWIG REQUIRED)
+  find_package(SWIG ${REQUIRED_ON_UNIX})
+  if(NOT SWIG_FOUND)
+    set_download_url(SWIG http://downloads.sourceforge.net/project/swig/swigwin/swigwin-3.0.0/swigwin-3.0.0.zip c1d85fee2421d4edac552923fc4e5bde)
+    include(BuildSwig)
+  endif()
   
   if(WITH_CSHARP_BINDINGS)
     find_package(CSharp REQUIRED)
@@ -141,6 +145,7 @@ if(WITH_CSHARP_BINDINGS OR WITH_JAVA_BINDINGS OR WITH_PYTHON_BINDINGS)
   endif()
   
   if(WITH_PYTHON_BINDINGS)
+    set(Python_ADDITIONAL_VERSIONS 3.4)
     find_package(PythonLibs 3 REQUIRED)
   endif()
 endif()
