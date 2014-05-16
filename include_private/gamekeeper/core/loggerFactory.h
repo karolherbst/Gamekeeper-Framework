@@ -33,7 +33,7 @@ interface Logger;
  * @interface LoggerFactory loggerFactory.h <gamekeeper/core/loggerFactory.h>
  *
  * This interface is used to create Logger instances
- * 
+ *
  * @author Karol Herbst
  * @since 0
  */

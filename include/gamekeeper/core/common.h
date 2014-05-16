@@ -85,19 +85,19 @@ typedef char gkbyte_t;
 
 /**
  * used to start a C++ namespace
- * 
+ *
  * It should be used in every header file also used in C applications.
  * It guards the namespace decleration with #ifdef __cplusplus check
- * 
+ *
  * This macro creates the following lines for C++ applications:
- * 
+ *
  * @code{.cpp}
  * namespace gamekeeper
  * {
  * namespace @p name
  * {
  * @endcode
- * 
+ *
  * @param[in] name of the namespace
  */
 #ifdef __cplusplus
@@ -112,17 +112,17 @@ typedef char gkbyte_t;
 
 /**
  * used to end a C++ namespace
- * 
+ *
  * It should be used in every header file also used in C applications.
  * It guards the namespace decleration with #ifdef __cplusplus check
- * 
+ *
  * This macro creates the following line for C++ applications:
- * 
+ *
  * @code{.cpp}
  * }
  * }
  * @endcode
- * 
+ *
  * @param[in] name of the namespace
  */
 #ifdef __cplusplus
