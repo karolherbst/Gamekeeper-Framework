@@ -36,22 +36,4 @@
 	PRIVATE_API type(const type&) = delete; \
 	PRIVATE_API type & operator=(const type &) = delete
 
-/**
- * this method auto creates the pure virtual method given
- *
- * @author Karol Herbst
- * @since 0
- * @param method the method signature
- */
-#define GAMEKEEPER_INTERFACE_METHOD(method) virtual method = 0
-
-/**
- * this macro shall be used to override interface methods
- *
- * @author Karol Herbst
- * @since 0
- * @param method the method signature
- */
-#define GAMEKEEPER_IMPLEMENTATION_OVERRIDE(method) virtual method override
-
 #endif //GAMEKEEPER_CORE_INTERFACE_H

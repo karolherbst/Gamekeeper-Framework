@@ -42,7 +42,7 @@ class PUBLIC_API BoostPOPropertyResolver : public PropertyResolver
 {
 public:
 	PUBLIC_API BoostPOPropertyResolver(const boost::program_options::variables_map &);
-	PRIVATE_API GAMEKEEPER_IMPLEMENTATION_OVERRIDE(boost::any get(const std::string& key));
+	PRIVATE_API virtual boost::any get(const std::string& key) override;
 private:
 	std::map<std::string, boost::any> values;
 };

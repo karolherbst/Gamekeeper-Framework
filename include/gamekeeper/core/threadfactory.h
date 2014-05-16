@@ -66,7 +66,7 @@ interface PUBLIC_API ThreadFactory
 	 * @param[in] name the name of the thread
 	 * @param[in] function the function run within the thread
 	 */
-	PUBLIC_API GAMEKEEPER_INTERFACE_METHOD(void createThread(const char * name, ThreadFunction function));
+	PUBLIC_API virtual void createThread(const char * name, ThreadFunction function) = 0;
 };
 
 GAMEKEEPER_NAMESPACE_END(core)

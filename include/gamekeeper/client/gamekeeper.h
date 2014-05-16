@@ -68,7 +68,7 @@ interface PUBLIC_API GameKeeperUI
 	 * @author Karol Herbst
 	 * @since 0
 	 */
-	PUBLIC_API GAMEKEEPER_INTERFACE_METHOD(void init(const ConfigMap & config));
+	PUBLIC_API virtual void init(const ConfigMap & config) = 0;
 
 	/**
 	 * shutdown event handling method for GameKeeper
@@ -78,7 +78,7 @@ interface PUBLIC_API GameKeeperUI
 	 * @author Karol Herbst
 	 * @since 0
 	 */
-	PUBLIC_API GAMEKEEPER_INTERFACE_METHOD(void onShutdown());
+	PUBLIC_API virtual void onShutdown() = 0;
 
 	/**
 	 * starts the implementation specific event loop
@@ -89,7 +89,7 @@ interface PUBLIC_API GameKeeperUI
 	 * @pre {@link #init} was called
 	 * @post blocks the current thread of execution
 	 */
-	PUBLIC_API GAMEKEEPER_INTERFACE_METHOD(void startEventLoop());
+	PUBLIC_API virtual void startEventLoop() = 0;
 };
 
 /**

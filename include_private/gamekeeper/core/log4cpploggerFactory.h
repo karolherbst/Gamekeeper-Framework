@@ -41,9 +41,9 @@ class PUBLIC_API Log4cppLoggerFactory : public LoggerFactory
 {
 public:
 	PUBLIC_API Log4cppLoggerFactory(std::shared_ptr<UserPaths>);
-	PRIVATE_API GAMEKEEPER_IMPLEMENTATION_OVERRIDE(Logger& getDefaultLogger());
-	PRIVATE_API GAMEKEEPER_IMPLEMENTATION_OVERRIDE(Logger& getComponentLogger(const char * const id));
-	PRIVATE_API GAMEKEEPER_IMPLEMENTATION_OVERRIDE(~Log4cppLoggerFactory());
+	PRIVATE_API virtual Logger& getDefaultLogger() override;
+	PRIVATE_API virtual Logger& getComponentLogger(const char * const id) override;
+	PRIVATE_API virtual ~Log4cppLoggerFactory();
 private:
 	Logger * rootLogger = nullptr;
 

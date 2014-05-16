@@ -47,7 +47,7 @@ interface PRIVATE_API LoggerFactory
 	 *
 	 * @return the default logger
 	 */
-	PRIVATE_API GAMEKEEPER_INTERFACE_METHOD(Logger& getDefaultLogger());
+	PRIVATE_API virtual Logger& getDefaultLogger() = 0;
 
 	/**
 	 * @author Karol Herbst
@@ -56,7 +56,7 @@ interface PRIVATE_API LoggerFactory
 	 * @param id the id of the component
 	 * @return a logger with the given id
 	 */
-	PRIVATE_API GAMEKEEPER_INTERFACE_METHOD(Logger& getComponentLogger(const char * const id));
+	PRIVATE_API virtual Logger& getComponentLogger(const char * const id) = 0;
 };
 
 GAMEKEEPER_NAMESPACE_END(core)

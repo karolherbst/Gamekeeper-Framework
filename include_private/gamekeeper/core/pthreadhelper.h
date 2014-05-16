@@ -30,8 +30,8 @@ GAMEKEEPER_NAMESPACE_START(core)
 class PUBLIC_API PthreadHelper : public NativeThreadHelper
 {
 public:
-	PRIVATE_API GAMEKEEPER_IMPLEMENTATION_OVERRIDE(void setNameOfThread(std::thread & thread, const char * name));
-	PRIVATE_API GAMEKEEPER_IMPLEMENTATION_OVERRIDE(std::string getNameOfThread(std::thread & thread));
+	PRIVATE_API virtual void setNameOfThread(std::thread & thread, const char * name) override;
+	PRIVATE_API virtual std::string getNameOfThread(std::thread & thread) override;
 };
 
 GAMEKEEPER_NAMESPACE_END(core)

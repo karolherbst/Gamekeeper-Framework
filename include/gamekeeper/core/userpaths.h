@@ -57,7 +57,7 @@ interface PUBLIC_API UserPaths
 	 * @param name the file name
 	 * @return the resolved file
 	 */
-	PUBLIC_API GAMEKEEPER_INTERFACE_METHOD(boost::filesystem::path getConfigFile(std::string name));
+	PUBLIC_API virtual boost::filesystem::path getConfigFile(std::string name) = 0;
 
 	/**
 	 * returns the file with the given name from the data paths
@@ -68,7 +68,7 @@ interface PUBLIC_API UserPaths
 	 * @param name the file name
 	 * @return the resolved file
 	 */
-	PUBLIC_API GAMEKEEPER_INTERFACE_METHOD(boost::filesystem::path getDataFile(std::string name));
+	PUBLIC_API virtual boost::filesystem::path getDataFile(std::string name) = 0;
 
 	/**
 	 * returns the file with the given name from the cache paths
@@ -79,7 +79,7 @@ interface PUBLIC_API UserPaths
 	 * @param name the file name
 	 * @return the resolved file
 	 */
-	PUBLIC_API GAMEKEEPER_INTERFACE_METHOD(boost::filesystem::path getCacheFile(std::string name));
+	PUBLIC_API virtual boost::filesystem::path getCacheFile(std::string name) = 0;
 
 	/**
 	 * returns the file with the given name from the runtime paths
@@ -90,7 +90,7 @@ interface PUBLIC_API UserPaths
 	 * @param name the file name
 	 * @return the resolved file
 	 */
-	PUBLIC_API GAMEKEEPER_INTERFACE_METHOD(boost::filesystem::path getRuntimeFile(std::string name));
+	PUBLIC_API virtual boost::filesystem::path getRuntimeFile(std::string name) = 0;
 
 	/**
 	 * exception class

@@ -9,9 +9,9 @@ class HBPrototype : public gamekeeper::client::GameKeeperUI
 {
 public:
 	HBPrototype(gamekeeper::core::Logger& logger);
-	GAMEKEEPER_IMPLEMENTATION_OVERRIDE(void init(const ConfigMap &));
-	GAMEKEEPER_IMPLEMENTATION_OVERRIDE(void onShutdown());
-	GAMEKEEPER_IMPLEMENTATION_OVERRIDE(void startEventLoop());
+	virtual void init(const ConfigMap &) override;
+	virtual void onShutdown() override;
+	virtual void startEventLoop() override;
 private:
 	const char * username = nullptr;
 	const char * userpass = nullptr;

@@ -84,8 +84,8 @@ interface PUBLIC_API HttpFileDownloader : public FileDownloader
 	 * @param[in] callback the callback function
 	 * @param[in] cookies the cookies
 	 */
-	PUBLIC_API GAMEKEEPER_INTERFACE_METHOD(void downloadFileWithCookies(const char * const url, DownloadCallback callback,
-	                                                                 const CookieBuket& cookies));
+	PUBLIC_API virtual void downloadFileWithCookies(const char * const url, DownloadCallback callback,
+	                                                const CookieBuket& cookies) = 0;
 
 	/**
 	 * fetches cookies with the given POST form
@@ -97,8 +97,7 @@ interface PUBLIC_API HttpFileDownloader : public FileDownloader
 	 * @param[in] form the form
 	 * @return the fetched cookies
 	 */
-	PUBLIC_API GAMEKEEPER_INTERFACE_METHOD(CookieBuket doPostRequestForCookies(const char * const url,
-	                                                                           const Form& form = Form()));
+	PUBLIC_API virtual CookieBuket doPostRequestForCookies(const char * const url, const Form& form = Form()) = 0;
 
 	/**
 	 * downloads the file with the given POST form
@@ -110,8 +109,7 @@ interface PUBLIC_API HttpFileDownloader : public FileDownloader
 	 * @param[in] callback the callback function
 	 * @param[in] form the form
 	 */
-	PUBLIC_API GAMEKEEPER_INTERFACE_METHOD(void downloadFileWithForm(const char * const url, DownloadCallback callback,
-	                                                                 const Form & form));
+	PUBLIC_API virtual void downloadFileWithForm(const char * const url, DownloadCallback callback, const Form & form) = 0;
 
 	/**
 	 * downloads the file and fetch cookies with the given POST form
@@ -124,9 +122,8 @@ interface PUBLIC_API HttpFileDownloader : public FileDownloader
 	 * @param[in] form the form
 	 * @return the fetched cookies
 	 */
-	PUBLIC_API GAMEKEEPER_INTERFACE_METHOD(CookieBuket downloadFileAndCookiesWithForm(const char * const url,
-	                                                                                  DownloadCallback callback,
-	                                                                                  const Form & form));
+	PUBLIC_API virtual CookieBuket downloadFileAndCookiesWithForm(const char * const url, DownloadCallback callback,
+	                                                              const Form & form) = 0;
 };
 
 GAMEKEEPER_NAMESPACE_END(core)

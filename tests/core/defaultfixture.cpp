@@ -50,10 +50,10 @@ class TestUserPaths : public gamekeeper::core::UserPaths
 {
 public:
 	TestUserPaths();
-	GAMEKEEPER_IMPLEMENTATION_OVERRIDE(boost::filesystem::path getConfigFile(std::string name));
-	GAMEKEEPER_IMPLEMENTATION_OVERRIDE(boost::filesystem::path getDataFile(std::string name));
-	GAMEKEEPER_IMPLEMENTATION_OVERRIDE(boost::filesystem::path getCacheFile(std::string name));
-	GAMEKEEPER_IMPLEMENTATION_OVERRIDE(boost::filesystem::path getRuntimeFile(std::string name));
+	virtual boost::filesystem::path getConfigFile(std::string name) override;
+	virtual boost::filesystem::path getDataFile(std::string name) override;
+	virtual boost::filesystem::path getCacheFile(std::string name) override;
+	virtual boost::filesystem::path getRuntimeFile(std::string name) override;
 private:
 	static boost::filesystem::path testPath;
 };
@@ -98,7 +98,7 @@ class TestPropertyResolver : public gamekeeper::core::PropertyResolver
 {
 public:
 	TestPropertyResolver(std::map<std::string, boost::any> & _props);
-	GAMEKEEPER_IMPLEMENTATION_OVERRIDE(boost::any get(const std::string& key));
+	virtual boost::any get(const std::string& key) override;
 private:
 	std::map<std::string, boost::any> & props;
 };

@@ -67,7 +67,7 @@ interface PUBLIC_API FileDownloader
 	 * @param[in] protocolName the name of the protocol
 	 * @return true if the implementation supports @p protocolName
 	 */
-	PUBLIC_API GAMEKEEPER_INTERFACE_METHOD(bool supportsProtocol(const char * const protocolName));
+	PUBLIC_API virtual bool supportsProtocol(const char * const protocolName) = 0;
 
 	/**
 	 * downloads the file behind the given location
@@ -78,7 +78,7 @@ interface PUBLIC_API FileDownloader
 	 * @param[in] url the url
 	 * @param[in] callback the callback function
 	 */
-	PUBLIC_API GAMEKEEPER_INTERFACE_METHOD(void downloadFile(const char * const url, DownloadCallback callback));
+	PUBLIC_API virtual void downloadFile(const char * const url, DownloadCallback callback) = 0;
 };
 
 GAMEKEEPER_NAMESPACE_END(core)

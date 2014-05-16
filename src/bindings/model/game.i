@@ -17,12 +17,12 @@
 		std::string name;
 
 	public:
-		PUBLIC_INLINE inline GAMEKEEPER_IMPLEMENTATION_OVERRIDE(const char * getId() const)
+		PUBLIC_INLINE inline virtual const char * getId() const override
 		{
 			return this->id.c_str();
 		}
 
-		PUBLIC_INLINE inline GAMEKEEPER_IMPLEMENTATION_OVERRIDE(const char * getName() const)
+		PUBLIC_INLINE inline virtual const char * getName() const override
 		{
 			return this->name.c_str();
 		}

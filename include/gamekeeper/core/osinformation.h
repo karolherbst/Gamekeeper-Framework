@@ -52,7 +52,7 @@ interface PUBLIC_API OSInformation
 	 * @param name the file name
 	 * @return the resolved value
 	 */
-	PUBLIC_API GAMEKEEPER_INTERFACE_METHOD(std::string getEnv(const char * name));
+	PUBLIC_API virtual std::string getEnv(const char * name) = 0;
 
 	/**
 	 * returns the value of the given environment variable name
@@ -63,7 +63,7 @@ interface PUBLIC_API OSInformation
 	 * @param name the file name
 	 * @return the resolved value
 	 */
-	PUBLIC_API GAMEKEEPER_INTERFACE_METHOD(void setEnv(const char * name, const char * value));
+	PUBLIC_API virtual void setEnv(const char * name, const char * value) = 0;
 
 	/**
 	 * This method should return the seperator used in environment variables to seperate multiple paths
@@ -73,7 +73,7 @@ interface PUBLIC_API OSInformation
 	 *
 	 * @return the seperator
 	 */
-	PUBLIC_API GAMEKEEPER_INTERFACE_METHOD(std::string getEnvSeperator());
+	PUBLIC_API virtual std::string getEnvSeperator() = 0;
 
 	/**
 	 * returns the path to the filesystem root of the system partition
@@ -83,7 +83,7 @@ interface PUBLIC_API OSInformation
 	 *
 	 * @return the path
 	 */
-	PUBLIC_API GAMEKEEPER_INTERFACE_METHOD(boost::filesystem::path getSystemRoot());
+	PUBLIC_API virtual boost::filesystem::path getSystemRoot() = 0;
 
 	/**
 	 * returns the path to the user directory
@@ -93,7 +93,7 @@ interface PUBLIC_API OSInformation
 	 *
 	 * @return the path
 	 */
-	PUBLIC_API GAMEKEEPER_INTERFACE_METHOD(boost::filesystem::path getUserPath());
+	PUBLIC_API virtual boost::filesystem::path getUserPath() = 0;
 
 	/**
 	 * returns the name of the current user
@@ -103,7 +103,7 @@ interface PUBLIC_API OSInformation
 	 *
 	 * @return the name
 	 */
-	PUBLIC_API GAMEKEEPER_INTERFACE_METHOD(std::string getUserName());
+	PUBLIC_API virtual std::string getUserName() = 0;
 };
 
 GAMEKEEPER_NAMESPACE_END(core)

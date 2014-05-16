@@ -33,7 +33,7 @@ class PUBLIC_API XMLGameListParser : public GameListParser
 {
 public:
 	PUBLIC_API XMLGameListParser(std::map<std::string, std::string> & config);
-	PRIVATE_API GAMEKEEPER_IMPLEMENTATION_OVERRIDE(std::unordered_set<std::unique_ptr<model::Game>> parseGameList(std::basic_istream<gkbyte_t> &));
+	PRIVATE_API virtual std::unordered_set<std::unique_ptr<model::Game>> parseGameList(std::basic_istream<gkbyte_t> &) override;
 private:
 	class PRIVATE_API PImpl;
 

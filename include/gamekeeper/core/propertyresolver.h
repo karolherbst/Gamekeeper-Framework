@@ -52,7 +52,7 @@ interface PUBLIC_API PropertyResolver
 	 * @param key the key of the property
 	 * @return a boost::any object with the typed value
 	 */
-	PUBLIC_API GAMEKEEPER_INTERFACE_METHOD(boost::any get(const std::string& key));
+	PUBLIC_API virtual boost::any get(const std::string& key) = 0;
 
 	/**
 	 * templated wrapper method around the get method

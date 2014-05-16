@@ -51,7 +51,7 @@ interface PUBLIC_API ThreadManager
 	 * @param[in] milliseconds the amount of milliseconds to wait
 	 * @return true if there is no active threads anymore
 	 */
-	PUBLIC_API GAMEKEEPER_INTERFACE_METHOD(bool tryJoinFor(int64_t seconds));
+	PUBLIC_API virtual bool tryJoinFor(int64_t seconds) = 0;
 
 	/**
 	 * this method interrupts every thread except the main one.
@@ -61,7 +61,7 @@ interface PUBLIC_API ThreadManager
 	 * @author Karol Herbst
 	 * @since 0
 	 */
-	PUBLIC_API GAMEKEEPER_INTERFACE_METHOD(void interruptAll());
+	PUBLIC_API virtual void interruptAll() = 0;
 };
 
 GAMEKEEPER_NAMESPACE_END(core)

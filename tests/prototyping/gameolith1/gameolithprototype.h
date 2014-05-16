@@ -9,9 +9,9 @@ class GameolithPrototype : public gamekeeper::client::GameKeeperUI
 {
 public:
 	GameolithPrototype(gamekeeper::core::Logger& logger);
-	GAMEKEEPER_IMPLEMENTATION_OVERRIDE(void init(const ConfigMap &));
-	GAMEKEEPER_IMPLEMENTATION_OVERRIDE(void onShutdown());
-	GAMEKEEPER_IMPLEMENTATION_OVERRIDE(void startEventLoop());
+	virtual void init(const ConfigMap &) override;
+	virtual void onShutdown() override;
+	virtual void startEventLoop() override;
 private:
 	bool handleRequest(std::basic_istream<gkbyte_t> &);
 	gamekeeper::core::Logger& logger;

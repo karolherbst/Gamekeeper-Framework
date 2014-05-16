@@ -28,8 +28,8 @@ GAMEKEEPER_NAMESPACE_START(model)
 interface PUBLIC_API Game
 {
 	GAMEKEEPER_INTERFACE_METHODS(Game);
-	PUBLIC_API GAMEKEEPER_INTERFACE_METHOD(const char * getId() const);
-	PUBLIC_API GAMEKEEPER_INTERFACE_METHOD(const char * getName() const);
+	PUBLIC_API virtual const char * getId() const = 0;
+	PUBLIC_API virtual const char * getName() const = 0;
 };
 
 GAMEKEEPER_NAMESPACE_END(model)

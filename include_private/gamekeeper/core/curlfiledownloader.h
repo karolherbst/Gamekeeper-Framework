@@ -42,19 +42,15 @@ class PUBLIC_API CurlFileDownloader : public HttpFileDownloader
 {
 public:
 	PUBLIC_API CurlFileDownloader(std::shared_ptr<LoggerFactory>, std::shared_ptr<PropertyResolver>, std::shared_ptr<UserPaths>);
-	PRIVATE_API ~CurlFileDownloader();
-	PRIVATE_API GAMEKEEPER_IMPLEMENTATION_OVERRIDE(bool supportsProtocol(const char * const protocolName));
-	PRIVATE_API GAMEKEEPER_IMPLEMENTATION_OVERRIDE(void downloadFile(const char * const url, DownloadCallback callback));
-	PRIVATE_API GAMEKEEPER_IMPLEMENTATION_OVERRIDE(void downloadFileWithCookies(const char * const url,
-	                                                                         DownloadCallback callback,
-	                                                                         const CookieBuket& cookies));
-	PRIVATE_API GAMEKEEPER_IMPLEMENTATION_OVERRIDE(CookieBuket doPostRequestForCookies(const char * const url,
-	                                                                                const Form& form));
-	PRIVATE_API GAMEKEEPER_IMPLEMENTATION_OVERRIDE(void downloadFileWithForm(const char * const url,
-	                                                                         DownloadCallback callback, const Form & form));
-	PRIVATE_API GAMEKEEPER_IMPLEMENTATION_OVERRIDE(CookieBuket downloadFileAndCookiesWithForm(const char * const url,
-	                                                                                          DownloadCallback callback,
-                                                                                                  const Form & form));
+	PRIVATE_API virtual ~CurlFileDownloader();
+	PRIVATE_API virtual bool supportsProtocol(const char * const protocolName) override;
+	PRIVATE_API virtual void downloadFile(const char * const url, DownloadCallback callback) override;
+	PRIVATE_API virtual void downloadFileWithCookies(const char * const url, DownloadCallback callback,
+	                                                 const CookieBuket& cookies) override;
+	PRIVATE_API virtual CookieBuket doPostRequestForCookies(const char * const url, const Form& form) override;
+	PRIVATE_API virtual void downloadFileWithForm(const char * const url, DownloadCallback callback, const Form & form) override;
+	PRIVATE_API virtual CookieBuket downloadFileAndCookiesWithForm(const char * const url, DownloadCallback callback,
+                                                                       const Form & form) override;
 private:
 	std::shared_ptr<PropertyResolver> propertyResolver;
 	std::shared_ptr<UserPaths> userpaths;

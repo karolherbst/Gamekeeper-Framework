@@ -106,7 +106,7 @@ public:
 	 * @param logLevel the log Level
 	 * @return a loggerStream
 	 */
-	PUBLIC_API GAMEKEEPER_INTERFACE_METHOD(LoggerStream& operator<<(const LogLevel& logLevel));
+	PUBLIC_API virtual LoggerStream& operator<<(const LogLevel& logLevel) = 0;
 
 	/**
 	 * method to check whether a loglevel is enabled or not
@@ -119,7 +119,7 @@ public:
 	 * @param logLevel the log level to check
 	 * @return true if the loglevel is enabled
 	 */
-	PUBLIC_API GAMEKEEPER_INTERFACE_METHOD(bool isEnabled(const LogLevel & loglevel));
+	PUBLIC_API virtual bool isEnabled(const LogLevel & loglevel) = 0;
 };
 
 GAMEKEEPER_NAMESPACE_END(core)

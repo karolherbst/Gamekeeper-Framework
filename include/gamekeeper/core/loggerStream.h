@@ -44,7 +44,7 @@ interface PUBLIC_API LoggerStream
 {
 public:
 	GAMEKEEPER_INTERFACE_METHODS(LoggerStream);
-	
+
 	/**
 	 * This methods logs the given string into the logger Stream
 	 *
@@ -54,7 +54,7 @@ public:
 	 * @param str the message to log
 	 * @return the logger stream itself
 	 */
-	PUBLIC_API GAMEKEEPER_INTERFACE_METHOD(LoggerStream& operator<<(const std::string& str));
+	PUBLIC_API virtual LoggerStream& operator<<(const std::string& str) = 0;
 
 	/**
 	 * This methods flushes the stream
@@ -64,7 +64,7 @@ public:
 	 *
 	 * @return the logger stream itself
 	 */
-	PUBLIC_API GAMEKEEPER_INTERFACE_METHOD(LoggerStream& flush());
+	PUBLIC_API virtual LoggerStream& flush() = 0;
 };
 
 /**

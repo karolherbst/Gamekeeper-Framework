@@ -57,7 +57,7 @@ interface PUBLIC_API GameListParser
 	 * @param[in] is the input stream
 	 * @return unsorted list of games
 	 */
-	PUBLIC_API GAMEKEEPER_INTERFACE_METHOD(std::unordered_set<std::unique_ptr<model::Game>> parseGameList(std::basic_istream<gkbyte_t> & is));
+	PUBLIC_API virtual std::unordered_set<std::unique_ptr<model::Game>> parseGameList(std::basic_istream<gkbyte_t> & is) = 0;
 };
 
 GAMEKEEPER_NAMESPACE_END(backend)
