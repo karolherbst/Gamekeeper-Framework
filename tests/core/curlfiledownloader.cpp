@@ -60,7 +60,7 @@ protected:
 	{
 		this->fileDownloader = new CurlFileDownloader(this->container->resolve<LoggerFactory>(),
 		                                              this->container->resolve<PropertyResolver>(),
-		                                              this->container->resolve<OSPaths>());
+		                                              this->container->resolve<UserPaths>());
 	}
 
 	virtual void TearDown() override

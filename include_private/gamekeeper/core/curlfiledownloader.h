@@ -27,8 +27,8 @@
 #include <unordered_set>
 
 #include <gamekeeper/core/httpfiledownloader.h>
-#include <gamekeeper/core/ospaths.h>
 #include <gamekeeper/core/propertyresolver.h>
+#include <gamekeeper/core/userpaths.h>
 
 #include <boost/filesystem/path.hpp>
 
@@ -41,7 +41,7 @@ interface LoggerFactory;
 class PUBLIC_API CurlFileDownloader : public HttpFileDownloader
 {
 public:
-	PUBLIC_API CurlFileDownloader(std::shared_ptr<LoggerFactory>, std::shared_ptr<PropertyResolver>, std::shared_ptr<OSPaths>);
+	PUBLIC_API CurlFileDownloader(std::shared_ptr<LoggerFactory>, std::shared_ptr<PropertyResolver>, std::shared_ptr<UserPaths>);
 	PRIVATE_API ~CurlFileDownloader();
 	PRIVATE_API GAMEKEEPER_IMPLEMENTATION_OVERRIDE(bool supportsProtocol(const char * const protocolName));
 	PRIVATE_API GAMEKEEPER_IMPLEMENTATION_OVERRIDE(void downloadFile(const char * const url, DownloadCallback callback));
@@ -57,7 +57,7 @@ public:
                                                                                                   const Form & form));
 private:
 	std::shared_ptr<PropertyResolver> propertyResolver;
-	std::shared_ptr<OSPaths> ospaths;
+	std::shared_ptr<UserPaths> userpaths;
 	Logger & logger;
 	const std::string userAgent;
 

@@ -18,8 +18,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef GAMEKEEPER_CORE_OSPATHS_H
-#define GAMEKEEPER_CORE_OSPATHS_H 1
+#ifndef GAMEKEEPER_CORE_USERPATHS_H
+#define GAMEKEEPER_CORE_USERPATHS_H 1
 
 #include <gamekeeper/core/common.h>
 
@@ -31,9 +31,9 @@
 GAMEKEEPER_NAMESPACE_START(core)
 
 /**
- * @interface OSPaths ospaths.h <gamekeeper/core/ospaths.h>
+ * @interface UserPaths userpaths.h <gamekeeper/core/userpaths.h>
  *
- * this interface provides all methods to get OS specific paths like where should config files be stored
+ * this interface provides all methods to get User specific paths like where should config files be stored
  *
  * All methods can return a path to a non existing file, which can be written to at any time. All methods will try to
  * resolve files relative to the home directory of the current user first and only in system wide paths if no files were
@@ -44,9 +44,9 @@ GAMEKEEPER_NAMESPACE_START(core)
  * @author Karol Herbst
  * @since 0
  */
-interface PUBLIC_API OSPaths
+interface PUBLIC_API UserPaths
 {
-	GAMEKEEPER_INTERFACE_METHODS(OSPaths);
+	GAMEKEEPER_INTERFACE_METHODS(UserPaths);
 
 	/**
 	 * returns the file with the given name from the config paths
@@ -95,7 +95,7 @@ interface PUBLIC_API OSPaths
 	/**
 	 * exception class
 	 */
-	class PUBLIC_API GAMEKEEPER_EXCEPTION(OSPathException);
+	class PUBLIC_API GAMEKEEPER_EXCEPTION(UserPathException);
 };
 
 GAMEKEEPER_NAMESPACE_END(core)

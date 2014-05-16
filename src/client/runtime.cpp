@@ -75,7 +75,7 @@ GameKeeperRuntime::GameKeeperRuntime()
 		as<OSInformation>()->
 		singleInstance();
 	containerBuilder.registerType<XDGPaths>(CREATE(new XDGPaths(INJECT(OSInformation))))->
-		as<OSPaths>()->
+		as<UserPaths>()->
 		singleInstance();
 	localContainer = containerBuilder.build();
 }
@@ -144,7 +144,7 @@ GameKeeperRuntime::main(int argc, const char* argv[], NewInstanceFuncPtr instanc
 	po::variables_map vm;
 	po::store(po::parse_command_line(argc, argv, descCmd), vm);
 
-	fs::path configFile = localContainer->resolve<OSPaths>()->getConfigFile("properties.conf");
+	fs::path configFile = localContainer->resolve<UserPaths>()->getConfigFile("properties.conf");
 	if(fs::exists(configFile))
 	{
 		po::store(po::parse_config_file<char>(configFile.string().c_str(), descFile, true), vm);
@@ -168,18 +168,18 @@ GameKeeperRuntime::main(int argc, const char* argv[], NewInstanceFuncPtr instanc
 		localContainer->resolve<OSInformation>())->
 		as<OSInformation>()->
 		singleInstance();
-	containerBuilder.registerInstance<OSPaths>(
-		localContainer->resolve<OSPaths>())->
-		as<OSPaths>()->
+	containerBuilder.registerInstance<UserPaths>(
+		localContainer->resolve<UserPaths>())->
+		as<UserPaths>()->
 		singleInstance();
-	containerBuilder.registerType<Log4cppLoggerFactory>(CREATE(new Log4cppLoggerFactory(INJECT(OSPaths))))->
+	containerBuilder.registerType<Log4cppLoggerFactory>(CREATE(new Log4cppLoggerFactory(INJECT(UserPaths))))->
 	        as<LoggerFactory>()->
 	        singleInstance();
 	containerBuilder.registerType<BoostPOPropertyResolver>(CREATE_CAPTURED([&vm], new BoostPOPropertyResolver(vm)))->
 		as<PropertyResolver>()->
 		singleInstance();
 	containerBuilder.registerType<CurlFileDownloader>(
-		CREATE(new CurlFileDownloader(INJECT(LoggerFactory), INJECT(PropertyResolver), INJECT(OSPaths))))->
+		CREATE(new CurlFileDownloader(INJECT(LoggerFactory), INJECT(PropertyResolver), INJECT(UserPaths))))->
 		as<FileDownloader>()->
 		as<HttpFileDownloader>()->
 		singleInstance();

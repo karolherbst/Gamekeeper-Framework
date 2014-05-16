@@ -210,9 +210,9 @@ CurlFileDownloader::supportedProtocols = {"http", "https", "ftp", "ftps", "sftp"
 
 CurlFileDownloader::CurlFileDownloader(std::shared_ptr<LoggerFactory> loggerFactory,
                                        std::shared_ptr<PropertyResolver> _propertyResolver,
-                                       std::shared_ptr<OSPaths> _ospaths)
+                                       std::shared_ptr<UserPaths> _userpaths)
 :	propertyResolver(_propertyResolver),
-	ospaths(_ospaths),
+	userpaths(_userpaths),
 	logger(loggerFactory->getComponentLogger("IO.curl")),
 	userAgent(buildUserAgentString(_propertyResolver->get("network.user_agent")))
 {
@@ -407,7 +407,7 @@ CurlFileDownloader::resolveDownloadPath(const char * const url)
 	uri.erase(0, pos + 3);
 	// now replace some unsupported characters
 	algo::replace_all(uri, ":", "_");
-	return this->ospaths->getCacheFile(std::string("downloads/" + uri));
+	return this->userpaths->getCacheFile(std::string("downloads/" + uri));
 }
 
 GAMEKEEPER_NAMESPACE_END(core)

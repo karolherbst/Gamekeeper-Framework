@@ -26,11 +26,11 @@
 #include <memory>
 
 #include <gamekeeper/core/osinformation.h>
-#include <gamekeeper/core/ospaths.h>
+#include <gamekeeper/core/userpaths.h>
 
 GAMEKEEPER_NAMESPACE_START(core)
 
-class PUBLIC_API XDGPaths : public OSPaths
+class PUBLIC_API XDGPaths : public UserPaths
 {
 public:
 	PUBLIC_API XDGPaths(std::shared_ptr<OSInformation>);

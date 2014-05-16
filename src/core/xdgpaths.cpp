@@ -45,7 +45,7 @@ createDirectories(const fs::path & p)
 	bool directoryCreated = fs::create_directories(p);
 	if(!directoryCreated && !fs::is_directory(p))
 	{
-		throw OSPaths::OSPathException(COULD_NOT_CREATE_DIRECTORY + "XDG_CONFIG_HOME");
+		throw UserPaths::UserPathException(COULD_NOT_CREATE_DIRECTORY + "XDG_CONFIG_HOME");
 	}
 	return directoryCreated;
 }

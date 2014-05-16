@@ -22,7 +22,7 @@
 
 #include <gamekeeper/core/log4cppLogger.h>
 #include <gamekeeper/core/log4cpploggerFactory.h>
-#include <gamekeeper/core/ospaths.h>
+#include <gamekeeper/core/userpaths.h>
 
 #include <string>
 #include <vector>
@@ -60,7 +60,7 @@ namespace bio = boost::iostreams;
 GAMEKEEPER_NAMESPACE_START(core)
 
 static std::string
-parseLine(std::string line, std::shared_ptr<OSPaths> & ospaths)
+parseLine(std::string line, std::shared_ptr<UserPaths> & userpaths)
 {
 	balgo::erase_all(line, " ");
 	std::string::size_type pos = line.find(".fileName=");
@@ -68,7 +68,7 @@ parseLine(std::string line, std::shared_ptr<OSPaths> & ospaths)
 	if(pos != std::string::npos)
 	{
 		std::string filename = line.substr(pos + 10);
-		bfs::path logfile = ospaths->getDataFile(std::string("log/") + filename);
+		bfs::path logfile = userpaths->getDataFile(std::string("log/") + filename);
 		bfs::create_directories(logfile.parent_path());
 		line.replace(pos + 10, std::string::npos, logfile.string());
 	}
@@ -80,7 +80,7 @@ parseLine(std::string line, std::shared_ptr<OSPaths> & ospaths)
 	return line;
 }
 
-Log4cppLoggerFactory::Log4cppLoggerFactory(std::shared_ptr<OSPaths> ospaths)
+Log4cppLoggerFactory::Log4cppLoggerFactory(std::shared_ptr<UserPaths> userpaths)
 :	appender(new log4cpp::OstreamAppender("console", &std::cout))
 {
 	log4cpp::Category & rootCategory = log4cpp::Category::getInstance("GameKeeper");
@@ -97,7 +97,7 @@ Log4cppLoggerFactory::Log4cppLoggerFactory(std::shared_ptr<OSPaths> ospaths)
 	this->rootLogger = new Log4cppLogger(rootCategory);
 
 	// read configuration file if exists
-	bfs::path cFile = ospaths->getConfigFile("log.conf");
+	bfs::path cFile = userpaths->getConfigFile("log.conf");
 	if(!bfs::exists(cFile))
 	{
 		return;
@@ -120,7 +120,7 @@ Log4cppLoggerFactory::Log4cppLoggerFactory(std::shared_ptr<OSPaths> ospaths)
 			continue;
 		}
 
-		parsedLine = parseLine(line, ospaths);
+		parsedLine = parseLine(line, userpaths);
 		logger << LogLevel::Debug << "parsed line \"" << line << "\" to: \"" << parsedLine << "\"" << endl;
 		buffer.insert(buffer.end(), parsedLine.begin(), parsedLine.end());
 		buffer.insert(buffer.end(), '\n');

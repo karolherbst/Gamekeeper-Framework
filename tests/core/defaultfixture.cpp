@@ -35,7 +35,7 @@
   #define THREADHELPERCLASS PthreadHelper
 #endif
 
-#include <gamekeeper/core/ospaths.h>
+#include <gamekeeper/core/userpaths.h>
 #include <gamekeeper/core/propertyresolver.h>
 #include <gamekeeper/core/stdc++11threadmanager.h>
 
@@ -46,10 +46,10 @@
 
 GAMEKEEPER_NAMESPACE_START(test)
 
-class TestOSPaths : public gamekeeper::core::OSPaths
+class TestUserPaths : public gamekeeper::core::UserPaths
 {
 public:
-	TestOSPaths();
+	TestUserPaths();
 	GAMEKEEPER_IMPLEMENTATION_OVERRIDE(boost::filesystem::path getConfigFile(std::string name));
 	GAMEKEEPER_IMPLEMENTATION_OVERRIDE(boost::filesystem::path getDataFile(std::string name));
 	GAMEKEEPER_IMPLEMENTATION_OVERRIDE(boost::filesystem::path getCacheFile(std::string name));
@@ -59,9 +59,9 @@ private:
 };
 
 boost::filesystem::path
-TestOSPaths::testPath = TESTPATH;
+TestUserPaths::testPath = TESTPATH;
 
-TestOSPaths::TestOSPaths()
+TestUserPaths::TestUserPaths()
 {
 	if(boost::filesystem::exists(testPath))
 	{
@@ -71,25 +71,25 @@ TestOSPaths::TestOSPaths()
 }
 
 boost::filesystem::path
-TestOSPaths::getConfigFile(std::string name)
+TestUserPaths::getConfigFile(std::string name)
 {
 	return testPath / "config" / name;
 }
 
 boost::filesystem::path
-TestOSPaths::getDataFile(std::string name)
+TestUserPaths::getDataFile(std::string name)
 {
 	return testPath / "data" / name;
 }
 
 boost::filesystem::path
-TestOSPaths::getCacheFile(std::string name)
+TestUserPaths::getCacheFile(std::string name)
 {
 	return testPath / "cache" / name;
 }
 
 boost::filesystem::path
-TestOSPaths::getRuntimeFile(std::string name)
+TestUserPaths::getRuntimeFile(std::string name)
 {
 	return testPath / "runtime" / name;
 }
@@ -121,10 +121,10 @@ DefaultFicture::DefaultFicture() {
 		containerBuilder.registerType<OSINFORMATIONCLASS>()->
 		        as<OSInformation>()->
 		        singleInstance();
-		containerBuilder.registerType<TestOSPaths>()->
-			as<OSPaths>()->
+		containerBuilder.registerType<TestUserPaths>()->
+			as<UserPaths>()->
 			singleInstance();
-		containerBuilder.registerType<Log4cppLoggerFactory>(CREATE(new Log4cppLoggerFactory(INJECT(OSPaths))))->
+		containerBuilder.registerType<Log4cppLoggerFactory>(CREATE(new Log4cppLoggerFactory(INJECT(UserPaths))))->
 		        as<LoggerFactory>()->
 		        singleInstance();
 		containerBuilder.registerType<TestPropertyResolver>(CREATE_CAPTURED([this], new TestPropertyResolver(this->props)))->
