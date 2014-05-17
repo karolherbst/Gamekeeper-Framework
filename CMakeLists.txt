@@ -113,11 +113,18 @@ endif()
 if(BUILD_TESTS)
   enable_testing()
   find_package(GTest)
-  
+
   if(NOT GTEST_FOUND)
     set_download_url(GTEST https://googletest.googlecode.com/files/gtest-1.7.0.zip 2d6ec8ccdf5c46b05ba54a9fd1d130d7)
     include(BuildGTest)
   endif()
+endif()
+
+# jansson
+find_package(Jansson ${REQUIRED_ON_LINUX})
+if(NOT JANSSON_FOUND)
+  set_download_url(JANSSON http://www.digip.org/jansson/releases/jansson-2.6.tar.gz 00dd7b55c01c74cac59df398208b92ed)
+  include(BuildJansson)
 endif()
 
 # jsoncpp

@@ -1,0 +1,34 @@
+From b21cd65d305f04b52c3c7cb1a33c63a2b1d7ad28 Mon Sep 17 00:00:00 2001
+From: Petri Lehtinen <petri@digip.org>
+Date: Thu, 16 Jan 2014 08:01:35 +0200
+Subject: [PATCH] Fix CMake build flags for MinGW
+
+---
+ CMakeLists.txt | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 446ec6e..08c1666 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -102,7 +102,7 @@ if (MSVC)
+    
+ endif()
+ 
+-if (CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX)
++if (NOT WIN32 AND (CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX))
+    set(CMAKE_C_FLAGS "-fPIC")
+ endif()
+ 
+@@ -415,7 +415,7 @@ if (NOT WITHOUT_TESTS)
+    # Test suites.
+    #
+    if (CMAKE_COMPILER_IS_GNUCC)
+-      add_definitions(-Wall -Wextra -Wdeclaration-after-statement -Werror)
++      add_definitions(-Wall -Wextra -Wdeclaration-after-statement)
+    endif ()
+ 
+    set(api_tests
+-- 
+1.9.3
+
