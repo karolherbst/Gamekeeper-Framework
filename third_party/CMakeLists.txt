@@ -9,3 +9,4 @@ if(BUILD_TESTS)
   add_subdirectory(mongoose)
 endif()
 
+add_subdirectory(jansson_path)
