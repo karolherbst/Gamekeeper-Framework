@@ -22,13 +22,11 @@
 
 #include <gamekeeper/backend/jsongamelistparser.h>
 
-#include <boost/algorithm/string/predicate.hpp>
-#include <boost/algorithm/string/replace.hpp>
-
-#include <json/reader.h>
-#include <json/value.h>
+#include <jansson.h>
+#include <jansson_path.h>
 
 #include <gamekeeper/model/game.h>
+#include <gamekeeper/utils/stringutils.h>
 
 GAMEKEEPER_NAMESPACE_START(backend)
 
@@ -50,37 +48,19 @@ public:
 	}
 };
 
-static std::string
-convertJsonPathToJsonCppPath(std::string path)
-{
-	// we handle root as current
-	boost::replace_all(path, "$", "@");
-	boost::replace_all(path, "@.", ".");
-
-	// we don't have any @. anymore
-	boost::replace_all(path, "@", ".");
-
-	// if we have [*] at the end, it indicates an array only, but we don't use it
-	if(boost::ends_with(path, "[*]"))
-	{
-		boost::replace_all(path, "[*]", "");
-	}
-	return path;
-}
-
 class JSONGameListParser::PImpl
 {
 public:
 	PImpl(std::map<std::string, std::string> & config);
-	Json::Path gamesListPath;
-	Json::Path gameIdPath;
-	Json::Path gameNamePath;
+	std::string gamesListPath;
+	std::string gameIdPath;
+	std::string gameNamePath;
 };
 
 JSONGameListParser::PImpl::PImpl(std::map<std::string, std::string> & config)
-:	gamesListPath(convertJsonPathToJsonCppPath(config.at("games.list"))),
-	gameIdPath(convertJsonPathToJsonCppPath(config.at("game.id"))),
-	gameNamePath(convertJsonPathToJsonCppPath(config.at("game.name"))){}
+:	gamesListPath(config.at("games.list")),
+	gameIdPath(config.at("game.id")),
+	gameNamePath(config.at("game.name")){}
 
 JSONGameListParser::JSONGameListParser(std::map<std::string, std::string> & config)
 :	data(new JSONGameListParser::PImpl(config)){}
@@ -88,21 +68,31 @@ JSONGameListParser::JSONGameListParser(std::map<std::string, std::string> & conf
 std::unordered_set<std::unique_ptr<model::Game>>
 JSONGameListParser::parseGameList(std::basic_istream<gkbyte_t> & is)
 {
-	Json::Value root;
-	Json::Reader reader;
+	json_t * root = nullptr;
+	json_error_t error;
 	std::unordered_set<std::unique_ptr<model::Game>> games;
 
-	if(reader.parse(is, root, false))
 	{
-		Json::Value gamesList = this->data->gamesListPath.resolve(root);
-		for(const Json::Value & gameNode : gamesList)
+		std::string jsonTree = utils::String::createFromStream(is);
+		root = json_loads(jsonTree.c_str(), 0, &error);
+	}
+
+	if(root)
+	{
+		json_t * gamesList = json_path_get(root, this->data->gamesListPath.c_str());
+		if(json_is_array(gamesList))
 		{
-			GameJSON * game = new GameJSON();
-			game->id = this->data->gameIdPath.resolve(gameNode).asString();
-			game->name = this->data->gameNamePath.resolve(gameNode).asString();
-			games.insert(std::move(std::unique_ptr<model::Game>(game)));
+			for(size_t i = 0; i < json_array_size(gamesList); i++)
+			{
+				json_t * gameNode = json_array_get(gamesList, i);
+				GameJSON * game = new GameJSON();
+				game->id = json_string_value(json_path_get(gameNode, this->data->gameIdPath.c_str()));
+				game->name = json_string_value(json_path_get(gameNode, this->data->gameNamePath.c_str()));
+				games.insert(std::move(std::unique_ptr<model::Game>(game)));
+			}
 		}
 	}
+	json_decref(root);
 	return games;
 }
 

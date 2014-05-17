@@ -35,9 +35,9 @@ GameolithPrototype::handleRequest(std::basic_istream<gkbyte_t> & is)
 {
 	static std::map<std::string, std::string> config
 	{
-		{"games.list", "$[*]"},
-		{"game.id", "@.slug"},
-		{"game.name", "@.title"}
+		{"games.list", "$"},
+		{"game.id", "$.slug"},
+		{"game.name", "$.title"}
 	};
 
 	std::unique_ptr<backend::GameListParser> glp(new backend::JSONGameListParser(config));

@@ -2,7 +2,8 @@ include_directories(
   ${GAMEKEEPER_PRIVATE_INCLUDE_DIR}
   ${CMAKE_CURRENT_SOURCE_DIR}
   ${Boost_INCLUDE_DIRS}
-  ${JSONCPP_INCLUDE_DIRS}
+  ${JANSSON_INCLUDE_DIR}
+  ${JANSSON_PATH_INCLUDE_DIR}
   ${PUGIXML_INCLUDE_DIRS}
 )
 
@@ -35,7 +36,8 @@ file(GLOB sources
 
 add_library(gamekeeperBackend SHARED ${sources} ${headers})
 target_link_libraries(gamekeeperBackend
-  ${JSONCPP_LIBRARIES}
+  ${JANSSON_LIBRARIES}
+  jansson_path
 )
 
 if(MINGW)
