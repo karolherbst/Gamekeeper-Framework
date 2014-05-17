@@ -20,8 +20,6 @@
 #  CURL_MD5                          win      md5sum of the used archive
 #  GTEST_URL                         all      Path to the Gtest archive
 #  GTEST_MD5                         all      md5sum of the used archive
-#  JSONCPP_URL                       win/mac  Path to the JsonCPP archive
-#  JSONCPP_MD5                       win/mac  md5sum of the used archive
 #######################################################################################################################
 
 project(gamekeeper)
@@ -125,13 +123,6 @@ find_package(Jansson ${REQUIRED_ON_LINUX})
 if(NOT JANSSON_FOUND)
   set_download_url(JANSSON http://www.digip.org/jansson/releases/jansson-2.6.tar.gz 00dd7b55c01c74cac59df398208b92ed)
   include(BuildJansson)
-endif()
-
-# jsoncpp
-find_package(Jsoncpp ${REQUIRED_ON_LINUX})
-if(NOT JSONCPP_FOUND)
-  set_download_url(JSONCPP http://sourceforge.net/projects/jsoncpp/files/jsoncpp/0.6.0-rc2/jsoncpp-src-0.6.0-rc2.tar.gz/download 363e2f4cbd3aeb63bf4e571f377400fb)
-  include(BuildJSONCpp)
 endif()
 
 # log4cpp
