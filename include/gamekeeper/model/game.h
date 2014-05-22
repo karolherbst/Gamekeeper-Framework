@@ -23,6 +23,10 @@
 
 #include <gamekeeper/core/interface.h>
 
+#include <set>
+
+#include <gamekeeper/model/platform.h>
+
 GAMEKEEPER_NAMESPACE_START(model)
 
 interface PUBLIC_API Game
@@ -30,6 +34,7 @@ interface PUBLIC_API Game
 	GAMEKEEPER_INTERFACE_METHODS(Game);
 	PUBLIC_API virtual const char * getId() const = 0;
 	PUBLIC_API virtual const char * getName() const = 0;
+	PUBLIC_API virtual const std::set<Platform> & getPlatforms() const = 0;
 };
 
 GAMEKEEPER_NAMESPACE_END(model)

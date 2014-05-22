@@ -27,6 +27,12 @@
 			return this->name.c_str();
 		}
 
+		PUBLIC_INLINE inline virtual const std::set<gamekeeper::model::Platform> & getPlatforms() const override
+		{
+			static std::set<gamekeeper::model::Platform> ps;
+			return ps;
+		}
+
 		PUBLIC_INLINE inline void setId(const char * _id)
 		{
 			this->id = _id;
