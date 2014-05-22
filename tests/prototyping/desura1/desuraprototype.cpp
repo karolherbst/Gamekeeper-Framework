@@ -38,7 +38,13 @@ resolveAllGames(std::basic_istream<gkbyte_t> & is, const prop::ptree & config)
 	{
 		{"games.list", config.get<std::string>("games.list")},
 		{"game.id", config.get<std::string>("game.id")},
-		{"game.name", config.get<std::string>("game.name")}
+		{"game.name", config.get<std::string>("game.name")},
+		{"game.platforms", config.get<std::string>("game.platforms")},
+		{"platform.id", config.get<std::string>("platform.id")},
+		{"platform.win32", config.get<std::string>("platform.win32")},
+		{"platform.mac32", config.get<std::string>("platform.mac32")},
+		{"platform.lin32", config.get<std::string>("platform.lin32")},
+		{"platform.lin64", config.get<std::string>("platform.lin64")}
 	};
 	std::unique_ptr<backend::GameListParser> glp(new backend::XMLGameListParser(xmlConfig));
 	return glp->parseGameList(is);
@@ -59,6 +65,32 @@ DesuraPrototype::onShutdown()
 {
 }
 
+static std::string
+platformsToString(const std::set<gamekeeper::model::Platform> & platforms)
+{
+	using gamekeeper::model::Platform;
+	std::string result;
+	for(const auto & p : platforms)
+	{
+		switch(p)
+		{
+		case Platform::WIN32:
+			result += "win32 ";
+			break;
+		case Platform::MAC32:
+			result += "Mac32 ";
+			break;
+		case Platform::LIN32:
+			result += "lin32 ";
+			break;
+		case Platform::LIN64:
+			result += "lin64 ";
+			break;
+		}
+	}
+	return result;
+}
+
 void
 DesuraPrototype::startEventLoop()
 {
@@ -77,7 +109,7 @@ DesuraPrototype::startEventLoop()
 		std::unordered_set<std::unique_ptr<model::Game>> games = resolveAllGames(is, config);
 		for(const auto & g : games)
 		{
-			this->logger << core::LogLevel::Debug << g->getName() << core::endl;
+			this->logger << core::LogLevel::Debug << "id[" << g->getId() << "] name[" << g->getName() << "] platforms[" << platformsToString(g->getPlatforms()) << "]" << core::endl;
 		}
 		return true;
 	}, cookies);
