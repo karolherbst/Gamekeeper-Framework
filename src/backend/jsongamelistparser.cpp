@@ -36,15 +36,21 @@ class GameJSON : public gamekeeper::model::Game
 private:
 	std::string id;
 	std::string name;
+	std::set<model::Platform> platforms;
 public:
-	const char * getId() const
+	virtual const char * getId() const override
 	{
 		return this->id.c_str();
 	}
 
-	const char * getName() const
+	virtual const char * getName() const override
 	{
 		return this->name.c_str();
+	}
+
+	virtual const std::set<model::Platform> & getPlatforms() const override
+	{
+		return this->platforms;
 	}
 };
 
