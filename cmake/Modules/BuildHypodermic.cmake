@@ -14,9 +14,11 @@ ExternalProject_Add(
 
 if(MINGW)
   set(HYPODERMIC_LIBRARIES ${HYPODERMIC_INSTALL_DIR}/lib/libhypodermic.dll.a)
+  install_external_library(hypodermic ${HYPODERMIC_INSTALL_DIR}/bin/libhypodermic.dll)
 else()
   set(HYPODERMIC_LIBRARIES ${HYPODERMIC_INSTALL_DIR}/lib/libhypodermic.so)
 endif()
+
 set(HYPODERMIC_INCLUDE_DIRS ${HYPODERMIC_INSTALL_DIR}/include)
 install_external_library(hypodermic ${HYPODERMIC_LIBRARIES})
 install(DIRECTORY ${HYPODERMIC_INCLUDE_DIRS}/Hypodermic DESTINATION ${CMAKE_INSTALL_FULL_INCLUDEDIR})
