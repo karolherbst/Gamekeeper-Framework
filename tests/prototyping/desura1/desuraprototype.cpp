@@ -74,16 +74,16 @@ platformsToString(const std::set<gamekeeper::model::Platform> & platforms)
 	{
 		switch(p)
 		{
-		case Platform::WIN32:
+		case Platform::WIN_32:
 			result += "win32 ";
 			break;
-		case Platform::MAC32:
+		case Platform::MAC_32:
 			result += "Mac32 ";
 			break;
-		case Platform::LIN32:
+		case Platform::LIN_32:
 			result += "lin32 ";
 			break;
-		case Platform::LIN64:
+		case Platform::LIN_64:
 			result += "lin64 ";
 			break;
 		}

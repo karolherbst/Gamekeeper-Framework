@@ -29,12 +29,12 @@ GAMEKEEPER_NAMESPACE_START(model)
 
 enum class Platform : uint16_t
 {
-	WIN32 = 0,
-	WIN64 = 1,
-	MAC32 = 2,
-	MAC64 = 3,
-	LIN32 = 4,
-	LIN64 = 5,
+	WIN_32 = 0,
+	WIN_64 = 1,
+	MAC_32 = 2,
+	MAC_64 = 3,
+	LIN_32 = 4,
+	LIN_64 = 5,
 };
 
 GAMEKEEPER_NAMESPACE_END(model)

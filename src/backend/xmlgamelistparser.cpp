@@ -115,19 +115,19 @@ XMLGameListParser::parseGameList(std::basic_istream<gkbyte_t> & is)
 				std::string platform = this->data->platformIdQuery.evaluate_string(p);
 				if(platform == this->data->platformWin32Id)
 				{
-					game->platforms.insert(model::Platform::WIN32);
+					game->platforms.insert(model::Platform::WIN_32);
 				}
 				else if(platform == this->data->platformMac32Id)
 				{
-					game->platforms.insert(model::Platform::MAC32);
+					game->platforms.insert(model::Platform::MAC_32);
 				}
 				else if(platform == this->data->platformLin32Id)
 				{
-					game->platforms.insert(model::Platform::LIN32);
+					game->platforms.insert(model::Platform::LIN_32);
 				}
 				else if(platform == this->data->platformLin64Id)
 				{
-					game->platforms.insert(model::Platform::LIN64);
+					game->platforms.insert(model::Platform::LIN_64);
 				}
 			}
 
