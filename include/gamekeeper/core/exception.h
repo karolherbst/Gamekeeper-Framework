@@ -56,6 +56,16 @@ public: \
 	name(std::string&& message) noexcept : gamekeeper::core::GameKeeperException(message){} \
 }
 
+#define GAMEKEEPER_EXCEPTION_MESSAGE_CONCAT(name, message) \
+name : public gamekeeper::core::GameKeeperException \
+{ \
+public: \
+	name(const std::string & info) : gamekeeper::core::GameKeeperException(std::string(message) + info){} \
+}
+
+// some global exceptions
+class PUBLIC_API GAMEKEEPER_EXCEPTION_MESSAGE_CONCAT(ResourceNotFound, "The following resource cannot be found: ");
+
 GAMEKEEPER_NAMESPACE_END(core)
 
 #endif //GAMEKEEPER_CORE_EXCEPTION_H
