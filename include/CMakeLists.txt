@@ -9,6 +9,7 @@ add_custom_target(headers
     gamekeeper/client/gamekeeper.h
     gamekeeper/client/hypodermic.h
 
+    gamekeeper/core/bundlepaths.h
     gamekeeper/core/common.h
     gamekeeper/core/filedownloader.h
     gamekeeper/core/httpfiledownloader.h
