@@ -34,6 +34,7 @@ file(GLOB headers
   ${GAMEKEEPER_PRIVATE_INCLUDE_DIR}/gamekeeper/core/boostpopropertyresolver.h
   ${GAMEKEEPER_PRIVATE_INCLUDE_DIR}/gamekeeper/core/curlfiledownloader.h
   ${GAMEKEEPER_PRIVATE_INCLUDE_DIR}/gamekeeper/core/exception.h
+  ${GAMEKEEPER_PRIVATE_INCLUDE_DIR}/gamekeeper/core/gnuinstalldirspaths.h
   ${GAMEKEEPER_PRIVATE_INCLUDE_DIR}/gamekeeper/core/log4cppLogger.h
   ${GAMEKEEPER_PRIVATE_INCLUDE_DIR}/gamekeeper/core/log4cpploggerFactory.h
   ${GAMEKEEPER_PRIVATE_INCLUDE_DIR}/gamekeeper/core/log4cppLoggerStream.h
@@ -47,6 +48,7 @@ file(GLOB sources
   boostpopropertyresolver.cpp
   curlfiledownloader.cpp
   exception.cpp
+  gnuinstalldirspaths.cpp
   log4cppLogger.cpp
   log4cpploggerFactory.cpp
   log4cppLoggerStream.cpp
@@ -54,6 +56,9 @@ file(GLOB sources
   xdgpaths.cpp
   ${platform_sources}
 )
+
+set_source_files_properties(gnuinstalldirspaths.cpp
+                            PROPERTIES COMPILE_DEFINITIONS DATADIR="${CMAKE_INSTALL_FULL_DATADIR}")
 
 add_library(gamekeeperCore SHARED ${sources} ${headers})
 target_link_libraries(gamekeeperCore
