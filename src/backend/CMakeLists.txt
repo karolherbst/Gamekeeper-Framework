@@ -23,13 +23,21 @@ endif()
 
 file(GLOB headers
   pch.h
+  ${GAMEKEEPER_PRIVATE_INCLUDE_DIR}/gamekeeper/backend/httppostloginhandler.h
   ${GAMEKEEPER_PRIVATE_INCLUDE_DIR}/gamekeeper/backend/jsongamelistparser.h
+  ${GAMEKEEPER_PRIVATE_INCLUDE_DIR}/gamekeeper/backend/storeconfiguration.h
+  ${GAMEKEEPER_PRIVATE_INCLUDE_DIR}/gamekeeper/backend/storeconfigurator.h
+  ${GAMEKEEPER_PRIVATE_INCLUDE_DIR}/gamekeeper/backend/storemanager.h
   ${GAMEKEEPER_PRIVATE_INCLUDE_DIR}/gamekeeper/backend/xmlgamelistparser.h
   ${platform_headers}
 )
 
 file(GLOB sources
+  httppostloginhandler.cpp
   jsongamelistparser.cpp
+  storeconfigurator.cpp
+  storeconfiguration.cpp
+  storemanager.cpp
   xmlgamelistparser.cpp
   ${platform_sources}
 )

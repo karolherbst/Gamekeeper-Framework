@@ -3,6 +3,7 @@
 add_custom_target(private_headers
   SOURCES
     gamekeeper/backend/gamelistparser.h
+    gamekeeper/backend/loginhandler.h
 
     gamekeeper/core/loggerFactory.h
     gamekeeper/core/nativethreadhelper.h

@@ -6,8 +6,11 @@ add_custom_target(headers
     std_compat/thread
 
     gamekeeper/client/autowire.h
+    gamekeeper/client/game.h
     gamekeeper/client/gamekeeper.h
     gamekeeper/client/hypodermic.h
+    gamekeeper/client/store.h
+    gamekeeper/client/storecontroller.h
 
     gamekeeper/core/bundlepaths.h
     gamekeeper/core/common.h
@@ -22,6 +25,7 @@ add_custom_target(headers
     gamekeeper/core/userpaths.h
 
     gamekeeper/model/game.h
+    gamekeeper/model/store.h
 
     gamekeeper/utils/stringutils.h
 )

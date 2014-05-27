@@ -18,28 +18,33 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef GAMEKEEPER_BACKEND_XMLGAMELISTPARSER_H
-#define GAMEKEEPER_BACKEND_XMLGAMELISTPARSER_H 1
+#ifndef GAMEKEEPER_BACKEND_STORECONFIGURATION_H
+#define GAMEKEEPER_BACKEND_STORECONFIGURATION_H 1
 
 #include <gamekeeper/core/common.h>
 
-#include <map>
+#include <memory>
 
-#include <gamekeeper/backend/gamelistparser.h>
+#include <gamekeeper/model/store.h>
 
 GAMEKEEPER_NAMESPACE_START(backend)
 
-class PUBLIC_API XMLGameListParser : public GameListParser
+class GameListParser;
+class LoginHandler;
+
+struct PUBLIC_API StoreConfiguration
 {
-public:
-	PUBLIC_API XMLGameListParser(std::map<std::string, std::string> & config);
-	PRIVATE_API virtual std::vector<std::unique_ptr<model::Game>> parseGameList(std::basic_istream<gkbyte_t> &) override;
+	PUBLIC_API StoreConfiguration(GameListParser *, LoginHandler *, model::Store *);
+	PUBLIC_API StoreConfiguration(const StoreConfiguration &);
+	PUBLIC_API StoreConfiguration(StoreConfiguration &&);
+	PUBLIC_API std::shared_ptr<model::Store> getStore();
+	PUBLIC_API std::shared_ptr<LoginHandler> getLoginHandler();
+	PUBLIC_API std::shared_ptr<GameListParser> getGameListParser();
 private:
 	class PRIVATE_API PImpl;
-
-	std::unique_ptr<XMLGameListParser::PImpl> data;
+	std::shared_ptr<PImpl> data;
 };
 
 GAMEKEEPER_NAMESPACE_END(backend)
 
-#endif //GAMEKEEPER_BACKEND_XMLGAMELISTPARSER_H
+#endif //GAMEKEEPER_BACKEND_STORECONFIGURATION_H

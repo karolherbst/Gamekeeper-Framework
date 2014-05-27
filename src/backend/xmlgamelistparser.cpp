@@ -83,10 +83,10 @@ XMLGameListParser::PImpl::PImpl(std::map<std::string, std::string> & config)
 XMLGameListParser::XMLGameListParser(std::map<std::string, std::string> & config)
 :	data(new XMLGameListParser::PImpl(config)){}
 
-std::unordered_set<std::unique_ptr<model::Game>>
+std::vector<std::unique_ptr<model::Game>>
 XMLGameListParser::parseGameList(std::basic_istream<gkbyte_t> & is)
 {
-	std::unordered_set<std::unique_ptr<model::Game>> games;
+	std::vector<std::unique_ptr<model::Game>> games;
 	pugi::xml_document doc;
 	if(doc.load(is))
 	{
@@ -130,7 +130,7 @@ XMLGameListParser::parseGameList(std::basic_istream<gkbyte_t> & is)
 				}
 			}
 
-			games.insert(std::move(std::unique_ptr<model::Game>(game)));
+			games.push_back(std::move(std::unique_ptr<model::Game>(game)));
 		}
 	}
 	return games;

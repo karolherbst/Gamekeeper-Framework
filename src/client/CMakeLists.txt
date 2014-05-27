@@ -5,12 +5,18 @@ include_directories(
 )
 
 file(GLOB headers
+  ${GAMEKEEPER_PRIVATE_INCLUDE_DIR}/gamekeeper/client/gameimpl.h
+  ${GAMEKEEPER_PRIVATE_INCLUDE_DIR}/gamekeeper/client/storeimpl.h
+  ${GAMEKEEPER_PRIVATE_INCLUDE_DIR}/gamekeeper/client/storecontrollerimpl.h
   pch.h
   runtime.h
 )
 
 file(GLOB sources
+  gameimpl.cpp
   runtime.cpp
+  storeimpl.cpp
+  storecontrollerimpl.cpp
 )
 
 file(GLOB main_sources
@@ -19,6 +25,7 @@ file(GLOB main_sources
 
 add_library(gamekeeperClient SHARED ${sources} ${headers})
 target_link_libraries(gamekeeperClient
+  gamekeeperBackend
   gamekeeperCore
   ${HYPODERMIC_LIBRARIES}
   ${Boost_PROGRAM_OPTIONS_LIBRARY}
