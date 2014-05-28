@@ -7,16 +7,15 @@ include_directories(
 )
 
 file(GLOB headers
-  desuraprototype.h
+  genericprototype.h
 )
 
 file(GLOB sources
-  desuraprototype.cpp
+  genericprototype.cpp
 )
 
-add_definitions(-DCONFIG_FILE_PATH="${CMAKE_CURRENT_SOURCE_DIR}/desura.ini")
-add_executable(DesuraPrototype ${sources} ${headers})
-target_link_libraries(DesuraPrototype
+add_executable(GenericPrototype ${sources} ${headers})
+target_link_libraries(GenericPrototype
   gamekeeperBackend
   gamekeeperClientMain
 )
