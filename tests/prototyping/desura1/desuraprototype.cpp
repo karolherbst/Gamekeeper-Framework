@@ -56,8 +56,8 @@ DesuraPrototype::DesuraPrototype(gamekeeper::core::Logger& _logger)
 void
 DesuraPrototype::init(const ConfigMap & cm)
 {
-	this->username = cm.at("desura.accountname").as<std::string>().c_str();
-	this->userpass = cm.at("desura.password").as<std::string>().c_str();
+	this->username = cm.at("desura.accountname").as<std::string>();
+	this->userpass = cm.at("desura.password").as<std::string>();
 }
 
 void

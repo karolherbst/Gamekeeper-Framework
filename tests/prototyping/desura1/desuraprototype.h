@@ -13,8 +13,8 @@ public:
 private:
 	gamekeeper::core::Logger& logger;
 
-	const char * username = nullptr;
-	const char * userpass = nullptr;
+	std::string username;
+	std::string userpass;
 };
 
 #endif
