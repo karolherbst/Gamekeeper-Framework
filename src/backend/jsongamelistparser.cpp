@@ -38,14 +38,14 @@ private:
 	std::string name;
 	std::set<model::Platform> platforms;
 public:
-	virtual const char * getId() const override
+	virtual const std::string & getId() const override
 	{
-		return this->id.c_str();
+		return this->id;
 	}
 
-	virtual const char * getName() const override
+	virtual const std::string & getName() const override
 	{
-		return this->name.c_str();
+		return this->name;
 	}
 
 	virtual const std::set<model::Platform> & getPlatforms() const override

@@ -36,14 +36,14 @@ private:
 	std::string name;
 	std::set<model::Platform> platforms;
 public:
-	virtual const char * getId() const override
+	virtual const std::string & getId() const override
 	{
-		return this->id.c_str();
+		return this->id;
 	}
 
-	virtual const char * getName() const override
+	virtual const std::string & getName() const override
 	{
-		return this->name.c_str();
+		return this->name;
 	}
 
 	virtual const std::set<model::Platform> & getPlatforms() const override
@@ -105,8 +105,8 @@ XMLGameListParser::parseGameList(std::basic_istream<gkbyte_t> & is)
 
 			pugi::xpath_query gamePlatformIdsQuery(this->data->gamePlatformIdsPath.c_str(), &variables);
 
-			variables.set("game.id", game->getId());
-			variables.set("game.name", game->getName());
+			variables.set("game.id", game->getId().c_str());
+			variables.set("game.name", game->getName().c_str());
 
 			// platform parsing is a little bit more tricky, because we get an array of names or ids
 			for(const pugi::xpath_node & p : gamePlatformIdsQuery.evaluate_node_set(node))

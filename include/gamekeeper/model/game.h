@@ -32,8 +32,8 @@ GAMEKEEPER_NAMESPACE_START(model)
 interface PUBLIC_API Game
 {
 	GAMEKEEPER_INTERFACE_METHODS(Game);
-	PUBLIC_API virtual const char * getId() const = 0;
-	PUBLIC_API virtual const char * getName() const = 0;
+	PUBLIC_API virtual const std::string & getId() const = 0;
+	PUBLIC_API virtual const std::string & getName() const = 0;
 	PUBLIC_API virtual const std::set<Platform> & getPlatforms() const = 0;
 };
 
