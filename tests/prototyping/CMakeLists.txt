@@ -1,3 +1,5 @@
 add_subdirectory(desura1)
 add_subdirectory(gameolith1)
-add_subdirectory(hb1)
+if(WITH_PYTHON_BINDINGS)
+  add_subdirectory(hb1)
+endif()
