@@ -135,7 +135,7 @@ class PRIVATE_API CURLPrivateData
 {
 public:
 	PRIVATE_API CURLPrivateData(const char * const url, const std::string & userAgent,
-	                            std::shared_ptr<PropertyResolver>);
+	                            std::shared_ptr<PropertyResolver>, bool debug);
 	PRIVATE_API ~CURLPrivateData();
 
 	CURL * handle;
@@ -146,13 +146,17 @@ public:
 };
 
 CURLPrivateData::CURLPrivateData(const char * const url, const std::string & userAgent,
-                                 std::shared_ptr<PropertyResolver> pr)
+                                 std::shared_ptr<PropertyResolver> pr, bool debug)
 :	handle(curl_easy_init())
 {
 	curl_easy_setopt(this->handle, CURLOPT_URL, url);
 	curl_easy_setopt(this->handle, CURLOPT_NOSIGNAL, 1);
 	curl_easy_setopt(this->handle, CURLOPT_USERAGENT, userAgent.c_str());
 	curl_easy_setopt(this->handle, CURLOPT_CONNECTTIMEOUT_MS, pr->get<uint16_t>("network.connection.timeout"));
+	if(debug)
+	{
+		curl_easy_setopt(this->handle, CURLOPT_VERBOSE, 1);
+	}
 }
 
 CURLPrivateData::~CURLPrivateData()
@@ -205,18 +209,44 @@ buildUserAgentString(const boost::any & configValue)
 	return boost::any_cast<std::string>(configValue);
 }
 
+class CurlFileDownloader::PImpl
+{
+public:
+	PImpl(Logger &, std::shared_ptr<PropertyResolver>, std::shared_ptr<UserPaths>);
+
+    std::shared_ptr<PropertyResolver> propertyResolver;
+    std::shared_ptr<UserPaths> userpaths;
+    Logger & logger;
+    const std::string userAgent;
+    bool debug;
+
+    void performCurl(CURLPrivateData & curl, uint32_t timeout = 0);
+    void handleFileDownload(CURLPrivateData & curl, FileDownloader::DownloadCallback * func,
+                                        const char * const url);
+    boost::filesystem::path resolveDownloadPath(const char * const url);
+
+    static const std::unordered_set<std::string> supportedProtocols;
+};
+
+CurlFileDownloader::PImpl::PImpl(Logger & l, std::shared_ptr<PropertyResolver> pr, std::shared_ptr<UserPaths> up)
+:	propertyResolver(pr),
+	userpaths(up),
+	logger(l),
+	userAgent(buildUserAgentString(pr->get("network.user_agent"))),
+	debug(pr->get<bool>("network.debug"))
+{
+
+}
+
 const std::unordered_set<std::string>
-CurlFileDownloader::supportedProtocols = {"http", "https", "ftp", "ftps", "sftp"};
+CurlFileDownloader::PImpl::supportedProtocols = {"http", "https", "ftp", "ftps", "sftp"};
 
 CurlFileDownloader::CurlFileDownloader(std::shared_ptr<LoggerFactory> loggerFactory,
-                                       std::shared_ptr<PropertyResolver> _propertyResolver,
-                                       std::shared_ptr<UserPaths> _userpaths)
-:	propertyResolver(_propertyResolver),
-	userpaths(_userpaths),
-	logger(loggerFactory->getComponentLogger("IO.curl")),
-	userAgent(buildUserAgentString(_propertyResolver->get("network.user_agent")))
+                                       std::shared_ptr<PropertyResolver> propertyResolver,
+                                       std::shared_ptr<UserPaths> userpaths)
+:	data(new PImpl(loggerFactory->getComponentLogger("IO.curl"), propertyResolver, userpaths))
 {
-	logger << LogLevel::Debug << "init curl with user-agent: " << this->userAgent << endl;
+	this->data->logger << LogLevel::Debug << "init curl with user-agent: " << this->data->userAgent << endl;
 	curl_global_init(CURL_GLOBAL_SSL);
 }
 
@@ -226,7 +256,7 @@ CurlFileDownloader::~CurlFileDownloader()
 }
 
 void
-CurlFileDownloader::handleFileDownload(CURLPrivateData & curl, FileDownloader::DownloadCallback * func, const char * const url)
+CurlFileDownloader::PImpl::handleFileDownload(CURLPrivateData & curl, FileDownloader::DownloadCallback * func, const char * const url)
 {
 	boost::filesystem::path downloadPath = this->resolveDownloadPath(url);
 	this->logger << LogLevel::Debug << "try to download file from: " << url << " at: " << downloadPath.string() << endl;
@@ -297,36 +327,36 @@ addFormToCurl(const HttpFileDownloader::Form& form, CURLPrivateData & curl)
 bool
 CurlFileDownloader::supportsProtocol(const char * const protocolName)
 {
-	return supportedProtocols.find(protocolName) != supportedProtocols.end();
+	return PImpl::supportedProtocols.find(protocolName) != PImpl::supportedProtocols.end();
 }
 
 void
 CurlFileDownloader::downloadFile(const char * const url, DownloadCallback callback)
 {
-	CURLPrivateData curl(url, this->userAgent, this->propertyResolver);
-	this->handleFileDownload(curl, &callback, url);
+	CURLPrivateData curl(url, this->data->userAgent, this->data->propertyResolver, this->data->debug);
+	this->data->handleFileDownload(curl, &callback, url);
 }
 
 void
 CurlFileDownloader::downloadFileWithCookies(const char * const url, DownloadCallback callback,
                                             const CookieBuket& cookies)
 {
-	CURLPrivateData curl(url, this->userAgent, this->propertyResolver);
+	CURLPrivateData curl(url, this->data->userAgent, this->data->propertyResolver, this->data->debug);
 	addCookiesToCurl(cookies, curl);
-	this->handleFileDownload(curl, &callback, url);
+	this->data->handleFileDownload(curl, &callback, url);
 }
 
 CurlFileDownloader::CookieBuket
 CurlFileDownloader::doPostRequestForCookies(const char * const url, const Form& form)
 {
-	this->logger << LogLevel::Debug << "try to fetch cookies at: " << url << endl;
-	CURLPrivateData curl(url, this->userAgent, this->propertyResolver);
+	this->data->logger << LogLevel::Debug << "try to fetch cookies at: " << url << endl;
+	CURLPrivateData curl(url, this->data->userAgent, this->data->propertyResolver, this->data->debug);
 	curl_easy_setopt(curl.handle, CURLOPT_WRITEFUNCTION, &emptyCurlFileDownloadCallback);
 
 	enableCookies(curl);
 	addFormToCurl(form, curl);
 
-	this->performCurl(curl);
+	this->data->performCurl(curl);
 
 	CurlFileDownloader::CookieBuket result = getCookies(curl);
 
@@ -336,23 +366,23 @@ CurlFileDownloader::doPostRequestForCookies(const char * const url, const Form& 
 void
 CurlFileDownloader::downloadFileWithForm(const char * const url, DownloadCallback callback, const Form & form)
 {
-	CURLPrivateData curl(url, this->userAgent, this->propertyResolver);
+	CURLPrivateData curl(url, this->data->userAgent, this->data->propertyResolver, this->data->debug);
 	addFormToCurl(form, curl);
-	this->handleFileDownload(curl, &callback, url);
+	this->data->handleFileDownload(curl, &callback, url);
 }
 
 CurlFileDownloader::CookieBuket
 CurlFileDownloader::downloadFileAndCookiesWithForm(const char * const url, DownloadCallback callback, const Form & form)
 {
-	CURLPrivateData curl(url, this->userAgent, this->propertyResolver);
+	CURLPrivateData curl(url, this->data->userAgent, this->data->propertyResolver, this->data->debug);
 	enableCookies(curl);
 	addFormToCurl(form, curl);
-	this->handleFileDownload(curl, &callback, url);
+	this->data->handleFileDownload(curl, &callback, url);
 	return getCookies(curl);
 }
 
 void
-CurlFileDownloader::performCurl(CURLPrivateData & curl, uint32_t timeout)
+CurlFileDownloader::PImpl::performCurl(CURLPrivateData & curl, uint32_t timeout)
 {
 	if(timeout > 0)
 	{
@@ -399,7 +429,7 @@ CurlFileDownloader::performCurl(CURLPrivateData & curl, uint32_t timeout)
 }
 
 boost::filesystem::path
-CurlFileDownloader::resolveDownloadPath(const char * const url)
+CurlFileDownloader::PImpl::resolveDownloadPath(const char * const url)
 {
 	std::string uri = url;
 	// frist cut the protocoll

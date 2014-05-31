@@ -90,6 +90,7 @@ fillProperties(po::options_description & cmd, po::options_description & file)
 		("help,h", "produce help message");
 
 	descNetwork.add_options()
+		("network.debug", po::value<bool>()->default_value(false)->implicit_value(true))
 		("network.time_between_retries", po::value<uint16_t>()->default_value(300))
 		("network.user_agent", po::value<std::string>())
 		("network.resolve.retries", po::value<uint16_t>()->default_value(3))

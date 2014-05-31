@@ -52,17 +52,9 @@ public:
 	PRIVATE_API virtual CookieBuket downloadFileAndCookiesWithForm(const char * const url, DownloadCallback callback,
                                                                        const Form & form) override;
 private:
-	std::shared_ptr<PropertyResolver> propertyResolver;
-	std::shared_ptr<UserPaths> userpaths;
-	Logger & logger;
-	const std::string userAgent;
+	class PRIVATE_API PImpl;
 
-	PRIVATE_API void performCurl(CURLPrivateData & curl, uint32_t timeout = 0);
-	PRIVATE_API void handleFileDownload(CURLPrivateData & curl, FileDownloader::DownloadCallback * func,
-	                                    const char * const url);
-	PRIVATE_API boost::filesystem::path resolveDownloadPath(const char * const url);
-
-	static const std::unordered_set<std::string> supportedProtocols;
+    std::unique_ptr<CurlFileDownloader::PImpl> data;
 };
 
 GAMEKEEPER_NAMESPACE_END(core)
