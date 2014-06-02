@@ -67,6 +67,12 @@ StoreImpl::logout()
 	return true;
 }
 
+bool
+StoreImpl::isLoggedIn() const
+{
+	return this->data->config->getLoginHandler()->isLoggedIn();
+}
+
 std::vector<std::unique_ptr<Game>>
 StoreImpl::getAllGames()
 {

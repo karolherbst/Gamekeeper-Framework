@@ -43,6 +43,7 @@ public:
 	PRIVATE_API virtual const std::map<std::string, std::string> & getConfig() const override;
 	PRIVATE_API virtual bool login(const std::string & username, const std::string & password /*, TwoFactorAuthCallback for later usage */) override;
 	PRIVATE_API virtual bool logout() override;
+	PRIVATE_API virtual bool isLoggedIn() const override;
 	PRIVATE_API virtual std::vector<std::unique_ptr<Game>> getAllGames() override;
 private:
 	class PRIVATE_API PImpl;
