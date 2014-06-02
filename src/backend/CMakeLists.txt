@@ -45,6 +45,7 @@ file(GLOB sources
 add_library(gamekeeperBackend SHARED ${sources} ${headers})
 target_link_libraries(gamekeeperBackend
   ${JANSSON_LIBRARIES}
+  ${PUGIXML_LIBRARIES}
   jansson_path
 )
 
