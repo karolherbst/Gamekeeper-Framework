@@ -124,6 +124,14 @@ void
 HTTPPostLoginHandler::logout()
 {
 	this->data->hfd->postRequest(this->data->logoutUrl);
+	// forcibly clear cookies
+	this->data->hfd->clearCookies();
+}
+
+bool
+HTTPPostLoginHandler::isLoggedIn() const
+{
+	return !this->data->checkAuthCookies();
 }
 
 void

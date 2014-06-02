@@ -43,6 +43,7 @@ public:
 	PUBLIC_API ~HTTPPostLoginHandler();
 	PRIVATE_API virtual bool login(const std::string & username, const std::string & password) override;
 	PRIVATE_API virtual void logout() override;
+	PRIVATE_API virtual bool isLoggedIn() const override;
 	PRIVATE_API virtual void downloadFile(const std::string & url, core::FileDownloader::DownloadCallback) override;
 private:
 	class PRIVATE_API PImpl;
