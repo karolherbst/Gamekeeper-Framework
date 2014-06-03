@@ -107,13 +107,4 @@ GenericPrototype::startEventLoop()
 			this->logger << core::LogLevel::Debug << "id[" << g->getId() << "] name[" << g->getName() << "] platforms[" << platformsToString(g->getPlatforms()) << "]" << core::endl;
 		}
 	}
-
-	// logout from all stores if logged in
-	for(auto & store : sc->getAll())
-	{
-		if(store->isLoggedIn())
-		{
-			store->logout();
-		}
-	}
 }
