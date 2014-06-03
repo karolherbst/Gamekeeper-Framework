@@ -158,6 +158,11 @@ if(WITH_CSHARP_BINDINGS OR WITH_JAVA_BINDINGS OR WITH_PYTHON_BINDINGS)
   endif()
 endif()
 
+# gnome-keyring
+if(WITH_GNOME_KEYRING)
+  find_package(GnomeKeyring)
+endif()
+
 #######################################################################################################################
 # set some cmake variables needed by GameKeeper build
 #######################################################################################################################
