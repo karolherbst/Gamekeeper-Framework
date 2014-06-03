@@ -234,8 +234,12 @@ GameKeeperRuntime::main(int argc, const char* argv[], NewInstanceFuncPtr instanc
 	containerBuilder.registerType<AUTHMANAGERCLASS>()->
 		as<AuthManager>()->
 		singleInstance();
+#define INJECT_AUTH INJECT(AuthManager)
+#else
+#define INJECT_AUTH nullptr
 #endif
-	containerBuilder.registerType<StoreManager>(CREATE(new StoreManager(INJECT(LoggerFactory), INJECT(BundlePaths), INJECT(FileDownloaderFactory))))->
+	containerBuilder.registerType<StoreManager>(CREATE(new StoreManager(INJECT(LoggerFactory), INJECT(BundlePaths), INJECT(FileDownloaderFactory),
+	                                                                    INJECT_AUTH)))->
 		as<StoreManager>()->
 		singleInstance();
 

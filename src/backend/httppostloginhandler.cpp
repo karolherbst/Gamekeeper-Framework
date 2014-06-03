@@ -27,6 +27,7 @@
 #include <boost/algorithm/string/replace.hpp>
 #include <boost/algorithm/string/split.hpp>
 
+#include <gamekeeper/backend/authmanager.h>
 #include <gamekeeper/core/filedownloader.h>
 
 namespace balgo = boost::algorithm;
@@ -36,9 +37,10 @@ GAMEKEEPER_NAMESPACE_START(backend)
 class HTTPPostLoginHandler::PImpl
 {
 public:
-	PImpl(std::map<std::string, std::string> &, std::shared_ptr<core::FileDownloader>);
+	PImpl(std::map<std::string, std::string> &, std::shared_ptr<core::FileDownloader>, std::shared_ptr<AuthManager>);
 
 	std::shared_ptr<core::FileDownloader> hfd;
+	std::shared_ptr<AuthManager> am;
 	std::string loginUrl;
 	std::string logoutUrl;
 	std::string usernameField;
@@ -49,8 +51,10 @@ public:
 	bool checkAuthCookies();
 };
 
-HTTPPostLoginHandler::PImpl::PImpl(std::map<std::string, std::string> & config, std::shared_ptr<core::FileDownloader> _hfd)
+HTTPPostLoginHandler::PImpl::PImpl(std::map<std::string, std::string> & config, std::shared_ptr<core::FileDownloader> _hfd,
+                                   std::shared_ptr<AuthManager> _am)
 :	hfd(_hfd),
+	am(_am),
 	loginUrl(config["auth.loginurl"]),
 	logoutUrl(config["auth.logouturl"]),
 	usernameField(config["authfield.username"]),
@@ -91,9 +95,9 @@ HTTPPostLoginHandler::PImpl::checkAuthCookies()
 	return !cookies.empty();
 }
 
-
-HTTPPostLoginHandler::HTTPPostLoginHandler(std::map<std::string, std::string> & config, std::shared_ptr<core::FileDownloader> hfd)
-:	data(new HTTPPostLoginHandler::PImpl(config, hfd)){}
+HTTPPostLoginHandler::HTTPPostLoginHandler(std::map<std::string, std::string> & config, std::shared_ptr<core::FileDownloader> hfd,
+                                           std::shared_ptr<AuthManager> am)
+:	data(new HTTPPostLoginHandler::PImpl(config, hfd, am)){}
 
 HTTPPostLoginHandler::~HTTPPostLoginHandler(){}
 
