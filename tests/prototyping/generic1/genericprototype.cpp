@@ -86,13 +86,4 @@ GenericPrototype::startEventLoop()
 
 		std::cout << "enter name of game store" << std::endl;
 	}
-
-	// logout from all stores if logged in
-	for(auto & store : sc->getAll())
-	{
-		if(store->isLoggedIn())
-		{
-			store->logout();
-		}
-	}
 }
