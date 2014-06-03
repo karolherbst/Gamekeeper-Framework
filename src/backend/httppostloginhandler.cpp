@@ -24,6 +24,7 @@
 
 #include <boost/algorithm/string/replace.hpp>
 
+#include <gamekeeper/backend/authmanager.h>
 #include <gamekeeper/core/filedownloader.h>
 
 namespace balgo = boost::algorithm;
@@ -33,9 +34,10 @@ GAMEKEEPER_NAMESPACE_START(backend)
 class HTTPPostLoginHandler::PImpl
 {
 public:
-	PImpl(std::map<std::string, std::string> &, std::shared_ptr<core::FileDownloader>);
+	PImpl(std::map<std::string, std::string> &, std::shared_ptr<core::FileDownloader>, std::shared_ptr<AuthManager>);
 
 	std::shared_ptr<core::FileDownloader> hfd;
+	std::shared_ptr<AuthManager> am;
 	std::string loginUrl;
 	std::string logoutUrl;
 	std::string usernameField;
@@ -43,15 +45,21 @@ public:
 	std::string username;
 };
 
-HTTPPostLoginHandler::PImpl::PImpl(std::map<std::string, std::string> & config, std::shared_ptr<core::FileDownloader> _hfd)
+HTTPPostLoginHandler::PImpl::PImpl(std::map<std::string, std::string> & config, std::shared_ptr<core::FileDownloader> _hfd,
+                                   std::shared_ptr<AuthManager> _am)
 :	hfd(_hfd),
+	am(_am),
 	loginUrl(config.at("auth.loginurl")),
 	logoutUrl(config.at("auth.logouturl")),
 	usernameField(config.at("authfield.username")),
-	passwordField(config.at("authfield.password")){}
+	passwordField(config.at("authfield.password"))
+{
+	this->hfd->setCookies(this->am->readAllTokens(config.at("store.name")));
+}
 
-HTTPPostLoginHandler::HTTPPostLoginHandler(std::map<std::string, std::string> & config, std::shared_ptr<core::FileDownloader> hfd)
-:	data(new HTTPPostLoginHandler::PImpl(config, hfd)){}
+HTTPPostLoginHandler::HTTPPostLoginHandler(std::map<std::string, std::string> & config, std::shared_ptr<core::FileDownloader> hfd,
+                                           std::shared_ptr<AuthManager> am)
+:	data(new HTTPPostLoginHandler::PImpl(config, hfd, am)){}
 
 bool
 HTTPPostLoginHandler::login(const std::string & username, const std::string & password)

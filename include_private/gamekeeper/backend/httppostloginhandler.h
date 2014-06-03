@@ -36,10 +36,13 @@ GAMEKEEPER_NAMESPACE_END(core)
 
 GAMEKEEPER_NAMESPACE_START(backend)
 
+class AuthManager;
+
 class PUBLIC_API HTTPPostLoginHandler : public LoginHandler
 {
 public:
-	PUBLIC_API HTTPPostLoginHandler(std::map<std::string, std::string> & config, std::shared_ptr<core::FileDownloader>);
+	PUBLIC_API HTTPPostLoginHandler(std::map<std::string, std::string> & config, std::shared_ptr<core::FileDownloader>,
+	                                std::shared_ptr<AuthManager>);
 	PRIVATE_API virtual bool login(const std::string & username, const std::string & password) override;
 	PRIVATE_API virtual void logout() override;
 	PRIVATE_API virtual bool isLoggedIn() const override;
