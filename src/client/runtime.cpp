@@ -60,6 +60,12 @@
   #define THREADHELPERCLASS PthreadHelper
 #endif
 
+#ifdef WITH_GNOME_KEYRING
+  #include <gamekeeper/backend/gnomekeyringmanager.h>
+  #define AUTHMANAGERCLASS GnomeKeyringManager
+  #define HAS_AUTHMANAGER 1
+#endif
+
 namespace fs = boost::filesystem;
 namespace po = boost::program_options;
 
@@ -201,6 +207,11 @@ GameKeeperRuntime::main(int argc, const char* argv[], NewInstanceFuncPtr instanc
 		as<ThreadFactory>()->
 		singleInstance();
 
+#ifdef HAS_AUTHMANAGER
+	containerBuilder.registerType<AUTHMANAGERCLASS>()->
+		as<AuthManager>()->
+		singleInstance();
+#endif
 	containerBuilder.registerType<StoreManager>(CREATE(new StoreManager(INJECT(LoggerFactory), INJECT(BundlePaths), INJECT(FileDownloaderFactory))))->
 		as<StoreManager>()->
 		singleInstance();
