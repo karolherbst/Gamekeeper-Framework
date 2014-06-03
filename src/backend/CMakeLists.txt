@@ -32,6 +32,7 @@ file(GLOB headers
 )
 
 file(GLOB sources
+  authmanager.cpp
   httppostloginhandler.cpp
   jsongamelistparser.cpp
   storeconfigurator.cpp
