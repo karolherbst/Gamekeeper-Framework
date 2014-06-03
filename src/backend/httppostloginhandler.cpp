@@ -42,6 +42,7 @@ public:
 	std::string logoutUrl;
 	std::string usernameField;
 	std::string passwordField;
+	std::string tokenGroup;
 	std::string username;
 };
 
@@ -52,9 +53,10 @@ HTTPPostLoginHandler::PImpl::PImpl(std::map<std::string, std::string> & config, 
 	loginUrl(config.at("auth.loginurl")),
 	logoutUrl(config.at("auth.logouturl")),
 	usernameField(config.at("authfield.username")),
-	passwordField(config.at("authfield.password"))
+	passwordField(config.at("authfield.password")),
+	tokenGroup(config.at("store.name"))
 {
-	this->hfd->setCookies(this->am->readAllTokens(config.at("store.name")));
+	this->hfd->setCookies(this->am->readAllTokens(this->tokenGroup));
 }
 
 HTTPPostLoginHandler::HTTPPostLoginHandler(std::map<std::string, std::string> & config, std::shared_ptr<core::FileDownloader> hfd,
@@ -73,7 +75,15 @@ HTTPPostLoginHandler::login(const std::string & username, const std::string & pa
 		{this->data->passwordField, password}
 	};
 	this->data->hfd->postRequest(this->data->loginUrl, form);
-	return !this->data->hfd->getCookies().empty();
+	core::FileDownloader::CookieBucket cs = this->data->hfd->getCookies();
+
+	// save tokens
+	for(const auto & t : cs)
+	{
+		this->data->am->saveToken(t.first, t.second, this->data->tokenGroup);
+	}
+
+	return !cs.empty();
 }
 
 void
