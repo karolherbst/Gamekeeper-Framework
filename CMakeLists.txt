@@ -8,6 +8,9 @@
 #  GENERATE_DOCS        OFF          all      generates documentation (needs doxygen)
 #  INSTALL_DOCS         OFF          all      installs the generated documentation
 #
+# optional features
+#  WITH_GNOME_KEYRING   OFF          linux    enables gnome-keyring token storage support
+#
 # control of bindings
 #  WITH_CSHARP_BINDINGS OFF          all      enables C# bindings (currently broken)
 #  WITH_JAVA_BINDINGS   OFF          all      enables Java bindings
