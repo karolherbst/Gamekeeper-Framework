@@ -21,6 +21,7 @@ add_compiler_flags(
   -Wno-padded
   -Wno-sign-conversion
   -Wno-switch-enum
+  -Wno-error=deprecated-declarations
 )
 
 # enable warnings we want to enforce
