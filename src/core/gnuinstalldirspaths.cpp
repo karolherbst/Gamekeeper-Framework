@@ -18,28 +18,18 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef GAMEKEEPER_BACKEND_XMLGAMELISTPARSER_H
-#define GAMEKEEPER_BACKEND_XMLGAMELISTPARSER_H 1
+#include <gamekeeper/core/gnuinstalldirspaths.h>
 
-#include <gamekeeper/core/common.h>
+namespace bfs = boost::filesystem;
 
-#include <map>
+GAMEKEEPER_NAMESPACE_START(core)
 
-#include <gamekeeper/backend/gamelistparser.h>
+static const bfs::path dataPath(DATADIR"/gamekeeper");
 
-GAMEKEEPER_NAMESPACE_START(backend)
-
-class PUBLIC_API XMLGameListParser : public GameListParser
+const boost::filesystem::path &
+GNUInstallDirsPaths::getDataPath()
 {
-public:
-	PUBLIC_API XMLGameListParser(std::map<std::string, std::string> & config);
-	PRIVATE_API virtual std::vector<std::unique_ptr<model::Game>> parseGameList(std::basic_istream<gkbyte_t> &) override;
-private:
-	class PRIVATE_API PImpl;
+	return dataPath;
+}
 
-	std::unique_ptr<XMLGameListParser::PImpl> data;
-};
-
-GAMEKEEPER_NAMESPACE_END(backend)
-
-#endif //GAMEKEEPER_BACKEND_XMLGAMELISTPARSER_H
+GAMEKEEPER_NAMESPACE_END(core)

@@ -18,28 +18,33 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef GAMEKEEPER_BACKEND_XMLGAMELISTPARSER_H
-#define GAMEKEEPER_BACKEND_XMLGAMELISTPARSER_H 1
+#ifndef GAMEKEEPER_CLIENT_STORECONTROLLERIMPL_H
+#define GAMEKEEPER_CLIENT_STORECONTROLLERIMPL_H 1
 
 #include <gamekeeper/core/common.h>
 
-#include <map>
+#include <memory>
 
-#include <gamekeeper/backend/gamelistparser.h>
+#include <gamekeeper/client/storecontroller.h>
 
 GAMEKEEPER_NAMESPACE_START(backend)
 
-class PUBLIC_API XMLGameListParser : public GameListParser
-{
-public:
-	PUBLIC_API XMLGameListParser(std::map<std::string, std::string> & config);
-	PRIVATE_API virtual std::vector<std::unique_ptr<model::Game>> parseGameList(std::basic_istream<gkbyte_t> &) override;
-private:
-	class PRIVATE_API PImpl;
-
-	std::unique_ptr<XMLGameListParser::PImpl> data;
-};
+class StoreManager;
 
 GAMEKEEPER_NAMESPACE_END(backend)
 
-#endif //GAMEKEEPER_BACKEND_XMLGAMELISTPARSER_H
+GAMEKEEPER_NAMESPACE_START(client)
+
+class PUBLIC_API StoreControllerImpl : public StoreController
+{
+public:
+	PUBLIC_API StoreControllerImpl(std::shared_ptr<backend::StoreManager>);
+	PRIVATE_API virtual std::vector<std::unique_ptr<Store>> getAll() override;
+	PRIVATE_API virtual std::unique_ptr<Store> get(const std::string & name) override;
+private:
+	std::shared_ptr<backend::StoreManager> sm;
+};
+
+GAMEKEEPER_NAMESPACE_END(client)
+
+#endif //GAMEKEEPER_CLIENT_STORECONTROLLERIMPL_H

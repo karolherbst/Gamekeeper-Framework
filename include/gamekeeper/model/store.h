@@ -18,23 +18,20 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef GAMEKEEPER_MODEL_GAME_H
-#define GAMEKEEPER_MODEL_GAME_H 1
+#ifndef GAMEKEEPER_MODEL_STORE_H
+#define GAMEKEEPER_MODEL_STORE_H 1
 
 #include <gamekeeper/core/interface.h>
 
-#include <set>
-
-#include <gamekeeper/model/platform.h>
+#include <map>
 
 GAMEKEEPER_NAMESPACE_START(model)
 
-interface PUBLIC_API Game
+interface PUBLIC_API Store
 {
-	GAMEKEEPER_INTERFACE_METHODS(Game);
-	PUBLIC_API virtual const std::string & getId() const = 0;
+	GAMEKEEPER_INTERFACE_METHODS(Store);
 	PUBLIC_API virtual const std::string & getName() const = 0;
-	PUBLIC_API virtual const std::set<Platform> & getPlatforms() const = 0;
+	PUBLIC_API virtual const std::map<std::string, std::string> & getConfig() const = 0;
 };
 
 GAMEKEEPER_NAMESPACE_END(model)

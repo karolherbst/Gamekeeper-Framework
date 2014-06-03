@@ -18,28 +18,36 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef GAMEKEEPER_BACKEND_XMLGAMELISTPARSER_H
-#define GAMEKEEPER_BACKEND_XMLGAMELISTPARSER_H 1
+#ifndef GAMEKEEPER_BACKEND_HTTPPOSTLOGINHANDLER_H
+#define GAMEKEEPER_BACKEND_HTTPPOSTLOGINHANDLER_H 1
 
 #include <gamekeeper/core/common.h>
 
 #include <map>
+#include <memory>
 
-#include <gamekeeper/backend/gamelistparser.h>
+#include <gamekeeper/backend/loginhandler.h>
+
+GAMEKEEPER_NAMESPACE_START(core)
+
+class HttpFileDownloader;
+
+GAMEKEEPER_NAMESPACE_END(core)
 
 GAMEKEEPER_NAMESPACE_START(backend)
 
-class PUBLIC_API XMLGameListParser : public GameListParser
+class PUBLIC_API HTTPPostLoginHandler : public LoginHandler
 {
 public:
-	PUBLIC_API XMLGameListParser(std::map<std::string, std::string> & config);
-	PRIVATE_API virtual std::vector<std::unique_ptr<model::Game>> parseGameList(std::basic_istream<gkbyte_t> &) override;
+	PUBLIC_API HTTPPostLoginHandler(std::map<std::string, std::string> & config, std::shared_ptr<core::HttpFileDownloader>);
+	PRIVATE_API virtual bool login(const std::string & username, const std::string & password) override;
+	PRIVATE_API virtual void logout() override;
+	PRIVATE_API virtual void downloadFile(const std::string & url, core::FileDownloader::DownloadCallback) override;
 private:
 	class PRIVATE_API PImpl;
-
-	std::unique_ptr<XMLGameListParser::PImpl> data;
+	std::unique_ptr<HTTPPostLoginHandler::PImpl> data;
 };
 
 GAMEKEEPER_NAMESPACE_END(backend)
 
-#endif //GAMEKEEPER_BACKEND_XMLGAMELISTPARSER_H
+#endif //GAMEKEEPER_BACKEND_HTTPPOSTLOGINHANDLER_H

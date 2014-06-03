@@ -18,28 +18,45 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef GAMEKEEPER_BACKEND_XMLGAMELISTPARSER_H
-#define GAMEKEEPER_BACKEND_XMLGAMELISTPARSER_H 1
+#include "pch.h"
 
-#include <gamekeeper/core/common.h>
+#include <gamekeeper/client/gameimpl.h>
 
-#include <map>
+GAMEKEEPER_NAMESPACE_START(client)
 
-#include <gamekeeper/backend/gamelistparser.h>
-
-GAMEKEEPER_NAMESPACE_START(backend)
-
-class PUBLIC_API XMLGameListParser : public GameListParser
+class GameImpl::PImpl
 {
 public:
-	PUBLIC_API XMLGameListParser(std::map<std::string, std::string> & config);
-	PRIVATE_API virtual std::vector<std::unique_ptr<model::Game>> parseGameList(std::basic_istream<gkbyte_t> &) override;
-private:
-	class PRIVATE_API PImpl;
-
-	std::unique_ptr<XMLGameListParser::PImpl> data;
+	PImpl(std::unique_ptr<model::Game> &&);
+	std::unique_ptr<model::Game> game;
 };
 
-GAMEKEEPER_NAMESPACE_END(backend)
+GameImpl::PImpl::PImpl(std::unique_ptr<model::Game> && model)
+:	game(std::move(model)){}
 
-#endif //GAMEKEEPER_BACKEND_XMLGAMELISTPARSER_H
+GameImpl::GameImpl(std::unique_ptr<model::Game> && model)
+:	data(new PImpl(std::move(model))){
+
+}
+
+GameImpl::~GameImpl(){}
+
+const std::string &
+GameImpl::getId() const
+{
+	return this->data->game->getId();
+}
+
+const std::string &
+GameImpl::getName() const
+{
+	return this->data->game->getName();
+}
+
+const std::set<model::Platform> &
+GameImpl::getPlatforms() const
+{
+	return this->data->game->getPlatforms();
+}
+
+GAMEKEEPER_NAMESPACE_END(client)

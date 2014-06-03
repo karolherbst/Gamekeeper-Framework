@@ -18,48 +18,50 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef GAMEKEEPER_BACKEND_GAMELISTPARSER_H
-#define GAMEKEEPER_BACKEND_GAMELISTPARSER_H 1
+#ifndef GAMEKEEPER_CLIENT_STORECONTROLLER_H
+#define GAMEKEEPER_CLIENT_STORECONTROLLER_H 1
 
 #include <gamekeeper/core/common.h>
 
 #include <memory>
 #include <vector>
 
+#include <gamekeeper/client/store.h>
 #include <gamekeeper/core/interface.h>
 
-GAMEKEEPER_NAMESPACE_START(model)
-
-interface Game;
-
-GAMEKEEPER_NAMESPACE_END(model)
-
-GAMEKEEPER_NAMESPACE_START(backend)
+GAMEKEEPER_NAMESPACE_START(client)
 
 /**
- * @interface GameListParser gamelistparser.h <gamekeeper/core/gamelistparser.h>
+ * @interface StoreController storecontroller.h <gamekeeper/client/storecontroller.h>
  *
- * This interfase should be used to implement GameListParser
+ * This interface provides an easy way to access stores
  *
  * @author Karol Herbst
  * @since 0
  */
-interface PUBLIC_API GameListParser
+interface PUBLIC_API StoreController
 {
-	GAMEKEEPER_INTERFACE_METHODS(GameListParser);
+public:
+	GAMEKEEPER_INTERFACE_METHODS(StoreController);
 
 	/**
-	 * parses games from the input stream
-	 *
 	 * @author Karol Herbst
 	 * @since 0
 	 *
-	 * @param[in] is the input stream
-	 * @return unsorted list of games
+	 * @return list of all stores
 	 */
-	PUBLIC_API virtual std::vector<std::unique_ptr<model::Game>> parseGameList(std::basic_istream<gkbyte_t> & is) = 0;
+	PUBLIC_API virtual std::vector<std::unique_ptr<Store>> getAll() = 0;
+
+	/**
+	 * @author Karol Herbst
+	 * @since 0
+	 *
+	 * @parem[in] name the name of the store
+	 * @return the store with the given name
+	 */
+	PUBLIC_API virtual std::unique_ptr<Store> get(const std::string & name) = 0;
 };
 
-GAMEKEEPER_NAMESPACE_END(backend)
+GAMEKEEPER_NAMESPACE_END(client)
 
-#endif //GAMEKEEPER_BACKEND_GAMELISTPARSER_H
+#endif //GAMEKEEPER_CLIENT_STORECONTROLLER_H

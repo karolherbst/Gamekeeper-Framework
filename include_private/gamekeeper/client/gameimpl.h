@@ -18,25 +18,31 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef GAMEKEEPER_MODEL_GAME_H
-#define GAMEKEEPER_MODEL_GAME_H 1
+#ifndef GAMEKEEPER_CLIENT_GAMEIMPL_H
+#define GAMEKEEPER_CLIENT_GAMEIMPL_H 1
 
-#include <gamekeeper/core/interface.h>
+#include <gamekeeper/core/common.h>
 
-#include <set>
+#include <memory>
 
-#include <gamekeeper/model/platform.h>
+#include <gamekeeper/client/game.h>
 
-GAMEKEEPER_NAMESPACE_START(model)
+GAMEKEEPER_NAMESPACE_START(client)
 
-interface PUBLIC_API Game
+class PRIVATE_API GameImpl : public Game
 {
-	GAMEKEEPER_INTERFACE_METHODS(Game);
-	PUBLIC_API virtual const std::string & getId() const = 0;
-	PUBLIC_API virtual const std::string & getName() const = 0;
-	PUBLIC_API virtual const std::set<Platform> & getPlatforms() const = 0;
+public:
+	PRIVATE_API GameImpl(std::unique_ptr<model::Game> &&);
+	PRIVATE_API ~GameImpl();
+	PRIVATE_API virtual const std::string & getId() const override;
+	PRIVATE_API virtual const std::string & getName() const override;
+	PRIVATE_API virtual const std::set<model::Platform> & getPlatforms() const override;
+
+private:
+	class PRIVATE_API PImpl;
+	std::unique_ptr<PImpl> data;
 };
 
-GAMEKEEPER_NAMESPACE_END(model)
+GAMEKEEPER_NAMESPACE_END(client)
 
-#endif //GAMEKEEPER_MODEL_GAME_H
+#endif //GAMEKEEPER_CLIENT_GAME_H

@@ -18,48 +18,46 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef GAMEKEEPER_BACKEND_GAMELISTPARSER_H
-#define GAMEKEEPER_BACKEND_GAMELISTPARSER_H 1
+#ifndef GAMEKEEPER_CORE_BUNDLEPATHS_H
+#define GAMEKEEPER_CORE_BUNDKEPATHS_H 1
 
 #include <gamekeeper/core/common.h>
 
-#include <memory>
-#include <vector>
-
 #include <gamekeeper/core/interface.h>
 
-GAMEKEEPER_NAMESPACE_START(model)
+#include <boost/filesystem/path.hpp>
 
-interface Game;
-
-GAMEKEEPER_NAMESPACE_END(model)
-
-GAMEKEEPER_NAMESPACE_START(backend)
+GAMEKEEPER_NAMESPACE_START(core)
 
 /**
- * @interface GameListParser gamelistparser.h <gamekeeper/core/gamelistparser.h>
+ * @interface BundlePaths bundlepaths.h <gamekeeper/core/bundlepaths.h>
  *
- * This interfase should be used to implement GameListParser
+ * this interface provides all methods to get Bundle specific paths
+ *
+ * It is guaranteed, that root access is needed to modify or create files under resolved system wide paths.
+ *
+ * All methods of this interface, which returns a single path, can throw the following exceptions:
+ *  * ResourceNotFound
  *
  * @author Karol Herbst
  * @since 0
  */
-interface PUBLIC_API GameListParser
+interface PUBLIC_API BundlePaths
 {
-	GAMEKEEPER_INTERFACE_METHODS(GameListParser);
+	GAMEKEEPER_INTERFACE_METHODS(BundlePaths);
 
 	/**
-	 * parses games from the input stream
+	 * returns the path to the data path directory
 	 *
 	 * @author Karol Herbst
 	 * @since 0
 	 *
-	 * @param[in] is the input stream
-	 * @return unsorted list of games
+	 * @return the resolved file
+	 * @throws ResourceNotFound
 	 */
-	PUBLIC_API virtual std::vector<std::unique_ptr<model::Game>> parseGameList(std::basic_istream<gkbyte_t> & is) = 0;
+	PUBLIC_API virtual const boost::filesystem::path & getDataPath() = 0;
 };
 
-GAMEKEEPER_NAMESPACE_END(backend)
+GAMEKEEPER_NAMESPACE_END(core)
 
-#endif //GAMEKEEPER_BACKEND_GAMELISTPARSER_H
+#endif //GAMEKEEPER_CORE_BUNDLEPATHS_H

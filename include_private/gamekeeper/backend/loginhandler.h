@@ -18,28 +18,25 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef GAMEKEEPER_BACKEND_XMLGAMELISTPARSER_H
-#define GAMEKEEPER_BACKEND_XMLGAMELISTPARSER_H 1
+#ifndef GAMEKEEPER_BACKEND_LOGINHANDLER_H
+#define GAMEKEEPER_BACKEND_LOGINHANDLER_H 1
 
 #include <gamekeeper/core/common.h>
 
-#include <map>
-
-#include <gamekeeper/backend/gamelistparser.h>
+#include <gamekeeper/core/filedownloader.h>
+#include <gamekeeper/core/interface.h>
 
 GAMEKEEPER_NAMESPACE_START(backend)
 
-class PUBLIC_API XMLGameListParser : public GameListParser
+interface PUBLIC_API LoginHandler
 {
-public:
-	PUBLIC_API XMLGameListParser(std::map<std::string, std::string> & config);
-	PRIVATE_API virtual std::vector<std::unique_ptr<model::Game>> parseGameList(std::basic_istream<gkbyte_t> &) override;
-private:
-	class PRIVATE_API PImpl;
+	GAMEKEEPER_INTERFACE_METHODS(LoginHandler);
 
-	std::unique_ptr<XMLGameListParser::PImpl> data;
+	PUBLIC_API virtual bool login(const std::string & username, const std::string & password) = 0;
+	PUBLIC_API virtual void logout() = 0;
+	PUBLIC_API virtual void downloadFile(const std::string & url, core::FileDownloader::DownloadCallback) = 0;
 };
 
 GAMEKEEPER_NAMESPACE_END(backend)
 
-#endif //GAMEKEEPER_BACKEND_XMLGAMELISTPARSER_H
+#endif //GAMEKEEPER_BACKEND_GAMELISTPARSER_H

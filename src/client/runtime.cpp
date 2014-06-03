@@ -25,11 +25,6 @@
 #include <cstdlib>
 #include <iostream>
 
-#include <gamekeeper/core/logger.h>
-#include <gamekeeper/core/loggerStream.h>
-#include <gamekeeper/client/gamekeeper.h>
-#include <gamekeeper/client/hypodermic.h>
-
 #include <boost/filesystem/operations.hpp>
 #include <boost/program_options/options_description.hpp>
 #include <boost/program_options/parsers.hpp>
@@ -38,6 +33,12 @@
 #include <Hypodermic/ContainerBuilder.h>
 #include <Hypodermic/Helpers.h>
 
+#include <gamekeeper/backend/storemanager.h>
+#include <gamekeeper/client/gamekeeper.h>
+#include <gamekeeper/client/hypodermic.h>
+#include <gamekeeper/client/storecontrollerimpl.h>
+#include <gamekeeper/core/logger.h>
+#include <gamekeeper/core/loggerStream.h>
 #include <gamekeeper/core/boostpopropertyresolver.h>
 #include <gamekeeper/core/curlfiledownloader.h>
 #include <gamekeeper/core/log4cpploggerFactory.h>
@@ -51,8 +52,10 @@
   #define OSINFORMATIONCLASS WindowsInformation
   #define THREADHELPERCLASS Win32ThreadHelper
 #else
+  #include <gamekeeper/core/gnuinstalldirspaths.h>
   #include <gamekeeper/core/linuxinformation.h>
   #include <gamekeeper/core/pthreadhelper.h>
+  #define BUNDLEPATHSCLASS GNUInstallDirsPaths
   #define OSINFORMATIONCLASS LinuxInformation
   #define THREADHELPERCLASS PthreadHelper
 #endif
@@ -90,6 +93,7 @@ fillProperties(po::options_description & cmd, po::options_description & file)
 		("help,h", "produce help message");
 
 	descNetwork.add_options()
+		("network.debug", po::value<bool>()->default_value(false)->implicit_value(true))
 		("network.time_between_retries", po::value<uint16_t>()->default_value(300))
 		("network.user_agent", po::value<std::string>())
 		("network.resolve.retries", po::value<uint16_t>()->default_value(3))
@@ -106,6 +110,8 @@ fillProperties(po::options_description & cmd, po::options_description & file)
 int
 GameKeeperRuntime::main(int argc, const char* argv[], NewInstanceFuncPtr instanceFuncPtr, AddOptionsFuncPtr optionsFuncPtr)
 {
+	using namespace gamekeeper::backend;
+	using namespace gamekeeper::client;
 	using namespace gamekeeper::core;
 
 	po::options_description descCmd;
@@ -172,6 +178,9 @@ GameKeeperRuntime::main(int argc, const char* argv[], NewInstanceFuncPtr instanc
 		localContainer->resolve<UserPaths>())->
 		as<UserPaths>()->
 		singleInstance();
+	containerBuilder.registerType<BUNDLEPATHSCLASS>()->
+	        as<BundlePaths>()->
+	        singleInstance();
 	containerBuilder.registerType<Log4cppLoggerFactory>(CREATE(new Log4cppLoggerFactory(INJECT(UserPaths))))->
 	        as<LoggerFactory>()->
 	        singleInstance();
@@ -191,6 +200,14 @@ GameKeeperRuntime::main(int argc, const char* argv[], NewInstanceFuncPtr instanc
 	                                     INJECT(LoggerFactory))))->
 		as<ThreadManager>()->
 		as<ThreadFactory>()->
+		singleInstance();
+
+	containerBuilder.registerType<StoreManager>(CREATE(new StoreManager(INJECT(LoggerFactory), INJECT(BundlePaths), INJECT(HttpFileDownloader))))->
+		as<StoreManager>()->
+		singleInstance();
+
+	containerBuilder.registerType<StoreControllerImpl>(CREATE(new StoreControllerImpl(INJECT(StoreManager))))->
+		as<StoreController>()->
 		singleInstance();
 #pragma GCC diagnostic pop
 	container = containerBuilder.build();

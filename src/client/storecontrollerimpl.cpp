@@ -18,28 +18,32 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef GAMEKEEPER_BACKEND_XMLGAMELISTPARSER_H
-#define GAMEKEEPER_BACKEND_XMLGAMELISTPARSER_H 1
+#include "pch.h"
 
-#include <gamekeeper/core/common.h>
+#include <gamekeeper/backend/storemanager.h>
+#include <gamekeeper/client/storeimpl.h>
+#include <gamekeeper/client/storecontrollerimpl.h>
 
-#include <map>
+GAMEKEEPER_NAMESPACE_START(client)
 
-#include <gamekeeper/backend/gamelistparser.h>
+StoreControllerImpl::StoreControllerImpl(std::shared_ptr<gamekeeper::backend::StoreManager> _sm)
+:	sm(_sm){}
 
-GAMEKEEPER_NAMESPACE_START(backend)
-
-class PUBLIC_API XMLGameListParser : public GameListParser
+std::vector<std::unique_ptr<Store>>
+StoreControllerImpl::getAll()
 {
-public:
-	PUBLIC_API XMLGameListParser(std::map<std::string, std::string> & config);
-	PRIVATE_API virtual std::vector<std::unique_ptr<model::Game>> parseGameList(std::basic_istream<gkbyte_t> &) override;
-private:
-	class PRIVATE_API PImpl;
+	std::vector<std::unique_ptr<Store>> result;
+	for(auto & s : this->sm->getAllStores())
+	{
+		result.push_back(std::move(std::unique_ptr<Store>(new StoreImpl(s))));
+	}
+	return result;
+}
 
-	std::unique_ptr<XMLGameListParser::PImpl> data;
-};
+std::unique_ptr<Store>
+StoreControllerImpl::get(const std::string & name)
+{
+	return std::unique_ptr<Store>(new StoreImpl(this->sm->getStore(name)));
+}
 
-GAMEKEEPER_NAMESPACE_END(backend)
-
-#endif //GAMEKEEPER_BACKEND_XMLGAMELISTPARSER_H
+GAMEKEEPER_NAMESPACE_END(client)

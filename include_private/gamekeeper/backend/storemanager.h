@@ -18,28 +18,45 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef GAMEKEEPER_BACKEND_XMLGAMELISTPARSER_H
-#define GAMEKEEPER_BACKEND_XMLGAMELISTPARSER_H 1
+#ifndef GAMEKEEPER_BACKEND_STOREMANAGER_H
+#define GAMEKEEPER_BACKEND_STOREMANAGER_H 1
 
 #include <gamekeeper/core/common.h>
 
 #include <map>
+#include <memory>
+#include <vector>
 
-#include <gamekeeper/backend/gamelistparser.h>
+#include <gamekeeper/backend/storeconfiguration.h>
+
+GAMEKEEPER_NAMESPACE_START(core)
+
+class BundlePaths;
+class HttpFileDownloader;
+class Logger;
+class LoggerFactory;
+
+GAMEKEEPER_NAMESPACE_END(core)
 
 GAMEKEEPER_NAMESPACE_START(backend)
 
-class PUBLIC_API XMLGameListParser : public GameListParser
+/**
+ * @class StoreManager storemanager <gamekeeper/backend/storemanager.h>
+ *
+ * @author Karol Herbst
+ * @since 0
+ */
+class PUBLIC_API StoreManager
 {
 public:
-	PUBLIC_API XMLGameListParser(std::map<std::string, std::string> & config);
-	PRIVATE_API virtual std::vector<std::unique_ptr<model::Game>> parseGameList(std::basic_istream<gkbyte_t> &) override;
+	PUBLIC_API StoreManager(std::shared_ptr<core::LoggerFactory>, std::shared_ptr<core::BundlePaths>, std::shared_ptr<core::HttpFileDownloader>);
+	PUBLIC_API std::vector<StoreConfiguration> getAllStores();
+	PUBLIC_API StoreConfiguration getStore(const std::string &);
 private:
-	class PRIVATE_API PImpl;
-
-	std::unique_ptr<XMLGameListParser::PImpl> data;
+	core::Logger & logger;
+	std::map<std::string, StoreConfiguration> storeConfigs;
 };
 
 GAMEKEEPER_NAMESPACE_END(backend)
 
-#endif //GAMEKEEPER_BACKEND_XMLGAMELISTPARSER_H
+#endif //GAMEKEEPER_BACKEND_STORECONFIGURATOR_H

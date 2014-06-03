@@ -17,22 +17,28 @@
 		std::string name;
 
 	public:
-		PUBLIC_INLINE inline virtual const char * getId() const override
+		PUBLIC_INLINE inline virtual const std::string & getId() const override
 		{
-			return this->id.c_str();
+			return this->id;
 		}
 
-		PUBLIC_INLINE inline virtual const char * getName() const override
+		PUBLIC_INLINE inline virtual const std::string & getName() const override
 		{
-			return this->name.c_str();
+			return this->name;
 		}
 
-		PUBLIC_INLINE inline void setId(const char * _id)
+		PUBLIC_INLINE inline virtual const std::set<gamekeeper::model::Platform> & getPlatforms() const override
+		{
+			static std::set<gamekeeper::model::Platform> ps;
+			return ps;
+		}
+
+		PUBLIC_INLINE inline void setId(const std::string & _id)
 		{
 			this->id = _id;
 		}
 
-		PUBLIC_INLINE inline void setName(const char * _name)
+		PUBLIC_INLINE inline void setName(const std::string & _name)
 		{
 			this->name = _name;
 		}
@@ -43,17 +49,18 @@
 %}
 
 %include <attribute.i>
+%include <std_string.i>
 
 namespace gamekeeper {
 namespace bindings {
 namespace model {
 struct Game
 {
-	const char * getId() const;
-	void setId(const char*);
+	const std::string & getId() const;
+	void setId(const std::string &);
 
-	const char * getName() const;
-	void setName(const char*);
+	const std::string & getName() const;
+	void setName(const std::string &);
 };
 }
 }
@@ -61,6 +68,6 @@ struct Game
 
 // generate attribute like getter and setter only for language, where this is common use
 #if defined(SWIGPYTHON) || defined(SWIGCSHARP)
-	%attribute(gamekeeper::bindings::model::Game, const char*, id, getId, setId);
-	%attribute(gamekeeper::bindings::model::Game, const char*, name, getName, setName);
+	%attribute(gamekeeper::bindings::model::Game, const std::string &, id, getId, setId);
+	%attribute(gamekeeper::bindings::model::Game, const std::string &, name, getName, setName);
 #endif
