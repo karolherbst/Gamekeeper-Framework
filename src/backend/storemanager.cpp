@@ -67,7 +67,14 @@ StoreManager::getAllStores()
 StoreConfiguration
 StoreManager::getStore(const std::string & name)
 {
-	return this->storeConfigs.at(balgo::to_lower_copy(name));
+	try
+	{
+		return this->storeConfigs.at(balgo::to_lower_copy(name));
+	}
+	catch(const std::out_of_range &)
+	{
+		throw StoreManagerException(std::string("store ") + name + " doesn't exist");
+	}
 }
 
 GAMEKEEPER_NAMESPACE_END(backend)

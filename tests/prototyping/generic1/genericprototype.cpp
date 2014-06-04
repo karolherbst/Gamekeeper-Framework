@@ -15,6 +15,8 @@ GAMECLIENTUI_CLASS(GenericPrototype)
 namespace client = gamekeeper::client;
 namespace core = gamekeeper::core;
 namespace po = boost::program_options;
+using core::endl;
+using core::LogLevel;
 
 GenericPrototype::GenericPrototype(gamekeeper::core::Logger& _logger)
 :	logger(_logger){}
@@ -55,17 +57,32 @@ platformsToString(const std::set<gamekeeper::model::Platform> & platforms)
 	return result;
 }
 
+static bool
+whileLoop(std::string & storeName)
+{
+	std::cout << "enter name of game store" << std::endl;
+	return std::getline(std::cin, storeName);
+}
+
 void
 GenericPrototype::startEventLoop()
 {
 	client::Autowire<client::StoreController> sc;
 
-	std::cout << "enter name of game store" << std::endl;
 	std::string storeName;
 
-	while(std::getline(std::cin, storeName))
+	while(whileLoop(storeName))
 	{
-		auto store = sc->get(storeName);
+		std::unique_ptr<client::Store> store;
+		try
+		{
+			store = sc->get(storeName);
+		}
+		catch(const std::exception & e)
+		{
+			this->logger << LogLevel::Error << e.what() << endl;
+			continue;
+		}
 
 		std::string username;
 		std::string password;
@@ -77,8 +94,7 @@ GenericPrototype::startEventLoop()
 
 		if(!store->login(username, password))
 		{
-			std::cout << "login failed" << std::endl;
-			std::cout << "enter name of game store" << std::endl;
+			this->logger << LogLevel::Info << "login failed" << endl;
 			continue;
 		}
 
@@ -88,6 +104,5 @@ GenericPrototype::startEventLoop()
 		}
 
 		store->logout();
-		std::cout << "enter name of game store" << std::endl;
 	}
 }
