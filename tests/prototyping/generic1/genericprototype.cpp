@@ -75,7 +75,12 @@ GenericPrototype::startEventLoop()
 		std::cout << "enter password" << std::endl;
 		std::getline(std::cin, password);
 
-		store->login(username, password);
+		if(!store->login(username, password))
+		{
+			std::cout << "login failed" << std::endl;
+			std::cout << "enter name of game store" << std::endl;
+			continue;
+		}
 
 		for(const auto & g : store->getAllGames())
 		{
