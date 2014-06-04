@@ -37,6 +37,7 @@ public:
 	PUBLIC_API virtual bool login(const std::string & username, const std::string & password /*, TwoFactorAuthCallback for later usage */) = 0;
 	PUBLIC_API virtual bool logout() = 0;
 	PUBLIC_API virtual bool isLoggedIn() const = 0;
+	PUBLIC_API virtual std::vector<std::string> supportedLoginMethods() = 0;
 	PUBLIC_API virtual std::vector<std::unique_ptr<Game>> getAllGames() = 0;
 };
 
