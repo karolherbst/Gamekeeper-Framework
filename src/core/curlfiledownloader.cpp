@@ -206,7 +206,15 @@ CurlFileDownloader::PImpl::performCurl(uint16_t timeout, uint16_t resolveFailed,
 			// everything okay, but we should also log the http return code
 			long returnCode;
 			curl_easy_getinfo(this->handle, CURLINFO_RESPONSE_CODE, &returnCode);
-			this->logger << LogLevel::Trace << "CURL returned with response code: " << returnCode << endl;
+			if(returnCode == 200)
+			{
+				this->logger << LogLevel::Trace << "CURL returned with response code: " << returnCode << endl;
+			}
+			else
+			{
+				this->logger << LogLevel::Error << "CURL returned with response code: " << returnCode << endl;
+				throw FileDownloaderException(std::string("HTTPS response code ") + utils::String::toString(returnCode));
+			}
 			break;
 		case CURLE_COULDNT_RESOLVE_HOST: // 6
 			if(resolveFailed < this->maxResolveRetries)
@@ -216,7 +224,11 @@ CurlFileDownloader::PImpl::performCurl(uint16_t timeout, uint16_t resolveFailed,
 			}
 			else
 			{
-				this->logger << LogLevel::Error << "CURL couldn't resolve host after " << this->maxResolveRetries << " retries" << endl;
+				std::string message("CURL couldn't resolve host after ");
+				message += resolveFailed;
+				message += " retries";
+				this->logger << LogLevel::Error << message << endl;
+				throw FileDownloaderException(message);
 			}
 			break;
 		case CURLE_COULDNT_CONNECT: // 7
@@ -227,7 +239,11 @@ CurlFileDownloader::PImpl::performCurl(uint16_t timeout, uint16_t resolveFailed,
 			}
 			else
 			{
-				this->logger << LogLevel::Error << "CURL couldn't connect to host after " << this->maxConnectRetries << " retries" << endl;
+				std::string message("CURL couldn't connect to host after ");
+				message += connectFailed;
+				message += " retries";
+				this->logger << LogLevel::Error << message << endl;
+				throw FileDownloaderException(message);
 			}
 			break;
 		default:
@@ -255,6 +271,7 @@ CurlFileDownloader::PImpl::handleCurlError(CURLcode code)
 		default:
 			// unhandled error
 			this->logger << LogLevel::Fatal << "CURL error \"" << curl_easy_strerror(code) << "\" (" << code << ") unhandled, please report a bug" << endl;
+			throw FileDownloaderException(std::string("unhandled CURL error") + curl_easy_strerror(code));
 			break;
 	}
 }
