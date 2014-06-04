@@ -61,6 +61,12 @@ StoreImpl::isLoggedIn() const
 	return this->data->config->getLoginHandler()->isLoggedIn();
 }
 
+std::vector<std::string>
+StoreImpl::supportedLoginMethods()
+{
+	return {this->getConfig().at("auth.method")};
+}
+
 std::vector<std::unique_ptr<Game>>
 StoreImpl::getAllGames()
 {
