@@ -38,7 +38,7 @@ GAMEKEEPER_NAMESPACE_START(core)
  * @since 0.1
  */
 
-class PUBLIC_API GameKeeperException : std::exception
+class PUBLIC_API GameKeeperException : public std::exception
 {
 public:
 	GameKeeperException(const std::string& message);
