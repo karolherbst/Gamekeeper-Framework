@@ -202,6 +202,12 @@ CurlFileDownloader::PImpl::performCurl(uint16_t timeout, uint16_t resolveFailed,
 	CURLcode code = curl_easy_perform(this->handle);
 	switch(code)
 	{
+		case CURLE_OK:
+			// everything okay, but we should also log the http return code
+			long returnCode;
+			curl_easy_getinfo(this->handle, CURLINFO_RESPONSE_CODE, &returnCode);
+			this->logger << LogLevel::Trace << "CURL returned with response code: " << returnCode << endl;
+			break;
 		case CURLE_COULDNT_RESOLVE_HOST: // 6
 			if(resolveFailed < this->maxResolveRetries)
 			{
