@@ -69,6 +69,8 @@ static void loadIniFileIntoMap(const prop::ptree & tree, std::map<std::string, s
 {
 	for(const auto & s : tree)
 	{
+		// insert an empty string with the section, so that we can check for them
+		map.insert(std::make_pair(s.first, ""));
 		for(const auto & k : s.second)
 		{
 			map.insert(std::make_pair(s.first + '.' + k.first, k.second.get_value<std::string>()));
