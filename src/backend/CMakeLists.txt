@@ -34,6 +34,7 @@ file(GLOB headers
   ${GAMEKEEPER_PRIVATE_INCLUDE_DIR}/gamekeeper/backend/httppostloginhandler.h
   ${GAMEKEEPER_PRIVATE_INCLUDE_DIR}/gamekeeper/backend/jsongamelistparser.h
   ${GAMEKEEPER_PRIVATE_INCLUDE_DIR}/gamekeeper/backend/libsecretmanager.h
+  ${GAMEKEEPER_PRIVATE_INCLUDE_DIR}/gamekeeper/backend/oauthloginhandler.h
   ${GAMEKEEPER_PRIVATE_INCLUDE_DIR}/gamekeeper/backend/storeconfiguration.h
   ${GAMEKEEPER_PRIVATE_INCLUDE_DIR}/gamekeeper/backend/storeconfigurator.h
   ${GAMEKEEPER_PRIVATE_INCLUDE_DIR}/gamekeeper/backend/storemanager.h
@@ -45,6 +46,7 @@ file(GLOB sources
   authmanager.cpp
   httppostloginhandler.cpp
   jsongamelistparser.cpp
+  oauthloginhandler.cpp
   storeconfigurator.cpp
   storeconfiguration.cpp
   storemanager.cpp

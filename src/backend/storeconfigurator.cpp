@@ -26,6 +26,7 @@
 
 #include <gamekeeper/backend/httppostloginhandler.h>
 #include <gamekeeper/backend/jsongamelistparser.h>
+#include <gamekeeper/backend/oauthloginhandler.h>
 #include <gamekeeper/backend/storeconfiguration.h>
 #include <gamekeeper/backend/xmlgamelistparser.h>
 #include <gamekeeper/core/filedownloaderfactory.h>
@@ -128,6 +129,11 @@ StoreConfigurator::configure(const boost::filesystem::path & configFile)
 		if(props.find("auth_http_post") != props.end())
 		{
 			lhm.insert(std::make_pair("http_post", std::make_shared<HTTPPostLoginHandler>(props, this->fdf->create(), this->am)));
+		}
+
+		if(props.find("auth_oauth") != props.end())
+		{
+			lhm.insert(std::make_pair("oauth", std::make_shared<OAuthLoginHandler>(props, this->fdf->create(), this->am)));
 		}
 
 		if(lhm.empty())
