@@ -98,11 +98,6 @@ StoreConfigurator::configure(const boost::filesystem::path & configFile)
 		// after more implementations came up
 		auto missing = utils::Containers::checkMissing(props,
 		{
-			"auth.loginurl",
-			"auth.logouturl",
-			"auth.method",
-			"authfield.username",
-			"authfield.password",
 			"games.url",
 			"games.list",
 			"game.id",
@@ -129,13 +124,18 @@ StoreConfigurator::configure(const boost::filesystem::path & configFile)
 			glp = std::make_shared<JSONGameListParser>(props);
 		}
 
-		std::shared_ptr<LoginHandler> lh;
-		if(authMethod == "http_post")
+		StoreConfiguration::LoginHandlerMap lhm;
+		if(props.find("auth_http_post") != props.end())
 		{
-			lh = std::make_shared<HTTPPostLoginHandler>(props, this->fdf->create(), this->am);
+			lhm.insert(std::make_pair("http_post", std::make_shared<HTTPPostLoginHandler>(props, this->fdf->create(), this->am)));
 		}
 
-		return StoreConfiguration(glp, lh, std::make_shared<StoreProps>(props));
+		if(lhm.empty())
+		{
+			throw StoreConfiguratorException("no login mechanism found in config");
+		}
+
+		return StoreConfiguration(glp, lhm, std::make_shared<StoreProps>(props));
 	}
 	catch(const std::exception & ex)
 	{

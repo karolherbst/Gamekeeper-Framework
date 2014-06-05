@@ -28,19 +28,19 @@ GAMEKEEPER_NAMESPACE_START(backend)
 class StoreConfiguration::PImpl
 {
 public:
-	PImpl(std::shared_ptr<GameListParser>, std::shared_ptr<LoginHandler>, std::shared_ptr<model::Store>);
+	PImpl(std::shared_ptr<GameListParser>, const LoginHandlerMap &, std::shared_ptr<model::Store>);
 	std::shared_ptr<GameListParser> glp;
 	std::shared_ptr<model::Store> store;
-	std::shared_ptr<LoginHandler> lh;
+	LoginHandlerMap lhm;
 };
 
-StoreConfiguration::PImpl::PImpl(std::shared_ptr<GameListParser> _glp, std::shared_ptr<LoginHandler> _lh, std::shared_ptr<model::Store> _store)
+StoreConfiguration::PImpl::PImpl(std::shared_ptr<GameListParser> _glp, const LoginHandlerMap & _lhm, std::shared_ptr<model::Store> _store)
 :	glp(_glp),
-	lh(_lh),
+	lhm(_lhm),
 	store(_store){}
 
-StoreConfiguration::StoreConfiguration(std::shared_ptr<GameListParser> glp, std::shared_ptr<LoginHandler> lh, std::shared_ptr<model::Store> store)
-:	data(std::make_shared<PImpl>(glp, lh, store)){}
+StoreConfiguration::StoreConfiguration(std::shared_ptr<GameListParser> glp, const LoginHandlerMap & lhm, std::shared_ptr<model::Store> store)
+:	data(std::make_shared<PImpl>(glp, lhm, store)){}
 
 StoreConfiguration::StoreConfiguration(const StoreConfiguration & sc)
 :	data(sc.data){}
@@ -54,10 +54,10 @@ StoreConfiguration::getGameListParser()
 	return this->data->glp;
 }
 
-std::shared_ptr<LoginHandler>
-StoreConfiguration::getLoginHandler()
+const StoreConfiguration::LoginHandlerMap &
+StoreConfiguration::getLoginHandlers()
 {
-	return this->data->lh;
+	return this->data->lhm;
 }
 
 std::shared_ptr<model::Store>
