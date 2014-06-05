@@ -128,7 +128,7 @@ GenericPrototype::startEventLoop()
 				break;
 			}
 
-			if(!store->login(username, password))
+			if(!store->login(loginMethod, username, password))
 			{
 				this->logger << LogLevel::Info << "login failed" << endl;
 				continue;

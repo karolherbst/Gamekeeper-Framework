@@ -23,6 +23,7 @@
 
 #include <gamekeeper/core/common.h>
 
+#include <map>
 #include <memory>
 
 #include <gamekeeper/model/store.h>
@@ -34,11 +35,13 @@ class LoginHandler;
 
 struct PUBLIC_API StoreConfiguration
 {
-	PUBLIC_API StoreConfiguration(std::shared_ptr<GameListParser>, std::shared_ptr<LoginHandler>, std::shared_ptr<model::Store>);
+	typedef std::map<std::string, std::shared_ptr<LoginHandler>> LoginHandlerMap;
+
+	PUBLIC_API StoreConfiguration(std::shared_ptr<GameListParser>, const LoginHandlerMap &, std::shared_ptr<model::Store>);
 	PUBLIC_API StoreConfiguration(const StoreConfiguration &);
 	PUBLIC_API StoreConfiguration(StoreConfiguration &&);
 	PUBLIC_API std::shared_ptr<model::Store> getStore();
-	PUBLIC_API std::shared_ptr<LoginHandler> getLoginHandler();
+	PUBLIC_API const LoginHandlerMap & getLoginHandlers();
 	PUBLIC_API std::shared_ptr<GameListParser> getGameListParser();
 private:
 	class PRIVATE_API PImpl;

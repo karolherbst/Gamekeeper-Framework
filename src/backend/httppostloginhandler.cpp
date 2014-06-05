@@ -62,10 +62,10 @@ HTTPPostLoginHandler::PImpl::PImpl(std::map<std::string, std::string> & config, 
                                    std::shared_ptr<AuthManager> _am)
 :	hfd(_hfd),
 	am(_am),
-	loginUrl(config["auth.loginurl"]),
-	logoutUrl(config["auth.logouturl"]),
-	usernameField(config["authfield.username"]),
-	passwordField(config["authfield.password"]),
+	loginUrl(config["auth_http_post.loginurl"]),
+	logoutUrl(config["auth_http_post.logouturl"]),
+	usernameField(config["auth_http_post.username"]),
+	passwordField(config["auth_http_post.password"]),
 	tokenGroup(config["store.name"])
 {
 	auto it = config.find("authtoken.keys");
