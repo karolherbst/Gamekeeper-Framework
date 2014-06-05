@@ -43,7 +43,7 @@ class PUBLIC_API HTTPPostLoginHandler : public LoginHandler
 public:
 	PUBLIC_API HTTPPostLoginHandler(std::map<std::string, std::string> & config, std::shared_ptr<core::FileDownloader>, std::shared_ptr<AuthManager>);
 	PUBLIC_API ~HTTPPostLoginHandler();
-	PRIVATE_API virtual bool login(const std::string & username, const std::string & password) override;
+	PRIVATE_API virtual bool login(const std::string & username, const std::string & password, const StringMap & fields = StringMap()) override;
 	PRIVATE_API virtual void logout() override;
 	PRIVATE_API virtual bool isLoggedIn() const override;
 	PRIVATE_API virtual void downloadFile(const std::string & url, core::FileDownloader::DownloadCallback) override;

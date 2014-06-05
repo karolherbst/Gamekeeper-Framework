@@ -23,6 +23,8 @@
 
 #include <gamekeeper/core/common.h>
 
+#include <unordered_map>
+
 #include <gamekeeper/core/filedownloader.h>
 #include <gamekeeper/core/interface.h>
 
@@ -32,7 +34,9 @@ interface PUBLIC_API LoginHandler
 {
 	GAMEKEEPER_INTERFACE_METHODS(LoginHandler);
 
-	PUBLIC_API virtual bool login(const std::string & username, const std::string & password) = 0;
+	typedef std::unordered_map<std::string, std::string> StringMap;
+
+	PUBLIC_API virtual bool login(const std::string & username, const std::string & password, const StringMap & fields = StringMap()) = 0;
 	PUBLIC_API virtual void logout() = 0;
 	PUBLIC_API virtual bool isLoggedIn() const = 0;
 	PUBLIC_API virtual void downloadFile(const std::string & url, core::FileDownloader::DownloadCallback) = 0;

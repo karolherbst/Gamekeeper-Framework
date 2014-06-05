@@ -122,7 +122,7 @@ HTTPPostLoginHandler::HTTPPostLoginHandler(std::map<std::string, std::string> & 
 HTTPPostLoginHandler::~HTTPPostLoginHandler(){}
 
 bool
-HTTPPostLoginHandler::login(const std::string & username, const std::string & password)
+HTTPPostLoginHandler::login(const std::string & username, const std::string & password, const StringMap & fields)
 {
 	// save username
 	this->data->username = username;
@@ -132,6 +132,7 @@ HTTPPostLoginHandler::login(const std::string & username, const std::string & pa
 		{this->data->usernameField, username},
 		{this->data->passwordField, password}
 	};
+	form.insert(fields.begin(), fields.end());
 
 	try
 	{
