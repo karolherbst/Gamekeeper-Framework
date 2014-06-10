@@ -201,7 +201,7 @@ GameKeeperRuntime::main(int argc, const char* argv[], NewInstanceFuncPtr instanc
 		as<ThreadFactory>()->
 		singleInstance();
 
-	containerBuilder.registerType<StoreManager>(CREATE(new StoreManager(INJECT(LoggerFactory), INJECT(BundlePaths), INJECT(FileDownloaderFactory)->create())))->
+	containerBuilder.registerType<StoreManager>(CREATE(new StoreManager(INJECT(LoggerFactory), INJECT(BundlePaths), INJECT(FileDownloaderFactory))))->
 		as<StoreManager>()->
 		singleInstance();
 

@@ -30,6 +30,7 @@
 #include <gamekeeper/backend/jsongamelistparser.h>
 #include <gamekeeper/backend/storeconfiguration.h>
 #include <gamekeeper/backend/xmlgamelistparser.h>
+#include <gamekeeper/core/filedownloaderfactory.h>
 #include <gamekeeper/model/store.h>
 
 namespace prop = boost::property_tree;
@@ -77,8 +78,8 @@ static void loadIniFileIntoMap(const prop::ptree & tree, std::map<std::string, s
 	}
 }
 
-StoreConfigurator::StoreConfigurator(std::shared_ptr<core::FileDownloader> _hfd)
-:	hfd(_hfd){}
+StoreConfigurator::StoreConfigurator(std::shared_ptr<core::FileDownloaderFactory> _fdf)
+:	fdf(_fdf){}
 
 StoreConfiguration
 StoreConfigurator::configure(const boost::filesystem::path & configFile)
@@ -106,7 +107,7 @@ StoreConfigurator::configure(const boost::filesystem::path & configFile)
 	LoginHandler * lh = nullptr;
 	if(authMethod == "http_post")
 	{
-		lh = new HTTPPostLoginHandler(props, this->hfd);
+		lh = new HTTPPostLoginHandler(props, this->fdf->create());
 	}
 
 	return StoreConfiguration(glp, lh, new StoreProps(props));

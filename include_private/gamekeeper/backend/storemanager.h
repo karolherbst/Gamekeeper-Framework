@@ -32,7 +32,7 @@
 GAMEKEEPER_NAMESPACE_START(core)
 
 class BundlePaths;
-class FileDownloader;
+class FileDownloaderFactory;
 class Logger;
 class LoggerFactory;
 
@@ -49,7 +49,7 @@ GAMEKEEPER_NAMESPACE_START(backend)
 class PUBLIC_API StoreManager
 {
 public:
-	PUBLIC_API StoreManager(std::shared_ptr<core::LoggerFactory>, std::shared_ptr<core::BundlePaths>, std::shared_ptr<core::FileDownloader>);
+	PUBLIC_API StoreManager(std::shared_ptr<core::LoggerFactory>, std::shared_ptr<core::BundlePaths>, std::shared_ptr<core::FileDownloaderFactory>);
 	PUBLIC_API std::vector<StoreConfiguration> getAllStores();
 	PUBLIC_API StoreConfiguration getStore(const std::string &);
 private:
