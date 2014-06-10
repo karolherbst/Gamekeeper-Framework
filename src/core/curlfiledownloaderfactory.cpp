@@ -22,6 +22,8 @@
 
 #include <gamekeeper/core/curlfiledownloaderfactory.h>
 
+#include <curl/curl.h>
+
 #include <gamekeeper/core/curlfiledownloader.h>
 
 GAMEKEEPER_NAMESPACE_START(core)
@@ -41,9 +43,15 @@ CurlFileDownloaderFactory::PImpl::PImpl(std::shared_ptr<LoggerFactory> _lf, std:
 	up(_up){}
 
 CurlFileDownloaderFactory::CurlFileDownloaderFactory(std::shared_ptr<LoggerFactory> lf, std::shared_ptr<PropertyResolver> pr, std::shared_ptr<UserPaths> up)
-:	data(new CurlFileDownloaderFactory::PImpl(lf, pr, up)){}
+:	data(new CurlFileDownloaderFactory::PImpl(lf, pr, up))
+{
+	curl_global_init(CURL_GLOBAL_SSL);
+}
 
-CurlFileDownloaderFactory::~CurlFileDownloaderFactory(){}
+CurlFileDownloaderFactory::~CurlFileDownloaderFactory()
+{
+	curl_global_cleanup();
+}
 
 std::shared_ptr<FileDownloader>
 CurlFileDownloaderFactory::create()

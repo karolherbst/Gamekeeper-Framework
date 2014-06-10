@@ -259,13 +259,9 @@ CurlFileDownloader::CurlFileDownloader(std::shared_ptr<LoggerFactory> loggerFact
 :	data(new PImpl(loggerFactory->getComponentLogger("IO.curl"), propertyResolver, userpaths))
 {
 	this->data->logger << LogLevel::Debug << "init curl with user-agent: " << this->data->userAgent << endl;
-	curl_global_init(CURL_GLOBAL_SSL);
 }
 
-CurlFileDownloader::~CurlFileDownloader()
-{
-	curl_global_cleanup();
-}
+CurlFileDownloader::~CurlFileDownloader(){}
 
 void
 CurlFileDownloader::PImpl::handleFileDownload(CURLPrivateData & curl, FileDownloader::DownloadCallback * func, const char * const url)
