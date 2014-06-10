@@ -253,9 +253,6 @@ CurlFileDownloader::PImpl::PImpl(Logger & l, std::shared_ptr<PropertyResolver> p
 
 }
 
-const std::unordered_set<std::string>
-CurlFileDownloader::PImpl::supportedProtocols = {"http", "https", "ftp", "ftps", "sftp"};
-
 CurlFileDownloader::CurlFileDownloader(std::shared_ptr<LoggerFactory> loggerFactory,
                                        std::shared_ptr<PropertyResolver> propertyResolver,
                                        std::shared_ptr<UserPaths> userpaths)
@@ -291,12 +288,12 @@ enableCookies(CURLPrivateData & curl)
 }
 
 static void
-addCookiesToCurl(const HttpFileDownloader::CookieBuket& cookies, CURLPrivateData & curl)
+addCookiesToCurl(const FileDownloader::CookieBuket& cookies, CURLPrivateData & curl)
 {
 	if(!cookies.empty())
 	{
 		std::ostringstream cookieLineBuilder;
-		for (const HttpFileDownloader::Cookie cookie : cookies)
+		for (const FileDownloader::Cookie & cookie : cookies)
 		{
 			cookieLineBuilder << cookie.first << '=' << cookie.second << ";";
 		}
@@ -305,11 +302,11 @@ addCookiesToCurl(const HttpFileDownloader::CookieBuket& cookies, CURLPrivateData
 	}
 }
 
-static HttpFileDownloader::CookieBuket
+static FileDownloader::CookieBuket
 getCookies(CURLPrivateData & curl)
 {
 	struct curl_slist * list;
-	HttpFileDownloader::CookieBuket result;
+	FileDownloader::CookieBuket result;
 	curl_easy_getinfo(curl.handle, CURLINFO_COOKIELIST, &list);
 
 	while(list != nullptr)
@@ -325,24 +322,18 @@ getCookies(CURLPrivateData & curl)
 }
 
 static void
-addFormToCurl(const HttpFileDownloader::Form& form, CURLPrivateData & curl)
+addFormToCurl(const FileDownloader::Form & form, CURLPrivateData & curl)
 {
 	if(!form.empty())
 	{
 		std::ostringstream cookieLineBuilder;
-		for (const HttpFileDownloader::FormField formField : form)
+		for (const FileDownloader::FormField & formField : form)
 		{
 			cookieLineBuilder << formField.first << '=' << formField.second << '&';
 		}
 		curl.postData = cookieLineBuilder.str();
 		curl_easy_setopt(curl.handle, CURLOPT_POSTFIELDS, curl.postData.c_str());
 	}
-}
-
-bool
-CurlFileDownloader::supportsProtocol(const char * const protocolName)
-{
-	return PImpl::supportedProtocols.find(protocolName) != PImpl::supportedProtocols.end();
 }
 
 void

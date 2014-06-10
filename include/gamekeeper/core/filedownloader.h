@@ -23,8 +23,7 @@
 
 #include <gamekeeper/core/common.h>
 
-#include <functional>
-#include <istream>
+#include <unordered_map>
 
 #include <gamekeeper/core/interface.h>
 
@@ -33,9 +32,8 @@ GAMEKEEPER_NAMESPACE_START(core)
 /**
  * @interface FileDownloader filedownloader.h <gamekeeper/core/filedownloader.h>
  *
- * This interface provides basic operations to download files over a network. It abstracts from protocols and doesn't
- * provide functionality special to a specific protocol. If you want to use a specific protocol you should use a more
- * specilized interface instead.
+ * This interface provides basic operations to download files over a network. An Implementation shall support
+ * HTTP(S) and (S)FTP(S).
  *
  * @author Karol Herbst
  * @since 0
@@ -59,15 +57,36 @@ interface PUBLIC_API FileDownloader
 	typedef std::function<bool (ByteIstream &)> DownloadCallback;
 
 	/**
-	 * checks if the implementation supports the givven protocol
+	 * A CookieBuket stores cookies as simple string string mappings
 	 *
 	 * @author Karol Herbst
 	 * @since 0
-	 *
-	 * @param[in] protocolName the name of the protocol
-	 * @return true if the implementation supports @p protocolName
 	 */
-	PUBLIC_API virtual bool supportsProtocol(const char * const protocolName) = 0;
+	typedef std::unordered_map<std::string, std::string> CookieBuket;
+
+	/**
+	 * The signature of one Cookie
+	 *
+	 * @author Karol Herbst
+	 * @since 0
+	 */
+	typedef std::pair<std::string, std::string> Cookie;
+
+	/**
+	 * A Form stores form data as simple string string mappings
+	 *
+	 * @author Karol Herbst
+	 * @since 0
+	 */
+	typedef std::unordered_map<std::string, std::string> Form;
+
+	/**
+	 * The signature of one HTTP Form entry
+	 *
+	 * @author Karol Herbst
+	 * @since 0
+	 */
+	typedef std::pair<std::string, std::string> FormField;
 
 	/**
 	 * downloads the file behind the given location
@@ -79,6 +98,59 @@ interface PUBLIC_API FileDownloader
 	 * @param[in] callback the callback function
 	 */
 	PUBLIC_API virtual void downloadFile(const char * const url, DownloadCallback callback) = 0;
+
+	/**
+	 * downloads the file behind the given location
+	 *
+	 * the given cookies will be passed to the Http(s) request
+	 *
+	 * @author Karol Herbst
+	 * @since 0
+	 *
+	 * @param[in] url the url
+	 * @param[in] callback the callback function
+	 * @param[in] cookies the cookies
+	 */
+	PUBLIC_API virtual void downloadFileWithCookies(const char * const url, DownloadCallback callback,
+	                                                const CookieBuket& cookies) = 0;
+
+	/**
+	 * fetches cookies with the given POST form
+	 *
+	 * @author Karol Herbst
+	 * @since 0
+	 *
+	 * @param[in] url the url
+	 * @param[in] form the form
+	 * @return the fetched cookies
+	 */
+	PUBLIC_API virtual CookieBuket doPostRequestForCookies(const char * const url, const Form& form = Form()) = 0;
+
+	/**
+	 * downloads the file with the given POST form
+	 *
+	 * @author Karol Herbst
+	 * @since 0
+	 *
+	 * @param[in] url the url
+	 * @param[in] callback the callback function
+	 * @param[in] form the form
+	 */
+	PUBLIC_API virtual void downloadFileWithForm(const char * const url, DownloadCallback callback, const Form & form) = 0;
+
+	/**
+	 * downloads the file and fetch cookies with the given POST form
+	 *
+	 * @author Karol Herbst
+	 * @since 0
+	 *
+	 * @param[in] url the url
+	 * @param[in] callback the callback function
+	 * @param[in] form the form
+	 * @return the fetched cookies
+	 */
+	PUBLIC_API virtual CookieBuket downloadFileAndCookiesWithForm(const char * const url, DownloadCallback callback,
+	                                                              const Form & form) = 0;
 };
 
 GAMEKEEPER_NAMESPACE_END(core)

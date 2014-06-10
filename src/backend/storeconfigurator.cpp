@@ -77,7 +77,7 @@ static void loadIniFileIntoMap(const prop::ptree & tree, std::map<std::string, s
 	}
 }
 
-StoreConfigurator::StoreConfigurator(std::shared_ptr<core::HttpFileDownloader> _hfd)
+StoreConfigurator::StoreConfigurator(std::shared_ptr<core::FileDownloader> _hfd)
 :	hfd(_hfd){}
 
 StoreConfiguration

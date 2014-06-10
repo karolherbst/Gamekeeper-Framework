@@ -54,7 +54,7 @@ using namespace gamekeeper::utils;
 class CurlFiledownloaderTest : public gamekeeper::test::WebServerFicture
 {
 protected:
-	HttpFileDownloader * fileDownloader = nullptr;
+	FileDownloader * fileDownloader = nullptr;
 
 	virtual void SetUp() override
 	{
@@ -96,7 +96,7 @@ TEST_F(CurlFiledownloaderTest, servertest)
 TEST_F(CurlFiledownloaderTest, cookieTest)
 {
 	bool handled = false;
-	HttpFileDownloader::CookieBuket cb = this->fileDownloader->doPostRequestForCookies("http://localhost:8080/cookies/type/value");
+	FileDownloader::CookieBuket cb = this->fileDownloader->doPostRequestForCookies("http://localhost:8080/cookies/type/value");
 	EXPECT_EQ("value", cb["type"]);
 }
 

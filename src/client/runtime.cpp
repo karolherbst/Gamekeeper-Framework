@@ -190,7 +190,6 @@ GameKeeperRuntime::main(int argc, const char* argv[], NewInstanceFuncPtr instanc
 	containerBuilder.registerType<CurlFileDownloader>(
 		CREATE(new CurlFileDownloader(INJECT(LoggerFactory), INJECT(PropertyResolver), INJECT(UserPaths))))->
 		as<FileDownloader>()->
-		as<HttpFileDownloader>()->
 		singleInstance();
 	containerBuilder.registerType<THREADHELPERCLASS>()->
 		as<NativeThreadHelper>()->
@@ -202,7 +201,7 @@ GameKeeperRuntime::main(int argc, const char* argv[], NewInstanceFuncPtr instanc
 		as<ThreadFactory>()->
 		singleInstance();
 
-	containerBuilder.registerType<StoreManager>(CREATE(new StoreManager(INJECT(LoggerFactory), INJECT(BundlePaths), INJECT(HttpFileDownloader))))->
+	containerBuilder.registerType<StoreManager>(CREATE(new StoreManager(INJECT(LoggerFactory), INJECT(BundlePaths), INJECT(FileDownloader))))->
 		as<StoreManager>()->
 		singleInstance();
 

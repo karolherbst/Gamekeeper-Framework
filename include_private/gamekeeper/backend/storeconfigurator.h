@@ -29,7 +29,7 @@
 
 GAMEKEEPER_NAMESPACE_START(core)
 
-class HttpFileDownloader;
+class FileDownloader;
 
 GAMEKEEPER_NAMESPACE_END(core)
 
@@ -44,10 +44,10 @@ GAMEKEEPER_NAMESPACE_START(backend)
 class PUBLIC_API StoreConfigurator
 {
 public:
-	PUBLIC_API StoreConfigurator(std::shared_ptr<core::HttpFileDownloader>);
+	PUBLIC_API StoreConfigurator(std::shared_ptr<core::FileDownloader>);
 	PUBLIC_API StoreConfiguration configure(const boost::filesystem::path & configFile);
 private:
-	std::shared_ptr<core::HttpFileDownloader> hfd;
+	std::shared_ptr<core::FileDownloader> hfd;
 };
 
 GAMEKEEPER_NAMESPACE_END(backend)

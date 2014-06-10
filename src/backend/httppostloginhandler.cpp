@@ -26,7 +26,7 @@
 
 #include <boost/algorithm/string/replace.hpp>
 
-#include <gamekeeper/core/httpfiledownloader.h>
+#include <gamekeeper/core/filedownloader.h>
 
 namespace balgo = boost::algorithm;
 
@@ -37,9 +37,9 @@ typedef std::unordered_map<std::string, std::string> Tokens;
 class HTTPPostLoginHandler::PImpl
 {
 public:
-	PImpl(std::map<std::string, std::string> &, std::shared_ptr<core::HttpFileDownloader>);
+	PImpl(std::map<std::string, std::string> &, std::shared_ptr<core::FileDownloader>);
 
-	std::shared_ptr<core::HttpFileDownloader> hfd;
+	std::shared_ptr<core::FileDownloader> hfd;
 	std::string loginUrl;
 	std::string logoutUrl;
 	std::string usernameField;
@@ -48,14 +48,14 @@ public:
 	Tokens tokens;
 };
 
-HTTPPostLoginHandler::PImpl::PImpl(std::map<std::string, std::string> & config, std::shared_ptr<core::HttpFileDownloader> _hfd)
+HTTPPostLoginHandler::PImpl::PImpl(std::map<std::string, std::string> & config, std::shared_ptr<core::FileDownloader> _hfd)
 :	hfd(_hfd),
 	loginUrl(config.at("auth.loginurl")),
 	logoutUrl(config.at("auth.logouturl")),
 	usernameField(config.at("authfield.username")),
 	passwordField(config.at("authfield.password")){}
 
-HTTPPostLoginHandler::HTTPPostLoginHandler(std::map<std::string, std::string> & config, std::shared_ptr<core::HttpFileDownloader> hfd)
+HTTPPostLoginHandler::HTTPPostLoginHandler(std::map<std::string, std::string> & config, std::shared_ptr<core::FileDownloader> hfd)
 :	data(new HTTPPostLoginHandler::PImpl(config, hfd)){}
 
 bool
@@ -64,7 +64,7 @@ HTTPPostLoginHandler::login(const std::string & username, const std::string & pa
 	// save username
 	this->data->username = username;
 
-	core::HttpFileDownloader::Form form
+	core::FileDownloader::Form form
 	{
 		{this->data->usernameField, username},
 		{this->data->passwordField, password}

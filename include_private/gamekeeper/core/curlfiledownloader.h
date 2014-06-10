@@ -26,7 +26,7 @@
 #include <memory>
 #include <unordered_set>
 
-#include <gamekeeper/core/httpfiledownloader.h>
+#include <gamekeeper/core/filedownloader.h>
 #include <gamekeeper/core/propertyresolver.h>
 #include <gamekeeper/core/userpaths.h>
 
@@ -38,12 +38,11 @@ class CURLPrivateData;
 interface Logger;
 interface LoggerFactory;
 
-class PUBLIC_API CurlFileDownloader : public HttpFileDownloader
+class PUBLIC_API CurlFileDownloader : public FileDownloader
 {
 public:
 	PUBLIC_API CurlFileDownloader(std::shared_ptr<LoggerFactory>, std::shared_ptr<PropertyResolver>, std::shared_ptr<UserPaths>);
 	PRIVATE_API virtual ~CurlFileDownloader();
-	PRIVATE_API virtual bool supportsProtocol(const char * const protocolName) override;
 	PRIVATE_API virtual void downloadFile(const char * const url, DownloadCallback callback) override;
 	PRIVATE_API virtual void downloadFileWithCookies(const char * const url, DownloadCallback callback,
 	                                                 const CookieBuket& cookies) override;
