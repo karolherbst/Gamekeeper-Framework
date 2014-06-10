@@ -21,7 +21,7 @@ using namespace gamekeeper::core;
 using namespace gamekeeper::utils;
 namespace po = boost::program_options;
 
-typedef FileDownloader::CookieBuket CookieBuket;
+typedef FileDownloader::CookieBucket CookieBucket;
 typedef FileDownloader::Cookie Cookie;
 typedef FileDownloader::Form Form;
 
@@ -67,9 +67,10 @@ HBPrototype::startEventLoop()
 	form["username"] = this->username;
 	form["password"] = this->userpass;
 
-	CookieBuket cookies = fileDownloader->doPostRequestForCookies("https://www.humblebundle.com/login", form);
-	fileDownloader->downloadFileWithCookies("https://www.humblebundle.com/home",
-	                                        std::bind(&HBPrototype::handleRequest, this, p::_1), cookies);
+	fileDownloader->postRequest("https://www.humblebundle.com/login", form);
+	CookieBucket cookies = fileDownloader->getCookies();
+	fileDownloader->setCookies(cookies);
+	fileDownloader->getRequest("https://www.humblebundle.com/home", std::bind(&HBPrototype::handleRequest, this, p::_1));
 	this->doPythonStuff();
 }
 

@@ -22,9 +22,14 @@
 
 #include <gamekeeper/core/curlfiledownloaderfactory.h>
 
+#include <sstream>
+
 #include <curl/curl.h>
 
 #include <gamekeeper/core/curlfiledownloader.h>
+#include <gamekeeper/core/userpaths.h>
+#include <gamekeeper/core/loggerFactory.h>
+#include <gamekeeper/core/propertyresolver.h>
 
 GAMEKEEPER_NAMESPACE_START(core)
 
@@ -53,10 +58,42 @@ CurlFileDownloaderFactory::~CurlFileDownloaderFactory()
 	curl_global_cleanup();
 }
 
+static std::string
+buildUserAgentString(const boost::any & configValue)
+{
+	if(configValue.empty())
+	{
+		curl_version_info_data * data = curl_version_info(CURLVERSION_NOW);
+		std::stringstream stream;
+		stream << "GameKeeper/0.1 libcurl/" << data->version;
+		if(data->ssl_version != nullptr)
+		{
+			stream << ' ' << data->ssl_version;
+		}
+
+		if(data->libz_version != nullptr)
+		{
+			stream << " zlib/" << data->libz_version;
+		}
+		return stream.str();
+	}
+	return boost::any_cast<std::string>(configValue);
+}
+
 std::shared_ptr<FileDownloader>
 CurlFileDownloaderFactory::create()
 {
-	return std::make_shared<CurlFileDownloader>(this->data->lf, this->data->pr, this->data->up);
+	return std::make_shared<CurlFileDownloader>
+	(
+		this->data->lf->getComponentLogger("IO.curl"),
+		buildUserAgentString(this->data->pr->get("network.user_agent")),
+		this->data->up->getCacheFile("downloads/"),
+	        this->data->pr->get<uint16_t>("network.connection.timeout"),
+		this->data->pr->get<uint16_t>("network.time_between_retries"),
+		this->data->pr->get<uint16_t>("network.resolve.retries"),
+		this->data->pr->get<uint16_t>("network.connection.retries"),
+		this->data->pr->get<uint32_t>("network.download.max_buffer_size")
+	);
 }
 
 GAMEKEEPER_NAMESPACE_END(core)

@@ -20,55 +20,51 @@
 
 #include "pch.h"
 
-#include <algorithm>
-#include <chrono>
-#include <iostream>
-#include <iterator>
-#include <sstream>
+#include <gamekeeper/core/curlfiledownloader.h>
+
 #include <vector>
 
 #include <std_compat/thread>
-
-#include <gamekeeper/core/curlfiledownloader.h>
-#include <gamekeeper/core/logger.h>
-#include <gamekeeper/core/loggerFactory.h>
-#include <gamekeeper/core/loggerStream.h>
 
 #include <boost/algorithm/string/classification.hpp>
 #include <boost/algorithm/string/replace.hpp>
 #include <boost/algorithm/string/split.hpp>
 #include <boost/filesystem/fstream.hpp>
 #include <boost/filesystem/operations.hpp>
-#include <boost/filesystem/path.hpp>
 #include <boost/iostreams/device/array.hpp>
 #include <boost/iostreams/stream.hpp>
 
 #include <curl/curl.h>
 
-namespace algo = boost::algorithm;
-namespace fs = boost::filesystem;
+#include <gamekeeper/core/logger.h>
+#include <gamekeeper/core/loggerStream.h>
+
+namespace balgo = boost::algorithm;
+namespace bfs = boost::filesystem;
+namespace bio = boost::iostreams;
 
 GAMEKEEPER_NAMESPACE_START(core)
 
 class PRIVATE_API CurlFileDownloadInfo
 {
 public:
-	PRIVATE_API CurlFileDownloadInfo(const FileDownloader::DownloadCallback * _func, uint64_t _maxBufferSize, const fs::path & _path)
-	:	maxBufferSize(_maxBufferSize),
-		func(_func),
-		path(_path){}
-
+	PRIVATE_API CurlFileDownloadInfo(const FileDownloader::DownloadCallback &, uint64_t maxBufferSize, const bfs::path & cacheFilePath);
 	PRIVATE_API uint64_t bytesDownloaded();
 	PRIVATE_API bool addData(void * const buffer, uint64_t bytes);
 	PRIVATE_API void callback();
 
 private:
 	const uint64_t maxBufferSize;
-	const FileDownloader::DownloadCallback * func;
-	const fs::path path;
+	const FileDownloader::DownloadCallback & func;
+	const bfs::path path;
 	std::vector<gkbyte_t> dataBuffer;
 	uint64_t _bytesDownloaded = 0;
 };
+
+CurlFileDownloadInfo::CurlFileDownloadInfo(const FileDownloader::DownloadCallback & _func, uint64_t mbs, const bfs::path & cacheFilePath)
+:	maxBufferSize(mbs),
+	func(_func),
+	path(cacheFilePath){}
 
 uint64_t
 CurlFileDownloadInfo::bytesDownloaded()
@@ -87,11 +83,11 @@ CurlFileDownloadInfo::addData(void * const buffer, uint64_t bytes)
 		if((this->dataBuffer.size() + bytes) > (this->maxBufferSize * 1024))
 		{
 			// first create directories
-			if(!fs::exists(this->path.parent_path()))
+			if(!bfs::exists(this->path.parent_path()))
 			{
-				fs::create_directories(this->path.parent_path());
+				bfs::create_directories(this->path.parent_path());
 			}
-			fs::basic_ofstream<gkbyte_t> ofs(this->path, std::ios_base::trunc | std::ios_base::binary);
+			bfs::basic_ofstream<gkbyte_t> ofs(this->path, std::ios_base::trunc | std::ios_base::binary);
 			ofs.write(this->dataBuffer.data(), this->dataBuffer.size());
 			ofs.write(newData, bytes);
 			ofs.close();
@@ -105,7 +101,7 @@ CurlFileDownloadInfo::addData(void * const buffer, uint64_t bytes)
 	}
 	else
 	{
-		fs::basic_ofstream<gkbyte_t> ofs(this->path, std::ios_base::app | std::ios_base::binary);
+		bfs::basic_ofstream<gkbyte_t> ofs(this->path, std::ios_base::app | std::ios_base::binary);
 		ofs.write(newData, bytes);
 	}
 	this->_bytesDownloaded += bytes;
@@ -117,84 +113,141 @@ CurlFileDownloadInfo::callback()
 {
 	if(bytesDownloaded() <= (this->maxBufferSize * 1024))
 	{
-		namespace bio = boost::iostreams;
 		bio::stream<bio::basic_array_source<gkbyte_t>> stream(this->dataBuffer.data(), this->dataBuffer.size());
 		stream.peek();
-		(*this->func)(stream);
+		this->func(stream);
 	}
 	else
 	{
-		fs::basic_ifstream<gkbyte_t> ifs(this->path);
-		(*this->func)(ifs);
+		bfs::basic_ifstream<gkbyte_t> ifs(this->path);
+		this->func(ifs);
 		ifs.close();
-		fs::remove(this->path);
+		bfs::remove(this->path);
 	}
 }
 
-class PRIVATE_API CURLPrivateData
+class CurlFileDownloader::PImpl
 {
 public:
-	PRIVATE_API CURLPrivateData(const char * const url, const std::string & userAgent,
-	                            std::shared_ptr<PropertyResolver>, Logger &, bool debug);
-	PRIVATE_API ~CURLPrivateData();
+	PImpl(Logger &, const std::string & userAgent, const bfs::path & cacheDir, uint16_t connectionTimeout, uint16_t retryPause,
+	      uint16_t maxResolveRetries, uint16_t maxConnectRetries, uint32_t maxBufferSize);
+	~PImpl();
+
+	void performCurl(uint16_t timeout = 0, uint16_t resolveFailed = 0, uint16_t connectFailed = 0);
+	boost::filesystem::path resolveDownloadPath(const std::string & url);
 
 	CURL * handle;
-	std::string postData;
-	CurlFileDownloadInfo * downloadInfo = nullptr;
-	uint16_t resolveFailed = 0;
-	uint16_t connectFailed = 0;
 	Logger & logger;
+
+	bfs::path cacheDir;
+	uint32_t retryPause;
+	uint16_t maxResolveRetries;
+	uint16_t maxConnectRetries;
+	uint32_t maxBufferSize;
 };
 
 static int
-curlDebugCallback(CURL *, curl_infotype type, char * data, size_t length, CURLPrivateData * curlData)
+curlDebugCallback(CURL *, curl_infotype type, char * data, size_t length, Logger * loggerPtr)
 {
 	if(type == CURLINFO_TEXT || type == CURLINFO_HEADER_IN || type == CURLINFO_HEADER_OUT)
 	{
+		Logger & logger = *loggerPtr;
 		std::string line(data, length - 1);
-		curlData->logger << LogLevel::Debug << line << endl;
+		logger << LogLevel::Debug << line << endl;
 	}
 	return 0;
 }
 
-CURLPrivateData::CURLPrivateData(const char * const url, const std::string & userAgent,
-                                 std::shared_ptr<PropertyResolver> pr, Logger & _logger, bool debug)
+CurlFileDownloader::PImpl::PImpl(Logger & _logger, const std::string & userAgent, const bfs::path & _cacheDir, uint16_t connectionTimeout, uint16_t _retryPause, uint16_t mrr, uint16_t mcr, uint32_t mbs)
 :	handle(curl_easy_init()),
-	logger(_logger)
+	logger(_logger),
+	cacheDir(_cacheDir),
+	retryPause(_retryPause),
+	maxResolveRetries(mrr),
+	maxConnectRetries(mcr),
+	maxBufferSize(mbs)
 {
-	curl_easy_setopt(this->handle, CURLOPT_URL, url);
-	curl_easy_setopt(this->handle, CURLOPT_NOSIGNAL, 1);
 	curl_easy_setopt(this->handle, CURLOPT_USERAGENT, userAgent.c_str());
-	curl_easy_setopt(this->handle, CURLOPT_CONNECTTIMEOUT_MS, pr->get<uint16_t>("network.connection.timeout"));
-	if(debug)
+	curl_easy_setopt(this->handle, CURLOPT_FOLLOWLOCATION, 1);
+	// needed for multithreading
+	curl_easy_setopt(this->handle, CURLOPT_NOSIGNAL, 1);
+	curl_easy_setopt(this->handle, CURLOPT_CONNECTTIMEOUT_MS, connectionTimeout);
+	// always enable cookie engine
+	curl_easy_setopt(this->handle, CURLOPT_COOKIEJAR, nullptr);
+	if(this->logger.isEnabled(LogLevel::Debug))
 	{
 		curl_easy_setopt(this->handle, CURLOPT_VERBOSE, 1);
-		curl_easy_setopt(this->handle, CURLOPT_DEBUGDATA, this);
+		curl_easy_setopt(this->handle, CURLOPT_DEBUGDATA, &this->logger);
 		curl_easy_setopt(this->handle, CURLOPT_DEBUGFUNCTION, &curlDebugCallback);
 	}
+	this->logger << LogLevel::Debug << "new curl handle with user-agent: " << userAgent << endl;
 }
 
-CURLPrivateData::~CURLPrivateData()
+CurlFileDownloader::PImpl::~PImpl()
 {
-	if(this->downloadInfo != nullptr)
-	{
-		delete downloadInfo;
-	}
 	curl_easy_cleanup(this->handle);
 }
 
-static uint64_t
-curlFileDownloadCallback(void * const buffer, size_t size, size_t nrMem,
-                         CURLPrivateData * data)
+void
+CurlFileDownloader::PImpl::performCurl(uint16_t timeout, uint16_t resolveFailed, uint16_t connectFailed)
 {
-	uint64_t sizeInBytes = size * nrMem;
-	CurlFileDownloadInfo * info = data->downloadInfo;
-	if(!info->addData(buffer, sizeInBytes))
+	if(timeout > 0)
 	{
-		return -1;
+		std::this_thread::sleep_for(std::chrono::milliseconds(timeout));
 	}
-	return sizeInBytes;
+
+	CURLcode code = curl_easy_perform(this->handle);
+	switch(code)
+	{
+		case CURLE_OK: // 0
+			// everything okay
+			this->logger << LogLevel::Trace << "CURL returned without errors" << endl;
+			break;
+		case CURLE_COULDNT_RESOLVE_HOST: // 6
+			if(resolveFailed < this->maxResolveRetries)
+			{
+				this->logger << LogLevel::Warn << "CURL couldn't resolve host, retrying" << endl;
+				this->performCurl(this->retryPause, ++resolveFailed, connectFailed);
+			}
+			else
+			{
+				this->logger << LogLevel::Error << "CURL couldn't resolve host after " << this->maxResolveRetries << " retries" << endl;
+			}
+			break;
+		case CURLE_COULDNT_CONNECT: // 7
+			if(connectFailed < this->maxConnectRetries)
+			{
+				this->logger << LogLevel::Warn << "CURL couldn't connect to host, retrying" << endl;
+				this->performCurl(this->retryPause, resolveFailed, ++connectFailed);
+			}
+			else
+			{
+				this->logger << LogLevel::Error << "CURL couldn't connect to host after " << this->maxConnectRetries << " retries" << endl;
+			}
+			break;
+		default:
+			// unhandled error
+			this->logger << LogLevel::Fatal << "CURL error \"" << curl_easy_strerror(code) << "\" (" << code << ") unhandled, please report a bug" << endl;
+			break;
+	}
 }
+
+boost::filesystem::path
+CurlFileDownloader::PImpl::resolveDownloadPath(const std::string & url)
+{
+	std::string uri = url;
+	// frist cut the protocoll
+	size_t pos = uri.find("://");
+	uri.erase(0, pos + 3);
+	balgo::replace_all(uri, ":", "_");
+	return this->cacheDir / uri;
+}
+
+CurlFileDownloader::CurlFileDownloader(Logger & logger, const std::string & userAgent, const bfs::path & cacheDir, uint16_t connectionTimeout,
+                                       uint16_t retryPause, uint16_t maxResolveRetries, uint16_t maxConnectRetries, uint32_t maxBufferSize)
+:	data(new PImpl(logger, userAgent, cacheDir, connectionTimeout, retryPause, maxResolveRetries, maxConnectRetries, maxBufferSize)){}
+
+CurlFileDownloader::~CurlFileDownloader(){}
 
 static uint64_t
 emptyCurlFileDownloadCallback(void * const, size_t size, size_t nrMem, void *)
@@ -202,244 +255,102 @@ emptyCurlFileDownloadCallback(void * const, size_t size, size_t nrMem, void *)
 	return size * nrMem;
 }
 
-static std::string
-buildUserAgentString(const boost::any & configValue)
+static uint64_t
+curlFileDownloadCallback(void * const buffer, size_t size, size_t nrMem, CurlFileDownloadInfo * cfdi)
 {
-	if(configValue.empty())
+	uint64_t sizeInBytes = size * nrMem;
+	if(!cfdi->addData(buffer, sizeInBytes))
 	{
-		curl_version_info_data * data = curl_version_info(CURLVERSION_NOW);
-		std::stringstream stream;
-		stream << "GameKeeper/0.1 libcurl/" << data->version;
-		if(data->ssl_version != nullptr)
-		{
-			stream << ' ' << data->ssl_version;
-		}
-
-		if(data->libz_version != nullptr)
-		{
-			stream << " zlib/" << data->libz_version;
-		}
-		return stream.str();
+		return -1;
 	}
-	return boost::any_cast<std::string>(configValue);
+	return sizeInBytes;
 }
-
-class CurlFileDownloader::PImpl
-{
-public:
-	PImpl(Logger &, std::shared_ptr<PropertyResolver>, std::shared_ptr<UserPaths>);
-
-    std::shared_ptr<PropertyResolver> propertyResolver;
-    std::shared_ptr<UserPaths> userpaths;
-    Logger & logger;
-    const std::string userAgent;
-    bool debug;
-
-    void performCurl(CURLPrivateData & curl, uint32_t timeout = 0);
-    void handleFileDownload(CURLPrivateData & curl, FileDownloader::DownloadCallback * func,
-                                        const char * const url);
-    boost::filesystem::path resolveDownloadPath(const char * const url);
-
-    static const std::unordered_set<std::string> supportedProtocols;
-};
-
-CurlFileDownloader::PImpl::PImpl(Logger & l, std::shared_ptr<PropertyResolver> pr, std::shared_ptr<UserPaths> up)
-:	propertyResolver(pr),
-	userpaths(up),
-	logger(l),
-	userAgent(buildUserAgentString(pr->get("network.user_agent"))),
-	debug(pr->get<bool>("network.debug"))
-{
-
-}
-
-CurlFileDownloader::CurlFileDownloader(std::shared_ptr<LoggerFactory> loggerFactory,
-                                       std::shared_ptr<PropertyResolver> propertyResolver,
-                                       std::shared_ptr<UserPaths> userpaths)
-:	data(new PImpl(loggerFactory->getComponentLogger("IO.curl"), propertyResolver, userpaths))
-{
-	this->data->logger << LogLevel::Debug << "init curl with user-agent: " << this->data->userAgent << endl;
-}
-
-CurlFileDownloader::~CurlFileDownloader(){}
 
 void
-CurlFileDownloader::PImpl::handleFileDownload(CURLPrivateData & curl, FileDownloader::DownloadCallback * func, const char * const url)
+CurlFileDownloader::postRequest(const std::string & url, const Form & form)
 {
-	boost::filesystem::path downloadPath = this->resolveDownloadPath(url);
-	this->logger << LogLevel::Debug << "try to download file from: " << url << " at: " << downloadPath.string() << endl;
-	curl.downloadInfo =
-		new CurlFileDownloadInfo(func, this->propertyResolver->get<uint32_t>("network.download.max_buffer_size"),
-		                         downloadPath);
-	curl_easy_setopt(curl.handle, CURLOPT_WRITEFUNCTION, &curlFileDownloadCallback);
-	curl_easy_setopt(curl.handle, CURLOPT_WRITEDATA, &curl);
-	this->performCurl(curl);
-	curl.downloadInfo->callback();
+	this->data->logger << LogLevel::Debug << "post request to: " << url << endl;
+
+	if(!form.empty())
+	{
+		std::ostringstream formLineBuilder;
+		for(const FileDownloader::FormField & formField : form)
+		{
+			formLineBuilder << formField.first << '=' << formField.second << '&';
+		}
+		curl_easy_setopt(this->data->handle, CURLOPT_POSTFIELDSIZE, -1L);
+		curl_easy_setopt(this->data->handle, CURLOPT_COPYPOSTFIELDS, formLineBuilder.str().c_str());
+	}
+	else
+	{
+		curl_easy_setopt(this->data->handle, CURLOPT_POSTFIELDSIZE, 0);
+	}
+
+	curl_easy_setopt(this->data->handle, CURLOPT_URL, url.c_str());
+	curl_easy_setopt(this->data->handle, CURLOPT_POST, 1);
+	// we don't need the body of the post result (for now)
+	curl_easy_setopt(this->data->handle, CURLOPT_WRITEFUNCTION, &emptyCurlFileDownloadCallback);
+	curl_easy_setopt(this->data->handle, CURLOPT_WRITEDATA, nullptr);
+	this->data->performCurl();
+	// clear unneded stuff
 }
 
-static void
-enableCookies(CURLPrivateData & curl)
+void
+CurlFileDownloader::getRequest(const std::string & url, const FileDownloader::DownloadCallback & callback)
 {
-	curl_easy_setopt(curl.handle, CURLOPT_COOKIEJAR, nullptr);
+	bfs::path cacheFilePath = this->data->resolveDownloadPath(url);
+	this->data->logger << LogLevel::Debug << "try to download file from: " << url << " at: " << cacheFilePath.string() << endl;
+	curl_easy_setopt(this->data->handle, CURLOPT_URL, url.c_str());
+	curl_easy_setopt(this->data->handle, CURLOPT_HTTPGET, 1);
+
+	CurlFileDownloadInfo cfdi(callback, this->data->maxBufferSize, cacheFilePath);
+	curl_easy_setopt(this->data->handle, CURLOPT_WRITEFUNCTION, &curlFileDownloadCallback);
+	curl_easy_setopt(this->data->handle, CURLOPT_WRITEDATA, &cfdi);
+	this->data->performCurl();
+	cfdi.callback();
 }
 
-static void
-addCookiesToCurl(const FileDownloader::CookieBuket& cookies, CURLPrivateData & curl)
+void
+CurlFileDownloader::setCookies(const CookieBucket & cookies)
 {
 	if(!cookies.empty())
 	{
 		std::ostringstream cookieLineBuilder;
-		for (const FileDownloader::Cookie & cookie : cookies)
+		for(const FileDownloader::Cookie & cookie : cookies)
 		{
 			cookieLineBuilder << cookie.first << '=' << cookie.second << ";";
 		}
-		std::string cookieLine = cookieLineBuilder.str();
-		curl_easy_setopt(curl.handle, CURLOPT_COOKIE, cookieLine.c_str());
+		curl_easy_setopt(this->data->handle, CURLOPT_COOKIE, cookieLineBuilder.str().c_str());
+	}
+	else
+	{
+		this->clearCookies();
 	}
 }
 
-static FileDownloader::CookieBuket
-getCookies(CURLPrivateData & curl)
+void
+CurlFileDownloader::clearCookies()
+{
+	curl_easy_setopt(this->data->handle, CURLOPT_COOKIE, "");
+}
+
+FileDownloader::CookieBucket
+CurlFileDownloader::getCookies()
 {
 	struct curl_slist * list;
-	FileDownloader::CookieBuket result;
-	curl_easy_getinfo(curl.handle, CURLINFO_COOKIELIST, &list);
+	FileDownloader::CookieBucket result;
+	curl_easy_getinfo(this->data->handle, CURLINFO_COOKIELIST, &list);
 
 	while(list != nullptr)
 	{
 		std::vector<std::string> strings;
-		boost::split(strings, list->data, boost::is_any_of("\t"));
+		balgo::split(strings, list->data, balgo::is_any_of("\t"));
 		result[strings[5]] = strings[6];
 		list = list->next;
 	}
 
 	curl_slist_free_all(list);
 	return result;
-}
-
-static void
-addFormToCurl(const FileDownloader::Form & form, CURLPrivateData & curl)
-{
-	if(!form.empty())
-	{
-		std::ostringstream cookieLineBuilder;
-		for (const FileDownloader::FormField & formField : form)
-		{
-			cookieLineBuilder << formField.first << '=' << formField.second << '&';
-		}
-		curl.postData = cookieLineBuilder.str();
-		curl_easy_setopt(curl.handle, CURLOPT_POSTFIELDS, curl.postData.c_str());
-	}
-}
-
-void
-CurlFileDownloader::downloadFile(const char * const url, DownloadCallback callback)
-{
-	CURLPrivateData curl(url, this->data->userAgent, this->data->propertyResolver, this->data->logger, this->data->debug);
-	this->data->handleFileDownload(curl, &callback, url);
-}
-
-void
-CurlFileDownloader::downloadFileWithCookies(const char * const url, DownloadCallback callback,
-                                            const CookieBuket& cookies)
-{
-	CURLPrivateData curl(url, this->data->userAgent, this->data->propertyResolver, this->data->logger, this->data->debug);
-	addCookiesToCurl(cookies, curl);
-	this->data->handleFileDownload(curl, &callback, url);
-}
-
-CurlFileDownloader::CookieBuket
-CurlFileDownloader::doPostRequestForCookies(const char * const url, const Form& form)
-{
-	this->data->logger << LogLevel::Debug << "try to fetch cookies at: " << url << endl;
-	CURLPrivateData curl(url, this->data->userAgent, this->data->propertyResolver, this->data->logger, this->data->debug);
-	curl_easy_setopt(curl.handle, CURLOPT_WRITEFUNCTION, &emptyCurlFileDownloadCallback);
-
-	enableCookies(curl);
-	addFormToCurl(form, curl);
-
-	this->data->performCurl(curl);
-
-	CurlFileDownloader::CookieBuket result = getCookies(curl);
-
-	return result;
-}
-
-void
-CurlFileDownloader::downloadFileWithForm(const char * const url, DownloadCallback callback, const Form & form)
-{
-	CURLPrivateData curl(url, this->data->userAgent, this->data->propertyResolver, this->data->logger, this->data->debug);
-	addFormToCurl(form, curl);
-	this->data->handleFileDownload(curl, &callback, url);
-}
-
-CurlFileDownloader::CookieBuket
-CurlFileDownloader::downloadFileAndCookiesWithForm(const char * const url, DownloadCallback callback, const Form & form)
-{
-	CURLPrivateData curl(url, this->data->userAgent, this->data->propertyResolver, this->data->logger, this->data->debug);
-	enableCookies(curl);
-	addFormToCurl(form, curl);
-	this->data->handleFileDownload(curl, &callback, url);
-	return getCookies(curl);
-}
-
-void
-CurlFileDownloader::PImpl::performCurl(CURLPrivateData & curl, uint32_t timeout)
-{
-	if(timeout > 0)
-	{
-		std::this_thread::sleep_for(std::chrono::milliseconds(timeout));
-	}
-
-	CURLcode code = curl_easy_perform(curl.handle);
-	switch (code)
-	{
-		case CURLE_OK: // 0
-			// everything okay
-			this->logger << LogLevel::Trace << "CURL returned without errors" << endl;
-			break;
-		case CURLE_COULDNT_RESOLVE_HOST: // 6
-			curl.resolveFailed++;
-			if(curl.resolveFailed < this->propertyResolver->get<uint16_t>("network.resolve.retries"))
-			{
-				this->logger << LogLevel::Warn << "CURL couldn't resolve host, retrying" << endl;
-				this->performCurl(curl, this->propertyResolver->get<uint16_t>("network.time_between_retries"));
-			}
-			else
-			{
-				this->logger << LogLevel::Error << "CURL couldn't resolve host after " << curl.resolveFailed << " retries" << endl;
-			}
-			break;
-		case CURLE_COULDNT_CONNECT: // 7
-			curl.connectFailed++;
-			if(curl.connectFailed < this->propertyResolver->get<uint16_t>("network.connection.retries"))
-			{
-				this->logger << LogLevel::Warn << "CURL couldn't connect to host, retrying" << endl;
-				this->performCurl(curl, this->propertyResolver->get<uint16_t>("network.time_between_retries"));
-			}
-			else
-			{
-				this->logger << LogLevel::Error << "CURL couldn't connect to host after " << curl.connectFailed << " retries" << endl;
-			}
-			break;
-		default:
-			// unhandled error
-			this->logger << LogLevel::Fatal << "CURL error \"" << curl_easy_strerror(code) << "\" (" << code <<
-				") unhandled, please report a bug" << endl;
-			break;
-	}
-}
-
-boost::filesystem::path
-CurlFileDownloader::PImpl::resolveDownloadPath(const char * const url)
-{
-	std::string uri = url;
-	// frist cut the protocoll
-	size_t pos = uri.find("://");
-	uri.erase(0, pos + 3);
-	// now replace some unsupported characters
-	algo::replace_all(uri, ":", "_");
-	return this->userpaths->getCacheFile(std::string("downloads/" + uri));
 }
 
 GAMEKEEPER_NAMESPACE_END(core)
