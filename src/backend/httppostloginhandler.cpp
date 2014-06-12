@@ -24,6 +24,7 @@
 
 #include <boost/algorithm/string/replace.hpp>
 
+#include <gamekeeper/backend/authmanager.h>
 #include <gamekeeper/core/filedownloader.h>
 
 namespace balgo = boost::algorithm;
@@ -33,25 +34,34 @@ GAMEKEEPER_NAMESPACE_START(backend)
 class HTTPPostLoginHandler::PImpl
 {
 public:
-	PImpl(std::map<std::string, std::string> &, std::shared_ptr<core::FileDownloader>);
+	PImpl(std::map<std::string, std::string> &, std::shared_ptr<core::FileDownloader>, std::shared_ptr<AuthManager>);
 
 	std::shared_ptr<core::FileDownloader> hfd;
+	std::shared_ptr<AuthManager> am;
 	std::string loginUrl;
 	std::string logoutUrl;
 	std::string usernameField;
 	std::string passwordField;
+	std::string tokenGroup;
 	std::string username;
 };
 
-HTTPPostLoginHandler::PImpl::PImpl(std::map<std::string, std::string> & config, std::shared_ptr<core::FileDownloader> _hfd)
+HTTPPostLoginHandler::PImpl::PImpl(std::map<std::string, std::string> & config, std::shared_ptr<core::FileDownloader> _hfd,
+                                   std::shared_ptr<AuthManager> _am)
 :	hfd(_hfd),
+	am(_am),
 	loginUrl(config.at("auth.loginurl")),
 	logoutUrl(config.at("auth.logouturl")),
 	usernameField(config.at("authfield.username")),
-	passwordField(config.at("authfield.password")){}
+	passwordField(config.at("authfield.password")),
+	tokenGroup(config.at("store.name"))
+{
+	this->hfd->setCookies(this->am->readAllTokens(this->tokenGroup));
+}
 
-HTTPPostLoginHandler::HTTPPostLoginHandler(std::map<std::string, std::string> & config, std::shared_ptr<core::FileDownloader> hfd)
-:	data(new HTTPPostLoginHandler::PImpl(config, hfd)){}
+HTTPPostLoginHandler::HTTPPostLoginHandler(std::map<std::string, std::string> & config, std::shared_ptr<core::FileDownloader> hfd,
+                                           std::shared_ptr<AuthManager> am)
+:	data(new HTTPPostLoginHandler::PImpl(config, hfd, am)){}
 
 bool
 HTTPPostLoginHandler::login(const std::string & username, const std::string & password)
@@ -65,13 +75,29 @@ HTTPPostLoginHandler::login(const std::string & username, const std::string & pa
 		{this->data->passwordField, password}
 	};
 	this->data->hfd->postRequest(this->data->loginUrl, form);
-	return !this->data->hfd->getCookies().empty();
+	core::FileDownloader::CookieBucket cs = this->data->hfd->getCookies();
+
+	// save tokens
+	for(const auto & t : cs)
+	{
+		this->data->am->saveToken(t.first, t.second, this->data->tokenGroup);
+	}
+
+	return !cs.empty();
 }
 
 void
 HTTPPostLoginHandler::logout()
 {
 	this->data->hfd->postRequest(this->data->logoutUrl);
+	// forciblie clear cookies
+	this->data->hfd->clearCookies();
+}
+
+bool
+HTTPPostLoginHandler::isLoggedIn() const
+{
+	return !this->data->hfd->getCookies().empty();
 }
 
 void

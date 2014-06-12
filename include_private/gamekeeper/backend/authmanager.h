@@ -18,26 +18,25 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef GAMEKEEPER_BACKEND_LOGINHANDLER_H
-#define GAMEKEEPER_BACKEND_LOGINHANDLER_H 1
+#ifndef GAMEKEEPER_BACKEND_AUTHMANAGER_H
+#define GAMEKEEPER_BACKEND_AUTHMANAGER_H 1
 
 #include <gamekeeper/core/common.h>
 
-#include <gamekeeper/core/filedownloader.h>
+#include <unordered_map>
+
 #include <gamekeeper/core/interface.h>
 
 GAMEKEEPER_NAMESPACE_START(backend)
 
-interface PUBLIC_API LoginHandler
+interface PUBLIC_API AuthManager
 {
-	GAMEKEEPER_INTERFACE_METHODS(LoginHandler);
-
-	PUBLIC_API virtual bool login(const std::string & username, const std::string & password) = 0;
-	PUBLIC_API virtual void logout() = 0;
-	PUBLIC_API virtual bool isLoggedIn() const = 0;
-	PUBLIC_API virtual void downloadFile(const std::string & url, core::FileDownloader::DownloadCallback) = 0;
+	GAMEKEEPER_INTERFACE_METHODS(AuthManager);
+	PUBLIC_API virtual void saveToken(const std::string & key, const std::string & value, const std::string & group) = 0;
+	PUBLIC_API virtual std::string readToken(const std::string & key, const std::string & group) = 0;
+	PUBLIC_API virtual std::unordered_map<std::string, std::string> readAllTokens(const std::string & group) = 0;
 };
 
 GAMEKEEPER_NAMESPACE_END(backend)
 
-#endif //GAMEKEEPER_BACKEND_GAMELISTPARSER_H
+#endif //GAMEKEEPER_BACKEND_AUTHMANAGER_H

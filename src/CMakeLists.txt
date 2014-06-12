@@ -7,6 +7,10 @@ include_directories(
 # needed for windows
 add_definitions(-DBUILDING_DLL)
 
+if(WITH_GNOME_KEYRING)
+  add_definitions(-DWITH_GNOME_KEYRING)
+endif()
+
 add_subdirectory(utils)
 add_subdirectory(client)
 add_subdirectory(core)

@@ -65,22 +65,25 @@ GenericPrototype::startEventLoop()
 	{
 		auto store = sc->get(storeName);
 
-		std::string username;
-		std::string password;
+		// we have only to login if the store isn't logged in
+		if(!store->isLoggedIn())
+		{
+			std::string username;
+			std::string password;
 
-		std::cout << "enter username" << std::endl;
-		std::getline(std::cin, username);
-		std::cout << "enter password" << std::endl;
-		std::getline(std::cin, password);
+			std::cout << "enter username" << std::endl;
+			std::getline(std::cin, username);
+			std::cout << "enter password" << std::endl;
+			std::getline(std::cin, password);
 
-		store->login(username, password);
+			store->login(username, password);
+		}
 
 		for(const auto & g : store->getAllGames())
 		{
 			this->logger << core::LogLevel::Debug << "id[" << g->getId() << "] name[" << g->getName() << "] platforms[" << platformsToString(g->getPlatforms()) << "]" << core::endl;
 		}
 
-		store->logout();
 		std::cout << "enter name of game store" << std::endl;
 	}
 }

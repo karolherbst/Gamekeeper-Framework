@@ -5,6 +5,8 @@
 option(BUILD_TESTS "enables the build of unit tests" OFF)
 option(BUILD_PROTOTYPES "enables the build of prototypes" OFF)
 
+option(WITH_GNOME_KEYRING "enables the gnome-keyring authmanager" OFF)
+
 #######################################################################################################################
 # doc options
 #######################################################################################################################

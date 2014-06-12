@@ -18,26 +18,23 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef GAMEKEEPER_BACKEND_LOGINHANDLER_H
-#define GAMEKEEPER_BACKEND_LOGINHANDLER_H 1
+#ifndef GAMEKEEPER_BACKEND_GNOMEKEYRINGMANAGER_H
+#define GAMEKEEPER_BACKEND_GNOMEKEYRINGMANAGER_H 1
 
 #include <gamekeeper/core/common.h>
 
-#include <gamekeeper/core/filedownloader.h>
-#include <gamekeeper/core/interface.h>
+#include <gamekeeper/backend/authmanager.h>
 
 GAMEKEEPER_NAMESPACE_START(backend)
 
-interface PUBLIC_API LoginHandler
+class PUBLIC_API GnomeKeyringManager : public AuthManager
 {
-	GAMEKEEPER_INTERFACE_METHODS(LoginHandler);
-
-	PUBLIC_API virtual bool login(const std::string & username, const std::string & password) = 0;
-	PUBLIC_API virtual void logout() = 0;
-	PUBLIC_API virtual bool isLoggedIn() const = 0;
-	PUBLIC_API virtual void downloadFile(const std::string & url, core::FileDownloader::DownloadCallback) = 0;
+public:
+	PRIVATE_API virtual void saveToken(const std::string & key, const std::string & value, const std::string & group) override;
+	PRIVATE_API virtual std::string readToken(const std::string & key, const std::string & group) override;
+	PRIVATE_API virtual std::unordered_map<std::string, std::string> readAllTokens(const std::string & group) override;
 };
 
 GAMEKEEPER_NAMESPACE_END(backend)
 
-#endif //GAMEKEEPER_BACKEND_GAMELISTPARSER_H
+#endif //GAMEKEEPER_BACKEND_GNOMEKEYRINGMANAGER_H

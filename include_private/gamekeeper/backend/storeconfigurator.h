@@ -35,6 +35,8 @@ GAMEKEEPER_NAMESPACE_END(core)
 
 GAMEKEEPER_NAMESPACE_START(backend)
 
+class AuthManager;
+
 /**
  * @class StoreConfigurator storeconfigurator <gamekeeper/backend/storconfigurator.h>
  *
@@ -44,10 +46,11 @@ GAMEKEEPER_NAMESPACE_START(backend)
 class PUBLIC_API StoreConfigurator
 {
 public:
-	PUBLIC_API StoreConfigurator(std::shared_ptr<core::FileDownloaderFactory>);
+	PUBLIC_API StoreConfigurator(std::shared_ptr<core::FileDownloaderFactory>, std::shared_ptr<AuthManager>);
 	PUBLIC_API StoreConfiguration configure(const boost::filesystem::path & configFile);
 private:
 	std::shared_ptr<core::FileDownloaderFactory> fdf;
+	std::shared_ptr<AuthManager> am;
 };
 
 GAMEKEEPER_NAMESPACE_END(backend)
