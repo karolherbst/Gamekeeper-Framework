@@ -33,6 +33,7 @@ file(GLOB headers
   pch.h
   ${GAMEKEEPER_PRIVATE_INCLUDE_DIR}/gamekeeper/core/boostpopropertyresolver.h
   ${GAMEKEEPER_PRIVATE_INCLUDE_DIR}/gamekeeper/core/curlfiledownloader.h
+  ${GAMEKEEPER_PRIVATE_INCLUDE_DIR}/gamekeeper/core/curlfiledownloaderfactory.h
   ${GAMEKEEPER_PRIVATE_INCLUDE_DIR}/gamekeeper/core/exception.h
   ${GAMEKEEPER_PRIVATE_INCLUDE_DIR}/gamekeeper/core/gnuinstalldirspaths.h
   ${GAMEKEEPER_PRIVATE_INCLUDE_DIR}/gamekeeper/core/log4cppLogger.h
@@ -47,6 +48,7 @@ file(GLOB headers
 file(GLOB sources
   boostpopropertyresolver.cpp
   curlfiledownloader.cpp
+  curlfiledownloaderfactory.cpp
   exception.cpp
   gnuinstalldirspaths.cpp
   log4cppLogger.cpp

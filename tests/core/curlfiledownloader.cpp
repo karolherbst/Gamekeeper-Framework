@@ -23,8 +23,11 @@
 #include <exception>
 #include <sstream>
 
-#include <gamekeeper/core/curlfiledownloader.h>
+#include <gamekeeper/core/curlfiledownloaderfactory.h>
+#include <gamekeeper/core/filedownloader.h>
 #include <gamekeeper/core/log4cpploggerFactory.h>
+#include <gamekeeper/core/propertyresolver.h>
+#include <gamekeeper/core/userpaths.h>
 #include <gamekeeper/utils/stringutils.h>
 
 #include "webserverfixture.h"
@@ -42,7 +45,7 @@ using namespace gamekeeper::utils;
 { \
 	bool handled = false; \
 	std::exception_ptr ex; \
-	this->fileDownloader->downloadFile(url, [CURL_DOWNLOAD_TEST_CAPTURE](FileDownloader::ByteIstream & is) -> bool \
+	this->fileDownloaderFactory->create()->getRequest(url, [CURL_DOWNLOAD_TEST_CAPTURE](FileDownloader::ByteIstream & is) -> bool \
 	{ \
 		try { body } catch (...) { ex = std::current_exception(); } \
 	}); \
@@ -54,18 +57,18 @@ using namespace gamekeeper::utils;
 class CurlFiledownloaderTest : public gamekeeper::test::WebServerFicture
 {
 protected:
-	HttpFileDownloader * fileDownloader = nullptr;
+	FileDownloaderFactory * fileDownloaderFactory = nullptr;
 
 	virtual void SetUp() override
 	{
-		this->fileDownloader = new CurlFileDownloader(this->container->resolve<LoggerFactory>(),
-		                                              this->container->resolve<PropertyResolver>(),
-		                                              this->container->resolve<UserPaths>());
+		this->fileDownloaderFactory = new CurlFileDownloaderFactory(this->container->resolve<LoggerFactory>(),
+		                                                            this->container->resolve<PropertyResolver>(),
+		                                                            this->container->resolve<UserPaths>());
 	}
 
 	virtual void TearDown() override
 	{
-		delete this->fileDownloader;
+		delete this->fileDownloaderFactory;
 	}
 };
 
@@ -96,7 +99,9 @@ TEST_F(CurlFiledownloaderTest, servertest)
 TEST_F(CurlFiledownloaderTest, cookieTest)
 {
 	bool handled = false;
-	HttpFileDownloader::CookieBuket cb = this->fileDownloader->doPostRequestForCookies("http://localhost:8080/cookies/type/value");
+	auto fd = this->fileDownloaderFactory->create();
+	fd->postRequest("http://localhost:8080/cookies/type/value");
+	FileDownloader::CookieBucket cb = fd->getCookies();
 	EXPECT_EQ("value", cb["type"]);
 }
 

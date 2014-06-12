@@ -4,7 +4,7 @@
 #include <boost/program_options/variables_map.hpp>
 
 #include <gamekeeper/client/autowire.h>
-#include <gamekeeper/core/httpfiledownloader.h>
+#include <gamekeeper/core/filedownloader.h>
 #include <gamekeeper/core/logger.h>
 #include <gamekeeper/core/loggerStream.h>
 #include <gamekeeper/model/game.h>
@@ -21,11 +21,11 @@ using namespace gamekeeper::core;
 using namespace gamekeeper::utils;
 namespace po = boost::program_options;
 
-typedef HttpFileDownloader::CookieBuket CookieBuket;
-typedef HttpFileDownloader::Cookie Cookie;
-typedef HttpFileDownloader::Form Form;
+typedef FileDownloader::CookieBucket CookieBucket;
+typedef FileDownloader::Cookie Cookie;
+typedef FileDownloader::Form Form;
 
-static std::shared_ptr<HttpFileDownloader> fileDownloader;
+static std::shared_ptr<FileDownloader> fileDownloader;
 
 HBPrototype::HBPrototype(gamekeeper::core::Logger& _logger)
 :	logger(_logger){}
@@ -38,7 +38,7 @@ GAMECLIENT_ADD_OPTIONS({
 void
 HBPrototype::init(const ConfigMap & configMap)
 {
-	fileDownloader = gamekeeper::client::Autowire<gamekeeper::core::HttpFileDownloader>();
+	fileDownloader = gamekeeper::client::Autowire<gamekeeper::core::FileDownloader>();
 
 	this->logger << LogLevel::Info << "init" << endl;
 
@@ -67,9 +67,10 @@ HBPrototype::startEventLoop()
 	form["username"] = this->username;
 	form["password"] = this->userpass;
 
-	CookieBuket cookies = fileDownloader->doPostRequestForCookies("https://www.humblebundle.com/login", form);
-	fileDownloader->downloadFileWithCookies("https://www.humblebundle.com/home",
-	                                        std::bind(&HBPrototype::handleRequest, this, p::_1), cookies);
+	fileDownloader->postRequest("https://www.humblebundle.com/login", form);
+	CookieBucket cookies = fileDownloader->getCookies();
+	fileDownloader->setCookies(cookies);
+	fileDownloader->getRequest("https://www.humblebundle.com/home", std::bind(&HBPrototype::handleRequest, this, p::_1));
 	this->doPythonStuff();
 }
 

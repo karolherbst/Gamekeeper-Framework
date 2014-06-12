@@ -24,7 +24,8 @@
 #include <gamekeeper/core/common.h>
 
 #include <functional>
-#include <istream>
+#include <iostream>
+#include <unordered_map>
 
 #include <gamekeeper/core/interface.h>
 
@@ -33,9 +34,8 @@ GAMEKEEPER_NAMESPACE_START(core)
 /**
  * @interface FileDownloader filedownloader.h <gamekeeper/core/filedownloader.h>
  *
- * This interface provides basic operations to download files over a network. It abstracts from protocols and doesn't
- * provide functionality special to a specific protocol. If you want to use a specific protocol you should use a more
- * specilized interface instead.
+ * This interface provides basic operations to download files over a network. An Implementation shall support
+ * HTTP(S) and (S)FTP(S).
  *
  * @author Karol Herbst
  * @since 0
@@ -46,39 +46,23 @@ interface PUBLIC_API FileDownloader
 
 	typedef std::basic_istream<gkbyte_t> ByteIstream;
 
-	/**
-	 * the callback function signature primary for lambdas
-	 *
-	 * @author Karol Herbst
-	 * @since 0
-	 *
-	 * @param[in] buffer the buffer with the raw data
-	 * @param[in] bufferSize the size of @p buffer
-	 * @return true if there was no error while handling the callback
-	 */
 	typedef std::function<bool (ByteIstream &)> DownloadCallback;
 
-	/**
-	 * checks if the implementation supports the givven protocol
-	 *
-	 * @author Karol Herbst
-	 * @since 0
-	 *
-	 * @param[in] protocolName the name of the protocol
-	 * @return true if the implementation supports @p protocolName
-	 */
-	PUBLIC_API virtual bool supportsProtocol(const char * const protocolName) = 0;
+	typedef std::unordered_map<std::string, std::string> CookieBucket;
 
-	/**
-	 * downloads the file behind the given location
-	 *
-	 * @author Karol Herbst
-	 * @since 0
-	 *
-	 * @param[in] url the url
-	 * @param[in] callback the callback function
-	 */
-	PUBLIC_API virtual void downloadFile(const char * const url, DownloadCallback callback) = 0;
+	typedef std::pair<std::string, std::string> Cookie;
+
+	typedef std::unordered_map<std::string, std::string> Form;
+
+	typedef std::pair<std::string, std::string> FormField;
+
+	PUBLIC_API virtual void getRequest(const std::string & url, const DownloadCallback & callback) = 0;
+
+	PUBLIC_API virtual void postRequest(const std::string & url, const Form & form = Form()) = 0;
+
+	PUBLIC_API virtual void setCookies(const CookieBucket & cookies) = 0;
+	PUBLIC_API virtual CookieBucket getCookies() = 0;
+	PUBLIC_API virtual void clearCookies() = 0;
 };
 
 GAMEKEEPER_NAMESPACE_END(core)

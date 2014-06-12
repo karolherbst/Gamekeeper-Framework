@@ -15,7 +15,7 @@ add_custom_target(headers
     gamekeeper/core/bundlepaths.h
     gamekeeper/core/common.h
     gamekeeper/core/filedownloader.h
-    gamekeeper/core/httpfiledownloader.h
+    gamekeeper/core/filedownloaderfactory.h
     gamekeeper/core/interface.h
     gamekeeper/core/logger.h
     gamekeeper/core/loggerStream.h

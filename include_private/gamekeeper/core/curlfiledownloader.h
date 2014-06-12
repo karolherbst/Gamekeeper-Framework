@@ -24,37 +24,32 @@
 #include <gamekeeper/core/common.h>
 
 #include <memory>
-#include <unordered_set>
-
-#include <gamekeeper/core/httpfiledownloader.h>
-#include <gamekeeper/core/propertyresolver.h>
-#include <gamekeeper/core/userpaths.h>
 
 #include <boost/filesystem/path.hpp>
 
+#include <gamekeeper/core/filedownloader.h>
+
 GAMEKEEPER_NAMESPACE_START(core)
 
-class CURLPrivateData;
 interface Logger;
-interface LoggerFactory;
 
-class PUBLIC_API CurlFileDownloader : public HttpFileDownloader
+class PUBLIC_API CurlFileDownloader : public FileDownloader
 {
 public:
-	PUBLIC_API CurlFileDownloader(std::shared_ptr<LoggerFactory>, std::shared_ptr<PropertyResolver>, std::shared_ptr<UserPaths>);
+	PUBLIC_API CurlFileDownloader(Logger & logger, const std::string & userAgent, const boost::filesystem::path & cacheDir,
+	                              uint16_t connectionTimeout, uint16_t retryPause, uint16_t maxResolveRetries, uint16_t maxConnectRetries,
+	                              uint32_t maxBufferSize);
 	PRIVATE_API virtual ~CurlFileDownloader();
-	PRIVATE_API virtual bool supportsProtocol(const char * const protocolName) override;
-	PRIVATE_API virtual void downloadFile(const char * const url, DownloadCallback callback) override;
-	PRIVATE_API virtual void downloadFileWithCookies(const char * const url, DownloadCallback callback,
-	                                                 const CookieBuket& cookies) override;
-	PRIVATE_API virtual CookieBuket doPostRequestForCookies(const char * const url, const Form& form) override;
-	PRIVATE_API virtual void downloadFileWithForm(const char * const url, DownloadCallback callback, const Form & form) override;
-	PRIVATE_API virtual CookieBuket downloadFileAndCookiesWithForm(const char * const url, DownloadCallback callback,
-                                                                       const Form & form) override;
+
+	PRIVATE_API virtual void getRequest(const std::string & url, const DownloadCallback & callback) override;
+	PRIVATE_API virtual void postRequest(const std::string & url, const Form & form) override;
+
+	PRIVATE_API virtual void setCookies(const CookieBucket & cookies) override;
+	PRIVATE_API virtual CookieBucket getCookies() override;
+	PRIVATE_API virtual void clearCookies() override;
 private:
 	class PRIVATE_API PImpl;
-
-    std::unique_ptr<CurlFileDownloader::PImpl> data;
+	std::unique_ptr<CurlFileDownloader::PImpl> data;
 };
 
 GAMEKEEPER_NAMESPACE_END(core)

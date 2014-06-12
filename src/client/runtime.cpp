@@ -40,7 +40,7 @@
 #include <gamekeeper/core/logger.h>
 #include <gamekeeper/core/loggerStream.h>
 #include <gamekeeper/core/boostpopropertyresolver.h>
-#include <gamekeeper/core/curlfiledownloader.h>
+#include <gamekeeper/core/curlfiledownloaderfactory.h>
 #include <gamekeeper/core/log4cpploggerFactory.h>
 #include <gamekeeper/core/stdc++11threadmanager.h>
 #include <gamekeeper/core/xdgpaths.h>
@@ -187,10 +187,9 @@ GameKeeperRuntime::main(int argc, const char* argv[], NewInstanceFuncPtr instanc
 	containerBuilder.registerType<BoostPOPropertyResolver>(CREATE_CAPTURED([&vm], new BoostPOPropertyResolver(vm)))->
 		as<PropertyResolver>()->
 		singleInstance();
-	containerBuilder.registerType<CurlFileDownloader>(
-		CREATE(new CurlFileDownloader(INJECT(LoggerFactory), INJECT(PropertyResolver), INJECT(UserPaths))))->
-		as<FileDownloader>()->
-		as<HttpFileDownloader>()->
+	containerBuilder.registerType<CurlFileDownloaderFactory>(
+		CREATE(new CurlFileDownloaderFactory(INJECT(LoggerFactory), INJECT(PropertyResolver), INJECT(UserPaths))))->
+		as<FileDownloaderFactory>()->
 		singleInstance();
 	containerBuilder.registerType<THREADHELPERCLASS>()->
 		as<NativeThreadHelper>()->
@@ -202,7 +201,7 @@ GameKeeperRuntime::main(int argc, const char* argv[], NewInstanceFuncPtr instanc
 		as<ThreadFactory>()->
 		singleInstance();
 
-	containerBuilder.registerType<StoreManager>(CREATE(new StoreManager(INJECT(LoggerFactory), INJECT(BundlePaths), INJECT(HttpFileDownloader))))->
+	containerBuilder.registerType<StoreManager>(CREATE(new StoreManager(INJECT(LoggerFactory), INJECT(BundlePaths), INJECT(FileDownloaderFactory))))->
 		as<StoreManager>()->
 		singleInstance();
 

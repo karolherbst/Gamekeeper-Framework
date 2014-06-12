@@ -22,40 +22,35 @@
 
 #include <gamekeeper/backend/httppostloginhandler.h>
 
-#include <unordered_map>
-
 #include <boost/algorithm/string/replace.hpp>
 
-#include <gamekeeper/core/httpfiledownloader.h>
+#include <gamekeeper/core/filedownloader.h>
 
 namespace balgo = boost::algorithm;
 
 GAMEKEEPER_NAMESPACE_START(backend)
 
-typedef std::unordered_map<std::string, std::string> Tokens;
-
 class HTTPPostLoginHandler::PImpl
 {
 public:
-	PImpl(std::map<std::string, std::string> &, std::shared_ptr<core::HttpFileDownloader>);
+	PImpl(std::map<std::string, std::string> &, std::shared_ptr<core::FileDownloader>);
 
-	std::shared_ptr<core::HttpFileDownloader> hfd;
+	std::shared_ptr<core::FileDownloader> hfd;
 	std::string loginUrl;
 	std::string logoutUrl;
 	std::string usernameField;
 	std::string passwordField;
 	std::string username;
-	Tokens tokens;
 };
 
-HTTPPostLoginHandler::PImpl::PImpl(std::map<std::string, std::string> & config, std::shared_ptr<core::HttpFileDownloader> _hfd)
+HTTPPostLoginHandler::PImpl::PImpl(std::map<std::string, std::string> & config, std::shared_ptr<core::FileDownloader> _hfd)
 :	hfd(_hfd),
 	loginUrl(config.at("auth.loginurl")),
 	logoutUrl(config.at("auth.logouturl")),
 	usernameField(config.at("authfield.username")),
 	passwordField(config.at("authfield.password")){}
 
-HTTPPostLoginHandler::HTTPPostLoginHandler(std::map<std::string, std::string> & config, std::shared_ptr<core::HttpFileDownloader> hfd)
+HTTPPostLoginHandler::HTTPPostLoginHandler(std::map<std::string, std::string> & config, std::shared_ptr<core::FileDownloader> hfd)
 :	data(new HTTPPostLoginHandler::PImpl(config, hfd)){}
 
 bool
@@ -64,24 +59,19 @@ HTTPPostLoginHandler::login(const std::string & username, const std::string & pa
 	// save username
 	this->data->username = username;
 
-	core::HttpFileDownloader::Form form
+	core::FileDownloader::Form form
 	{
 		{this->data->usernameField, username},
 		{this->data->passwordField, password}
 	};
-	this->data->tokens = this->data->hfd->doPostRequestForCookies(this->data->loginUrl.c_str(), form);
-	return !this->data->tokens.empty();
+	this->data->hfd->postRequest(this->data->loginUrl, form);
+	return !this->data->hfd->getCookies().empty();
 }
 
 void
 HTTPPostLoginHandler::logout()
 {
-	this->data->hfd->downloadFileWithCookies(this->data->logoutUrl.c_str(),
-	[](std::basic_istream<gkbyte_t> & is) -> bool
-	{
-		return true;
-	}, this->data->tokens);
-	this->data->tokens.clear();
+	this->data->hfd->postRequest(this->data->logoutUrl);
 }
 
 void
@@ -89,7 +79,7 @@ HTTPPostLoginHandler::downloadFile(const std::string & url, core::FileDownloader
 {
 	std::string parsedString = url;
 	balgo::replace_all(parsedString, "${authfield.username}", this->data->username);
-	this->data->hfd->downloadFileWithCookies(parsedString.c_str(), callback, this->data->tokens);
+	this->data->hfd->getRequest(parsedString, callback);
 }
 
 GAMEKEEPER_NAMESPACE_END(backend)
