@@ -134,6 +134,7 @@ public:
 	void performCurl(uint16_t timeout = 0, uint16_t resolveFailed = 0, uint16_t connectFailed = 0);
 	template <typename T>
 	void setOpt(CURLoption option, const T &);
+	void handleCurlError(CURLcode code);
 	boost::filesystem::path resolveDownloadPath(const std::string & url);
 
 	CURL * handle;
@@ -199,10 +200,6 @@ CurlFileDownloader::PImpl::performCurl(uint16_t timeout, uint16_t resolveFailed,
 	CURLcode code = curl_easy_perform(this->handle);
 	switch(code)
 	{
-		case CURLE_OK: // 0
-			// everything okay
-			this->logger << LogLevel::Trace << "CURL returned without errors" << endl;
-			break;
 		case CURLE_COULDNT_RESOLVE_HOST: // 6
 			if(resolveFailed < this->maxResolveRetries)
 			{
@@ -227,7 +224,7 @@ CurlFileDownloader::PImpl::performCurl(uint16_t timeout, uint16_t resolveFailed,
 			break;
 		default:
 			// unhandled error
-			this->logger << LogLevel::Fatal << "CURL error \"" << curl_easy_strerror(code) << "\" (" << code << ") unhandled, please report a bug" << endl;
+			handleCurlError(code);
 			break;
 	}
 }
@@ -236,7 +233,22 @@ template <typename T>
 void
 CurlFileDownloader::PImpl::setOpt(CURLoption option, const T & value)
 {
-	curl_easy_setopt(this->handle, option, value);
+	handleCurlError(curl_easy_setopt(this->handle, option, value));
+}
+
+void
+CurlFileDownloader::PImpl::handleCurlError(CURLcode code)
+{
+	switch(code)
+	{
+		case CURLE_OK:
+			// everything okay
+			break;
+		default:
+			// unhandled error
+			this->logger << LogLevel::Fatal << "CURL error \"" << curl_easy_strerror(code) << "\" (" << code << ") unhandled, please report a bug" << endl;
+			break;
+	}
 }
 
 boost::filesystem::path
@@ -346,7 +358,7 @@ CurlFileDownloader::getCookies()
 {
 	struct curl_slist * list;
 	FileDownloader::CookieBucket result;
-	curl_easy_getinfo(this->data->handle, CURLINFO_COOKIELIST, &list);
+	this->data->handleCurlError(curl_easy_getinfo(this->data->handle, CURLINFO_COOKIELIST, &list));
 
 	while(list != nullptr)
 	{
