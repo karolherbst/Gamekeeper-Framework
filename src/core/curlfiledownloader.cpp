@@ -132,6 +132,8 @@ public:
 	~PImpl();
 
 	void performCurl(uint16_t timeout = 0, uint16_t resolveFailed = 0, uint16_t connectFailed = 0);
+	template <typename T>
+	void setOpt(CURLoption option, const T &);
 	boost::filesystem::path resolveDownloadPath(const std::string & url);
 
 	CURL * handle;
@@ -165,18 +167,18 @@ CurlFileDownloader::PImpl::PImpl(Logger & _logger, const std::string & userAgent
 	maxConnectRetries(mcr),
 	maxBufferSize(mbs)
 {
-	curl_easy_setopt(this->handle, CURLOPT_USERAGENT, userAgent.c_str());
-	curl_easy_setopt(this->handle, CURLOPT_FOLLOWLOCATION, 1);
+	setOpt(CURLOPT_USERAGENT, userAgent.c_str());
+	setOpt(CURLOPT_FOLLOWLOCATION, 1);
 	// needed for multithreading
-	curl_easy_setopt(this->handle, CURLOPT_NOSIGNAL, 1);
-	curl_easy_setopt(this->handle, CURLOPT_CONNECTTIMEOUT_MS, connectionTimeout);
+	setOpt(CURLOPT_NOSIGNAL, 1);
+	setOpt(CURLOPT_CONNECTTIMEOUT_MS, connectionTimeout);
 	// always enable cookie engine
-	curl_easy_setopt(this->handle, CURLOPT_COOKIEJAR, nullptr);
+	setOpt(CURLOPT_COOKIEJAR, nullptr);
 	if(this->logger.isEnabled(LogLevel::Debug))
 	{
-		curl_easy_setopt(this->handle, CURLOPT_VERBOSE, 1);
-		curl_easy_setopt(this->handle, CURLOPT_DEBUGDATA, &this->logger);
-		curl_easy_setopt(this->handle, CURLOPT_DEBUGFUNCTION, &curlDebugCallback);
+		setOpt(CURLOPT_VERBOSE, 1);
+		setOpt(CURLOPT_DEBUGDATA, &this->logger);
+		setOpt(CURLOPT_DEBUGFUNCTION, &curlDebugCallback);
 	}
 	this->logger << LogLevel::Debug << "new curl handle with user-agent: " << userAgent << endl;
 }
@@ -230,6 +232,13 @@ CurlFileDownloader::PImpl::performCurl(uint16_t timeout, uint16_t resolveFailed,
 	}
 }
 
+template <typename T>
+void
+CurlFileDownloader::PImpl::setOpt(CURLoption option, const T & value)
+{
+	curl_easy_setopt(this->handle, option, value);
+}
+
 boost::filesystem::path
 CurlFileDownloader::PImpl::resolveDownloadPath(const std::string & url)
 {
@@ -276,19 +285,19 @@ CurlFileDownloader::postRequest(const std::string & url, const Form & form)
 		{
 			formLineBuilder << formField.first << '=' << formField.second << '&';
 		}
-		curl_easy_setopt(this->data->handle, CURLOPT_POSTFIELDSIZE, -1L);
-		curl_easy_setopt(this->data->handle, CURLOPT_COPYPOSTFIELDS, formLineBuilder.str().c_str());
+		this->data->setOpt(CURLOPT_POSTFIELDSIZE, -1L);
+		this->data->setOpt(CURLOPT_COPYPOSTFIELDS, formLineBuilder.str().c_str());
 	}
 	else
 	{
-		curl_easy_setopt(this->data->handle, CURLOPT_POSTFIELDSIZE, 0);
+		this->data->setOpt(CURLOPT_POSTFIELDSIZE, 0);
 	}
 
-	curl_easy_setopt(this->data->handle, CURLOPT_URL, url.c_str());
-	curl_easy_setopt(this->data->handle, CURLOPT_POST, 1);
+	this->data->setOpt(CURLOPT_URL, url.c_str());
+	this->data->setOpt(CURLOPT_POST, 1);
 	// we don't need the body of the post result (for now)
-	curl_easy_setopt(this->data->handle, CURLOPT_WRITEFUNCTION, &emptyCurlFileDownloadCallback);
-	curl_easy_setopt(this->data->handle, CURLOPT_WRITEDATA, nullptr);
+	this->data->setOpt(CURLOPT_WRITEFUNCTION, &emptyCurlFileDownloadCallback);
+	this->data->setOpt(CURLOPT_WRITEDATA, nullptr);
 	this->data->performCurl();
 	// clear unneded stuff
 }
@@ -298,12 +307,12 @@ CurlFileDownloader::getRequest(const std::string & url, const FileDownloader::Do
 {
 	bfs::path cacheFilePath = this->data->resolveDownloadPath(url);
 	this->data->logger << LogLevel::Debug << "try to download file from: " << url << " at: " << cacheFilePath.string() << endl;
-	curl_easy_setopt(this->data->handle, CURLOPT_URL, url.c_str());
-	curl_easy_setopt(this->data->handle, CURLOPT_HTTPGET, 1);
+	this->data->setOpt(CURLOPT_URL, url.c_str());
+	this->data->setOpt(CURLOPT_HTTPGET, 1);
 
 	CurlFileDownloadInfo cfdi(callback, this->data->maxBufferSize, cacheFilePath);
-	curl_easy_setopt(this->data->handle, CURLOPT_WRITEFUNCTION, &curlFileDownloadCallback);
-	curl_easy_setopt(this->data->handle, CURLOPT_WRITEDATA, &cfdi);
+	this->data->setOpt(CURLOPT_WRITEFUNCTION, &curlFileDownloadCallback);
+	this->data->setOpt(CURLOPT_WRITEDATA, &cfdi);
 	this->data->performCurl();
 	cfdi.callback();
 }
@@ -318,7 +327,7 @@ CurlFileDownloader::setCookies(const CookieBucket & cookies)
 		{
 			cookieLineBuilder << cookie.first << '=' << cookie.second << ";";
 		}
-		curl_easy_setopt(this->data->handle, CURLOPT_COOKIE, cookieLineBuilder.str().c_str());
+		this->data->setOpt(CURLOPT_COOKIE, cookieLineBuilder.str().c_str());
 	}
 	else
 	{
@@ -329,7 +338,7 @@ CurlFileDownloader::setCookies(const CookieBucket & cookies)
 void
 CurlFileDownloader::clearCookies()
 {
-	curl_easy_setopt(this->data->handle, CURLOPT_COOKIE, "");
+	this->data->setOpt(CURLOPT_COOKIE, "");
 }
 
 FileDownloader::CookieBucket
