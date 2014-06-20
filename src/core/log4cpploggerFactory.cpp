@@ -73,7 +73,7 @@ parseLine(std::string line, std::shared_ptr<UserPaths> & userpaths)
 		line.replace(pos + 10, std::string::npos, logfile.string());
 	}
 
-	if(!line.find_first_of("rootCategory") == 0)
+	if(line.find_first_of("rootCategory") != 0)
 	{
 		balgo::replace_all(line, "category.", "category.GameKeeper.");
 	}
