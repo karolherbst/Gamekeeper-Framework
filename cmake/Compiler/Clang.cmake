@@ -8,6 +8,7 @@ add_compiler_flags(
   -Wno-c++98-compat-pedantic
   -Wno-disabled-macro-expansion
   -Wno-documentation
+  -Wno-deprecated-register
   -Wno-exit-time-destructors
   -Wno-global-constructors
   -Wno-weak-vtables
