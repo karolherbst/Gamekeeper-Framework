@@ -31,6 +31,11 @@ target_link_libraries(gamekeeperClient
   ${Boost_PROGRAM_OPTIONS_LIBRARY}
   ${Boost_SYSTEM_LIBRARY}
 )
+
+if(BUILD_USE_COTIRE)
+  cotire(gamekeeperClient)
+endif()
+
 install_library(gamekeeperClient)
 
 add_library(gamekeeperClientMain STATIC ${main_sources})
@@ -38,4 +43,9 @@ target_link_libraries(gamekeeperClientMain
   gamekeeperClient
   ${CMAKE_DL_LIBS}
 )
+
+if(BUILD_USE_COTIRE)
+  cotire(gamekeeperClientMain)
+endif()
+
 #install_library(gamekeeperClientMain)

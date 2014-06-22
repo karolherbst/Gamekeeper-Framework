@@ -169,6 +169,10 @@ set(GAMEKEEPER_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/include")
 # build GameKeeper Framework
 #######################################################################################################################
 
+if(BUILD_USE_COTIRE)
+  include(cotire)
+endif()
+
 add_subdirectory(doc)
 add_subdirectory(third_party)
 add_subdirectory(include_private)

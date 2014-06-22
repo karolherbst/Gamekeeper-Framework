@@ -20,8 +20,6 @@
 
 #include "runtime.h"
 
-#include <gamekeeper/core/common.h>
-
 #include <cstdlib>
 #include <iostream>
 

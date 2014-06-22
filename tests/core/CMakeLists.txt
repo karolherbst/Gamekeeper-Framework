@@ -43,4 +43,8 @@ target_link_libraries(gamekeeperUnitTests
   ${HYPODERMIC_LIBRARIES}
 )
 
+if(BUILD_USE_COTIRE)
+  cotire(gamekeeperUnitTests)
+endif()
+
 add_test(gamekeeperUnitTests gamekeeperUnitTests${CMAKE_EXECUTABLE_SUFFIX})

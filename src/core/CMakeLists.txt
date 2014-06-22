@@ -71,6 +71,10 @@ target_link_libraries(gamekeeperCore
   ${CMAKE_THREAD_LIBS_INIT}
 )
 
+if(BUILD_USE_COTIRE)
+  cotire(gamekeeperCore)
+endif()
+
 if(MINGW)
   add_definitions(-DBOOST_THREAD_USE_LIB)
   target_link_libraries(gamekeeperCore
