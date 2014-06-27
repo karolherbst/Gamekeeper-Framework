@@ -127,3 +127,39 @@ TEST_F(CurlFileDownloaderServerTest, bigFile)
 		return true;
 	});
 }
+
+TEST_F(CurlFileDownloaderTest, cookieIntegrity)
+{
+	auto cfd = this->fileDownloaderFactory->create();
+	FileDownloader::CookieBucket cb
+	{
+		{"key1", "value1", "localhost", "/", 0, true},
+		{"key2", "value2", "localhost", "/", 0, true}
+	};
+	cfd->setCookies(cb);
+	EXPECT_EQ(cb, cfd->getCookies());
+}
+
+TEST_F(CurlFileDownloaderTest, simpleCookieIntegrity)
+{
+	auto cfd = this->fileDownloaderFactory->create();
+	FileDownloader::CookieBucket cb
+	{
+		{"key1", "value1", "localhost", "/"}
+	};
+	cfd->setCookies(cb);
+	EXPECT_EQ(cb, cfd->getCookies());
+}
+
+TEST_F(CurlFileDownloaderTest, setCookieCrazyDomainLocalhostDot)
+{
+	auto cfd = this->fileDownloaderFactory->create();
+
+	// curl is doing some weird stuff, check here if curl has changed
+	// curl converts localhost to .localhost
+	cfd->addCookie({"crazyCurl", "", "localhost"});
+
+	auto cs = cfd->getCookies();
+	EXPECT_EQ(1, cs.size());
+	EXPECT_EQ("localhost", cs[0].domain);
+}
