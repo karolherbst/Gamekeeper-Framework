@@ -30,6 +30,7 @@
 #include <gamekeeper/core/userpaths.h>
 #include <gamekeeper/utils/stringutils.h>
 
+#include "defaultfixture.h"
 #include "webserverfixture.h"
 
 using namespace gamekeeper::core;
@@ -53,8 +54,7 @@ using namespace gamekeeper::utils;
 	if(ex) std::rethrow_exception(ex); \
 }
 
-
-class CurlFiledownloaderTest : public gamekeeper::test::WebServerFicture
+class CurlFileDownloaderTest : public gamekeeper::test::DefaultFicture
 {
 protected:
 	FileDownloaderFactory * fileDownloaderFactory = nullptr;
@@ -72,7 +72,15 @@ protected:
 	}
 };
 
-TEST_F(CurlFiledownloaderTest, loadEmptyFile)
+class CurlFileDownloaderServerTest : public CurlFileDownloaderTest, public gamekeeper::test::WebServerFictureAspect
+{
+public:
+	CurlFileDownloaderServerTest()
+	:	CurlFileDownloaderTest(),
+		WebServerFictureAspect(this->container){}
+};
+
+TEST_F(CurlFileDownloaderServerTest, loadEmptyFile)
 {
 	CURL_DOWNLOAD_TEST("http://localhost:8080/files/emptyfile",
 	{
@@ -83,7 +91,7 @@ TEST_F(CurlFiledownloaderTest, loadEmptyFile)
 	});
 }
 
-TEST_F(CurlFiledownloaderTest, servertest)
+TEST_F(CurlFileDownloaderServerTest, servertest)
 {
 	CURL_DOWNLOAD_TEST("http://localhost:8080/files/fileWithContentHAHa",
 	{
@@ -96,7 +104,7 @@ TEST_F(CurlFiledownloaderTest, servertest)
 	});
 }
 
-TEST_F(CurlFiledownloaderTest, cookieTest)
+TEST_F(CurlFileDownloaderServerTest, cookieTest)
 {
 	bool handled = false;
 	auto fd = this->fileDownloaderFactory->create();
@@ -105,7 +113,7 @@ TEST_F(CurlFiledownloaderTest, cookieTest)
 	EXPECT_EQ("value", cb["type"]);
 }
 
-TEST_F(CurlFiledownloaderTest, bigFile)
+TEST_F(CurlFileDownloaderServerTest, bigFile)
 {
 	// set buffer size to 0 to disable buffering at all
 	setProperty("network.download", (uint64_t)0);

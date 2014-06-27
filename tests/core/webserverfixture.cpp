@@ -32,6 +32,8 @@
 #include <boost/filesystem/path.hpp>
 #include <boost/lexical_cast.hpp>
 
+#include <Hypodermic/IContainer.h>
+
 #include <mongoose.h>
 
 GAMEKEEPER_NAMESPACE_START(test)
@@ -43,7 +45,7 @@ using gamekeeper::core::ThreadFactory;
 
 static const fs::path fileServerRoot = WEBSERVERPATH;
 
-WebServerFicture::WebServerFicture()
+WebServerFictureAspect::WebServerFictureAspect(std::shared_ptr<Hypodermic::IContainer> container)
 {
 	this->server = mg_create_server(nullptr, [](mg_connection * conn, mg_event event) -> int
 	{
@@ -125,7 +127,7 @@ WebServerFicture::WebServerFicture()
 		return MG_TRUE;
 	});
 	mg_set_option(this->server, "listening_port", "8080");
-	this->container->resolve<ThreadFactory>()->createThread("mongoose server thread",
+	container->resolve<ThreadFactory>()->createThread("mongoose server thread",
 		[this](ThreadFactory::ThreadFunction::argument_type interrupted) -> void
 	{
 		mg_server * copyServer = this->server;

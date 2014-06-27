@@ -23,16 +23,21 @@
 
 #include <gamekeeper/core/common.h>
 
-#include "defaultfixture.h"
+#include <memory>
 
 struct mg_server;
 
+namespace Hypodermic
+{
+	class IContainer;
+}
+
 GAMEKEEPER_NAMESPACE_START(test)
 
-class WebServerFicture : public DefaultFicture
+class WebServerFictureAspect
 {
 public:
-	WebServerFicture();
+	WebServerFictureAspect(std::shared_ptr<Hypodermic::IContainer>);
 private:
 	mg_server * server = nullptr;
 };
