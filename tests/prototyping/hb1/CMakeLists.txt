@@ -28,3 +28,7 @@ target_link_libraries(HBPrototype
   gamekeeperClientMain
   ${PYTHON_LIBRARIES}
 )
+
+if(BUILD_USE_COTIRE)
+  cotire(HBPrototype)
+endif()

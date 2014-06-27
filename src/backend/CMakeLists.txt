@@ -49,6 +49,10 @@ target_link_libraries(gamekeeperBackend
   jansson_path
 )
 
+if(BUILD_USE_COTIRE)
+  cotire(gamekeeperBackend)
+endif()
+
 if(MINGW)
   target_link_libraries(gamekeeperBackend
   )

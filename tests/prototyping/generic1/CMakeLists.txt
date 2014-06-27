@@ -19,3 +19,7 @@ target_link_libraries(GenericPrototype
   gamekeeperBackend
   gamekeeperClientMain
 )
+
+if(BUILD_USE_COTIRE)
+  cotire(GenericPrototype)
+endif()

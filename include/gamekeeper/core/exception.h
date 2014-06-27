@@ -24,6 +24,7 @@
 #include <gamekeeper/core/common.h>
 
 #include <exception>
+#include <string>
 
 GAMEKEEPER_NAMESPACE_START(core)
 

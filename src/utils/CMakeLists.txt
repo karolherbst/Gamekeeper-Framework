@@ -4,7 +4,6 @@ include_directories(
 )
 
 file(GLOB headers
-  pch.h
 )
 
 add_custom_target(gamekeeperUtils ${sources} ${headers})

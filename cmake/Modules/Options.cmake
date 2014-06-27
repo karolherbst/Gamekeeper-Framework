@@ -4,6 +4,7 @@
 
 option(BUILD_TESTS "enables the build of unit tests" OFF)
 option(BUILD_PROTOTYPES "enables the build of prototypes" OFF)
+option(BUILD_USE_COTIRE "enables cotire when building" ON)
 
 #######################################################################################################################
 # doc options

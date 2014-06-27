@@ -23,6 +23,8 @@
 
 #include <gamekeeper/core/common.h>
 
+#include <string>
+
 #include <gamekeeper/core/interface.h>
 
 namespace std
