@@ -110,7 +110,9 @@ TEST_F(CurlFileDownloaderServerTest, cookieTest)
 	auto fd = this->fileDownloaderFactory->create();
 	fd->postRequest("http://localhost:8080/cookies/type/value");
 	FileDownloader::CookieBucket cb = fd->getCookies();
-	EXPECT_EQ("value", cb["type"]);
+	EXPECT_EQ(1, cb.size());
+	EXPECT_EQ("type", cb[0].name);
+	EXPECT_EQ("value", cb[0].value);
 }
 
 TEST_F(CurlFileDownloaderServerTest, bigFile)

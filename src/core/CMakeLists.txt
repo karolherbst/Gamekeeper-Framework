@@ -50,6 +50,7 @@ file(GLOB sources
   curlfiledownloader.cpp
   curlfiledownloaderfactory.cpp
   exception.cpp
+  filedownloader.cpp
   gnuinstalldirspaths.cpp
   log4cppLogger.cpp
   log4cpploggerFactory.cpp

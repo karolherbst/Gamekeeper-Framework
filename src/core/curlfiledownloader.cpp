@@ -25,6 +25,7 @@
 #include <std_compat/thread>
 
 #include <boost/algorithm/string/classification.hpp>
+#include <boost/algorithm/string/predicate.hpp>
 #include <boost/algorithm/string/replace.hpp>
 #include <boost/algorithm/string/split.hpp>
 #include <boost/filesystem/fstream.hpp>
@@ -36,6 +37,7 @@
 
 #include <gamekeeper/core/logger.h>
 #include <gamekeeper/core/loggerStream.h>
+#include <gamekeeper/utils/stringutils.h>
 
 namespace balgo = boost::algorithm;
 namespace bfs = boost::filesystem;
@@ -329,28 +331,68 @@ CurlFileDownloader::getRequest(const std::string & url, const FileDownloader::Do
 	cfdi.callback();
 }
 
+static const std::string COOKIE_TRUE{"TRUE"};
+static const std::string COOKIE_FALSE{"FALSE"};
+typedef std::vector<std::string>::size_type vector_size_type;
+
+constexpr vector_size_type COOKIE_DOMAIN_IDX{0};
+constexpr vector_size_type COOKIE_ENTIREDOMAIN_IDX{1};
+constexpr vector_size_type COOKIE_PATH_IDX{2};
+constexpr vector_size_type COOKIE_SECURE_IDX{3};
+constexpr vector_size_type COOKIE_EXPIRY_IDX{4};
+constexpr vector_size_type COOKIE_NAME_IDX{5};
+constexpr vector_size_type COOKIE_VALUE_IDX{6};
+
 void
-CurlFileDownloader::setCookies(const CookieBucket & cookies)
+CurlFileDownloader::addCookie(const Cookie & c)
 {
-	if(!cookies.empty())
+	std::ostringstream cookieLineBuilder;
+	cookieLineBuilder << c.domain << "\tTRUE\t" << c.path << '\t' << (c.secure ? COOKIE_TRUE : COOKIE_FALSE)
+	                  << '\t' << utils::String::toString(std::chrono::system_clock::to_time_t(c.expiry)) << '\t'
+	                  << c.name << '\t' << c.value;
+	std::string genLine = cookieLineBuilder.str();
+	this->data->logger << LogLevel::Debug << "saving cookie line: " << genLine << endl;
+	this->data->setOpt(CURLOPT_COOKIELIST, genLine.c_str());
+}
+
+void
+CurlFileDownloader::addCookies(const CookieBucket & cookies)
+{
+	for(const Cookie & c : cookies)
 	{
-		std::ostringstream cookieLineBuilder;
-		for(const FileDownloader::Cookie & cookie : cookies)
-		{
-			cookieLineBuilder << cookie.first << '=' << cookie.second << ";";
-		}
-		this->data->setOpt(CURLOPT_COOKIE, cookieLineBuilder.str().c_str());
-	}
-	else
-	{
-		this->clearCookies();
+		this->addCookie(c);
 	}
 }
 
 void
 CurlFileDownloader::clearCookies()
 {
-	this->data->setOpt(CURLOPT_COOKIE, "");
+	this->data->setOpt(CURLOPT_COOKIELIST, "ALL");
+}
+
+void
+CurlFileDownloader::setCookies(const CookieBucket & cookies)
+{
+	this->clearCookies();
+	this->addCookies(cookies);
+}
+
+// libcurl is doing some strange stuff under the hood. Make the data reasonable
+static std::string &
+fixCookieDomain(std::string & domain)
+{
+	// if the domain is set to TRUE we actually have localhost
+	if(domain == COOKIE_TRUE)
+	{
+		return (domain = "localhost");
+	}
+	// ignore httpOnly for now
+	if(balgo::starts_with(domain, "#HttpOnly_"))
+	{
+		// reduce length of string by 1 instead of doing -1
+		domain.erase(0, sizeof("#HttpOnly"));
+	}
+	return domain;
 }
 
 FileDownloader::CookieBucket
@@ -363,8 +405,17 @@ CurlFileDownloader::getCookies()
 	while(list != nullptr)
 	{
 		std::vector<std::string> strings;
+		this->data->logger << LogLevel::Debug << "parse Cookie: " << list->data << endl;
 		balgo::split(strings, list->data, balgo::is_any_of("\t"));
-		result[strings[5]] = strings[6];
+		result.push_back(
+		{
+			strings[COOKIE_NAME_IDX],
+			strings[COOKIE_VALUE_IDX],
+			std::move(fixCookieDomain(strings[COOKIE_DOMAIN_IDX])),
+			strings[COOKIE_PATH_IDX],
+			std::stoi(strings[COOKIE_EXPIRY_IDX]),
+			(strings[COOKIE_SECURE_IDX] == COOKIE_TRUE)
+		});
 		list = list->next;
 	}
 

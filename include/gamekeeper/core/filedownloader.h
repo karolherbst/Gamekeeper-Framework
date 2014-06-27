@@ -23,8 +23,10 @@
 
 #include <gamekeeper/core/common.h>
 
+#include <chrono>
 #include <functional>
 #include <iostream>
+#include <vector>
 #include <unordered_map>
 
 #include <gamekeeper/core/interface.h>
@@ -48,9 +50,29 @@ interface PUBLIC_API FileDownloader
 
 	typedef std::function<bool (ByteIstream &)> DownloadCallback;
 
-	typedef std::unordered_map<std::string, std::string> CookieBucket;
+	/**
+	 * @interface Cookie filedownloader.h <gamekeeper/core/filedownloader.h>
+	 *
+	 * A Cookie is a small piece of data to store http data sent by the server. This class provides an easy way to create such.
+	 * All fields are conforming to the HTTP State Management Mechanism standard (RFC 6265) and have the same meaning period.
+	 *
+	 * All created Cookie objects represent session cookies by default
+	 *
+	 * @author Karol Herbst
+	 * @since 0
+	 */
+	struct PUBLIC_API Cookie
+	{
+		PUBLIC_API Cookie(const std::string & name, const std::string & value, const std::string & domain, const std::string & path = "", time_t expiry = 0, bool secure = false);
+		const std::string name;
+		const std::string value;
+		const std::string domain;
+		const std::string path;
+		const std::chrono::time_point<std::chrono::system_clock> expiry;
+		const bool secure;
+	};
 
-	typedef std::pair<std::string, std::string> Cookie;
+	typedef std::vector<Cookie> CookieBucket;
 
 	typedef std::unordered_map<std::string, std::string> Form;
 
@@ -60,10 +82,20 @@ interface PUBLIC_API FileDownloader
 
 	PUBLIC_API virtual void postRequest(const std::string & url, const Form & form = Form()) = 0;
 
-	PUBLIC_API virtual void setCookies(const CookieBucket & cookies) = 0;
+	PUBLIC_API virtual void addCookie(const Cookie & cookie) = 0;
+	PUBLIC_API virtual void addCookies(const CookieBucket & cookies) = 0;
 	PUBLIC_API virtual CookieBucket getCookies() = 0;
+
+	PUBLIC_API virtual void setCookies(const CookieBucket & cookies) = 0;
 	PUBLIC_API virtual void clearCookies() = 0;
 };
+
+bool PUBLIC_API operator==(const FileDownloader::Cookie & a, const FileDownloader::Cookie & b);
+
+inline bool PUBLIC_INLINE operator!=(const FileDownloader::Cookie & a, const FileDownloader::Cookie & b)
+{
+	return !(a == b);
+}
 
 GAMEKEEPER_NAMESPACE_END(core)
 
