@@ -81,6 +81,12 @@ TEST_F(FileDownloaderTest, cookieRFC6256_5_2_3)
 
 TEST_F(FileDownloaderTest, cookieRFC6256_5_2_4)
 {
-	Cookie c("", "", "", "/PAth");
-	ASSERT_EQ("/path", c.path);
+	Cookie c1("", "", "", "");
+	ASSERT_EQ("/", c1.path);
+
+	Cookie c2("", "", "", "hsd");
+	ASSERT_EQ("/", c2.path);
+
+	Cookie c3("", "", "", "/DjhkdasDTest");
+	ASSERT_EQ("/DjhkdasDTest", c3.path);
 }
