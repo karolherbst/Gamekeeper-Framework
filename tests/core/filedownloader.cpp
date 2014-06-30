@@ -66,21 +66,27 @@ TEST_F(FileDownloaderTest, cookieNotEqual)
 	ASSERT_NE(c1, c2);
 }
 
-TEST_F(FileDownloaderTest, cookieRFC2656_5_2_L1_4_AND_5_2_L2_5)
+TEST_F(FileDownloaderTest, cookieRFC6256_5_2_L1_4_AND_5_2_L2_5)
 {
 	Cookie c("   testName   ", "   testValue   ", "");
 	ASSERT_EQ("testName", c.name);
 	ASSERT_EQ("testValue", c.value);
 }
 
-TEST_F(FileDownloaderTest, cookieRFC2656_5_2_3)
+TEST_F(FileDownloaderTest, cookieRFC6256_5_2_3)
 {
 	Cookie c("", "", ".doMaIn");
 	ASSERT_EQ("domain", c.domain);
 }
 
-TEST_F(FileDownloaderTest, cookieRFC2656_5_2_4)
+TEST_F(FileDownloaderTest, cookieRFC6256_5_2_4)
 {
-	Cookie c("", "", "", "/PAth");
-	ASSERT_EQ("/path", c.path);
+	Cookie c1("", "", "", "");
+	ASSERT_EQ("/", c1.path);
+
+	Cookie c2("", "", "", "hsd");
+	ASSERT_EQ("/", c2.path);
+
+	Cookie c3("", "", "", "/DjhkdasDTest");
+	ASSERT_EQ("/DjhkdasDTest", c3.path);
 }
