@@ -8,7 +8,6 @@ file(GLOB headers
   ${GAMEKEEPER_PRIVATE_INCLUDE_DIR}/gamekeeper/client/gameimpl.h
   ${GAMEKEEPER_PRIVATE_INCLUDE_DIR}/gamekeeper/client/storeimpl.h
   ${GAMEKEEPER_PRIVATE_INCLUDE_DIR}/gamekeeper/client/storecontrollerimpl.h
-  pch.h
   runtime.h
 )
 
