@@ -25,6 +25,7 @@
 #include <std_compat/thread>
 
 #include <boost/algorithm/string/classification.hpp>
+#include <boost/algorithm/string/predicate.hpp>
 #include <boost/algorithm/string/replace.hpp>
 #include <boost/algorithm/string/split.hpp>
 #include <boost/filesystem/fstream.hpp>
@@ -36,6 +37,7 @@
 
 #include <gamekeeper/core/logger.h>
 #include <gamekeeper/core/loggerStream.h>
+#include <gamekeeper/utils/stringutils.h>
 
 namespace balgo = boost::algorithm;
 namespace bfs = boost::filesystem;
@@ -132,6 +134,9 @@ public:
 	~PImpl();
 
 	void performCurl(uint16_t timeout = 0, uint16_t resolveFailed = 0, uint16_t connectFailed = 0);
+	template <typename T>
+	void setOpt(CURLoption option, const T &);
+	void handleCurlError(CURLcode code);
 	boost::filesystem::path resolveDownloadPath(const std::string & url);
 
 	CURL * handle;
@@ -165,18 +170,18 @@ CurlFileDownloader::PImpl::PImpl(Logger & _logger, const std::string & userAgent
 	maxConnectRetries(mcr),
 	maxBufferSize(mbs)
 {
-	curl_easy_setopt(this->handle, CURLOPT_USERAGENT, userAgent.c_str());
-	curl_easy_setopt(this->handle, CURLOPT_FOLLOWLOCATION, 1);
+	setOpt(CURLOPT_USERAGENT, userAgent.c_str());
+	setOpt(CURLOPT_FOLLOWLOCATION, 1);
 	// needed for multithreading
-	curl_easy_setopt(this->handle, CURLOPT_NOSIGNAL, 1);
-	curl_easy_setopt(this->handle, CURLOPT_CONNECTTIMEOUT_MS, connectionTimeout);
+	setOpt(CURLOPT_NOSIGNAL, 1);
+	setOpt(CURLOPT_CONNECTTIMEOUT_MS, connectionTimeout);
 	// always enable cookie engine
-	curl_easy_setopt(this->handle, CURLOPT_COOKIEJAR, nullptr);
+	setOpt(CURLOPT_COOKIEJAR, nullptr);
 	if(this->logger.isEnabled(LogLevel::Debug))
 	{
-		curl_easy_setopt(this->handle, CURLOPT_VERBOSE, 1);
-		curl_easy_setopt(this->handle, CURLOPT_DEBUGDATA, &this->logger);
-		curl_easy_setopt(this->handle, CURLOPT_DEBUGFUNCTION, &curlDebugCallback);
+		setOpt(CURLOPT_VERBOSE, 1);
+		setOpt(CURLOPT_DEBUGDATA, &this->logger);
+		setOpt(CURLOPT_DEBUGFUNCTION, &curlDebugCallback);
 	}
 	this->logger << LogLevel::Debug << "new curl handle with user-agent: " << userAgent << endl;
 }
@@ -197,10 +202,6 @@ CurlFileDownloader::PImpl::performCurl(uint16_t timeout, uint16_t resolveFailed,
 	CURLcode code = curl_easy_perform(this->handle);
 	switch(code)
 	{
-		case CURLE_OK: // 0
-			// everything okay
-			this->logger << LogLevel::Trace << "CURL returned without errors" << endl;
-			break;
 		case CURLE_COULDNT_RESOLVE_HOST: // 6
 			if(resolveFailed < this->maxResolveRetries)
 			{
@@ -222,6 +223,28 @@ CurlFileDownloader::PImpl::performCurl(uint16_t timeout, uint16_t resolveFailed,
 			{
 				this->logger << LogLevel::Error << "CURL couldn't connect to host after " << this->maxConnectRetries << " retries" << endl;
 			}
+			break;
+		default:
+			// unhandled error
+			handleCurlError(code);
+			break;
+	}
+}
+
+template <typename T>
+void
+CurlFileDownloader::PImpl::setOpt(CURLoption option, const T & value)
+{
+	handleCurlError(curl_easy_setopt(this->handle, option, value));
+}
+
+void
+CurlFileDownloader::PImpl::handleCurlError(CURLcode code)
+{
+	switch(code)
+	{
+		case CURLE_OK:
+			// everything okay
 			break;
 		default:
 			// unhandled error
@@ -276,19 +299,19 @@ CurlFileDownloader::postRequest(const std::string & url, const Form & form)
 		{
 			formLineBuilder << formField.first << '=' << formField.second << '&';
 		}
-		curl_easy_setopt(this->data->handle, CURLOPT_POSTFIELDSIZE, -1L);
-		curl_easy_setopt(this->data->handle, CURLOPT_COPYPOSTFIELDS, formLineBuilder.str().c_str());
+		this->data->setOpt(CURLOPT_POSTFIELDSIZE, -1L);
+		this->data->setOpt(CURLOPT_COPYPOSTFIELDS, formLineBuilder.str().c_str());
 	}
 	else
 	{
-		curl_easy_setopt(this->data->handle, CURLOPT_POSTFIELDSIZE, 0);
+		this->data->setOpt(CURLOPT_POSTFIELDSIZE, 0);
 	}
 
-	curl_easy_setopt(this->data->handle, CURLOPT_URL, url.c_str());
-	curl_easy_setopt(this->data->handle, CURLOPT_POST, 1);
+	this->data->setOpt(CURLOPT_URL, url.c_str());
+	this->data->setOpt(CURLOPT_POST, 1);
 	// we don't need the body of the post result (for now)
-	curl_easy_setopt(this->data->handle, CURLOPT_WRITEFUNCTION, &emptyCurlFileDownloadCallback);
-	curl_easy_setopt(this->data->handle, CURLOPT_WRITEDATA, nullptr);
+	this->data->setOpt(CURLOPT_WRITEFUNCTION, &emptyCurlFileDownloadCallback);
+	this->data->setOpt(CURLOPT_WRITEDATA, nullptr);
 	this->data->performCurl();
 	// clear unneded stuff
 }
@@ -298,38 +321,78 @@ CurlFileDownloader::getRequest(const std::string & url, const FileDownloader::Do
 {
 	bfs::path cacheFilePath = this->data->resolveDownloadPath(url);
 	this->data->logger << LogLevel::Debug << "try to download file from: " << url << " at: " << cacheFilePath.string() << endl;
-	curl_easy_setopt(this->data->handle, CURLOPT_URL, url.c_str());
-	curl_easy_setopt(this->data->handle, CURLOPT_HTTPGET, 1);
+	this->data->setOpt(CURLOPT_URL, url.c_str());
+	this->data->setOpt(CURLOPT_HTTPGET, 1);
 
 	CurlFileDownloadInfo cfdi(callback, this->data->maxBufferSize, cacheFilePath);
-	curl_easy_setopt(this->data->handle, CURLOPT_WRITEFUNCTION, &curlFileDownloadCallback);
-	curl_easy_setopt(this->data->handle, CURLOPT_WRITEDATA, &cfdi);
+	this->data->setOpt(CURLOPT_WRITEFUNCTION, &curlFileDownloadCallback);
+	this->data->setOpt(CURLOPT_WRITEDATA, &cfdi);
 	this->data->performCurl();
 	cfdi.callback();
 }
 
+static const std::string COOKIE_TRUE{"TRUE"};
+static const std::string COOKIE_FALSE{"FALSE"};
+typedef std::vector<std::string>::size_type vector_size_type;
+
+constexpr vector_size_type COOKIE_DOMAIN_IDX{0};
+constexpr vector_size_type COOKIE_ENTIREDOMAIN_IDX{1};
+constexpr vector_size_type COOKIE_PATH_IDX{2};
+constexpr vector_size_type COOKIE_SECURE_IDX{3};
+constexpr vector_size_type COOKIE_EXPIRY_IDX{4};
+constexpr vector_size_type COOKIE_NAME_IDX{5};
+constexpr vector_size_type COOKIE_VALUE_IDX{6};
+
 void
-CurlFileDownloader::setCookies(const CookieBucket & cookies)
+CurlFileDownloader::addCookie(const Cookie & c)
 {
-	if(!cookies.empty())
+	std::ostringstream cookieLineBuilder;
+	cookieLineBuilder << c.domain << "\tTRUE\t" << c.path << '\t' << (c.secure ? COOKIE_TRUE : COOKIE_FALSE)
+	                  << '\t' << utils::String::toString(std::chrono::system_clock::to_time_t(c.expiry)) << '\t'
+	                  << c.name << '\t' << c.value;
+	std::string genLine = cookieLineBuilder.str();
+	this->data->logger << LogLevel::Debug << "saving cookie line: " << genLine << endl;
+	this->data->setOpt(CURLOPT_COOKIELIST, genLine.c_str());
+}
+
+void
+CurlFileDownloader::addCookies(const CookieBucket & cookies)
+{
+	for(const Cookie & c : cookies)
 	{
-		std::ostringstream cookieLineBuilder;
-		for(const FileDownloader::Cookie & cookie : cookies)
-		{
-			cookieLineBuilder << cookie.first << '=' << cookie.second << ";";
-		}
-		curl_easy_setopt(this->data->handle, CURLOPT_COOKIE, cookieLineBuilder.str().c_str());
-	}
-	else
-	{
-		this->clearCookies();
+		this->addCookie(c);
 	}
 }
 
 void
 CurlFileDownloader::clearCookies()
 {
-	curl_easy_setopt(this->data->handle, CURLOPT_COOKIE, "");
+	this->data->setOpt(CURLOPT_COOKIELIST, "ALL");
+}
+
+void
+CurlFileDownloader::setCookies(const CookieBucket & cookies)
+{
+	this->clearCookies();
+	this->addCookies(cookies);
+}
+
+// libcurl is doing some strange stuff under the hood. Make the data reasonable
+static std::string &
+fixCookieDomain(std::string & domain)
+{
+	// if the domain is set to TRUE we actually have localhost
+	if(domain == COOKIE_TRUE)
+	{
+		return (domain = "localhost");
+	}
+	// ignore httpOnly for now
+	if(balgo::starts_with(domain, "#HttpOnly_"))
+	{
+		// reduce length of string by 1 instead of doing -1
+		domain.erase(0, sizeof("#HttpOnly"));
+	}
+	return domain;
 }
 
 FileDownloader::CookieBucket
@@ -337,13 +400,22 @@ CurlFileDownloader::getCookies()
 {
 	struct curl_slist * list;
 	FileDownloader::CookieBucket result;
-	curl_easy_getinfo(this->data->handle, CURLINFO_COOKIELIST, &list);
+	this->data->handleCurlError(curl_easy_getinfo(this->data->handle, CURLINFO_COOKIELIST, &list));
 
 	while(list != nullptr)
 	{
 		std::vector<std::string> strings;
+		this->data->logger << LogLevel::Debug << "parse Cookie: " << list->data << endl;
 		balgo::split(strings, list->data, balgo::is_any_of("\t"));
-		result[strings[5]] = strings[6];
+		result.push_back(
+		{
+			strings[COOKIE_NAME_IDX],
+			strings[COOKIE_VALUE_IDX],
+			std::move(fixCookieDomain(strings[COOKIE_DOMAIN_IDX])),
+			strings[COOKIE_PATH_IDX],
+			std::stoi(strings[COOKIE_EXPIRY_IDX]),
+			(strings[COOKIE_SECURE_IDX] == COOKIE_TRUE)
+		});
 		list = list->next;
 	}
 

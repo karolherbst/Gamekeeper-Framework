@@ -44,8 +44,11 @@ public:
 	PRIVATE_API virtual void getRequest(const std::string & url, const DownloadCallback & callback) override;
 	PRIVATE_API virtual void postRequest(const std::string & url, const Form & form) override;
 
-	PRIVATE_API virtual void setCookies(const CookieBucket & cookies) override;
+	PRIVATE_API virtual void addCookie(const Cookie & cookie) override;
+	PRIVATE_API virtual void addCookies(const CookieBucket & cookies) override;
 	PRIVATE_API virtual CookieBucket getCookies() override;
+
+	PRIVATE_API virtual void setCookies(const CookieBucket & cookies) override;
 	PRIVATE_API virtual void clearCookies() override;
 private:
 	class PRIVATE_API PImpl;
