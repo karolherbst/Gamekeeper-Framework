@@ -239,4 +239,8 @@ typedef int64_t gktime64_t;
 	#define interface struct
 #endif
 
+// some global variables
+constexpr char GK_TRUE_STRING[] = "true";
+constexpr char GK_FALSE_STRING[] = "false";
+
 #endif //GAMEKEEPER_CORE_COMMON_H
