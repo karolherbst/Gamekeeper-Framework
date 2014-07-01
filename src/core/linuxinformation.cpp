@@ -22,7 +22,6 @@
 
 #include <climits>
 #include <cstdlib>
-#include <unistd.h>
 
 GAMEKEEPER_NAMESPACE_START(core)
 
@@ -64,9 +63,9 @@ LinuxInformation::getUserPath()
 std::string
 LinuxInformation::getUserName()
 {
-	char buffer[LOGIN_NAME_MAX];
-	getlogin_r(buffer, LOGIN_NAME_MAX);
-	return buffer;
+	// LOGNAME should work in POSIX, but fall back to USER for things like BSD.
+	std::string logName = getEnv("LOGNAME");
+	return !logName.empty() ? logName : getEnv("USER");
 }
 
 GAMEKEEPER_NAMESPACE_END(core)
