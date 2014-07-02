@@ -348,8 +348,8 @@ CurlFileDownloader::addCookie(const Cookie & c)
 {
 	std::ostringstream cookieLineBuilder;
 	cookieLineBuilder << c.domain << "\tTRUE\t" << c.path << '\t' << (c.secure ? COOKIE_TRUE : COOKIE_FALSE)
-	                  << '\t' << utils::String::toString(std::chrono::system_clock::to_time_t(c.expiry)) << '\t'
-	                  << c.name << '\t' << c.value;
+	                  << '\t' << utils::String::toString(std::chrono::duration_cast<std::chrono::seconds>(c.expiry.time_since_epoch()).count())
+	                  << '\t' << c.name << '\t' << c.value;
 	std::string genLine = cookieLineBuilder.str();
 	this->data->logger << LogLevel::Debug << "saving cookie line: " << genLine << endl;
 	this->data->setOpt(CURLOPT_COOKIELIST, genLine.c_str());
@@ -413,7 +413,7 @@ CurlFileDownloader::getCookies()
 			strings[COOKIE_VALUE_IDX],
 			std::move(fixCookieDomain(strings[COOKIE_DOMAIN_IDX])),
 			strings[COOKIE_PATH_IDX],
-			std::stoi(strings[COOKIE_EXPIRY_IDX]),
+			std::stol(strings[COOKIE_EXPIRY_IDX]),
 			(strings[COOKIE_SECURE_IDX] == COOKIE_TRUE)
 		});
 		list = list->next;
