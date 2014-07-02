@@ -160,6 +160,6 @@ TEST_F(CurlFileDownloaderTest, setCookieCrazyDomainLocalhostDot)
 	cfd->addCookie({"crazyCurl", "", "localhost"});
 
 	auto cs = cfd->getCookies();
-	EXPECT_EQ(1, cs.size());
+	ASSERT_EQ(1, cs.size());
 	EXPECT_EQ("localhost", cs[0].domain);
 }
