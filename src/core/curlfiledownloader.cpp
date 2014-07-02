@@ -343,9 +343,27 @@ constexpr vector_size_type COOKIE_EXPIRY_IDX{4};
 constexpr vector_size_type COOKIE_NAME_IDX{5};
 constexpr vector_size_type COOKIE_VALUE_IDX{6};
 
+static bool
+isSessionCookie(const FileDownloader::Cookie & c)
+{
+	// check against epoch
+	return c.expiry == std::chrono::system_clock::time_point();
+}
+
+static bool
+isCookieExpiredAndNotSession(const FileDownloader::Cookie & c)
+{
+	return std::chrono::system_clock::now() >= c.expiry && !isSessionCookie(c);
+}
+
 void
 CurlFileDownloader::addCookie(const Cookie & c)
 {
+	if(isCookieExpiredAndNotSession(c))
+	{
+		this->data->logger << LogLevel::Debug << "outdated cookie not saved!" << endl;
+		return;
+	}
 	std::ostringstream cookieLineBuilder;
 	cookieLineBuilder << c.domain << "\tTRUE\t" << c.path << '\t' << (c.secure ? COOKIE_TRUE : COOKIE_FALSE)
 	                  << '\t' << utils::String::toString(std::chrono::duration_cast<std::chrono::seconds>(c.expiry.time_since_epoch()).count())
