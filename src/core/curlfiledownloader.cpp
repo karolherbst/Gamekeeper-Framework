@@ -420,21 +420,26 @@ CurlFileDownloader::getCookies()
 	FileDownloader::CookieBucket result;
 	this->data->handleCurlError(curl_easy_getinfo(this->data->handle, CURLINFO_COOKIELIST, &list));
 
-	while(list != nullptr)
+	for(; list != nullptr; list = list->next)
 	{
 		std::vector<std::string> strings;
 		this->data->logger << LogLevel::Debug << "parse Cookie: " << list->data << endl;
 		balgo::split(strings, list->data, balgo::is_any_of("\t"));
+		int64_t cookieTime = std::stol(strings[COOKIE_EXPIRY_IDX]);
+		if(cookieTime != 0 && std::chrono::system_clock::now() > std::chrono::system_clock::time_point(std::chrono::seconds(cookieTime)))
+		{
+			this->data->logger << LogLevel::Debug << "Cookie ignored, because it is expired" << endl;
+			continue;
+		}
 		result.push_back(
 		{
 			strings[COOKIE_NAME_IDX],
 			strings[COOKIE_VALUE_IDX],
 			std::move(fixCookieDomain(strings[COOKIE_DOMAIN_IDX])),
 			strings[COOKIE_PATH_IDX],
-			std::stol(strings[COOKIE_EXPIRY_IDX]),
+			cookieTime,
 			(strings[COOKIE_SECURE_IDX] == COOKIE_TRUE)
 		});
-		list = list->next;
 	}
 
 	curl_slist_free_all(list);
