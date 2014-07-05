@@ -38,6 +38,7 @@ file(GLOB headers
   ${GAMEKEEPER_PRIVATE_INCLUDE_DIR}/gamekeeper/core/log4cppLogger.h
   ${GAMEKEEPER_PRIVATE_INCLUDE_DIR}/gamekeeper/core/log4cpploggerFactory.h
   ${GAMEKEEPER_PRIVATE_INCLUDE_DIR}/gamekeeper/core/log4cppLoggerStream.h
+  ${GAMEKEEPER_PRIVATE_INCLUDE_DIR}/gamekeeper/core/portableinstalldirspaths.h
   ${GAMEKEEPER_PRIVATE_INCLUDE_DIR}/gamekeeper/core/stdc++11threadmanager.h
   ${GAMEKEEPER_PRIVATE_INCLUDE_DIR}/gamekeeper/core/threadmanager.h
   ${GAMEKEEPER_PRIVATE_INCLUDE_DIR}/gamekeeper/core/xdgpaths.h
@@ -54,6 +55,7 @@ file(GLOB sources
   log4cppLogger.cpp
   log4cpploggerFactory.cpp
   log4cppLoggerStream.cpp
+  portableinstalldirspaths.cpp
   stdc++11threadmanager.cpp
   xdgpaths.cpp
   ${platform_sources}

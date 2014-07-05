@@ -41,6 +41,7 @@
 #include <gamekeeper/core/curlfiledownloaderfactory.h>
 #include <gamekeeper/core/gnuinstalldirspaths.h>
 #include <gamekeeper/core/log4cpploggerFactory.h>
+#include <gamekeeper/core/portableinstalldirspaths.h>
 #include <gamekeeper/core/stdc++11threadmanager.h>
 #include <gamekeeper/core/xdgpaths.h>
 
@@ -186,11 +187,19 @@ GameKeeperRuntime::main(int argc, const char* argv[], NewInstanceFuncPtr instanc
 	{
 #if defined(GAMEKEEPER_OS_IS_LINUX)
 		bundleLayout = "FHS";
+#elif defined(GAMEKEEPER_OS_IS_WINDOWS)
+		bundleLayout = "portable";
 #endif
 	}
 	if(bundleLayout == "FHS")
 	{
 		containerBuilder.registerType<GNUInstallDirsPaths>()->
+			as<BundlePaths>()->
+			singleInstance();
+	}
+	else if(bundleLayout == "portable")
+	{
+		containerBuilder.registerType<PortableInstallDirsPaths>(CREATE(new PortableInstallDirsPaths(INJECT(OSInformation))))->
 			as<BundlePaths>()->
 			singleInstance();
 	}
