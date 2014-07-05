@@ -63,7 +63,7 @@ interface PUBLIC_API FileDownloader
 	 */
 	struct PUBLIC_API Cookie
 	{
-		PUBLIC_API Cookie(const std::string & name, const std::string & value, const std::string & domain, const std::string & path = "", time_t expiry = 0, bool secure = false);
+		PUBLIC_API Cookie(const std::string & name, const std::string & value, const std::string & domain, const std::string & path = "", gktime64_t expiry = 0, bool secure = false);
 		const std::string name;
 		const std::string value;
 		const std::string domain;

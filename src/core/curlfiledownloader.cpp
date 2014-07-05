@@ -343,13 +343,31 @@ constexpr vector_size_type COOKIE_EXPIRY_IDX{4};
 constexpr vector_size_type COOKIE_NAME_IDX{5};
 constexpr vector_size_type COOKIE_VALUE_IDX{6};
 
+static bool
+isSessionCookie(const FileDownloader::Cookie & c)
+{
+	// check against epoch
+	return c.expiry == std::chrono::system_clock::time_point();
+}
+
+static bool
+isCookieExpiredAndNotSession(const FileDownloader::Cookie & c)
+{
+	return std::chrono::system_clock::now() >= c.expiry && !isSessionCookie(c);
+}
+
 void
 CurlFileDownloader::addCookie(const Cookie & c)
 {
+	if(isCookieExpiredAndNotSession(c))
+	{
+		this->data->logger << LogLevel::Debug << "outdated cookie not saved!" << endl;
+		return;
+	}
 	std::ostringstream cookieLineBuilder;
 	cookieLineBuilder << c.domain << "\tTRUE\t" << c.path << '\t' << (c.secure ? COOKIE_TRUE : COOKIE_FALSE)
-	                  << '\t' << utils::String::toString(std::chrono::system_clock::to_time_t(c.expiry)) << '\t'
-	                  << c.name << '\t' << c.value;
+	                  << '\t' << utils::String::toString(std::chrono::duration_cast<std::chrono::seconds>(c.expiry.time_since_epoch()).count())
+	                  << '\t' << c.name << '\t' << c.value;
 	std::string genLine = cookieLineBuilder.str();
 	this->data->logger << LogLevel::Debug << "saving cookie line: " << genLine << endl;
 	this->data->setOpt(CURLOPT_COOKIELIST, genLine.c_str());
@@ -402,21 +420,26 @@ CurlFileDownloader::getCookies()
 	FileDownloader::CookieBucket result;
 	this->data->handleCurlError(curl_easy_getinfo(this->data->handle, CURLINFO_COOKIELIST, &list));
 
-	while(list != nullptr)
+	for(; list != nullptr; list = list->next)
 	{
 		std::vector<std::string> strings;
 		this->data->logger << LogLevel::Debug << "parse Cookie: " << list->data << endl;
 		balgo::split(strings, list->data, balgo::is_any_of("\t"));
+		int64_t cookieTime = std::stol(strings[COOKIE_EXPIRY_IDX]);
+		if(cookieTime != 0 && std::chrono::system_clock::now() > std::chrono::system_clock::time_point(std::chrono::seconds(cookieTime)))
+		{
+			this->data->logger << LogLevel::Debug << "Cookie ignored, because it is expired" << endl;
+			continue;
+		}
 		result.push_back(
 		{
 			strings[COOKIE_NAME_IDX],
 			strings[COOKIE_VALUE_IDX],
 			std::move(fixCookieDomain(strings[COOKIE_DOMAIN_IDX])),
 			strings[COOKIE_PATH_IDX],
-			std::stoi(strings[COOKIE_EXPIRY_IDX]),
+			cookieTime,
 			(strings[COOKIE_SECURE_IDX] == COOKIE_TRUE)
 		});
-		list = list->next;
 	}
 
 	curl_slist_free_all(list);

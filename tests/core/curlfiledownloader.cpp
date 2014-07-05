@@ -23,6 +23,8 @@
 #include <exception>
 #include <sstream>
 
+#include <std_compat/thread>
+
 #include <gamekeeper/core/curlfiledownloaderfactory.h>
 #include <gamekeeper/core/filedownloader.h>
 #include <gamekeeper/core/log4cpploggerFactory.h>
@@ -160,6 +162,32 @@ TEST_F(CurlFileDownloaderTest, setCookieCrazyDomainLocalhostDot)
 	cfd->addCookie({"crazyCurl", "", "localhost"});
 
 	auto cs = cfd->getCookies();
-	EXPECT_EQ(1, cs.size());
+	ASSERT_EQ(1, cs.size());
 	EXPECT_EQ("localhost", cs[0].domain);
+}
+
+TEST_F(CurlFileDownloaderTest, cookieExpired)
+{
+	auto cfd = this->fileDownloaderFactory->create();
+	cfd->addCookie({"expired", "expired", "domain.org", "/", 10000});
+	auto cs = cfd->getCookies();
+	EXPECT_TRUE(cs.empty());
+}
+
+TEST_F(CurlFileDownloaderTest, sessionCookie)
+{
+	auto cfd = this->fileDownloaderFactory->create();
+	cfd->addCookie({"expired", "expired", "domain.org", "/", 0});
+	auto cs = cfd->getCookies();
+	EXPECT_FALSE(cs.empty());
+}
+
+TEST_F(CurlFileDownloaderTest, cookieCheckExpiring)
+{
+	auto cfd = this->fileDownloaderFactory->create();
+	cfd->addCookie({"expiring", "expiring", "domain.org", "/",
+	                std::chrono::duration_cast<std::chrono::seconds>((std::chrono::system_clock::now() + std::chrono::seconds(1)).time_since_epoch()).count()});
+	ASSERT_FALSE(cfd->getCookies().empty());
+	std::this_thread::sleep_for(std::chrono::seconds(2));
+	ASSERT_TRUE(cfd->getCookies().empty());
 }
