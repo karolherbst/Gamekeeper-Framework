@@ -44,6 +44,11 @@ target_link_libraries(gamekeeperUnitTests
   ${HYPODERMIC_LIBRARIES}
 )
 
+if(MINGW)
+  add_definitions(-DBOOST_THREAD_USE_LIB)
+  target_link_libraries(gamekeeperUnitTests ${Boost_THREAD_LIBRARY})
+endif()
+
 if(BUILD_USE_COTIRE)
   cotire(gamekeeperUnitTests)
 endif()
