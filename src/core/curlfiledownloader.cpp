@@ -425,7 +425,7 @@ CurlFileDownloader::getCookies()
 		std::vector<std::string> strings;
 		this->data->logger << LogLevel::Debug << "parse Cookie: " << list->data << endl;
 		balgo::split(strings, list->data, balgo::is_any_of("\t"));
-		int64_t cookieTime = std::stol(strings[COOKIE_EXPIRY_IDX]);
+		gktime64_t cookieTime = std::stol(strings[COOKIE_EXPIRY_IDX]);
 		if(cookieTime != 0 && std::chrono::system_clock::now() > std::chrono::system_clock::time_point(std::chrono::seconds(cookieTime)))
 		{
 			this->data->logger << LogLevel::Debug << "Cookie ignored, because it is expired" << endl;
