@@ -89,6 +89,26 @@ namespace String
 	                        typename std::enable_if<!std::is_same<typename std::remove_cv<typename std::remove_pointer<T>::type>::type,
 	                                                              char>::value, std::string>::type>::type
 	toString(const T &);
+
+	template <class T>
+	PUBLIC_INLINE
+	typename std::enable_if<std::is_constructible<T, const std::string &>::value, T>::type
+	toType(const std::string &);
+
+	template <class T>
+	PUBLIC_INLINE
+	typename std::enable_if<Is8BitInt<T>::value, T>::type
+	toType(const std::string &);
+
+	template <class T>
+	PUBLIC_INLINE
+	typename std::enable_if<Is16BitOrHigherInt<T>::value || std::is_same<T, char>::value, T>::type
+	toType(const std::string &);
+
+	template <class T>
+	PUBLIC_INLINE
+	typename std::enable_if<std::is_enum<T>::value, T>::type
+	toType(const std::string &);
 }
 
 template <class charT, class traits>
@@ -153,6 +173,39 @@ typename std::enable_if<std::is_pointer<T>::value,
 String::toString(const T & t)
 {
 	return boost::lexical_cast<std::string>(t);
+}
+
+template <class T>
+PUBLIC_INLINE
+typename std::enable_if<std::is_constructible<T, const std::string &>::value, T>::type
+String::toType(const std::string & str)
+{
+	return str;
+}
+
+template <class T>
+PUBLIC_INLINE
+typename std::enable_if<String::Is8BitInt<T>::value, T>::type
+String::toType(const std::string & str)
+{
+	return boost::lexical_cast<int16_t>(str);
+}
+
+template <class T>
+PUBLIC_INLINE
+typename std::enable_if<String::Is16BitOrHigherInt<T>::value || std::is_same<T, char>::value, T>::type
+String::toType(const std::string & str)
+{
+	return boost::lexical_cast<T>(str);
+}
+
+template <class T>
+PUBLIC_INLINE
+typename std::enable_if<std::is_enum<T>::value, T>::type
+String::toType(const std::string & str)
+{
+	typedef typename std::underlying_type<T>::type UT;
+	return static_cast<T>(boost::lexical_cast<UT>(str));
 }
 
 GAMEKEEPER_NAMESPACE_END(core)
