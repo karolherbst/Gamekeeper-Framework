@@ -22,6 +22,9 @@
 
 #include <climits>
 #include <cstdlib>
+#include <unistd.h>
+
+namespace bfs = boost::filesystem;
 
 GAMEKEEPER_NAMESPACE_START(core)
 
@@ -48,13 +51,13 @@ LinuxInformation::getEnvSeperator()
 	return ":";
 }
 
-boost::filesystem::path
+bfs::path
 LinuxInformation::getSystemRoot()
 {
 	return "/";
 }
 
-boost::filesystem::path
+bfs::path
 LinuxInformation::getUserPath()
 {
 	return getEnv("HOME");
@@ -66,6 +69,19 @@ LinuxInformation::getUserName()
 	// LOGNAME should work in POSIX, but fall back to USER for things like BSD.
 	std::string logName = getEnv("LOGNAME");
 	return !logName.empty() ? logName : getEnv("USER");
+}
+
+bfs::path
+LinuxInformation::getExecPath()
+{
+	char buffer[PATH_MAX];
+	ssize_t res = readlink("/proc/self/exe", buffer, PATH_MAX);
+
+	if(res == -1)
+	{
+		return bfs::path();
+	}
+	return bfs::path(buffer, &buffer[res]);
 }
 
 GAMEKEEPER_NAMESPACE_END(core)

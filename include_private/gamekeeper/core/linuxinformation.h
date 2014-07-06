@@ -36,6 +36,7 @@ public:
 	PRIVATE_API virtual boost::filesystem::path getSystemRoot() override;
 	PRIVATE_API virtual boost::filesystem::path getUserPath() override;
 	PRIVATE_API virtual std::string getUserName() override;
+	PRIVATE_API virtual boost::filesystem::path getExecPath() override;
 };
 
 GAMEKEEPER_NAMESPACE_END(core)

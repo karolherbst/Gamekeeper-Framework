@@ -104,6 +104,16 @@ interface PUBLIC_API OSInformation
 	 * @return the name
 	 */
 	PUBLIC_API virtual std::string getUserName() = 0;
+
+	/**
+	 * returns the path where the file of the current process is located
+	 *
+	 * @author Karol Herbst
+	 * @since 0
+	 *
+	 * @return the path
+	 */
+	PUBLIC_API virtual boost::filesystem::path getExecPath() = 0;
 };
 
 GAMEKEEPER_NAMESPACE_END(core)
