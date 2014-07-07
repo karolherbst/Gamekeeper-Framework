@@ -48,25 +48,36 @@ TEST_F(StringUtilsTest, toString_##name) \
         EXPECT_EQ(exp_value, gamekeeper::utils::String::toString(C)); \
 }
 
+#define TO_TYPE_TEST(name, type, value, exp_value) \
+TEST_F(StringUtilsTest, toType_##name) \
+{ \
+	const type expected = exp_value; \
+	EXPECT_EQ(expected, gamekeeper::utils::String::toType<type>(value)); \
+}
+
+#define TO_STRING_TYPE_TEST(name, type, value, exp_value) \
+TO_STRING_TEST(name, type, value, exp_value) \
+TO_TYPE_TEST(name, type, exp_value, value)
+
 static constexpr char TEST_STRING[] = "test string";
 static const std::string TEST_STRING_STRING = "test string";
 
-TO_STRING_TEST(char, char, 'c', "c");
-TO_STRING_TEST(uint8_t, uint8_t, 5, "5");
-TO_STRING_TEST(int8_t, int8_t, 5, "5");
-TO_STRING_TEST(uint16_t, uint16_t, 5, "5");
-TO_STRING_TEST(int16_t, int16_t, 5, "5");
-TO_STRING_TEST(uint32_t, uint32_t, 5, "5");
-TO_STRING_TEST(int32_t, int32_t, 5, "5");
-TO_STRING_TEST(uint64_t, uint64_t, 5, "5");
-TO_STRING_TEST(int64_t, int64_t, 5, "5");
-TO_STRING_TEST(float, float, 5.0f, "5");
-TO_STRING_TEST(double, double, 5.0, "5");
-TO_STRING_TEST(long_double, long double, 5.0, "5");
-TO_STRING_TEST(string, std::string, TEST_STRING, TEST_STRING);
+TO_STRING_TYPE_TEST(char, char, 'c', "c");
+TO_STRING_TYPE_TEST(uint8_t, uint8_t, 5, "5");
+TO_STRING_TYPE_TEST(int8_t, int8_t, 5, "5");
+TO_STRING_TYPE_TEST(uint16_t, uint16_t, 5, "5");
+TO_STRING_TYPE_TEST(int16_t, int16_t, 5, "5");
+TO_STRING_TYPE_TEST(uint32_t, uint32_t, 5, "5");
+TO_STRING_TYPE_TEST(int32_t, int32_t, 5, "5");
+TO_STRING_TYPE_TEST(uint64_t, uint64_t, 5, "5");
+TO_STRING_TYPE_TEST(int64_t, int64_t, 5, "5");
+TO_STRING_TYPE_TEST(float, float, 5.0f, "5");
+TO_STRING_TYPE_TEST(double, double, 5.0, "5");
+TO_STRING_TYPE_TEST(long_double, long double, 5.0, "5");
+TO_STRING_TYPE_TEST(string, std::string, TEST_STRING, TEST_STRING);
 TO_STRING_TEST(string_from_string, std::string &, TEST_STRING_STRING, TEST_STRING_STRING);
 TO_STRING_TEST(char_ptr, char * , TEST_STRING, TEST_STRING);
 TO_STRING_TEST(ptr, void *, (void *)5, "0x5");
-TO_STRING_TEST(enum, TEST_ENUM, TEST_ENUM_TEST, "4");
-TO_STRING_TEST(enum_class_int, TEST_ENUM_INT, TEST_ENUM_INT::TEST, "5");
-TO_STRING_TEST(enum_class_char, TEST_ENUM_CHAR, TEST_ENUM_CHAR::TEST, "E");
+TO_STRING_TYPE_TEST(enum, TEST_ENUM, TEST_ENUM_TEST, "4");
+TO_STRING_TYPE_TEST(enum_class_int, TEST_ENUM_INT, TEST_ENUM_INT::TEST, "5");
+TO_STRING_TYPE_TEST(enum_class_char, TEST_ENUM_CHAR, TEST_ENUM_CHAR::TEST, "E");
