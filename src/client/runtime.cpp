@@ -39,6 +39,7 @@
 #include <gamekeeper/core/loggerStream.h>
 #include <gamekeeper/core/boostpopropertyresolver.h>
 #include <gamekeeper/core/curlfiledownloaderfactory.h>
+#include <gamekeeper/core/gnuinstalldirspaths.h>
 #include <gamekeeper/core/log4cpploggerFactory.h>
 #include <gamekeeper/core/stdc++11threadmanager.h>
 #include <gamekeeper/core/xdgpaths.h>
@@ -50,10 +51,8 @@
   #define OSINFORMATIONCLASS WindowsInformation
   #define THREADHELPERCLASS Win32ThreadHelper
 #else
-  #include <gamekeeper/core/gnuinstalldirspaths.h>
   #include <gamekeeper/core/linuxinformation.h>
   #include <gamekeeper/core/pthreadhelper.h>
-  #define BUNDLEPATHSCLASS GNUInstallDirsPaths
   #define OSINFORMATIONCLASS LinuxInformation
   #define THREADHELPERCLASS PthreadHelper
 #endif
@@ -180,9 +179,22 @@ GameKeeperRuntime::main(int argc, const char* argv[], NewInstanceFuncPtr instanc
 		localContainer->resolve<UserPaths>())->
 		as<UserPaths>()->
 		singleInstance();
-	containerBuilder.registerType<BUNDLEPATHSCLASS>()->
-	        as<BundlePaths>()->
-	        singleInstance();
+
+	std::string bundleLayout = pr->get<std::string>("filelayout.bundle");
+
+	if(bundleLayout == "auto")
+	{
+#if defined(GAMEKEEPER_OS_IS_LINUX)
+		bundleLayout = "FHS";
+#endif
+	}
+	if(bundleLayout == "FHS")
+	{
+		containerBuilder.registerType<GNUInstallDirsPaths>()->
+			as<BundlePaths>()->
+			singleInstance();
+	}
+
 	containerBuilder.registerType<Log4cppLoggerFactory>(CREATE(new Log4cppLoggerFactory(INJECT(UserPaths))))->
 	        as<LoggerFactory>()->
 	        singleInstance();
