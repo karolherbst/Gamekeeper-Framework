@@ -49,7 +49,7 @@ fixPath(const std::string & path)
 }
 
 // this constructor will do all required steps from RFC 6265 section 5.2
-FileDownloader::Cookie::Cookie(const std::string & name, const std::string & value, const std::string & domain, const std::string & path, time_t expiry, bool secure)
+FileDownloader::Cookie::Cookie(const std::string & name, const std::string & value, const std::string & domain, const std::string & path, gktime64_t expiry, bool secure)
 :	name(std::move(fixNameOrValue(name))),
 	value(std::move(fixNameOrValue(value))),
 	domain(std::move(fixDomain(domain))),

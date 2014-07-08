@@ -60,7 +60,7 @@ file(GLOB sources
 )
 
 set_source_files_properties(gnuinstalldirspaths.cpp
-                            PROPERTIES COMPILE_DEFINITIONS DATADIR="${CMAKE_INSTALL_FULL_DATADIR}")
+                            PROPERTIES COMPILE_DEFINITIONS GK_DATADIR="${CMAKE_INSTALL_FULL_DATADIR}")
 
 add_library(gamekeeperCore SHARED ${sources} ${headers})
 target_link_libraries(gamekeeperCore
@@ -71,14 +71,14 @@ target_link_libraries(gamekeeperCore
   ${CMAKE_THREAD_LIBS_INIT}
 )
 
-if(BUILD_USE_COTIRE)
-  cotire(gamekeeperCore)
-endif()
-
 if(MINGW)
   add_definitions(-DBOOST_THREAD_USE_LIB)
   target_link_libraries(gamekeeperCore
     ${Boost_CHRONO_LIBRARY}
     ${Boost_THREAD_LIBRARY}
   )
+endif()
+
+if(BUILD_USE_COTIRE)
+  cotire(gamekeeperCore)
 endif()

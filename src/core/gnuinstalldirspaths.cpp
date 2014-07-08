@@ -24,7 +24,7 @@ namespace bfs = boost::filesystem;
 
 GAMEKEEPER_NAMESPACE_START(core)
 
-static const bfs::path dataPath(DATADIR"/gamekeeper");
+static const bfs::path dataPath(GK_DATADIR"/gamekeeper");
 
 const boost::filesystem::path &
 GNUInstallDirsPaths::getDataPath()
