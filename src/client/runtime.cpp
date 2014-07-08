@@ -162,6 +162,9 @@ GameKeeperRuntime::main(int argc, const char* argv[], NewInstanceFuncPtr instanc
 
 	po::notify(vm);
 
+	// build our property resolver now
+	std::shared_ptr<PropertyResolver> pr = std::make_shared<BoostPOPropertyResolver>(vm);
+
 	Hypodermic::ContainerBuilder containerBuilder;
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-parameter"
@@ -182,7 +185,7 @@ GameKeeperRuntime::main(int argc, const char* argv[], NewInstanceFuncPtr instanc
 	containerBuilder.registerType<Log4cppLoggerFactory>(CREATE(new Log4cppLoggerFactory(INJECT(UserPaths))))->
 	        as<LoggerFactory>()->
 	        singleInstance();
-	containerBuilder.registerType<BoostPOPropertyResolver>(CREATE_CAPTURED([&vm], new BoostPOPropertyResolver(vm)))->
+	containerBuilder.registerInstance(pr)->
 		as<PropertyResolver>()->
 		singleInstance();
 	containerBuilder.registerType<CurlFileDownloaderFactory>(
