@@ -18,27 +18,29 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef GAMEKEEPER_CORE_LINUXINFORMATION_H
-#define GAMEKEEPER_CORE_LINUXINFORMATION_H 1
+#ifndef GAMEKEEPER_CORE_PORTABLEINSTALLDIRSPATHS_H
+#define GAMEKEEPER_CORE_PORTABLEINSTALLDIRSPATHS_H 1
 
 #include <gamekeeper/core/common.h>
 
-#include <gamekeeper/core/osinformation.h>
+#include <gamekeeper/core/bundlepaths.h>
 
 GAMEKEEPER_NAMESPACE_START(core)
 
-class PUBLIC_API LinuxInformation : public OSInformation
+interface OSInformation;
+
+class PUBLIC_API PortableInstallDirsPaths : public BundlePaths
 {
 public:
-	PRIVATE_API virtual std::string getEnv(const char * name) override;
-	PRIVATE_API virtual void setEnv(const char *, const char *) override;
-	PRIVATE_API virtual std::string getEnvSeperator() override;
-	PRIVATE_API virtual boost::filesystem::path getSystemRoot() override;
-	PRIVATE_API virtual boost::filesystem::path getUserPath() override;
-	PRIVATE_API virtual std::string getUserName() override;
-	PRIVATE_API virtual boost::filesystem::path getExecPath() override;
+	PUBLIC_API PortableInstallDirsPaths(std::shared_ptr<OSInformation>);
+	PRIVATE_API ~PortableInstallDirsPaths();
+
+	PRIVATE_API virtual const boost::filesystem::path & getDataPath() override;
+private:
+	class PRIVATE_API PImpl;
+	std::unique_ptr<PImpl> data;
 };
 
 GAMEKEEPER_NAMESPACE_END(core)
 
-#endif //GAMEKEEPER_CORE_LINUXINFORMATION_H
+#endif //GAMEKEEPER_CORE_PORTABLEINSTALLDIRSPATHS_H

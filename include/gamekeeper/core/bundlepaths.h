@@ -19,7 +19,7 @@
  */
 
 #ifndef GAMEKEEPER_CORE_BUNDLEPATHS_H
-#define GAMEKEEPER_CORE_BUNDKEPATHS_H 1
+#define GAMEKEEPER_CORE_BUNDLEPATHS_H 1
 
 #include <gamekeeper/core/common.h>
 

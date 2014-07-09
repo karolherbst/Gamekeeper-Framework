@@ -39,7 +39,9 @@
 #include <gamekeeper/core/loggerStream.h>
 #include <gamekeeper/core/boostpopropertyresolver.h>
 #include <gamekeeper/core/curlfiledownloaderfactory.h>
+#include <gamekeeper/core/gnuinstalldirspaths.h>
 #include <gamekeeper/core/log4cpploggerFactory.h>
+#include <gamekeeper/core/portableinstalldirspaths.h>
 #include <gamekeeper/core/stdc++11threadmanager.h>
 #include <gamekeeper/core/xdgpaths.h>
 
@@ -50,10 +52,8 @@
   #define OSINFORMATIONCLASS WindowsInformation
   #define THREADHELPERCLASS Win32ThreadHelper
 #else
-  #include <gamekeeper/core/gnuinstalldirspaths.h>
   #include <gamekeeper/core/linuxinformation.h>
   #include <gamekeeper/core/pthreadhelper.h>
-  #define BUNDLEPATHSCLASS GNUInstallDirsPaths
   #define OSINFORMATIONCLASS LinuxInformation
   #define THREADHELPERCLASS PthreadHelper
 #endif
@@ -91,6 +91,7 @@ fillProperties(po::options_description & cmd, po::options_description & file)
 		("help,h", "produce help message");
 
 	descNetwork.add_options()
+		("filelayout.bundle", po::value<std::string>()->default_value("auto"))
 		("network.debug", po::value<bool>()->default_value(false)->implicit_value(true))
 		("network.time_between_retries", po::value<uint16_t>()->default_value(300))
 		("network.user_agent", po::value<std::string>())
@@ -162,6 +163,9 @@ GameKeeperRuntime::main(int argc, const char* argv[], NewInstanceFuncPtr instanc
 
 	po::notify(vm);
 
+	// build our property resolver now
+	std::shared_ptr<PropertyResolver> pr = std::make_shared<BoostPOPropertyResolver>(vm);
+
 	Hypodermic::ContainerBuilder containerBuilder;
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-parameter"
@@ -176,13 +180,34 @@ GameKeeperRuntime::main(int argc, const char* argv[], NewInstanceFuncPtr instanc
 		localContainer->resolve<UserPaths>())->
 		as<UserPaths>()->
 		singleInstance();
-	containerBuilder.registerType<BUNDLEPATHSCLASS>()->
-	        as<BundlePaths>()->
-	        singleInstance();
+
+	std::string bundleLayout = pr->get<std::string>("filelayout.bundle");
+
+	if(bundleLayout == "auto")
+	{
+#if defined(GAMEKEEPER_OS_IS_LINUX)
+		bundleLayout = "FHS";
+#elif defined(GAMEKEEPER_OS_IS_WINDOWS)
+		bundleLayout = "portable";
+#endif
+	}
+	if(bundleLayout == "FHS")
+	{
+		containerBuilder.registerType<GNUInstallDirsPaths>()->
+			as<BundlePaths>()->
+			singleInstance();
+	}
+	else if(bundleLayout == "portable")
+	{
+		containerBuilder.registerType<PortableInstallDirsPaths>(CREATE(new PortableInstallDirsPaths(INJECT(OSInformation))))->
+			as<BundlePaths>()->
+			singleInstance();
+	}
+
 	containerBuilder.registerType<Log4cppLoggerFactory>(CREATE(new Log4cppLoggerFactory(INJECT(UserPaths))))->
 	        as<LoggerFactory>()->
 	        singleInstance();
-	containerBuilder.registerType<BoostPOPropertyResolver>(CREATE_CAPTURED([&vm], new BoostPOPropertyResolver(vm)))->
+	containerBuilder.registerInstance(pr)->
 		as<PropertyResolver>()->
 		singleInstance();
 	containerBuilder.registerType<CurlFileDownloaderFactory>(

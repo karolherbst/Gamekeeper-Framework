@@ -81,3 +81,8 @@ TEST_F(OSINFORMATIONCLASSTEST, setEnv)
 	osInfo->setEnv(testValue, testValue);
 	EXPECT_EQ(osInfo->getEnv(testValue), testValue);
 }
+
+TEST_F(OSINFORMATIONCLASSTEST, getExecPath)
+{
+	EXPECT_FALSE(osInfo->getExecPath().empty());
+}

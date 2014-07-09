@@ -28,6 +28,8 @@
 
 #include <boost/locale/encoding_utf.hpp>
 
+namespace bfs = boost::filesystem;
+
 GAMEKEEPER_NAMESPACE_START(core)
 
 using boost::locale::conv::utf_to_utf;
@@ -52,13 +54,13 @@ WindowsInformation::getEnvSeperator()
 	return ";";
 }
 
-boost::filesystem::path
+bfs::path
 WindowsInformation::getSystemRoot()
 {
 	return "C:\\";
 }
 
-boost::filesystem::path
+bfs::path
 WindowsInformation::getUserPath()
 {
 	TCHAR szPath[MAX_PATH];
@@ -73,6 +75,14 @@ WindowsInformation::getUserName()
 	DWORD size = UNLEN + 1;
 	GetUserNameW(buffer, &size);
 	return utf_to_utf<char>(buffer, &buffer[size]);
+}
+
+bfs::path
+WindowsInformation::getExecPath()
+{
+	wchar_t buffer[MAX_PATH];
+	DWORD resSize = GetModuleFileNameW(nullptr, buffer, MAX_PATH);
+	return bfs::path(buffer, &buffer[resSize]);
 }
 
 GAMEKEEPER_NAMESPACE_END(core)

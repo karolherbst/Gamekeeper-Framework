@@ -18,27 +18,35 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef GAMEKEEPER_CORE_LINUXINFORMATION_H
-#define GAMEKEEPER_CORE_LINUXINFORMATION_H 1
-
-#include <gamekeeper/core/common.h>
+#include <gamekeeper/core/portableinstalldirspaths.h>
 
 #include <gamekeeper/core/osinformation.h>
 
+namespace bfs = boost::filesystem;
+
 GAMEKEEPER_NAMESPACE_START(core)
 
-class PUBLIC_API LinuxInformation : public OSInformation
+static bfs::path exePath;
+
+class PortableInstallDirsPaths::PImpl
 {
 public:
-	PRIVATE_API virtual std::string getEnv(const char * name) override;
-	PRIVATE_API virtual void setEnv(const char *, const char *) override;
-	PRIVATE_API virtual std::string getEnvSeperator() override;
-	PRIVATE_API virtual boost::filesystem::path getSystemRoot() override;
-	PRIVATE_API virtual boost::filesystem::path getUserPath() override;
-	PRIVATE_API virtual std::string getUserName() override;
-	PRIVATE_API virtual boost::filesystem::path getExecPath() override;
+	PImpl(std::shared_ptr<OSInformation>);
+	bfs::path dataPath;
 };
 
-GAMEKEEPER_NAMESPACE_END(core)
+PortableInstallDirsPaths::PImpl::PImpl(std::shared_ptr<OSInformation> osi)
+:	dataPath(osi->getExecPath().parent_path() / "data"){}
 
-#endif //GAMEKEEPER_CORE_LINUXINFORMATION_H
+PortableInstallDirsPaths::PortableInstallDirsPaths(std::shared_ptr<OSInformation> osi)
+:	data(new PImpl(osi)){}
+
+PortableInstallDirsPaths::~PortableInstallDirsPaths(){}
+
+const bfs::path &
+PortableInstallDirsPaths::getDataPath()
+{
+	return this->data->dataPath;
+}
+
+GAMEKEEPER_NAMESPACE_END(core)
