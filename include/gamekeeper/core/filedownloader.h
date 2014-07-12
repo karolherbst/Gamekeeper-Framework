@@ -29,6 +29,7 @@
 #include <vector>
 #include <unordered_map>
 
+#include <gamekeeper/core/exception.h>
 #include <gamekeeper/core/interface.h>
 
 GAMEKEEPER_NAMESPACE_START(core)
@@ -88,6 +89,8 @@ interface PUBLIC_API FileDownloader
 
 	PUBLIC_API virtual void setCookies(const CookieBucket & cookies) = 0;
 	PUBLIC_API virtual void clearCookies() = 0;
+
+	class PUBLIC_API GAMEKEEPER_EXCEPTION(FileDownloaderException);
 };
 
 bool PUBLIC_API operator==(const FileDownloader::Cookie & a, const FileDownloader::Cookie & b);

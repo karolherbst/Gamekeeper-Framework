@@ -62,7 +62,15 @@ HTTPPostLoginHandler::login(const std::string & username, const std::string & pa
 		{this->data->usernameField, username},
 		{this->data->passwordField, password}
 	};
-	this->data->hfd->postRequest(this->data->loginUrl, form);
+
+	try
+	{
+		this->data->hfd->postRequest(this->data->loginUrl, form);
+	}
+	catch(const core::FileDownloader::FileDownloaderException & e)
+	{
+		return false;
+	}
 	return !this->data->hfd->getCookies().empty();
 }
 

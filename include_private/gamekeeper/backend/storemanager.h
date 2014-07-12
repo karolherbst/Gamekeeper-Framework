@@ -28,6 +28,7 @@
 #include <vector>
 
 #include <gamekeeper/backend/storeconfiguration.h>
+#include <gamekeeper/core/exception.h>
 
 GAMEKEEPER_NAMESPACE_START(core)
 
@@ -52,6 +53,8 @@ public:
 	PUBLIC_API StoreManager(std::shared_ptr<core::LoggerFactory>, std::shared_ptr<core::BundlePaths>, std::shared_ptr<core::FileDownloaderFactory>);
 	PUBLIC_API std::vector<StoreConfiguration> getAllStores();
 	PUBLIC_API StoreConfiguration getStore(const std::string &);
+
+	class PUBLIC_API GAMEKEEPER_EXCEPTION(StoreManagerException);
 private:
 	core::Logger & logger;
 	std::map<std::string, StoreConfiguration> storeConfigs;
