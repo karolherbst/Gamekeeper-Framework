@@ -54,7 +54,7 @@ FileDownloader::Cookie::Cookie(const std::string & name, const std::string & val
 	value(std::move(fixNameOrValue(value))),
 	domain(std::move(fixDomain(domain))),
 	path(std::move(fixPath(path))),
-	expiry(std::chrono::system_clock::from_time_t(expiry)),
+	expiry(std::chrono::seconds(expiry)),
 	secure(secure){}
 
 bool operator==(const FileDownloader::Cookie & a, const FileDownloader::Cookie & b)
