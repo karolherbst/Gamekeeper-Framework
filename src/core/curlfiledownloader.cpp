@@ -370,7 +370,7 @@ static bool
 isSessionCookie(const FileDownloader::Cookie & c)
 {
 	// check against epoch
-	return c.expiry == std::chrono::system_clock::time_point();
+	return c.expiry == FileDownloader::Cookie::TimePoint();
 }
 
 static bool
@@ -448,8 +448,9 @@ CurlFileDownloader::getCookies()
 		std::vector<std::string> strings;
 		this->data->logger << LogLevel::Debug << "parse Cookie: " << list->data << endl;
 		balgo::split(strings, list->data, balgo::is_any_of("\t"));
-		gktime64_t cookieTime = utils::String::toType<gktime64_t>(strings[COOKIE_EXPIRY_IDX]);
-		if(cookieTime != 0 && std::chrono::system_clock::now() > std::chrono::system_clock::time_point(std::chrono::seconds(cookieTime)))
+		Cookie::TimePoint::rep cookieTimeRep(utils::String::toType<Cookie::TimePoint::rep>(strings[COOKIE_EXPIRY_IDX]));
+		Cookie::TimePoint cookieTime = Cookie::TimePoint(std::chrono::seconds(cookieTimeRep));
+		if(cookieTimeRep != 0 && std::chrono::system_clock::now() > cookieTime)
 		{
 			this->data->logger << LogLevel::Debug << "Cookie ignored, because it is expired" << endl;
 			continue;

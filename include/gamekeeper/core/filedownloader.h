@@ -64,12 +64,18 @@ interface PUBLIC_API FileDownloader
 	 */
 	struct PUBLIC_API Cookie
 	{
-		PUBLIC_API Cookie(const std::string & name, const std::string & value, const std::string & domain, const std::string & path = "", gktime64_t expiry = 0, bool secure = false);
+		typedef std::chrono::system_clock::time_point TimePoint;
+		PUBLIC_API Cookie(const std::string & name, const std::string & value, const std::string & domain, const std::string & path = "",
+		                  const TimePoint & expiry = TimePoint(std::chrono::seconds(0)), bool secure = false);
+		PUBLIC_API Cookie(const std::string & name, const std::string & value, const std::string & domain, const std::string & path,
+		                  const TimePoint::duration &, bool secure = false);
+		PUBLIC_API Cookie(const std::string & name, const std::string & value, const std::string & domain, const std::string & path,
+		                  const TimePoint::rep & duration, bool secure = false);
 		const std::string name;
 		const std::string value;
 		const std::string domain;
 		const std::string path;
-		const std::chrono::time_point<std::chrono::system_clock> expiry;
+		const TimePoint expiry;
 		const bool secure;
 	};
 
