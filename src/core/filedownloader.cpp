@@ -58,10 +58,10 @@ FileDownloader::Cookie::Cookie(const std::string & name, const std::string & val
 	secure(secure){}
 
 FileDownloader::Cookie::Cookie(const std::string & name, const std::string & value, const std::string & domain, const std::string & path, const TimePoint::duration & duration, bool secure)
-:	Cookie(name, value, domain, path, duration, secure){}
+:	Cookie(name, value, domain, path, TimePoint(duration), secure){}
 
 FileDownloader::Cookie::Cookie(const std::string & name, const std::string & value, const std::string & domain, const std::string & path, const TimePoint::rep & duration, bool secure)
-:	Cookie(name, value, domain, path, duration, secure){}
+:	Cookie(name, value, domain, path, std::chrono::seconds(duration), secure){}
 
 bool operator==(const FileDownloader::Cookie & a, const FileDownloader::Cookie & b)
 {
