@@ -16,7 +16,7 @@ before_install:
   - sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
   - sudo apt-get update
 install:
-  - sudo apt-get install default-jdk libboost${BV}-dev libboost-filesystem${BV}-dev libboost-program-options${BV}-dev libboost-signals${BV}-dev libboost-system${BV}-dev libboost-test${BV}-dev libcurl4-gnutls-dev libgtest-dev libjansson-dev liblog4cpp5-dev python3-dev swig
+  - sudo apt-get install default-jdk gdb libboost${BV}-dev libboost-filesystem${BV}-dev libboost-program-options${BV}-dev libboost-signals${BV}-dev libboost-system${BV}-dev libboost-test${BV}-dev libcurl4-gnutls-dev libgtest-dev libjansson-dev liblog4cpp5-dev python3-dev swig
   - sudo apt-get install -qq g++-4.8
   - if [ "$CXX" = "g++" ]; then export CXX="g++-4.8" CC="gcc-4.8"; fi
   - if [ -n "$COVERAGE" ]; then sudo pip install cpp-coveralls --use-mirrors; fi
@@ -25,7 +25,7 @@ install:
 script:
   - cmake . -DWITH_CSHARP_FRONTEND=OFF -DWITH_JAVA_FRONTEND=ON -DWITH_PYTHON_FRONTEND=OFF -DBUILD_TESTS=ON -DBUILD_PROTOTYPES=ON
   - if [ -n "$COVERAGE" -a "$TRAVIS_BRANCH" = "master" ]; then COVERITY_UNSUPPORTED=1 cov-build --dir cov-int $BUILD_COMMAND && cov-import-scm --dir cov-int --scm git --log cov-int/scm_log.txt 2>&1 ; else $BUILD_COMMAND ; fi
-  - ctest --output-on-failure .
+  - printf "run\nbacktrace full" | gdb ./tests/core/gamekeeperUnitTests
 after_success:
   - if [ -n "$COVERAGE" ]; then coveralls --gcov gcov-4.8 --exclude tests --exclude gtest-prefix --exclude CMakeFiles --exclude-pattern 'CMake[^\.]*\.c(?:pp)?' --exclude-pattern '[^\.]*\.h' > /dev/null ; fi
   - if [ -n "$COVERAGE" -a "$TRAVIS_BRANCH" = "master" ]; then tar czf analysis-results.tgz cov-int && curl --progress-bar --form project=$TRAVIS_REPO_SLUG --form token=$COVERITY_SCAN_TOKEN --form email=git@karolherbst.de --form file=@analysis-results.tgz --form version=$(git rev-parse --short HEAD) --form description="Travis CI build" https://scan.coverity.com/builds ; fi
