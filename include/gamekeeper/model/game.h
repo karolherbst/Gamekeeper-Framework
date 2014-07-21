@@ -33,6 +33,8 @@ GAMEKEEPER_NAMESPACE_START(model)
 #define GAME_MODEL ( \
 	(std::string, id, Id, GK_MODEL_REQUIRED), \
 	(std::string, name, Name, GK_MODEL_REQUIRED), \
+	(std::string, description, Description, GK_MODEL_OPTIONAL), \
+	(std::string, homepage, Homepage, GK_MODEL_OPTIONAL), \
 	(std::set<gamekeeper::model::Platform>, platforms, Platforms, GK_MODEL_OPTIONAL))
 
 interface PUBLIC_API Game

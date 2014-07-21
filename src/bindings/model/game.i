@@ -27,6 +27,12 @@ struct Game
 
 	const std::string & getName() const;
 	void setName(const std::string &);
+
+	const std::string & getDescription() const;
+	void setDescription(const std::string &);
+
+	const std::string & getHomepage() const;
+	void setHomepage(const std::string &);
 };
 }
 }
@@ -36,4 +42,6 @@ struct Game
 #if defined(SWIGPYTHON) || defined(SWIGCSHARP)
 	%attribute(gamekeeper::bindings::model::Game, const std::string &, id, getId, setId);
 	%attribute(gamekeeper::bindings::model::Game, const std::string &, name, getName, setName);
+	%attribute(gamekeeper::bindings::model::Game, const std::string &, description, getDescription, setDescription);
+	%attribute(gamekeeper::bindings::model::Game, const std::string &, homepage, getHomepage, setHomepage);
 #endif
