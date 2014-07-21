@@ -26,14 +26,45 @@
 
 GAMEKEEPER_NAMESPACE_START(backend)
 
+class PRIVATE_API XpathQuery
+{
+public:
+	XpathQuery(const std::string &);
+	const std::unique_ptr<pugi::xpath_query> & operator->();
+	operator bool();
+private:
+	std::unique_ptr<pugi::xpath_query> query;
+};
+
+XpathQuery::XpathQuery(const std::string & _query)
+{
+	if(!_query.empty())
+	{
+		query.reset(new pugi::xpath_query(_query.c_str()));
+	}
+}
+
+const std::unique_ptr<pugi::xpath_query> &
+XpathQuery::operator->()
+{
+	return this->query;
+}
+
+XpathQuery::operator bool()
+{
+	return static_cast<bool>(this->query);
+}
+
 class XMLGameListParser::PImpl
 {
 public:
 	PImpl(std::map<std::string, std::string> & config);
-	pugi::xpath_query gamesListQuery;
-	pugi::xpath_query gameIdQuery;
-	pugi::xpath_query gameNameQuery;
-	pugi::xpath_query platformIdQuery;
+	XpathQuery gamesListQuery;
+	XpathQuery gameIdQuery;
+	XpathQuery gameNameQuery;
+	XpathQuery gameDescriptionQuery;
+	XpathQuery gameHomepageQuery;
+	XpathQuery platformIdQuery;
 
 	std::string gamePlatformIdsPath;
 
@@ -47,6 +78,8 @@ XMLGameListParser::PImpl::PImpl(std::map<std::string, std::string> & config)
 :	gamesListQuery(config["games.list"].c_str()),
 	gameIdQuery(config["game.id"].c_str()),
 	gameNameQuery(config["game.name"].c_str()),
+	gameDescriptionQuery(config["game.description"]),
+	gameHomepageQuery(config["game.homepage"]),
 	platformIdQuery(config["platform.id"].c_str()),
 	gamePlatformIdsPath(config["game.platforms"]),
 	platformWin32Id(config["platform.win32"]),
@@ -66,29 +99,41 @@ XMLGameListParser::parseGameList(std::basic_istream<gkbyte_t> & is)
 	pugi::xml_document doc;
 	if(doc.load(is))
 	{
-		pugi::xpath_node_set result = this->data->gamesListQuery.evaluate_node_set(doc.document_element());
+		pugi::xpath_node_set result = this->data->gamesListQuery->evaluate_node_set(doc.document_element());
 		for(const pugi::xpath_node & node : result)
 		{
 			model::GenericGame * game = new model::GenericGame();
-			game->setId(this->data->gameIdQuery.evaluate_string(node));
-			game->setName(this->data->gameNameQuery.evaluate_string(node));
+			game->setId(this->data->gameIdQuery->evaluate_string(node));
+			game->setName(this->data->gameNameQuery->evaluate_string(node));
+			if(this->data->gameDescriptionQuery)
+			{
+				game->setDescription(this->data->gameDescriptionQuery->evaluate_string(node));
+			}
+			if(this->data->gameHomepageQuery)
+			{
+				game->setHomepage(this->data->gameHomepageQuery->evaluate_string(node));
+			}
 
 			// after trivial stuff was parsed, create out variables
 			pugi::xpath_variable_set variables;
 
 			variables.add("game.id", pugi::xpath_type_string);
-			variables.add("gamen.ame", pugi::xpath_type_string);
+			variables.add("game.name", pugi::xpath_type_string);
+			variables.add("game.description", pugi::xpath_type_string);
+			variables.add("game.homepage", pugi::xpath_type_string);
 
 			pugi::xpath_query gamePlatformIdsQuery(this->data->gamePlatformIdsPath.c_str(), &variables);
 
 			variables.set("game.id", game->getId().c_str());
 			variables.set("game.name", game->getName().c_str());
+			variables.set("game.description", game->getName().c_str());
+			variables.set("game.homepage", game->getName().c_str());
 
 			// platform parsing is a little bit more tricky, because we get an array of names or ids
 			std::set<model::Platform> platforms;
 			for(const pugi::xpath_node & p : gamePlatformIdsQuery.evaluate_node_set(node))
 			{
-				std::string platform = this->data->platformIdQuery.evaluate_string(p);
+				std::string platform = this->data->platformIdQuery->evaluate_string(p);
 				if(platform == this->data->platformWin32Id)
 				{
 					platforms.insert(model::Platform::WIN_32);

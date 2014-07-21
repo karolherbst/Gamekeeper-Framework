@@ -36,6 +36,8 @@ public:
 	std::string gameIdPath;
 	std::string gameNamePath;
 	std::string gamePlatformsPath;
+	std::string gameDescriptionPath;
+	std::string gameHomepagePath;
 	std::string platformId;
 	std::string platformWin32Id;
 	std::string platformMac32Id;
@@ -48,6 +50,8 @@ JSONGameListParser::PImpl::PImpl(std::map<std::string, std::string> & config)
 	gameIdPath(config["game.id"]),
 	gameNamePath(config["game.name"]),
 	gamePlatformsPath(config["game.platforms"]),
+	gameDescriptionPath(config["game.description"]),
+	gameHomepagePath(config["game.homepage"]),
 	platformId(config["platform.id"]),
 	platformWin32Id(config["platform.win32"]),
 	platformMac32Id(config["platform.mac32"]),
@@ -82,6 +86,14 @@ JSONGameListParser::parseGameList(std::basic_istream<gkbyte_t> & is)
 				model::GenericGame * game = new model::GenericGame();
 				game->setId(json_string_value(json_path_get(gameNode, this->data->gameIdPath.c_str())));
 				game->setName(json_string_value(json_path_get(gameNode, this->data->gameNamePath.c_str())));
+				if(!this->data->gameDescriptionPath.empty())
+				{
+					game->setDescription(json_string_value(json_path_get(gameNode, this->data->gameDescriptionPath.c_str())));
+				}
+				if(!this->data->gameHomepagePath.empty())
+				{
+					game->setHomepage(json_string_value(json_path_get(gameNode, this->data->gameHomepagePath.c_str())));
+				}
 
 				json_t * gamePlatforms = json_path_get(gameNode, this->data->gamePlatformsPath.c_str());
 
