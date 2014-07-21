@@ -20,7 +20,12 @@
 
 #include <gamekeeper/backend/httppostloginhandler.h>
 
+#include <algorithm>
+#include <vector>
+
+#include <boost/algorithm/string/classification.hpp>
 #include <boost/algorithm/string/replace.hpp>
+#include <boost/algorithm/string/split.hpp>
 
 #include <gamekeeper/core/filedownloader.h>
 
@@ -39,6 +44,9 @@ public:
 	std::string usernameField;
 	std::string passwordField;
 	std::string username;
+	std::vector<std::string> cookieWhitelist;
+
+	bool checkAuthCookies();
 };
 
 HTTPPostLoginHandler::PImpl::PImpl(std::map<std::string, std::string> & config, std::shared_ptr<core::FileDownloader> _hfd)
@@ -46,7 +54,43 @@ HTTPPostLoginHandler::PImpl::PImpl(std::map<std::string, std::string> & config, 
 	loginUrl(config.at("auth.loginurl")),
 	logoutUrl(config.at("auth.logouturl")),
 	usernameField(config.at("authfield.username")),
-	passwordField(config.at("authfield.password")){}
+	passwordField(config.at("authfield.password"))
+{
+	auto it = config.find("authtoken.keys");
+	if(it != config.end())
+	{
+		balgo::split(this->cookieWhitelist, (*it).second, balgo::is_any_of(", "), balgo::token_compress_on);
+	}
+}
+
+bool
+HTTPPostLoginHandler::PImpl::checkAuthCookies()
+{
+	auto cookies = this->hfd->getCookies();
+	// if no whitelist, fallback to empty check
+	if(this->cookieWhitelist.empty())
+	{
+		return !cookies.empty();
+	}
+
+	// first get all names
+	std::vector<std::string> names;
+	for(const core::FileDownloader::Cookie & c : cookies)
+	{
+		names.push_back(c.name);
+	}
+
+	// now check the whitelist
+	for(const std::string & w : this->cookieWhitelist)
+	{
+		if(std::find(names.begin(), names.end(), w) == names.end())
+		{
+			return false;
+		}
+	}
+	return !cookies.empty();
+}
+
 
 HTTPPostLoginHandler::HTTPPostLoginHandler(std::map<std::string, std::string> & config, std::shared_ptr<core::FileDownloader> hfd)
 :	data(new HTTPPostLoginHandler::PImpl(config, hfd)){}
@@ -71,7 +115,7 @@ HTTPPostLoginHandler::login(const std::string & username, const std::string & pa
 	{
 		return false;
 	}
-	return !this->data->hfd->getCookies().empty();
+	return this->data->checkAuthCookies();
 }
 
 void
