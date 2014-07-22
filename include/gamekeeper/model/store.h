@@ -25,13 +25,19 @@
 
 #include <map>
 
+#include <gamekeeper/model/macros.h>
+
 GAMEKEEPER_NAMESPACE_START(model)
+
+#define STORE_MODEL ( \
+	(std::string, name, Name), \
+	(gamekeeper::model::Store::ConfigMap, config, Config))
 
 interface PUBLIC_API Store
 {
+	typedef std::map<std::string,std::string> ConfigMap;
 	GAMEKEEPER_INTERFACE_METHODS(Store);
-	PUBLIC_API virtual const std::string & getName() const = 0;
-	PUBLIC_API virtual const std::map<std::string, std::string> & getConfig() const = 0;
+	GK_BUILD_GET_INTERFACE(STORE_MODEL, PUBLIC_API virtual, = 0)
 };
 
 GAMEKEEPER_NAMESPACE_END(model)

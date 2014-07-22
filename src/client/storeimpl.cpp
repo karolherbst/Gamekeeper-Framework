@@ -40,17 +40,7 @@ StoreImpl::PImpl::PImpl(backend::StoreConfiguration * _config)
 StoreImpl::StoreImpl(const backend::StoreConfiguration & _config)
 :	data(new StoreImpl::PImpl(new backend::StoreConfiguration(_config))){}
 
-const std::string &
-StoreImpl::getName() const
-{
-	return this->data->config->getStore()->getName();
-}
-
-const std::map<std::string, std::string> &
-StoreImpl::getConfig() const
-{
-	return this->data->config->getStore()->getConfig();
-}
+GK_BUILD_GET_IMPLEMENTATION_WRAPPER(STORE_MODEL, StoreImpl,, this->data->config->getStore())
 
 bool
 StoreImpl::login(const std::string & username, const std::string & password /*, TwoFactorAuthCallback for later usage */)
