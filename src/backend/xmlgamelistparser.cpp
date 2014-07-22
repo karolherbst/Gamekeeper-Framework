@@ -22,33 +22,9 @@
 
 #include <pugixml.hpp>
 
-#include <gamekeeper/model/game.h>
+#include <gamekeeper/model/genericgame.h>
 
 GAMEKEEPER_NAMESPACE_START(backend)
-
-class GameXML : public gamekeeper::model::Game
-{
-	friend class XMLGameListParser;
-private:
-	std::string id;
-	std::string name;
-	std::set<model::Platform> platforms;
-public:
-	virtual const std::string & getId() const override
-	{
-		return this->id;
-	}
-
-	virtual const std::string & getName() const override
-	{
-		return this->name;
-	}
-
-	virtual const std::set<model::Platform> & getPlatforms() const override
-	{
-		return this->platforms;
-	}
-};
 
 class XMLGameListParser::PImpl
 {
@@ -93,9 +69,9 @@ XMLGameListParser::parseGameList(std::basic_istream<gkbyte_t> & is)
 		pugi::xpath_node_set result = this->data->gamesListQuery.evaluate_node_set(doc.document_element());
 		for(const pugi::xpath_node & node : result)
 		{
-			GameXML * game = new GameXML();
-			game->id = this->data->gameIdQuery.evaluate_string(node);
-			game->name = this->data->gameNameQuery.evaluate_string(node);
+			model::GenericGame * game = new model::GenericGame();
+			game->setId(this->data->gameIdQuery.evaluate_string(node));
+			game->setName(this->data->gameNameQuery.evaluate_string(node));
 
 			// after trivial stuff was parsed, create out variables
 			pugi::xpath_variable_set variables;
@@ -109,26 +85,28 @@ XMLGameListParser::parseGameList(std::basic_istream<gkbyte_t> & is)
 			variables.set("game.name", game->getName().c_str());
 
 			// platform parsing is a little bit more tricky, because we get an array of names or ids
+			std::set<model::Platform> platforms;
 			for(const pugi::xpath_node & p : gamePlatformIdsQuery.evaluate_node_set(node))
 			{
 				std::string platform = this->data->platformIdQuery.evaluate_string(p);
 				if(platform == this->data->platformWin32Id)
 				{
-					game->platforms.insert(model::Platform::WIN_32);
+					platforms.insert(model::Platform::WIN_32);
 				}
 				else if(platform == this->data->platformMac32Id)
 				{
-					game->platforms.insert(model::Platform::MAC_32);
+					platforms.insert(model::Platform::MAC_32);
 				}
 				else if(platform == this->data->platformLin32Id)
 				{
-					game->platforms.insert(model::Platform::LIN_32);
+					platforms.insert(model::Platform::LIN_32);
 				}
 				else if(platform == this->data->platformLin64Id)
 				{
-					game->platforms.insert(model::Platform::LIN_64);
+					platforms.insert(model::Platform::LIN_64);
 				}
 			}
+			game->setPlatforms(std::move(platforms));
 
 			games.push_back(std::move(std::unique_ptr<model::Game>(game)));
 		}
