@@ -25,16 +25,20 @@
 
 #include <set>
 
+#include <gamekeeper/model/macros.h>
 #include <gamekeeper/model/platform.h>
 
 GAMEKEEPER_NAMESPACE_START(model)
 
+#define GAME_MODEL ( \
+	(std::string, id, Id, GK_MODEL_REQUIRED), \
+	(std::string, name, Name, GK_MODEL_REQUIRED), \
+	(std::set<gamekeeper::model::Platform>, platforms, Platforms, GK_MODEL_OPTIONAL))
+
 interface PUBLIC_API Game
 {
 	GAMEKEEPER_INTERFACE_METHODS(Game);
-	PUBLIC_API virtual const std::string & getId() const = 0;
-	PUBLIC_API virtual const std::string & getName() const = 0;
-	PUBLIC_API virtual const std::set<Platform> & getPlatforms() const = 0;
+	GK_BUILD_GET_INTERFACE(GAME_MODEL, PUBLIC_API virtual, = 0)
 };
 
 GAMEKEEPER_NAMESPACE_END(model)

@@ -38,23 +38,6 @@ GameImpl::GameImpl(std::unique_ptr<model::Game> && model)
 }
 
 GameImpl::~GameImpl(){}
-
-const std::string &
-GameImpl::getId() const
-{
-	return this->data->game->getId();
-}
-
-const std::string &
-GameImpl::getName() const
-{
-	return this->data->game->getName();
-}
-
-const std::set<model::Platform> &
-GameImpl::getPlatforms() const
-{
-	return this->data->game->getPlatforms();
-}
+GK_BUILD_GET_IMPLEMENTATION_WRAPPER(GAME_MODEL, GameImpl,, this->data->game)
 
 GAMEKEEPER_NAMESPACE_END(client)
