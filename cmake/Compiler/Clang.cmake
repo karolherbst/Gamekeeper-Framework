@@ -12,3 +12,8 @@ add_compiler_flags(
   -Wno-global-constructors
   -Wno-weak-vtables
 )
+
+# some hacks
+
+# clang has variadic macro support in c++11 mode, so just enable it for boost, because boost thinks it has not
+add_definitions(-DBOOST_PP_VARIADICS)
