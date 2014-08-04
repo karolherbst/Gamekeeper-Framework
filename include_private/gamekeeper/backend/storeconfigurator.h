@@ -26,6 +26,7 @@
 #include <boost/filesystem/path.hpp>
 
 #include <gamekeeper/backend/storeconfiguration.h>
+#include <gamekeeper/core/exception.h>
 
 GAMEKEEPER_NAMESPACE_START(core)
 
@@ -46,6 +47,8 @@ class PUBLIC_API StoreConfigurator
 public:
 	PUBLIC_API StoreConfigurator(std::shared_ptr<core::FileDownloaderFactory>);
 	PUBLIC_API StoreConfiguration configure(const boost::filesystem::path & configFile);
+
+	class PUBLIC_API GAMEKEEPER_EXCEPTION(StoreConfiguratorException);
 private:
 	std::shared_ptr<core::FileDownloaderFactory> fdf;
 };
