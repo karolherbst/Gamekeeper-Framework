@@ -89,26 +89,37 @@ StoreConfigurator::configure(const boost::filesystem::path & configFile)
 		loadIniFileIntoMap(config, props);
 	}
 
-	std::string storeFormat = props.at("store.format");
-	std::string authMethod = props.at("auth.method");
-
-	std::shared_ptr<GameListParser> glp;
-	if(storeFormat == "xml")
+	try
 	{
-		glp = std::make_shared<XMLGameListParser>(props);
-	}
-	else if(storeFormat == "json")
-	{
-		glp = std::make_shared<JSONGameListParser>(props);
-	}
+		std::string storeFormat = props.at("store.format");
+		std::string authMethod = props.at("auth.method");
 
-	std::shared_ptr<LoginHandler> lh;
-	if(authMethod == "http_post")
-	{
-		lh = std::make_shared<HTTPPostLoginHandler>(props, this->fdf->create());
-	}
+		std::shared_ptr<GameListParser> glp;
+		if(storeFormat == "xml")
+		{
+			glp = std::make_shared<XMLGameListParser>(props);
+		}
+		else if(storeFormat == "json")
+		{
+			glp = std::make_shared<JSONGameListParser>(props);
+		}
 
-	return StoreConfiguration(glp, lh, std::make_shared<StoreProps>(props));
+		std::shared_ptr<LoginHandler> lh;
+		if(authMethod == "http_post")
+		{
+			lh = std::make_shared<HTTPPostLoginHandler>(props, this->fdf->create());
+		}
+
+		return StoreConfiguration(glp, lh, std::make_shared<StoreProps>(props));
+	}
+	catch(const std::exception & ex)
+	{
+		throw StoreConfiguratorException(std::string("error[") + ex.what() + "] while parsing store config file: " + configFile.string());
+	}
+	catch(...)
+	{
+		throw StoreConfiguratorException("unhandled error while parsing store config file: " + configFile.string());
+	}
 }
 
 GAMEKEEPER_NAMESPACE_END(backend)
