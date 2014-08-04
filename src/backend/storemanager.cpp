@@ -48,8 +48,15 @@ StoreManager::StoreManager(std::shared_ptr<core::LoggerFactory> lf, std::shared_
 	{
 		bfs::path file((*pIt).path());
 		this->logger << LogLevel::Debug << "parsing file: " << file.string() << endl;
-		StoreConfiguration sConfig = sc.configure(file);
-		this->storeConfigs.insert(std::make_pair(balgo::to_lower_copy(sConfig.getStore()->getName()), sConfig));
+		try
+		{
+			StoreConfiguration sConfig = sc.configure(file);
+			this->storeConfigs.insert(std::make_pair(balgo::to_lower_copy(sConfig.getStore()->getName()), sConfig));
+		}
+		catch(const StoreConfigurator::StoreConfiguratorException & ex)
+		{
+			this->logger << LogLevel::Error << ex.what() << endl;
+		}
 	}
 }
 
