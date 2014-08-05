@@ -33,6 +33,7 @@ class PUBLIC_API XMLGameListParser : public GameListParser
 {
 public:
 	PUBLIC_API XMLGameListParser(std::map<std::string, std::string> & config);
+	PUBLIC_API ~XMLGameListParser();
 	PRIVATE_API virtual std::vector<std::unique_ptr<model::Game>> parseGameList(std::basic_istream<gkbyte_t> &) override;
 private:
 	class PRIVATE_API PImpl;

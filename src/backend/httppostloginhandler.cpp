@@ -95,6 +95,8 @@ HTTPPostLoginHandler::PImpl::checkAuthCookies()
 HTTPPostLoginHandler::HTTPPostLoginHandler(std::map<std::string, std::string> & config, std::shared_ptr<core::FileDownloader> hfd)
 :	data(new HTTPPostLoginHandler::PImpl(config, hfd)){}
 
+HTTPPostLoginHandler::~HTTPPostLoginHandler(){}
+
 bool
 HTTPPostLoginHandler::login(const std::string & username, const std::string & password)
 {
