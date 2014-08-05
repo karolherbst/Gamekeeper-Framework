@@ -26,6 +26,7 @@
 #include <memory>
 #include <vector>
 
+#include <gamekeeper/core/exception.h>
 #include <gamekeeper/core/interface.h>
 
 GAMEKEEPER_NAMESPACE_START(model)
@@ -58,6 +59,8 @@ interface PUBLIC_API GameListParser
 	 * @return unsorted list of games
 	 */
 	PUBLIC_API virtual std::vector<std::unique_ptr<model::Game>> parseGameList(std::basic_istream<gkbyte_t> & is) = 0;
+
+	class PUBLIC_API GAMEKEEPER_EXCEPTION(GameListParserException);
 };
 
 GAMEKEEPER_NAMESPACE_END(backend)
