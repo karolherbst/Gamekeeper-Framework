@@ -92,23 +92,23 @@ StoreConfigurator::configure(const boost::filesystem::path & configFile)
 	std::string storeFormat = props.at("store.format");
 	std::string authMethod = props.at("auth.method");
 
-	GameListParser * glp = nullptr;
+	std::shared_ptr<GameListParser> glp;
 	if(storeFormat == "xml")
 	{
-		glp = new XMLGameListParser(props);
+		glp = std::make_shared<XMLGameListParser>(props);
 	}
 	else if(storeFormat == "json")
 	{
-		glp = new JSONGameListParser(props);
+		glp = std::make_shared<JSONGameListParser>(props);
 	}
 
-	LoginHandler * lh = nullptr;
+	std::shared_ptr<LoginHandler> lh;
 	if(authMethod == "http_post")
 	{
-		lh = new HTTPPostLoginHandler(props, this->fdf->create());
+		lh = std::make_shared<HTTPPostLoginHandler>(props, this->fdf->create());
 	}
 
-	return StoreConfiguration(glp, lh, new StoreProps(props));
+	return StoreConfiguration(glp, lh, std::make_shared<StoreProps>(props));
 }
 
 GAMEKEEPER_NAMESPACE_END(backend)

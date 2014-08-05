@@ -28,19 +28,19 @@ GAMEKEEPER_NAMESPACE_START(backend)
 class StoreConfiguration::PImpl
 {
 public:
-	PImpl(GameListParser *, LoginHandler *, model::Store *);
+	PImpl(std::shared_ptr<GameListParser>, std::shared_ptr<LoginHandler>, std::shared_ptr<model::Store>);
 	std::shared_ptr<GameListParser> glp;
 	std::shared_ptr<model::Store> store;
 	std::shared_ptr<LoginHandler> lh;
 };
 
-StoreConfiguration::PImpl::PImpl(GameListParser * _glp, LoginHandler * _lh, model::Store * _store)
+StoreConfiguration::PImpl::PImpl(std::shared_ptr<GameListParser> _glp, std::shared_ptr<LoginHandler> _lh, std::shared_ptr<model::Store> _store)
 :	glp(_glp),
 	lh(_lh),
 	store(_store){}
 
-StoreConfiguration::StoreConfiguration(GameListParser * glp, LoginHandler * lh, model::Store * store)
-:	data(new PImpl(glp, lh, store)){}
+StoreConfiguration::StoreConfiguration(std::shared_ptr<GameListParser> glp, std::shared_ptr<LoginHandler> lh, std::shared_ptr<model::Store> store)
+:	data(std::make_shared<PImpl>(glp, lh, store)){}
 
 StoreConfiguration::StoreConfiguration(const StoreConfiguration & sc)
 :	data(sc.data){}
