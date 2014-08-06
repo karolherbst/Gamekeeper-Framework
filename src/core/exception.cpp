@@ -22,20 +22,20 @@
 
 GAMEKEEPER_NAMESPACE_START(core)
 
-GameKeeperException::GameKeeperException(const std::string& message)
+GameKeeperMessageException::GameKeeperMessageException(const std::string& message)
 :	errorMessage(message){}
 
-GameKeeperException::GameKeeperException(std::string&& message) noexcept
+GameKeeperMessageException::GameKeeperMessageException(std::string&& message) noexcept
 :	errorMessage(message){}
 
 const char *
-GameKeeperException::what() const noexcept
+GameKeeperMessageException::what() const noexcept
 {
 	return this->errorMessage.c_str();
 }
 
-GameKeeperException&
-GameKeeperException::operator=(const std::exception& ex)
+GameKeeperMessageException&
+GameKeeperMessageException::operator=(const std::exception& ex)
 {
 	this->errorMessage = ex.what();
 	return *this;
