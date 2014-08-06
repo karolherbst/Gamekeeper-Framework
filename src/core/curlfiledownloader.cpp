@@ -225,7 +225,7 @@ CurlFileDownloader::PImpl::performCurl(uint16_t timeout, uint16_t resolveFailed,
 			else
 			{
 				std::string message("CURL couldn't resolve host after ");
-				message += resolveFailed;
+				message += utils::String::toString(resolveFailed);
 				message += " retries";
 				this->logger << LogLevel::Error << message << endl;
 				throw FileDownloaderException(message);
@@ -240,7 +240,7 @@ CurlFileDownloader::PImpl::performCurl(uint16_t timeout, uint16_t resolveFailed,
 			else
 			{
 				std::string message("CURL couldn't connect to host after ");
-				message += connectFailed;
+				message += utils::String::toString(connectFailed);
 				message += " retries";
 				this->logger << LogLevel::Error << message << endl;
 				throw FileDownloaderException(message);
