@@ -81,6 +81,8 @@ XMLGameListParser::PImpl::PImpl(std::map<std::string, std::string> & config)
 XMLGameListParser::XMLGameListParser(std::map<std::string, std::string> & config)
 :	data(new XMLGameListParser::PImpl(config)){}
 
+XMLGameListParser::~XMLGameListParser(){}
+
 std::vector<std::unique_ptr<model::Game>>
 XMLGameListParser::parseGameList(std::basic_istream<gkbyte_t> & is)
 {

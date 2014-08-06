@@ -35,33 +35,40 @@ GAMEKEEPER_NAMESPACE_START(core)
  * easily catched globally
  *
  * @author Karol Herbst
- * @since 0.1
+ * @since 0
  */
+class PUBLIC_API GameKeeperException : public std::exception{};
 
-class PUBLIC_API GameKeeperException : public std::exception
+/**
+ * simple message based Exception class
+ *
+ * @author Karol Herbst
+ * @since 0
+ */
+class PUBLIC_API GameKeeperMessageException : public GameKeeperException
 {
 public:
-	GameKeeperException(const std::string& message);
-	GameKeeperException(std::string&& message) noexcept;
+	GameKeeperMessageException(const std::string& message);
+	GameKeeperMessageException(std::string&& message) noexcept;
 	virtual const char * what() const noexcept override;
-	GameKeeperException& operator=(const exception&);
+	GameKeeperMessageException& operator=(const exception&);
 private:
 	std::string errorMessage;
 };
 
 #define GAMEKEEPER_EXCEPTION(name) \
-name : public gamekeeper::core::GameKeeperException \
+name : public gamekeeper::core::GameKeeperMessageException \
 { \
 public: \
-	name(const std::string & message) : gamekeeper::core::GameKeeperException(message){} \
-	name(std::string&& message) noexcept : gamekeeper::core::GameKeeperException(message){} \
+	name(const std::string & message) : gamekeeper::core::GameKeeperMessageException(message){} \
+	name(std::string&& message) noexcept : gamekeeper::core::GameKeeperMessageException(message){} \
 }
 
 #define GAMEKEEPER_EXCEPTION_MESSAGE_CONCAT(name, message) \
-name : public gamekeeper::core::GameKeeperException \
+name : public gamekeeper::core::GameKeeperMessageException \
 { \
 public: \
-	name(const std::string & info) : gamekeeper::core::GameKeeperException(std::string(message) + info){} \
+	name(const std::string & info) : gamekeeper::core::GameKeeperMessageException(std::string(message) + info){} \
 }
 
 // some global exceptions

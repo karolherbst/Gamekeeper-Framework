@@ -33,10 +33,10 @@ class PUBLIC_API JSONGameListParser : public GameListParser
 {
 public:
 	PUBLIC_API JSONGameListParser(std::map<std::string, std::string> & config);
+	PUBLIC_API ~JSONGameListParser();
 	PRIVATE_API virtual std::vector<std::unique_ptr<model::Game>> parseGameList(std::basic_istream<gkbyte_t> &) override;
 private:
 	class PRIVATE_API PImpl;
-
 	std::unique_ptr<JSONGameListParser::PImpl> data;
 };
 

@@ -34,7 +34,7 @@ class LoginHandler;
 
 struct PUBLIC_API StoreConfiguration
 {
-	PUBLIC_API StoreConfiguration(GameListParser *, LoginHandler *, model::Store *);
+	PUBLIC_API StoreConfiguration(std::shared_ptr<GameListParser>, std::shared_ptr<LoginHandler>, std::shared_ptr<model::Store>);
 	PUBLIC_API StoreConfiguration(const StoreConfiguration &);
 	PUBLIC_API StoreConfiguration(StoreConfiguration &&);
 	PUBLIC_API std::shared_ptr<model::Store> getStore();
