@@ -68,15 +68,15 @@ public:
 };
 
 XMLGameListParser::PImpl::PImpl(std::map<std::string, std::string> & config)
-:	gamesListQuery(config.at("games.list").c_str()),
-	gameIdQuery(config.at("game.id").c_str()),
-	gameNameQuery(config.at("game.name").c_str()),
-	platformIdQuery(config.at("platform.id").c_str()),
-	gamePlatformIdsPath(config.at("game.platforms")),
-	platformWin32Id(config.at("platform.win32")),
-	platformMac32Id(config.at("platform.mac32")),
-	platformLin32Id(config.at("platform.lin32")),
-	platformLin64Id(config.at("platform.lin64")){}
+:	gamesListQuery(config["games.list"].c_str()),
+	gameIdQuery(config["game.id"].c_str()),
+	gameNameQuery(config["game.name"].c_str()),
+	platformIdQuery(config["platform.id"].c_str()),
+	gamePlatformIdsPath(config["game.platforms"]),
+	platformWin32Id(config["platform.win32"]),
+	platformMac32Id(config["platform.mac32"]),
+	platformLin32Id(config["platform.lin32"]),
+	platformLin64Id(config["platform.lin64"]){}
 
 XMLGameListParser::XMLGameListParser(std::map<std::string, std::string> & config)
 :	data(new XMLGameListParser::PImpl(config)){}

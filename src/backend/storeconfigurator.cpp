@@ -50,7 +50,7 @@ private:
 };
 
 StoreProps::StoreProps(std::map<std::string, std::string> props)
-:	name(props.at("store.name")),
+:	name(props["store.name"]),
 	config(props){}
 
 const std::string &
@@ -113,8 +113,8 @@ StoreConfigurator::configure(const boost::filesystem::path & configFile)
 			throw core::PropertiesMissingException(missing);
 		}
 
-		std::string storeFormat = props.at("store.format");
-		std::string authMethod = props.at("auth.method");
+		const std::string & storeFormat = props["store.format"];
+		const std::string & authMethod = props["auth.method"];
 
 		std::shared_ptr<GameListParser> glp;
 		if(storeFormat == "xml")
