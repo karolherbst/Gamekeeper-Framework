@@ -30,9 +30,9 @@
 #include <gamekeeper/backend/xmlgamelistparser.h>
 #include <gamekeeper/core/filedownloaderfactory.h>
 #include <gamekeeper/model/store.h>
+#include <gamekeeper/utils/containerutils.h>
 
 namespace prop = boost::property_tree;
-
 
 GAMEKEEPER_NAMESPACE_START(backend)
 
@@ -91,6 +91,28 @@ StoreConfigurator::configure(const boost::filesystem::path & configFile)
 
 	try
 	{
+		// here we check for properties every config file must have. It may be that some will move in different places
+		// after more implementations came up
+		auto missing = utils::Containers::checkMissing(props,
+		{
+			"auth.loginurl",
+			"auth.logouturl",
+			"auth.method",
+			"authfield.username",
+			"authfield.password",
+			"games.url",
+			"games.list",
+			"game.id",
+			"game.name",
+			"store.format",
+			"store.name"
+		});
+
+		if(!missing.empty())
+		{
+			throw core::PropertiesMissingException(missing);
+		}
+
 		std::string storeFormat = props.at("store.format");
 		std::string authMethod = props.at("auth.method");
 
