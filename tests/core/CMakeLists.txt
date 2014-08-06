@@ -26,6 +26,7 @@ file(GLOB headers
 )
 
 file(GLOB sources
+  containerutils.cpp
   curlfiledownloader.cpp
   defaultfixture.cpp
   filedownloader.cpp
