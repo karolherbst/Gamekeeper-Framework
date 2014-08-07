@@ -51,10 +51,10 @@ public:
 
 HTTPPostLoginHandler::PImpl::PImpl(std::map<std::string, std::string> & config, std::shared_ptr<core::FileDownloader> _hfd)
 :	hfd(_hfd),
-	loginUrl(config.at("auth.loginurl")),
-	logoutUrl(config.at("auth.logouturl")),
-	usernameField(config.at("authfield.username")),
-	passwordField(config.at("authfield.password"))
+	loginUrl(config["auth.loginurl"]),
+	logoutUrl(config["auth.logouturl"]),
+	usernameField(config["authfield.username"]),
+	passwordField(config["authfield.password"])
 {
 	auto it = config.find("authtoken.keys");
 	if(it != config.end())

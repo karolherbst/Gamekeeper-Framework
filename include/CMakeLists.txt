@@ -27,6 +27,7 @@ add_custom_target(headers
     gamekeeper/model/game.h
     gamekeeper/model/store.h
 
+    gamekeeper/utils/containerutils.h
     gamekeeper/utils/stringutils.h
 )
 

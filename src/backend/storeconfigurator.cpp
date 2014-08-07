@@ -30,9 +30,9 @@
 #include <gamekeeper/backend/xmlgamelistparser.h>
 #include <gamekeeper/core/filedownloaderfactory.h>
 #include <gamekeeper/model/store.h>
+#include <gamekeeper/utils/containerutils.h>
 
 namespace prop = boost::property_tree;
-
 
 GAMEKEEPER_NAMESPACE_START(backend)
 
@@ -50,7 +50,7 @@ private:
 };
 
 StoreProps::StoreProps(std::map<std::string, std::string> props)
-:	name(props.at("store.name")),
+:	name(props["store.name"]),
 	config(props){}
 
 const std::string &
@@ -89,26 +89,59 @@ StoreConfigurator::configure(const boost::filesystem::path & configFile)
 		loadIniFileIntoMap(config, props);
 	}
 
-	std::string storeFormat = props.at("store.format");
-	std::string authMethod = props.at("auth.method");
-
-	std::shared_ptr<GameListParser> glp;
-	if(storeFormat == "xml")
+	try
 	{
-		glp = std::make_shared<XMLGameListParser>(props);
-	}
-	else if(storeFormat == "json")
-	{
-		glp = std::make_shared<JSONGameListParser>(props);
-	}
+		// here we check for properties every config file must have. It may be that some will move in different places
+		// after more implementations came up
+		auto missing = utils::Containers::checkMissing(props,
+		{
+			"auth.loginurl",
+			"auth.logouturl",
+			"auth.method",
+			"authfield.username",
+			"authfield.password",
+			"games.url",
+			"games.list",
+			"game.id",
+			"game.name",
+			"store.format",
+			"store.name"
+		});
 
-	std::shared_ptr<LoginHandler> lh;
-	if(authMethod == "http_post")
-	{
-		lh = std::make_shared<HTTPPostLoginHandler>(props, this->fdf->create());
-	}
+		if(!missing.empty())
+		{
+			throw core::PropertiesMissingException(missing);
+		}
 
-	return StoreConfiguration(glp, lh, std::make_shared<StoreProps>(props));
+		const std::string & storeFormat = props["store.format"];
+		const std::string & authMethod = props["auth.method"];
+
+		std::shared_ptr<GameListParser> glp;
+		if(storeFormat == "xml")
+		{
+			glp = std::make_shared<XMLGameListParser>(props);
+		}
+		else if(storeFormat == "json")
+		{
+			glp = std::make_shared<JSONGameListParser>(props);
+		}
+
+		std::shared_ptr<LoginHandler> lh;
+		if(authMethod == "http_post")
+		{
+			lh = std::make_shared<HTTPPostLoginHandler>(props, this->fdf->create());
+		}
+
+		return StoreConfiguration(glp, lh, std::make_shared<StoreProps>(props));
+	}
+	catch(const std::exception & ex)
+	{
+		throw StoreConfiguratorException(std::string("error[") + ex.what() + "] while parsing store config file: " + configFile.string());
+	}
+	catch(...)
+	{
+		throw StoreConfiguratorException("unhandled error while parsing store config file: " + configFile.string());
+	}
 }
 
 GAMEKEEPER_NAMESPACE_END(backend)

@@ -56,6 +56,7 @@ file(GLOB sources
   log4cpploggerFactory.cpp
   log4cppLoggerStream.cpp
   portableinstalldirspaths.cpp
+  propertiesmissingexception.cpp
   stdc++11threadmanager.cpp
   xdgpaths.cpp
   ${platform_sources}

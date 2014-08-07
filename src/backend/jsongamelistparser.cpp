@@ -68,14 +68,14 @@ public:
 };
 
 JSONGameListParser::PImpl::PImpl(std::map<std::string, std::string> & config)
-:	gamesListPath(config.at("games.list")),
-	gameIdPath(config.at("game.id")),
-	gameNamePath(config.at("game.name")),
-	gamePlatformsPath(config.at("game.platforms")),
-	platformId(config.at("platform.id")),
-	platformWin32Id(config.at("platform.win32")),
-	platformMac32Id(config.at("platform.mac32")),
-	platformLin32Id(config.at("platform.lin32")),
+:	gamesListPath(config["games.list"]),
+	gameIdPath(config["game.id"]),
+	gameNamePath(config["game.name"]),
+	gamePlatformsPath(config["game.platforms"]),
+	platformId(config["platform.id"]),
+	platformWin32Id(config["platform.win32"]),
+	platformMac32Id(config["platform.mac32"]),
+	platformLin32Id(config["platform.lin32"]),
 	platformLin64Id(config["platform.lin64"]){}
 
 JSONGameListParser::JSONGameListParser(std::map<std::string, std::string> & config)

@@ -74,6 +74,19 @@ public: \
 // some global exceptions
 class PUBLIC_API GAMEKEEPER_EXCEPTION_MESSAGE_CONCAT(ResourceNotFound, "The following resource cannot be found: ");
 
+// some non trivial global exceptions
+class PUBLIC_API PropertiesMissingException : public gamekeeper::core::GameKeeperException
+{
+public:
+	PropertiesMissingException(const std::vector<std::string> &);
+	PropertiesMissingException(std::vector<std::string> &&);
+	virtual const char * what() const noexcept override;
+	const std::vector<std::string> getMissingProperties() const;
+private:
+	const std::vector<std::string> props;
+	const std::string msg;
+};
+
 GAMEKEEPER_NAMESPACE_END(core)
 
 #endif //GAMEKEEPER_CORE_EXCEPTION_H
