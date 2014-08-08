@@ -76,8 +76,9 @@ static void loadIniFileIntoMap(const prop::ptree & tree, std::map<std::string, s
 	}
 }
 
-StoreConfigurator::StoreConfigurator(std::shared_ptr<core::FileDownloaderFactory> _fdf)
-:	fdf(_fdf){}
+StoreConfigurator::StoreConfigurator(std::shared_ptr<core::FileDownloaderFactory> _fdf, std::shared_ptr<AuthManager> _am)
+:	fdf(_fdf),
+	am(_am){}
 
 StoreConfiguration
 StoreConfigurator::configure(const boost::filesystem::path & configFile)
@@ -129,7 +130,7 @@ StoreConfigurator::configure(const boost::filesystem::path & configFile)
 		std::shared_ptr<LoginHandler> lh;
 		if(authMethod == "http_post")
 		{
-			lh = std::make_shared<HTTPPostLoginHandler>(props, this->fdf->create());
+			lh = std::make_shared<HTTPPostLoginHandler>(props, this->fdf->create(), this->am);
 		}
 
 		return StoreConfiguration(glp, lh, std::make_shared<StoreProps>(props));

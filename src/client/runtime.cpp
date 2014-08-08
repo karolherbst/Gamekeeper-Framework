@@ -58,6 +58,12 @@
   #define THREADHELPERCLASS PthreadHelper
 #endif
 
+#ifdef WITH_LIBSECRET
+  #include <gamekeeper/backend/libsecretmanager.h>
+  #define AUTHMANAGERCLASS LibSecretManager
+  #define HAS_AUTHMANAGER 1
+#endif
+
 namespace fs = boost::filesystem;
 namespace po = boost::program_options;
 
@@ -224,7 +230,16 @@ GameKeeperRuntime::main(int argc, const char* argv[], NewInstanceFuncPtr instanc
 		as<ThreadFactory>()->
 		singleInstance();
 
-	containerBuilder.registerType<StoreManager>(CREATE(new StoreManager(INJECT(LoggerFactory), INJECT(BundlePaths), INJECT(FileDownloaderFactory))))->
+#ifdef HAS_AUTHMANAGER
+	containerBuilder.registerType<AUTHMANAGERCLASS>()->
+		as<AuthManager>()->
+		singleInstance();
+#define INJECT_AUTH INJECT(AuthManager)
+#else
+#define INJECT_AUTH nullptr
+#endif
+	containerBuilder.registerType<StoreManager>(CREATE(new StoreManager(INJECT(LoggerFactory), INJECT(BundlePaths), INJECT(FileDownloaderFactory),
+	                                                                    INJECT_AUTH)))->
 		as<StoreManager>()->
 		singleInstance();
 

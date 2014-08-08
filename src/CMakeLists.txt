@@ -7,6 +7,10 @@ include_directories(
 # needed for windows
 add_definitions(-DBUILDING_DLL)
 
+if(WITH_LIBSECRET)
+  add_definitions(-DWITH_LIBSECRET)
+endif()
+
 add_subdirectory(utils)
 add_subdirectory(client)
 add_subdirectory(core)

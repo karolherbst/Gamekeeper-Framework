@@ -18,26 +18,21 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef GAMEKEEPER_BACKEND_LOGINHANDLER_H
-#define GAMEKEEPER_BACKEND_LOGINHANDLER_H 1
-
-#include <gamekeeper/core/common.h>
-
-#include <gamekeeper/core/filedownloader.h>
-#include <gamekeeper/core/interface.h>
+#include <gamekeeper/backend/authmanager.h>
 
 GAMEKEEPER_NAMESPACE_START(backend)
 
-interface PUBLIC_API LoginHandler
-{
-	GAMEKEEPER_INTERFACE_METHODS(LoginHandler);
+AuthManager::Token::Token(const std::string & _key, const std::string & _value, const std::string & _group, const TimePoint & _expiry, Properties _properties)
+:	key(_key),
+	value(_value),
+	group(_group),
+	expiry(_expiry),
+	properties(_properties){}
 
-	PUBLIC_API virtual bool login(const std::string & username, const std::string & password) = 0;
-	PUBLIC_API virtual void logout() = 0;
-	PUBLIC_API virtual bool isLoggedIn() const = 0;
-	PUBLIC_API virtual void downloadFile(const std::string & url, core::FileDownloader::DownloadCallback) = 0;
-};
+AuthManager::Token::Token(const std::string & _key, const std::string & _value, const std::string & _group, const TimePoint::duration & duration, Properties _properties)
+:	Token(_key, _value, _group, TimePoint(duration), _properties){}
+
+AuthManager::Token::Token(const std::string & _key, const std::string & _value, const std::string & _group, const TimePoint::rep & duration, Properties _properties)
+:	Token(_key, _value, _group, std::chrono::seconds(duration), _properties){}
 
 GAMEKEEPER_NAMESPACE_END(backend)
-
-#endif //GAMEKEEPER_BACKEND_GAMELISTPARSER_H

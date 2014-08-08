@@ -27,39 +27,63 @@
 #include <boost/algorithm/string/replace.hpp>
 #include <boost/algorithm/string/split.hpp>
 
+#include <gamekeeper/backend/authmanager.h>
 #include <gamekeeper/core/filedownloader.h>
+#include <gamekeeper/utils/stringutils.h>
 
 namespace balgo = boost::algorithm;
 
 GAMEKEEPER_NAMESPACE_START(backend)
 
+static const std::string COOKIE_DOMAIN{"domain"};
+static const std::string COOKIE_PATH{"path"};
+static const std::string COOKIE_EXPIRY{"expiry"};
+static const std::string COOKIE_SECURE{"secure"};
+
 class HTTPPostLoginHandler::PImpl
 {
 public:
-	PImpl(std::map<std::string, std::string> &, std::shared_ptr<core::FileDownloader>);
+	PImpl(std::map<std::string, std::string> &, std::shared_ptr<core::FileDownloader>, std::shared_ptr<AuthManager>);
 
 	std::shared_ptr<core::FileDownloader> hfd;
+	std::shared_ptr<AuthManager> am;
 	std::string loginUrl;
 	std::string logoutUrl;
 	std::string usernameField;
 	std::string passwordField;
+	std::string tokenGroup;
 	std::string username;
 	std::vector<std::string> cookieWhitelist;
 
 	bool checkAuthCookies();
 };
 
-HTTPPostLoginHandler::PImpl::PImpl(std::map<std::string, std::string> & config, std::shared_ptr<core::FileDownloader> _hfd)
+HTTPPostLoginHandler::PImpl::PImpl(std::map<std::string, std::string> & config, std::shared_ptr<core::FileDownloader> _hfd,
+                                   std::shared_ptr<AuthManager> _am)
 :	hfd(_hfd),
+	am(_am),
 	loginUrl(config["auth.loginurl"]),
 	logoutUrl(config["auth.logouturl"]),
 	usernameField(config["authfield.username"]),
-	passwordField(config["authfield.password"])
+	passwordField(config["authfield.password"]),
+	tokenGroup(config["store.name"])
 {
 	auto it = config.find("authtoken.keys");
 	if(it != config.end())
 	{
 		balgo::split(this->cookieWhitelist, (*it).second, balgo::is_any_of(", "), balgo::token_compress_on);
+	}
+
+	// we might not get an authmanager
+	if(this->am)
+	{
+		core::FileDownloader::CookieBucket cookies;
+		for(const AuthManager::Token & t : this->am->readAllTokens(this->tokenGroup))
+		{
+			cookies.push_back({t.key, t.value, t.properties.at("domain"), t.properties.at("path"), t.expiry,
+			                   t.properties.at("secure") == GK_TRUE_STRING ? true : false});
+		}
+		this->hfd->setCookies(cookies);
 	}
 }
 
@@ -91,9 +115,9 @@ HTTPPostLoginHandler::PImpl::checkAuthCookies()
 	return !cookies.empty();
 }
 
-
-HTTPPostLoginHandler::HTTPPostLoginHandler(std::map<std::string, std::string> & config, std::shared_ptr<core::FileDownloader> hfd)
-:	data(new HTTPPostLoginHandler::PImpl(config, hfd)){}
+HTTPPostLoginHandler::HTTPPostLoginHandler(std::map<std::string, std::string> & config, std::shared_ptr<core::FileDownloader> hfd,
+                                           std::shared_ptr<AuthManager> am)
+:	data(new HTTPPostLoginHandler::PImpl(config, hfd, am)){}
 
 HTTPPostLoginHandler::~HTTPPostLoginHandler(){}
 
@@ -117,13 +141,38 @@ HTTPPostLoginHandler::login(const std::string & username, const std::string & pa
 	{
 		return false;
 	}
-	return this->data->checkAuthCookies();
+
+	bool validTokens = this->data->checkAuthCookies();
+	// save tokens, if we have an authmanager
+	if(this->data->am && validTokens)
+	{
+		for(const core::FileDownloader::Cookie & c : this->data->hfd->getCookies())
+		{
+			this->data->am->saveToken({c.name, c.value, this->data->tokenGroup, c.expiry,
+				{
+					{"domain", c.domain},
+					{"path", c.path},
+					{"secure", c.secure ? GK_TRUE_STRING : GK_FALSE_STRING},
+				}
+			});
+		}
+	}
+
+	return validTokens;
 }
 
 void
 HTTPPostLoginHandler::logout()
 {
 	this->data->hfd->postRequest(this->data->logoutUrl);
+	// forcibly clear cookies
+	this->data->hfd->clearCookies();
+}
+
+bool
+HTTPPostLoginHandler::isLoggedIn() const
+{
+	return !this->data->checkAuthCookies();
 }
 
 void
