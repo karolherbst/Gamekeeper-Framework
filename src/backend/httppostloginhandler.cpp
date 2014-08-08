@@ -172,7 +172,7 @@ HTTPPostLoginHandler::logout()
 bool
 HTTPPostLoginHandler::isLoggedIn() const
 {
-	return !this->data->checkAuthCookies();
+	return this->data->checkAuthCookies();
 }
 
 void
