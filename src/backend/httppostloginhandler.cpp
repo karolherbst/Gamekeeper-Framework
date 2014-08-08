@@ -55,7 +55,7 @@ public:
 	std::string username;
 	std::vector<std::string> cookieWhitelist;
 
-	bool checkAuthCookies();
+	bool checkCookiesValidForAuth();
 };
 
 HTTPPostLoginHandler::PImpl::PImpl(std::map<std::string, std::string> & config, std::shared_ptr<core::FileDownloader> _hfd,
@@ -88,7 +88,7 @@ HTTPPostLoginHandler::PImpl::PImpl(std::map<std::string, std::string> & config, 
 }
 
 bool
-HTTPPostLoginHandler::PImpl::checkAuthCookies()
+HTTPPostLoginHandler::PImpl::checkCookiesValidForAuth()
 {
 	auto cookies = this->hfd->getCookies();
 	// if no whitelist, fallback to empty check
@@ -142,7 +142,7 @@ HTTPPostLoginHandler::login(const std::string & username, const std::string & pa
 		return false;
 	}
 
-	bool validTokens = this->data->checkAuthCookies();
+	bool validTokens = this->data->checkCookiesValidForAuth();
 	// save tokens, if we have an authmanager
 	if(this->data->am && validTokens)
 	{
@@ -172,7 +172,7 @@ HTTPPostLoginHandler::logout()
 bool
 HTTPPostLoginHandler::isLoggedIn() const
 {
-	return this->data->checkAuthCookies();
+	return this->data->checkCookiesValidForAuth();
 }
 
 void
