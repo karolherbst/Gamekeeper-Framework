@@ -69,7 +69,6 @@ LibSecretManager::saveToken(const AuthManager::Token & token)
 {
 	SecretSchema genSchema = GK_TOKEN_SCHEMA_TEMPLATE;
 	GHashTable * attributes = g_hash_table_new(&g_direct_hash, &g_direct_equal);
-	GError * e{nullptr};
 
 	// save trivial stuff first
 	g_hash_table_insert(attributes, GPOINTER_CAST(GK_TOKEN_GROUP), GPOINTER_CAST(token.group.c_str()));
@@ -89,7 +88,7 @@ LibSecretManager::saveToken(const AuthManager::Token & token)
 	}
 	genSchema.attributes[i].name = nullptr;
 
-	secret_password_storev_sync(&genSchema, attributes, nullptr, (std::string("gamekeeper token for: ") + token.group).c_str(), token.value.c_str(), nullptr, &e);
+	secret_password_storev_sync(&genSchema, attributes, nullptr, (std::string("gamekeeper token for: ") + token.group).c_str(), token.value.c_str(), nullptr, nullptr);
 
 	g_hash_table_destroy(attributes);
 }
@@ -99,12 +98,11 @@ LibSecretManager::readAllTokens(const std::string & group)
 {
 	AuthManager::Tokens tokens;
 	GHashTable * attributes = g_hash_table_new(&g_str_hash, &g_str_equal);
-	GError * e{nullptr};
 
 	g_hash_table_insert(attributes, GPOINTER_CAST(GK_TOKEN_APPLICATION), GPOINTER_CAST(GK_TOKEN_APPLICATION_VALUE));
 	g_hash_table_insert(attributes, GPOINTER_CAST(GK_TOKEN_GROUP), GPOINTER_CAST(group.c_str()));
 
-	GList * list = secret_service_search_sync(nullptr, nullptr, attributes, static_cast<SecretSearchFlags>(SECRET_SEARCH_ALL | SECRET_SEARCH_LOAD_SECRETS), nullptr, &e);
+	GList * list = secret_service_search_sync(nullptr, nullptr, attributes, static_cast<SecretSearchFlags>(SECRET_SEARCH_ALL | SECRET_SEARCH_LOAD_SECRETS), nullptr, nullptr);
 	g_hash_table_destroy(attributes);
 
 	GList * it = list;
@@ -139,6 +137,8 @@ LibSecretManager::readAllTokens(const std::string & group)
 		secret_value_unref(value);
 		tokens.push_back(std::move(token));
 	}
+
+	g_list_free(list);
 
 	return tokens;
 }
