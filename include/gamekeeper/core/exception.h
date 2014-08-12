@@ -25,6 +25,7 @@
 
 #include <exception>
 #include <string>
+#include <vector>
 
 GAMEKEEPER_NAMESPACE_START(core)
 

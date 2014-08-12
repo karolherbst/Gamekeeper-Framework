@@ -23,6 +23,8 @@
 
 #include <gamekeeper/core/common.h>
 
+#include <vector>
+
 GAMEKEEPER_NAMESPACE_START(utils)
 
 namespace Containers
