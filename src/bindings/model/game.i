@@ -4,46 +4,12 @@
 
 	#include <string>
 
-	#include <gamekeeper/model/game.h>
+	#include <gamekeeper/model/genericgame.h>
 
 	GAMEKEEPER_NAMESPACE_START(bindings)
 	namespace model
 	{
-
-	class PUBLIC_API Game : public gamekeeper::model::Game
-	{
-	private:
-		std::string id;
-		std::string name;
-
-	public:
-		PUBLIC_INLINE inline virtual const std::string & getId() const override
-		{
-			return this->id;
-		}
-
-		PUBLIC_INLINE inline virtual const std::string & getName() const override
-		{
-			return this->name;
-		}
-
-		PUBLIC_INLINE inline virtual const std::set<gamekeeper::model::Platform> & getPlatforms() const override
-		{
-			static std::set<gamekeeper::model::Platform> ps;
-			return ps;
-		}
-
-		PUBLIC_INLINE inline void setId(const std::string & _id)
-		{
-			this->id = _id;
-		}
-
-		PUBLIC_INLINE inline void setName(const std::string & _name)
-		{
-			this->name = _name;
-		}
-	};
-
+		typedef gamekeeper::model::GenericGame Game;
 	}
 	GAMEKEEPER_NAMESPACE_END(bindings)
 %}
@@ -61,6 +27,12 @@ struct Game
 
 	const std::string & getName() const;
 	void setName(const std::string &);
+
+	const std::string & getDescription() const;
+	void setDescription(const std::string &);
+
+	const std::string & getHomepage() const;
+	void setHomepage(const std::string &);
 };
 }
 }
@@ -70,4 +42,6 @@ struct Game
 #if defined(SWIGPYTHON) || defined(SWIGCSHARP)
 	%attribute(gamekeeper::bindings::model::Game, const std::string &, id, getId, setId);
 	%attribute(gamekeeper::bindings::model::Game, const std::string &, name, getName, setName);
+	%attribute(gamekeeper::bindings::model::Game, const std::string &, description, getDescription, setDescription);
+	%attribute(gamekeeper::bindings::model::Game, const std::string &, homepage, getHomepage, setHomepage);
 #endif

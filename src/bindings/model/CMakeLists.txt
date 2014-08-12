@@ -22,6 +22,7 @@ macro(add_gamekeeper_swig_binding type name module)
   set_source_files_properties(${swig_sources} PROPERTIES SWIG_FLAGS "-DGAMEKEEPER_BINDING_MODULE=${name};${ARGN}")
   swig_add_module(${name} ${type} ${swig_sources})
   set_target_properties(${SWIG_MODULE_${name}_REAL_NAME} PROPERTIES LIBRARY_OUTPUT_DIRECTORY "${SWIG_${swigName}_LIBRARY_PATH}")
+  swig_link_libraries(${name} gamekeeperModel)
 endmacro()
 
 if(WITH_CSHARP_BINDINGS)

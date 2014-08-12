@@ -18,26 +18,22 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#include <gamekeeper/client/gameimpl.h>
+#include <gamekeeper/model/genericgame.h>
 
-GAMEKEEPER_NAMESPACE_START(client)
+#include <string>
 
-class GameImpl::PImpl
+GAMEKEEPER_NAMESPACE_START(model)
+
+struct GenericGame::PImpl
 {
-public:
-	PImpl(std::unique_ptr<model::Game> &&);
-	std::unique_ptr<model::Game> game;
+	GK_BUILD_MEMBER(GAME_MODEL)
 };
 
-GameImpl::PImpl::PImpl(std::unique_ptr<model::Game> && model)
-:	game(std::move(model)){}
+GenericGame::GenericGame()
+:	data(new PImpl()){}
 
-GameImpl::GameImpl(std::unique_ptr<model::Game> && model)
-:	data(new PImpl(std::move(model))){
+GenericGame::~GenericGame(){}
 
-}
+GK_BUILD_IMPLEMENTATION(GAME_MODEL, GenericGame,, this->data)
 
-GameImpl::~GameImpl(){}
-GK_BUILD_GET_IMPLEMENTATION_WRAPPER(GAME_MODEL, GameImpl,, this->data->game)
-
-GAMEKEEPER_NAMESPACE_END(client)
+GAMEKEEPER_NAMESPACE_END(model)

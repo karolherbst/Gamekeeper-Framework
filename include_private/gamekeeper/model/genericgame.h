@@ -18,26 +18,29 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef GAMEKEEPER_MODEL_STORE_H
-#define GAMEKEEPER_MODEL_STORE_H 1
+#ifndef GAMEKEEPER_MODEL_GENERICGAME_H
+#define GAMEKEEPER_MODEL_GENERICGAME_H 1
 
-#include <gamekeeper/core/interface.h>
+#include <gamekeeper/core/common.h>
 
-#include <map>
+#include <memory>
+#include <set>
 
+#include <gamekeeper/model/game.h>
 #include <gamekeeper/model/macros.h>
 
 GAMEKEEPER_NAMESPACE_START(model)
 
-#define STORE_MODEL ( \
-	(std::string, name, Name), \
-	(gamekeeper::model::Store::ConfigMap, config, Config))
-
-interface PUBLIC_API Store
+class PUBLIC_API GenericGame : public Game
 {
-	typedef std::map<std::string,std::string> ConfigMap;
-	GAMEKEEPER_INTERFACE_METHODS(Store);
-	GK_BUILD_GET_INTERFACE(STORE_MODEL, PUBLIC_API virtual, = 0)
+public:
+	PUBLIC_API GenericGame();
+	PUBLIC_API ~GenericGame();
+	GK_BUILD_GET_INTERFACE(GAME_MODEL, PUBLIC_API virtual, override)
+	GK_BUILD_SET_INTERFACE(GAME_MODEL, PUBLIC_API,)
+private:
+	class PRIVATE_API PImpl;
+	std::unique_ptr<PImpl> data;
 };
 
 GAMEKEEPER_NAMESPACE_END(model)

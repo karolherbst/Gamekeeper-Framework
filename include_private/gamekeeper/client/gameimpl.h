@@ -34,10 +34,7 @@ class PRIVATE_API GameImpl : public Game
 public:
 	PRIVATE_API GameImpl(std::unique_ptr<model::Game> &&);
 	PRIVATE_API ~GameImpl();
-	PRIVATE_API virtual const std::string & getId() const override;
-	PRIVATE_API virtual const std::string & getName() const override;
-	PRIVATE_API virtual const std::set<model::Platform> & getPlatforms() const override;
-
+	GK_BUILD_GET_INTERFACE(GAME_MODEL, PRIVATE_API virtual, override)
 private:
 	class PRIVATE_API PImpl;
 	std::unique_ptr<PImpl> data;

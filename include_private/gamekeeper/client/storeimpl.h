@@ -39,8 +39,7 @@ interface PRIVATE_API StoreImpl : public client::Store
 {
 public:
 	PRIVATE_API StoreImpl(const backend::StoreConfiguration &);
-	PRIVATE_API virtual const std::string & getName() const override;
-	PRIVATE_API virtual const std::map<std::string, std::string> & getConfig() const override;
+	GK_BUILD_GET_INTERFACE(STORE_MODEL, PRIVATE_API virtual, override)
 	PRIVATE_API virtual bool login(const std::string & username, const std::string & password /*, TwoFactorAuthCallback for later usage */) override;
 	PRIVATE_API virtual bool logout() override;
 	PRIVATE_API virtual bool isLoggedIn() const override;

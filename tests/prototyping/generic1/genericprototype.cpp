@@ -104,7 +104,8 @@ GenericPrototype::startEventLoop()
 
 		for(const auto & g : store->getAllGames())
 		{
-			this->logger << core::LogLevel::Debug << "id[" << g->getId() << "] name[" << g->getName() << "] platforms[" << platformsToString(g->getPlatforms()) << "]" << core::endl;
+			this->logger << core::LogLevel::Debug << "id[" << g->getId() << "] name[" << g->getName() << "] platforms[" << platformsToString(g->getPlatforms())
+				<< "] description[" << g->getDescription() << "] homepage[" << g->getHomepage() << "]" << core::endl;
 		}
 	}
 }

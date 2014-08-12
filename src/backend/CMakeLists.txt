@@ -55,6 +55,7 @@ file(GLOB sources
 add_library(gamekeeperBackend SHARED ${sources} ${headers} ${libsecret_manager})
 target_link_libraries(gamekeeperBackend
   gamekeeperCore
+  gamekeeperModel
   ${JANSSON_LIBRARIES}
   ${LIBSECRET_LIBRARIES}
   ${PUGIXML_LIBRARIES}

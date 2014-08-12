@@ -12,6 +12,7 @@ if(WITH_LIBSECRET)
 endif()
 
 add_subdirectory(utils)
+add_subdirectory(model)
 add_subdirectory(client)
 add_subdirectory(core)
 add_subdirectory(bindings)

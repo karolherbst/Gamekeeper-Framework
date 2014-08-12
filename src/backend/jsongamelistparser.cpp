@@ -23,34 +23,10 @@
 #include <jansson.h>
 #include <jansson_path.h>
 
-#include <gamekeeper/model/game.h>
+#include <gamekeeper/model/genericgame.h>
 #include <gamekeeper/utils/stringutils.h>
 
 GAMEKEEPER_NAMESPACE_START(backend)
-
-class GameJSON : public gamekeeper::model::Game
-{
-	friend class JSONGameListParser;
-private:
-	std::string id;
-	std::string name;
-	std::set<model::Platform> platforms;
-public:
-	virtual const std::string & getId() const override
-	{
-		return this->id;
-	}
-
-	virtual const std::string & getName() const override
-	{
-		return this->name;
-	}
-
-	virtual const std::set<model::Platform> & getPlatforms() const override
-	{
-		return this->platforms;
-	}
-};
 
 class JSONGameListParser::PImpl
 {
@@ -60,6 +36,8 @@ public:
 	std::string gameIdPath;
 	std::string gameNamePath;
 	std::string gamePlatformsPath;
+	std::string gameDescriptionPath;
+	std::string gameHomepagePath;
 	std::string platformId;
 	std::string platformWin32Id;
 	std::string platformMac32Id;
@@ -72,6 +50,8 @@ JSONGameListParser::PImpl::PImpl(std::map<std::string, std::string> & config)
 	gameIdPath(config["game.id"]),
 	gameNamePath(config["game.name"]),
 	gamePlatformsPath(config["game.platforms"]),
+	gameDescriptionPath(config["game.description"]),
+	gameHomepagePath(config["game.homepage"]),
 	platformId(config["platform.id"]),
 	platformWin32Id(config["platform.win32"]),
 	platformMac32Id(config["platform.mac32"]),
@@ -103,32 +83,42 @@ JSONGameListParser::parseGameList(std::basic_istream<gkbyte_t> & is)
 			for(size_t i = 0; i < json_array_size(gamesList); i++)
 			{
 				json_t * gameNode = json_array_get(gamesList, i);
-				GameJSON * game = new GameJSON();
-				game->id = json_string_value(json_path_get(gameNode, this->data->gameIdPath.c_str()));
-				game->name = json_string_value(json_path_get(gameNode, this->data->gameNamePath.c_str()));
+				model::GenericGame * game = new model::GenericGame();
+				game->setId(json_string_value(json_path_get(gameNode, this->data->gameIdPath.c_str())));
+				game->setName(json_string_value(json_path_get(gameNode, this->data->gameNamePath.c_str())));
+				if(!this->data->gameDescriptionPath.empty())
+				{
+					game->setDescription(json_string_value(json_path_get(gameNode, this->data->gameDescriptionPath.c_str())));
+				}
+				if(!this->data->gameHomepagePath.empty())
+				{
+					game->setHomepage(json_string_value(json_path_get(gameNode, this->data->gameHomepagePath.c_str())));
+				}
 
 				json_t * gamePlatforms = json_path_get(gameNode, this->data->gamePlatformsPath.c_str());
 
+				std::set<model::Platform> platforms;
 				for(size_t p = 0; p < json_array_size(gamePlatforms); p++)
 				{
 					std::string platform = json_string_value(json_path_get(json_array_get(gamePlatforms, p), "$"));
 					if(platform == this->data->platformWin32Id)
 					{
-						game->platforms.insert(model::Platform::WIN_32);
+						platforms.insert(model::Platform::WIN_32);
 					}
 					else if(platform == this->data->platformMac32Id)
 					{
-						game->platforms.insert(model::Platform::MAC_32);
+						platforms.insert(model::Platform::MAC_32);
 					}
 					else if(platform == this->data->platformLin32Id)
 					{
-						game->platforms.insert(model::Platform::LIN_32);
+						platforms.insert(model::Platform::LIN_32);
 					}
 					else if(platform == this->data->platformLin64Id)
 					{
-						game->platforms.insert(model::Platform::LIN_64);
+						platforms.insert(model::Platform::LIN_64);
 					}
 				}
+				game->setPlatforms(std::move(platforms));
 
 				games.push_back(std::move(std::unique_ptr<model::Game>(game)));
 			}
