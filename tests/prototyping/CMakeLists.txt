@@ -1,4 +1,7 @@
 add_subdirectory(generic1)
+if(WITH_NCURSES)
+  add_subdirectory(curses)
+endif()
 if(WITH_PYTHON_BINDINGS)
   add_subdirectory(hb1)
 endif()
