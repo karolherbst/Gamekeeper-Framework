@@ -16,7 +16,6 @@ file(GLOB sources
 
 add_executable(GenericPrototype ${sources} ${headers})
 target_link_libraries(GenericPrototype
-  gamekeeperBackend
   gamekeeperClientMain
 )
 
