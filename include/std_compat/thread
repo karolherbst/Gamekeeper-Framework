@@ -1,27 +1,18 @@
 /*
- * GameKeeper Framework
+ * C++ Standard Library Boost Wrapper
+ * Boost fallbacks for missing C++11 functionality
  *
- * Copyright (C) 2013 Karol Herbst <gamekeeper@karolherbst.de>
+ * Written in 2013 by Karol Herbst <gamekeeper@karolherbst.de>
+ * To the extent possible under law, the author(s) have dedicated all copyright
+ * and related and neighboring rights to this software to the public domain
+ * worldwide. This software is distributed without any warranty.
  *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2.1 of the License, or (at your option) any later version.
- *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ * You should have received a copy of the CC0 Public Domain Dedication along with
+ * this software. If not, see <http://creativecommons.org/publicdomain/zero/1.0/>.
  */
 
-#ifndef GAMEKEEPER_STD_COMPAT_THREAD
-#define GAMEKEEPER_STD_COMPAT_THREAD 1
-
-#include <gamekeeper/core/common.h>
+#ifndef STD_COMPAT_THREAD
+#define STD_COMPAT_THREAD 1
 
 #include <thread>
 
@@ -32,29 +23,29 @@
 
 namespace std
 {
-	class PUBLIC_API thread : public boost::thread
+	class thread : public boost::thread
 	{
 	public:
 		template<typename Callable>
-		PUBLIC_INLINE thread (Callable func) : boost::thread(func){};
+		thread (Callable func) : boost::thread(func){};
 	};
 
 namespace this_thread
 {
-	PUBLIC_INLINE inline thread::id get_id() noexcept
+	inline thread::id get_id() noexcept
 	{
 		return boost::this_thread::get_id();
 	}
 
 	template <class Rep, class Period>
-	PUBLIC_INLINE inline void sleep_for (const chrono::duration<Rep,Period>& rel_time)
+	inline void sleep_for (const chrono::duration<Rep,Period>& rel_time)
 	{
 		typedef boost::chrono::duration<Rep, boost::ratio<Period::num, Period::den>> BDuration;
 		boost::this_thread::sleep_for(BDuration(rel_time.count()));
 	}
 
 	template <class Clock, class Duration>
-	PUBLIC_INLINE inline void sleep_until (const chrono::time_point<Clock,Duration>& abs_time)
+	inline void sleep_until (const chrono::time_point<Clock,Duration>& abs_time)
 	{
 		sleep_for(abs_time - Clock::now());
 	}
@@ -63,4 +54,4 @@ namespace this_thread
 
 #endif
 
-#endif //GAMEKEEPER_STD_COMPAT_THREAD
+#endif //STD_COMPAT_THREAD
