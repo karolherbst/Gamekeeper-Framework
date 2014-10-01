@@ -9,6 +9,7 @@ file(GLOB headers
 
 file(GLOB sources
   genericgame.cpp
+  converter/gamestringconverter.cpp
 )
 
 add_library(gamekeeperModel SHARED ${sources} ${headers})
