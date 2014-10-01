@@ -29,31 +29,16 @@
 #include <boost/algorithm/string/replace.hpp>
 #include <boost/filesystem/fstream.hpp>
 #include <boost/filesystem/operations.hpp>
-#include <boost/iostreams/device/array.hpp>
-#include <boost/iostreams/stream.hpp>
 
 #include <log4cpp/Category.hh>
 #include <log4cpp/Configurator.hh>
 #include <log4cpp/OstreamAppender.hh>
 #include <log4cpp/PatternLayout.hh>
 #include <log4cpp/Priority.hh>
-
-// sadly this is the only way to use a different file format to configure our logger :(
-// reimplmeneting this doesn't make much sense to me
-namespace log4cpp
-{
-	class PropertyConfiguratorImpl
-	{
-	public:
-		PropertyConfiguratorImpl();
-		virtual ~PropertyConfiguratorImpl();
-		virtual void doConfigure(std::istream& in) throw (ConfigureFailure);
-	};
-}
+#include <log4cpp/PropertyConfigurator.hh>
 
 namespace balgo = boost::algorithm;
 namespace bfs = boost::filesystem;
-namespace bio = boost::iostreams;
 
 GAMEKEEPER_NAMESPACE_START(core)
 
@@ -105,7 +90,9 @@ Log4cppLoggerFactory::Log4cppLoggerFactory(std::shared_ptr<UserPaths> userpaths)
 	logger << LogLevel::Debug << "parse config file at: " << cFile.string() << endl;
 
 	bfs::ifstream ifstream(cFile);
-	std::vector<char> buffer;
+	bfs::path cFileGen = userpaths->getConfigFile("log.conf.gen");
+	bfs::remove(cFileGen);
+	bfs::ofstream ofstream(cFileGen);
 	std::string line;
 	std::string parsedLine;
 
@@ -120,21 +107,20 @@ Log4cppLoggerFactory::Log4cppLoggerFactory(std::shared_ptr<UserPaths> userpaths)
 
 		parsedLine = parseLine(line, userpaths);
 		logger << LogLevel::Debug << "parsed line \"" << line << "\" to: \"" << parsedLine << "\"" << endl;
-		buffer.insert(buffer.end(), parsedLine.begin(), parsedLine.end());
-		buffer.insert(buffer.end(), '\n');
+		ofstream << parsedLine << std::endl;
 	}
 
 	// ignore the file if nothing was parsed
-	if(buffer.empty())
+	if(ofstream.tellp() <= 0)
 	{
 		return;
 	}
 
 	logger << LogLevel::Info << "moving to new configuration" << endl;
 
-	bio::stream<bio::array_source> stream(buffer.data(), buffer.size());
-	log4cpp::PropertyConfiguratorImpl pci;
-	pci.doConfigure(stream);
+	log4cpp::PropertyConfigurator pci;
+	pci.configure(cFileGen.string());
+	bfs::remove(cFileGen);
 
 	// we have another logger noew
 	log4cpp::Category::getInstance("GameKeeper").removeAppender(this->appender);
