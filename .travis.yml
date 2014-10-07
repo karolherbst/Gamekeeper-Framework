@@ -10,11 +10,8 @@ matrix:
   include:
     - compiler: gcc
       env: CFLAGS=--coverage CXXFLAGS=--coverage COVERAGE=1 GCC=4.8
-      fast_finish: true
-  include:
     - compiler: gcc
       env: GCC=4.9
-  include:
     - compiler: gcc
       env: GCC=4.8
   exclude:
@@ -42,7 +39,7 @@ notifications:
     channels:
       - "irc.freenode.org#gamekeeper"
     template:
-      - "%{repository} (%{commit}) by %{author} : %{message} %{foo} "
+      - "%{repository} (%{commit}) by %{author} : %{message}"
       - "Build details: %{build_url}"
       - "Latest commit: %{compare_url}"
     on_success: change
