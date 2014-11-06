@@ -87,15 +87,48 @@ GenericPrototype::startEventLoop()
 		// we have only to login if the store isn't logged in
 		if(!store->isLoggedIn())
 		{
+			std::vector<std::string> loginMethods = store->supportedLoginMethods();
+			std::string loginMethod;
+			if(loginMethods.size() == 1)
+			{
+				loginMethod = loginMethods[0];
+				this->logger << LogLevel::Info << "using " << loginMethod << " login method"<< endl;
+			}
+			else
+			{
+				std::cout << "store supports the following login methods, please choose one of:";
+				for(const auto & m : loginMethods)
+				{
+					std::cout << " " << m;
+				}
+				std::cout << std::endl;
+				if(!std::getline(std::cin, loginMethod))
+				{
+					break;
+				}
+				if(std::find(loginMethods.begin(), loginMethods.end(), loginMethod) == loginMethods.end())
+				{
+					this->logger << LogLevel::Error << "unsupported login method" << endl;
+					break;
+				}
+			}
+
 			std::string username;
 			std::string password;
 
 			std::cout << "enter username" << std::endl;
-			std::getline(std::cin, username);
-			std::cout << "enter password" << std::endl;
-			std::getline(std::cin, password);
+			if(!std::getline(std::cin, username))
+			{
+				break;
+			}
 
-			if(!store->login(username, password))
+			std::cout << "enter password" << std::endl;
+			if(!std::getline(std::cin, password))
+			{
+				break;
+			}
+
+			if(!store->login(loginMethod, username, password))
 			{
 				this->logger << LogLevel::Info << "login failed" << endl;
 				continue;

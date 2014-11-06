@@ -40,9 +40,10 @@ interface PRIVATE_API StoreImpl : public client::Store
 public:
 	PRIVATE_API StoreImpl(const backend::StoreConfiguration &);
 	GK_BUILD_GET_INTERFACE(STORE_MODEL, PRIVATE_API virtual, override)
-	PRIVATE_API virtual bool login(const std::string & username, const std::string & password /*, TwoFactorAuthCallback for later usage */) override;
+	PRIVATE_API virtual bool login(const std::string & method, const std::string & username, const std::string & password /*, TwoFactorAuthCallback for later usage */) override;
 	PRIVATE_API virtual bool logout() override;
 	PRIVATE_API virtual bool isLoggedIn() const override;
+	PRIVATE_API virtual std::vector<std::string> supportedLoginMethods() override;
 	PRIVATE_API virtual std::vector<std::unique_ptr<Game>> getAllGames() override;
 private:
 	class PRIVATE_API PImpl;

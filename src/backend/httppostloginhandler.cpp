@@ -62,10 +62,10 @@ HTTPPostLoginHandler::PImpl::PImpl(std::map<std::string, std::string> & config, 
                                    std::shared_ptr<AuthManager> _am)
 :	hfd(_hfd),
 	am(_am),
-	loginUrl(config["auth.loginurl"]),
-	logoutUrl(config["auth.logouturl"]),
-	usernameField(config["authfield.username"]),
-	passwordField(config["authfield.password"]),
+	loginUrl(config["auth_http_post.loginurl"]),
+	logoutUrl(config["auth_http_post.logouturl"]),
+	usernameField(config["auth_http_post.username"]),
+	passwordField(config["auth_http_post.password"]),
 	tokenGroup(config["store.name"])
 {
 	auto it = config.find("authtoken.keys");
@@ -78,7 +78,7 @@ HTTPPostLoginHandler::PImpl::PImpl(std::map<std::string, std::string> & config, 
 	if(this->am)
 	{
 		core::FileDownloader::CookieBucket cookies;
-		for(const AuthManager::Token & t : this->am->readAllTokens(this->tokenGroup))
+		for(const AuthManager::Token & t : this->am->readAllTokens(this->tokenGroup + "_http_post"))
 		{
 			cookies.push_back({t.key, t.value, t.properties.at("domain"), t.properties.at("path"), t.expiry,
 			                   t.properties.at("secure") == GK_TRUE_STRING ? true : false});
@@ -148,7 +148,7 @@ HTTPPostLoginHandler::login(const std::string & username, const std::string & pa
 	{
 		for(const core::FileDownloader::Cookie & c : this->data->hfd->getCookies())
 		{
-			this->data->am->saveToken({c.name, c.value, this->data->tokenGroup, c.expiry,
+			this->data->am->saveToken({c.name, c.value, this->data->tokenGroup + "_http_post", c.expiry,
 				{
 					{"domain", c.domain},
 					{"path", c.path},
