@@ -40,16 +40,36 @@ namespace Containers
 	 */
 	template <class Container>
 	std::vector<typename Container::key_type> checkMissing(const Container & container, const std::vector<typename Container::key_type> & keys);
+
+	/**
+	 * returns a list of keys not found in @a container
+	 *
+	 * @author Karol Herbst
+	 * @since 0
+	 *
+	 * @param[in] container the container to be searched through
+	 * @param[in] keys a list of keys to be searched
+	 * @param[in] endIt the end iterator to use if container.end() is not usable
+	 */
+	template <class Container, class Iterator>
+	std::vector<typename Container::key_type> checkMissing(const Container & container, const std::vector<typename Container::key_type> & keys, const Iterator & endIt);
 }
 
 template <class Container>
 std::vector<typename Container::key_type>
 Containers::checkMissing(const Container & container, const std::vector<typename Container::key_type> & keys)
 {
+	return checkMissing(container, keys, container.end());
+}
+
+template <class Container, class Iterator>
+std::vector<typename Container::key_type>
+Containers::checkMissing(const Container & container, const std::vector<typename Container::key_type> & keys, const Iterator & endIt)
+{
 	std::vector<typename Container::key_type> missing;
 	for(const typename Container::key_type & key : keys)
 	{
-		if(container.find(key) == container.end())
+		if(container.find(key) == endIt)
 		{
 			missing.push_back(key);
 		}
