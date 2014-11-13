@@ -91,8 +91,9 @@ StoreConfigurator::configure(const boost::filesystem::path & configFile)
 		throw StoreConfiguratorException("Config file \"" + configFile.string() + "\" has no suffix, can't determine file format");
 	}
 
-	std::map<std::string, std::string> props;
+	try
 	{
+		std::map<std::string, std::string> props;
 		prop::ptree config;
 		std::string ext(configFile.extension().string(), 1);
 
@@ -118,10 +119,7 @@ StoreConfigurator::configure(const boost::filesystem::path & configFile)
 		}
 
 		loadFileIntoMap(config, props);
-	}
 
-	try
-	{
 		// here we check for properties every config file must have. It may be that some will move in different places
 		// after more implementations came up
 		auto missing = utils::Containers::checkMissing(props,
@@ -164,6 +162,11 @@ StoreConfigurator::configure(const boost::filesystem::path & configFile)
 		}
 
 		return StoreConfiguration(glp, lh, std::make_shared<StoreProps>(props));
+	}
+	// just rethrow them
+	catch(const StoreConfiguratorException &)
+	{
+		throw;
 	}
 	catch(const std::exception & ex)
 	{
