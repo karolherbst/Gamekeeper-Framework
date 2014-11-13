@@ -22,7 +22,10 @@
 
 #include <boost/filesystem/path.hpp>
 #include <boost/property_tree/ptree.hpp>
+#include <boost/property_tree/info_parser.hpp>
 #include <boost/property_tree/ini_parser.hpp>
+#include <boost/property_tree/json_parser.hpp>
+#include <boost/property_tree/xml_parser.hpp>
 
 #include <gamekeeper/backend/httppostloginhandler.h>
 #include <gamekeeper/backend/jsongamelistparser.h>
@@ -65,7 +68,7 @@ StoreProps::getConfig() const
 	return this->config;
 }
 
-static void loadIniFileIntoMap(const prop::ptree & tree, std::map<std::string, std::string> & map)
+static void loadFileIntoMap(const prop::ptree & tree, std::map<std::string, std::string> & map)
 {
 	for(const auto & s : tree)
 	{
@@ -91,8 +94,30 @@ StoreConfigurator::configure(const boost::filesystem::path & configFile)
 	std::map<std::string, std::string> props;
 	{
 		prop::ptree config;
-		prop::read_ini(configFile.string(), config);
-		loadIniFileIntoMap(config, props);
+		std::string ext(configFile.extension().string(), 1);
+
+		if(ext == "inf" || ext == "info")
+		{
+			prop::read_info(configFile.string(), config);
+		}
+		else if(ext == "ini")
+		{
+			prop::read_ini(configFile.string(), config);
+		}
+		else if(ext == "js" || ext == "json")
+		{
+			prop::read_json(configFile.string(), config);
+		}
+		else if(ext == "xml")
+		{
+			prop::read_xml(configFile.string(), config);
+		}
+		else
+		{
+			throw StoreConfiguratorException("Config file \"" + configFile.string() + "\" has no usable file format");
+		}
+
+		loadFileIntoMap(config, props);
 	}
 
 	try
