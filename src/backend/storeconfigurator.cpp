@@ -83,6 +83,11 @@ StoreConfigurator::StoreConfigurator(std::shared_ptr<core::FileDownloaderFactory
 StoreConfiguration
 StoreConfigurator::configure(const boost::filesystem::path & configFile)
 {
+	if(!configFile.has_extension())
+	{
+		throw StoreConfiguratorException("Config file \"" + configFile.string() + "\" has no suffix, can't determine file format");
+	}
+
 	std::map<std::string, std::string> props;
 	{
 		prop::ptree config;
