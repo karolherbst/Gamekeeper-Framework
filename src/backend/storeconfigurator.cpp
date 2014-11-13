@@ -21,6 +21,7 @@
 #include <gamekeeper/backend/storeconfigurator.h>
 
 #include <boost/filesystem/path.hpp>
+#include <boost/property_tree/detail/file_parser_error.hpp>
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/info_parser.hpp>
 #include <boost/property_tree/ini_parser.hpp>
@@ -34,6 +35,7 @@
 #include <gamekeeper/core/filedownloaderfactory.h>
 #include <gamekeeper/model/store.h>
 #include <gamekeeper/utils/containerutils.h>
+#include <gamekeeper/utils/stringutils.h>
 
 namespace prop = boost::property_tree;
 
@@ -162,6 +164,11 @@ StoreConfigurator::configure(const boost::filesystem::path & configFile)
 		}
 
 		return StoreConfiguration(glp, lh, std::make_shared<StoreProps>(props));
+	}
+	// indicates parsing error in the read_* calls
+	catch(const prop::file_parser_error & fpe)
+	{
+		throw StoreConfiguratorException(std::string("parsing error[") + fpe.message() + "] in file: " + configFile.string() + ":" + utils::String::toString(fpe.line()));
 	}
 	// just rethrow them
 	catch(const StoreConfiguratorException &)
