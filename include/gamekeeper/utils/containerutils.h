@@ -40,8 +40,8 @@ namespace Containers
 	 * @param[in] container the container to be searched through
 	 * @param[in] keys a list of keys to be searched
 	 */
-	template <class Container>
-	std::vector<typename Container::key_type> checkMissing(const Container & container, const std::vector<typename Container::key_type> & keys);
+	template <class Container, class Keys = std::vector<typename Container::key_type>>
+	std::vector<typename Container::key_type> checkMissing(const Container & container, const Keys & keys);
 
 	/**
 	 * returns a list of keys not found in @a container
@@ -53,20 +53,20 @@ namespace Containers
 	 * @param[in] keys a list of keys to be searched
 	 * @param[in] endIt the end iterator to use if container.end() is not usable
 	 */
-	template <class Container, class Iterator>
-	std::vector<typename Container::key_type> checkMissing(const Container & container, const std::vector<typename Container::key_type> & keys, const Iterator & endIt);
+	template <class Container, class Iterator, class Keys = std::vector<typename Container::key_type>>
+	std::vector<typename Container::key_type> checkMissing(const Container & container, const Keys & keys, const Iterator & endIt);
 }
 
-template <class Container>
+template <class Container, class Keys>
 std::vector<typename Container::key_type>
-Containers::checkMissing(const Container & container, const std::vector<typename Container::key_type> & keys)
+Containers::checkMissing(const Container & container, const Keys & keys)
 {
 	return checkMissing(container, keys, container.end());
 }
 
-template <class Container, class Iterator>
+template <class Container, class Iterator, class Keys>
 std::vector<typename Container::key_type>
-Containers::checkMissing(const Container & container, const std::vector<typename Container::key_type> & keys, const Iterator & endIt)
+Containers::checkMissing(const Container & container, const Keys & keys, const Iterator & endIt)
 {
 	std::vector<typename Container::key_type> missing;
 	std::copy_if(keys.begin(), keys.end(), std::inserter(missing, missing.begin()), [&](const typename Container::key_type & key)
