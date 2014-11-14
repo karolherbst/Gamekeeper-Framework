@@ -23,6 +23,8 @@
 
 #include <gamekeeper/core/common.h>
 
+#include <algorithm>
+#include <iterator>
 #include <vector>
 
 GAMEKEEPER_NAMESPACE_START(utils)
@@ -67,13 +69,10 @@ std::vector<typename Container::key_type>
 Containers::checkMissing(const Container & container, const std::vector<typename Container::key_type> & keys, const Iterator & endIt)
 {
 	std::vector<typename Container::key_type> missing;
-	for(const typename Container::key_type & key : keys)
+	std::copy_if(keys.begin(), keys.end(), std::inserter(missing, missing.begin()), [&](const typename Container::key_type & key)
 	{
-		if(container.find(key) == endIt)
-		{
-			missing.push_back(key);
-		}
-	}
+		return container.find(key) == endIt;
+	});
 	return missing;
 }
 
