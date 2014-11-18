@@ -20,7 +20,13 @@
 
 #include <gamekeeper/utils/containerutils.h>
 
+#include <deque>
+#include <list>
 #include <map>
+#include <set>
+#include <unordered_map>
+#include <unordered_set>
+#include <vector>
 
 #include <gtest/gtest.h>
 
@@ -28,17 +34,60 @@ class ContainerUtilsTest : public testing::Test{};
 
 using namespace gamekeeper::utils;
 
-TEST_F(ContainerUtilsTest, checkMissing_emptyContainer)
-{
-	std::map<std::string,std::string> emptyMap;
-	std::vector<std::string> missingKeys{"missingKey"};
-	EXPECT_EQ(missingKeys, Containers::checkMissing(emptyMap, missingKeys));
+using std::deque;
+using std::list;
+using std::map;
+using std::multimap;
+using std::multiset;
+using std::set;
+using std::unordered_map;
+using std::unordered_multimap;
+using std::unordered_multiset;
+using std::unordered_set;
+using std::vector;
+
+#define TEST_MACRO_MAP(type, mapType) \
+TEST_F(ContainerUtilsTest, checkMissing_emptyContainer_##type##_##mapType) \
+{ \
+	mapType<std::string,std::string> emptyMap; \
+	type<std::string> missingKeys{"missingKey"}; \
+	EXPECT_EQ(missingKeys, Containers::checkMissing(emptyMap, missingKeys)); \
+} \
+\
+TEST_F(ContainerUtilsTest, checkMissing_mixed_##type##_##mapType) \
+{ \
+	mapType<std::string,std::string> emptyMap{{"existingKey", "string"}}; \
+	type<std::string> keysToSearch{"existingKey", "missingKey"}; \
+	type<std::string> missingKeys{"missingKey"}; \
+	EXPECT_EQ(missingKeys, Containers::checkMissing(emptyMap, keysToSearch)); \
 }
 
-TEST_F(ContainerUtilsTest, checkMissing_mixed)
-{
-	std::map<std::string,std::string> emptyMap{{"existingKey", "string"}};
-	std::vector<std::string> keysToSearch{"existingKey", "missingKey"};
-	std::vector<std::string> missingKeys{"missingKey"};
-	EXPECT_EQ(missingKeys, Containers::checkMissing(emptyMap, keysToSearch));
+#define TEST_MACRO_SET(type, setType) \
+TEST_F(ContainerUtilsTest, checkMissing_emptyContainer_##type##_##setType) \
+{ \
+	setType<std::string> emptyMap; \
+	type<std::string> missingKeys{"missingKey"}; \
+	EXPECT_EQ(missingKeys, Containers::checkMissing(emptyMap, missingKeys)); \
+} \
+\
+TEST_F(ContainerUtilsTest, checkMissing_mixed_##type##_##setType) \
+{ \
+	setType<std::string> emptyMap{"existingKey"}; \
+	type<std::string> keysToSearch{"existingKey", "missingKey"}; \
+	type<std::string> missingKeys{"missingKey"}; \
+	EXPECT_EQ(missingKeys, Containers::checkMissing(emptyMap, keysToSearch)); \
 }
+
+#define TEST_MACRO_EXEC(type) \
+TEST_MACRO_MAP(type, map) \
+TEST_MACRO_MAP(type, multimap) \
+TEST_MACRO_MAP(type, unordered_map) \
+TEST_MACRO_MAP(type, unordered_multimap) \
+TEST_MACRO_SET(type, set) \
+TEST_MACRO_SET(type, multiset) \
+TEST_MACRO_SET(type, unordered_set) \
+TEST_MACRO_SET(type, unordered_multiset) \
+
+TEST_MACRO_EXEC(deque)
+TEST_MACRO_EXEC(list)
+TEST_MACRO_EXEC(vector)
