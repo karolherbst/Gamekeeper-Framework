@@ -23,6 +23,8 @@
 
 #include <gamekeeper/core/common.h>
 
+#include <algorithm>
+#include <iterator>
 #include <vector>
 
 GAMEKEEPER_NAMESPACE_START(utils)
@@ -38,22 +40,39 @@ namespace Containers
 	 * @param[in] container the container to be searched through
 	 * @param[in] keys a list of keys to be searched
 	 */
-	template <class Container>
-	std::vector<typename Container::key_type> checkMissing(const Container & container, const std::vector<typename Container::key_type> & keys);
+	template <class Container, class Keys = std::vector<typename Container::key_type>>
+	Keys checkMissing(const Container & container, const Keys & keys);
+
+	/**
+	 * returns a list of keys not found in @a container
+	 *
+	 * @author Karol Herbst
+	 * @since 0
+	 *
+	 * @param[in] container the container to be searched through
+	 * @param[in] keys a list of keys to be searched
+	 * @param[in] endIt the end iterator to use if container.end() is not usable
+	 */
+	template <class Container, class Iterator, class Keys = std::vector<typename Container::key_type>>
+	Keys checkMissing(const Container & container, const Keys & keys, const Iterator & endIt);
 }
 
-template <class Container>
-std::vector<typename Container::key_type>
-Containers::checkMissing(const Container & container, const std::vector<typename Container::key_type> & keys)
+template <class Container, class Keys>
+Keys
+Containers::checkMissing(const Container & container, const Keys & keys)
 {
-	std::vector<typename Container::key_type> missing;
-	for(const typename Container::key_type & key : keys)
+	return checkMissing(container, keys, container.end());
+}
+
+template <class Container, class Iterator, class Keys>
+Keys
+Containers::checkMissing(const Container & container, const Keys & keys, const Iterator & endIt)
+{
+	Keys missing;
+	std::copy_if(keys.begin(), keys.end(), std::inserter(missing, missing.begin()), [&](const typename Container::key_type & key)
 	{
-		if(container.find(key) == container.end())
-		{
-			missing.push_back(key);
-		}
-	}
+		return container.find(key) == endIt;
+	});
 	return missing;
 }
 
