@@ -21,8 +21,12 @@
 #include <gamekeeper/backend/storeconfigurator.h>
 
 #include <boost/filesystem/path.hpp>
+#include <boost/property_tree/detail/file_parser_error.hpp>
 #include <boost/property_tree/ptree.hpp>
+#include <boost/property_tree/info_parser.hpp>
 #include <boost/property_tree/ini_parser.hpp>
+#include <boost/property_tree/json_parser.hpp>
+#include <boost/property_tree/xml_parser.hpp>
 
 #include <gamekeeper/backend/httppostloginhandler.h>
 #include <gamekeeper/backend/jsongamelistparser.h>
@@ -31,6 +35,7 @@
 #include <gamekeeper/core/filedownloaderfactory.h>
 #include <gamekeeper/model/store.h>
 #include <gamekeeper/utils/containerutils.h>
+#include <gamekeeper/utils/stringutils.h>
 
 namespace prop = boost::property_tree;
 
@@ -65,7 +70,7 @@ StoreProps::getConfig() const
 	return this->config;
 }
 
-static void loadIniFileIntoMap(const prop::ptree & tree, std::map<std::string, std::string> & map)
+static void loadFileIntoMap(const prop::ptree & tree, std::map<std::string, std::string> & map)
 {
 	for(const auto & s : tree)
 	{
@@ -83,15 +88,40 @@ StoreConfigurator::StoreConfigurator(std::shared_ptr<core::FileDownloaderFactory
 StoreConfiguration
 StoreConfigurator::configure(const boost::filesystem::path & configFile)
 {
-	std::map<std::string, std::string> props;
+	if(!configFile.has_extension())
 	{
-		prop::ptree config;
-		prop::read_ini(configFile.string(), config);
-		loadIniFileIntoMap(config, props);
+		throw StoreConfiguratorException("Config file \"" + configFile.string() + "\" has no suffix, can't determine file format");
 	}
 
 	try
 	{
+		std::map<std::string, std::string> props;
+		prop::ptree config;
+		std::string ext(configFile.extension().string(), 1);
+
+		if(ext == "inf" || ext == "info")
+		{
+			prop::read_info(configFile.string(), config);
+		}
+		else if(ext == "ini")
+		{
+			prop::read_ini(configFile.string(), config);
+		}
+		else if(ext == "js" || ext == "json")
+		{
+			prop::read_json(configFile.string(), config);
+		}
+		else if(ext == "xml")
+		{
+			prop::read_xml(configFile.string(), config);
+		}
+		else
+		{
+			throw StoreConfiguratorException("Config file \"" + configFile.string() + "\" has no usable file format");
+		}
+
+		loadFileIntoMap(config, props);
+
 		// here we check for properties every config file must have. It may be that some will move in different places
 		// after more implementations came up
 		auto missing = utils::Containers::checkMissing(props,
@@ -134,6 +164,16 @@ StoreConfigurator::configure(const boost::filesystem::path & configFile)
 		}
 
 		return StoreConfiguration(glp, lh, std::make_shared<StoreProps>(props));
+	}
+	// indicates parsing error in the read_* calls
+	catch(const prop::file_parser_error & fpe)
+	{
+		throw StoreConfiguratorException(std::string("parsing error[") + fpe.message() + "] in file: " + configFile.string() + ":" + utils::String::toString(fpe.line()));
+	}
+	// just rethrow them
+	catch(const StoreConfiguratorException &)
+	{
+		throw;
 	}
 	catch(const std::exception & ex)
 	{
