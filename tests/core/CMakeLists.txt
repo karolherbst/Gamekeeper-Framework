@@ -1,14 +1,12 @@
 include_directories(
   ${GAMEKEEPER_PRIVATE_INCLUDE_DIR}
   ${GAMEKEEPER_INCLUDE_DIR}
+  ${GAMEKEEPER_LIBTEST_INCLUDE_DIR}
   ${Boost_INCLUDE_DIRS}
   ${GTEST_INCLUDE_DIRS}
   ${HYPODERMIC_INCLUDE_DIRS}
   ${MONGOOSE_INCLUDE_DIR}
 )
-
-add_definitions(-DTESTPATH=\"${CMAKE_CURRENT_BINARY_DIR}/test_runtime\")
-add_definitions(-DWEBSERVERPATH=\"${CMAKE_CURRENT_SOURCE_DIR}/webserverfiles\")
 
 if(LINUX)
   file(GLOB platform_sources
@@ -20,38 +18,30 @@ elseif(WIN32)
   )
 endif()
 
-file(GLOB headers
-  defaultfixture.h
-  webserverfixture.h
-)
-
 file(GLOB sources
   containerutils.cpp
   curlfiledownloader.cpp
-  defaultfixture.cpp
   filedownloader.cpp
   stringutils.cpp
-  webserverfixture.cpp
   xdgpaths.cpp
   ${platform_sources}
 )
 
-add_executable(gamekeeperUnitTests ${sources} ${headers})
-target_link_libraries(gamekeeperUnitTests
+add_executable(gamekeeperUnitTestsCore ${sources})
+target_link_libraries(gamekeeperUnitTestsCore
+  gamekeeperUnitTest
   gamekeeperCore
-  mongoose
   ${Boost_SYSTEM_LIBRARY}
   ${GTEST_BOTH_LIBRARIES}
-  ${HYPODERMIC_LIBRARIES}
 )
 
 if(MINGW)
   add_definitions(-DBOOST_THREAD_USE_LIB)
-  target_link_libraries(gamekeeperUnitTests ${Boost_THREAD_LIBRARY})
+  target_link_libraries(gamekeeperUnitTestsCore ${Boost_THREAD_LIBRARY})
 endif()
 
 if(BUILD_USE_COTIRE)
-  cotire(gamekeeperUnitTests)
+  cotire(gamekeeperUnitTestsCore)
 endif()
 
-add_test(gamekeeperUnitTests gamekeeperUnitTests${CMAKE_EXECUTABLE_SUFFIX})
+add_test(gamekeeperUnitTestsCore gamekeeperUnitTestsCore${CMAKE_EXECUTABLE_SUFFIX})

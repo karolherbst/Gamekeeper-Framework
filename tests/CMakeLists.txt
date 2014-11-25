@@ -2,6 +2,7 @@
 add_compiler_flags(-w)
 
 if(BUILD_TESTS)
+  add_subdirectory(libtest)
   add_subdirectory(core)
 endif()
 
@@ -12,10 +13,10 @@ endif()
 # some important dependencies
 if(BUILD_TESTS)
   if(NOT GTEST_FOUND)
-    add_dependencies(gamekeeperUnitTests gtest)
+    add_dependencies(gamekeeperUnitTestsCore gtest)
   endif()
 
   if(NOT HYPODERMIC_FOUND)
-    add_dependencies(gamekeeperUnitTests hypodermic)
+    add_dependencies(gamekeeperUnitTestsCore hypodermic)
   endif()
 endif()
