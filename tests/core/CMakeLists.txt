@@ -2,10 +2,8 @@ include_directories(
   ${GAMEKEEPER_PRIVATE_INCLUDE_DIR}
   ${GAMEKEEPER_INCLUDE_DIR}
   ${GAMEKEEPER_LIBTEST_INCLUDE_DIR}
-  ${Boost_INCLUDE_DIRS}
   ${GTEST_INCLUDE_DIRS}
   ${HYPODERMIC_INCLUDE_DIRS}
-  ${MONGOOSE_INCLUDE_DIR}
 )
 
 if(LINUX)
@@ -19,10 +17,8 @@ elseif(WIN32)
 endif()
 
 file(GLOB sources
-  containerutils.cpp
   curlfiledownloader.cpp
   filedownloader.cpp
-  stringutils.cpp
   xdgpaths.cpp
   ${platform_sources}
 )
@@ -31,7 +27,6 @@ add_executable(gamekeeperUnitTestsCore ${sources})
 target_link_libraries(gamekeeperUnitTestsCore
   gamekeeperUnitTest
   gamekeeperCore
-  ${Boost_SYSTEM_LIBRARY}
   ${GTEST_BOTH_LIBRARIES}
 )
 
