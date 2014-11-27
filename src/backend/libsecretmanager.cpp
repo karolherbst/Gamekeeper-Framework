@@ -105,8 +105,7 @@ LibSecretManager::readAllTokens(const std::string & group)
 	GList * list = secret_service_search_sync(nullptr, nullptr, attributes, static_cast<SecretSearchFlags>(SECRET_SEARCH_ALL | SECRET_SEARCH_LOAD_SECRETS), nullptr, nullptr);
 	g_hash_table_destroy(attributes);
 
-	GList * it = list;
-	while(it)
+	for(GList * it = list; it != nullptr; it = it->next)
 	{
 		SecretItem * item = static_cast<SecretItem *>(it->data);
 		SecretValue * value = secret_item_get_secret(item);
@@ -130,8 +129,6 @@ LibSecretManager::readAllTokens(const std::string & group)
 				token->properties.insert(std::make_pair(key, value));
 			}
 		}, &token);
-
-		it = it->next;
 
 		g_hash_table_unref(atts);
 		secret_value_unref(value);
