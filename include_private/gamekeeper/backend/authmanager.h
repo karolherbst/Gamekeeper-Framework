@@ -53,6 +53,7 @@ interface PUBLIC_API AuthManager
 
 	GAMEKEEPER_INTERFACE_METHODS(AuthManager);
 	PUBLIC_API virtual void saveToken(const Token & token) = 0;
+	PUBLIC_API virtual void removeToken(const Token & token) = 0;
 	PUBLIC_API virtual Tokens readAllTokens(const std::string & group) = 0;
 };
 

@@ -31,6 +31,7 @@ class PUBLIC_API LibSecretManager : public AuthManager
 {
 public:
 	PRIVATE_API virtual void saveToken(const Token & token) override;
+	PRIVATE_API virtual void removeToken(const Token & token) override;
 	PRIVATE_API virtual Tokens readAllTokens(const std::string & group) override;
 };
 

@@ -109,6 +109,14 @@ LibSecretManager::saveToken(const AuthManager::Token & token)
 	secret_password_storev_sync(&w.schema, w.attributes, nullptr, (std::string("gamekeeper token for: ") + token.group).c_str(), token.value.c_str(), nullptr, nullptr);
 }
 
+void
+LibSecretManager::removeToken(const AuthManager::Token & token)
+{
+	SchemaAttributesWrapper w;
+	w.fillSchemaAndAttributes(token);
+	secret_password_clearv_sync(&w.schema, w.attributes, nullptr, nullptr);
+}
+
 AuthManager::Tokens
 LibSecretManager::readAllTokens(const std::string & group)
 {

@@ -164,6 +164,17 @@ HTTPPostLoginHandler::login(const std::string & username, const std::string & pa
 void
 HTTPPostLoginHandler::logout()
 {
+	// remove stored tokens first, if anything goes wrong after, we are still in a good state
+	for(const core::FileDownloader::Cookie & c : this->data->hfd->getCookies())
+	{
+		this->data->am->removeToken({c.name, c.value, this->data->tokenGroup, c.expiry,
+			{
+				{"domain", c.domain},
+				{"path", c.path},
+				{"secure", c.secure ? GK_TRUE_STRING : GK_FALSE_STRING},
+			}
+		});
+	}
 	this->data->hfd->postRequest(this->data->logoutUrl);
 	// forcibly clear cookies
 	this->data->hfd->clearCookies();
