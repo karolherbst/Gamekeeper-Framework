@@ -64,33 +64,49 @@ static SecretSchema GK_TOKEN_SCHEMA_TEMPLATE
 	}
 };
 
-void
-LibSecretManager::saveToken(const AuthManager::Token & token)
+struct SchemaAttributesWrapper
 {
-	SecretSchema genSchema = GK_TOKEN_SCHEMA_TEMPLATE;
+	void fillSchemaAndAttributes(const AuthManager::Token & token);
+	~SchemaAttributesWrapper();
+	SecretSchema schema = GK_TOKEN_SCHEMA_TEMPLATE;
 	GHashTable * attributes = g_hash_table_new(&g_direct_hash, &g_direct_equal);
+private:
+	std::string expiry;
+};
 
+SchemaAttributesWrapper::~SchemaAttributesWrapper()
+{
+	g_hash_table_destroy(attributes);
+}
+
+void
+SchemaAttributesWrapper::fillSchemaAndAttributes(const AuthManager::Token & token)
+{
 	// save trivial stuff first
-	g_hash_table_insert(attributes, GPOINTER_CAST(GK_TOKEN_GROUP), GPOINTER_CAST(token.group.c_str()));
-	g_hash_table_insert(attributes, GPOINTER_CAST(GK_TOKEN_KEY), GPOINTER_CAST(token.key.c_str()));
-	std::string expiryStr(utils::String::toString(std::chrono::duration_cast<std::chrono::seconds>(token.expiry.time_since_epoch()).count()));
-	g_hash_table_insert(attributes, GPOINTER_CAST(GK_TOKEN_EXPIRY), GPOINTER_CAST(expiryStr.c_str()));
-	g_hash_table_insert(attributes, GPOINTER_CAST(GK_TOKEN_APPLICATION), GPOINTER_CAST(GK_TOKEN_APPLICATION_VALUE));
+	g_hash_table_insert(this->attributes, GPOINTER_CAST(GK_TOKEN_GROUP), GPOINTER_CAST(token.group.c_str()));
+	g_hash_table_insert(this->attributes, GPOINTER_CAST(GK_TOKEN_KEY), GPOINTER_CAST(token.key.c_str()));
+	this->expiry = utils::String::toString(std::chrono::duration_cast<std::chrono::seconds>(token.expiry.time_since_epoch()).count());
+	g_hash_table_insert(this->attributes, GPOINTER_CAST(GK_TOKEN_EXPIRY), GPOINTER_CAST(this->expiry.c_str()));
+	g_hash_table_insert(this->attributes, GPOINTER_CAST(GK_TOKEN_APPLICATION), GPOINTER_CAST(GK_TOKEN_APPLICATION_VALUE));
 
 	// we begin at the fourth attribute
 	uint8_t i = 4;
 	for(const auto & p : token.properties)
 	{
-		genSchema.attributes[i].name = p.first.c_str();
-		genSchema.attributes[i].type = SECRET_SCHEMA_ATTRIBUTE_STRING;
-		g_hash_table_insert(attributes, GPOINTER_CAST(p.first.c_str()), GPOINTER_CAST(p.second.c_str()));
+		this->schema.attributes[i].name = p.first.c_str();
+		this->schema.attributes[i].type = SECRET_SCHEMA_ATTRIBUTE_STRING;
+		g_hash_table_insert(this->attributes, GPOINTER_CAST(p.first.c_str()), GPOINTER_CAST(p.second.c_str()));
 		i++;
 	}
-	genSchema.attributes[i].name = nullptr;
+	this->schema.attributes[i].name = nullptr;
+}
 
-	secret_password_storev_sync(&genSchema, attributes, nullptr, (std::string("gamekeeper token for: ") + token.group).c_str(), token.value.c_str(), nullptr, nullptr);
-
-	g_hash_table_destroy(attributes);
+void
+LibSecretManager::saveToken(const AuthManager::Token & token)
+{
+	SchemaAttributesWrapper w;
+	w.fillSchemaAndAttributes(token);
+	secret_password_storev_sync(&w.schema, w.attributes, nullptr, (std::string("gamekeeper token for: ") + token.group).c_str(), token.value.c_str(), nullptr, nullptr);
 }
 
 AuthManager::Tokens
