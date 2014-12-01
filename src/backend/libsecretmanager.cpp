@@ -101,6 +101,19 @@ SchemaAttributesWrapper::fillSchemaAndAttributes(const AuthManager::Token & toke
 	this->schema.attributes[i].name = nullptr;
 }
 
+class LibSecretManager::PImpl
+{
+	
+};
+
+LibSecretManager::LibSecretManager()
+:	data(new LibSecretManager::PImpl()){}
+
+LibSecretManager::~LibSecretManager()
+{
+	
+}
+
 void
 LibSecretManager::saveToken(const AuthManager::Token & token)
 {

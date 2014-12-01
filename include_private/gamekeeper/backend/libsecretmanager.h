@@ -23,6 +23,8 @@
 
 #include <gamekeeper/core/common.h>
 
+#include <memory>
+
 #include <gamekeeper/backend/authmanager.h>
 
 GAMEKEEPER_NAMESPACE_START(backend)
@@ -30,9 +32,14 @@ GAMEKEEPER_NAMESPACE_START(backend)
 class PUBLIC_API LibSecretManager : public AuthManager
 {
 public:
+	PUBLIC_API LibSecretManager();
+	PUBLIC_API ~LibSecretManager();
 	PRIVATE_API virtual void saveToken(const Token & token) override;
 	PRIVATE_API virtual void removeToken(const Token & token) override;
 	PRIVATE_API virtual Tokens readAllTokens(const std::string & group) override;
+private:
+	class PRIVATE_API PImpl;
+	std::unique_ptr<LibSecretManager::PImpl> data;
 };
 
 GAMEKEEPER_NAMESPACE_END(backend)
