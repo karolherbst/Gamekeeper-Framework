@@ -34,6 +34,7 @@ static constexpr char GK_TOKEN_KEY[] = "key";
 static constexpr char GK_TOKEN_EXPIRY[] = "expiry";
 static constexpr char GK_TOKEN_APPLICATION[] = "application";
 static constexpr char GK_TOKEN_APPLICATION_VALUE[] = "gamekeeper";
+static constexpr char GK_TOKEN_PASSWORD_CONTENT_TYPE[] = "text/plain";
 
 static SecretSchema GK_TOKEN_SCHEMA_TEMPLATE
 {
@@ -103,15 +104,20 @@ SchemaAttributesWrapper::fillSchemaAndAttributes(const AuthManager::Token & toke
 
 class LibSecretManager::PImpl
 {
-	
+public:
+	PImpl();
+	std::shared_ptr<SecretService> secretService;
 };
+
+LibSecretManager::PImpl::PImpl()
+:	secretService(secret_service_get_sync(SECRET_SERVICE_OPEN_SESSION, nullptr, nullptr), g_object_unref){}
 
 LibSecretManager::LibSecretManager()
 :	data(new LibSecretManager::PImpl()){}
 
 LibSecretManager::~LibSecretManager()
 {
-	
+	secret_service_disconnect();
 }
 
 void
@@ -119,7 +125,14 @@ LibSecretManager::saveToken(const AuthManager::Token & token)
 {
 	SchemaAttributesWrapper w;
 	w.fillSchemaAndAttributes(token);
-	secret_password_storev_sync(&w.schema, w.attributes, nullptr, (std::string("gamekeeper token for: ") + token.group).c_str(), token.value.c_str(), nullptr, nullptr);
+	secret_service_store_sync(this->data->secretService.get(),
+	                          &w.schema,
+	                          w.attributes,
+	                          nullptr,
+	                          (std::string("gamekeeper token for: ") + token.group).c_str(),
+	                          secret_value_new(token.value.c_str(), token.value.length(), GK_TOKEN_PASSWORD_CONTENT_TYPE),
+	                          nullptr,
+	                          nullptr);
 }
 
 void
@@ -127,7 +140,7 @@ LibSecretManager::removeToken(const AuthManager::Token & token)
 {
 	SchemaAttributesWrapper w;
 	w.fillSchemaAndAttributes(token);
-	secret_password_clearv_sync(&w.schema, w.attributes, nullptr, nullptr);
+	secret_service_clear_sync(this->data->secretService.get(), &w.schema, w.attributes, nullptr, nullptr);
 }
 
 AuthManager::Tokens
@@ -139,7 +152,7 @@ LibSecretManager::readAllTokens(const std::string & group)
 	g_hash_table_insert(attributes, GPOINTER_CAST(GK_TOKEN_APPLICATION), GPOINTER_CAST(GK_TOKEN_APPLICATION_VALUE));
 	g_hash_table_insert(attributes, GPOINTER_CAST(GK_TOKEN_GROUP), GPOINTER_CAST(group.c_str()));
 
-	GList * list = secret_service_search_sync(nullptr, nullptr, attributes, static_cast<SecretSearchFlags>(SECRET_SEARCH_ALL | SECRET_SEARCH_LOAD_SECRETS), nullptr, nullptr);
+	GList * list = secret_service_search_sync(this->data->secretService.get(), nullptr, attributes, static_cast<SecretSearchFlags>(SECRET_SEARCH_ALL | SECRET_SEARCH_LOAD_SECRETS), nullptr, nullptr);
 	g_hash_table_destroy(attributes);
 
 	for(GList * it = list; it != nullptr; it = it->next)
