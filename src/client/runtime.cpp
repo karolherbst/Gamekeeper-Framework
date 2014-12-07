@@ -211,8 +211,8 @@ GameKeeperRuntime::main(int argc, const char* argv[], NewInstanceFuncPtr instanc
 	}
 
 	containerBuilder.registerType<Log4cppLoggerFactory>(CREATE(new Log4cppLoggerFactory(INJECT(UserPaths))))->
-	        as<LoggerFactory>()->
-	        singleInstance();
+		as<LoggerFactory>()->
+		singleInstance();
 	containerBuilder.registerInstance(pr)->
 		as<PropertyResolver>()->
 		singleInstance();
@@ -222,7 +222,7 @@ GameKeeperRuntime::main(int argc, const char* argv[], NewInstanceFuncPtr instanc
 		singleInstance();
 	containerBuilder.registerType<THREADHELPERCLASS>()->
 		as<NativeThreadHelper>()->
-	        singleInstance();
+		singleInstance();
 	containerBuilder.registerType<StdCpp11ThreadManager>(
 		CREATE(new StdCpp11ThreadManager(INJECT(NativeThreadHelper),
 	                                     INJECT(LoggerFactory))))->

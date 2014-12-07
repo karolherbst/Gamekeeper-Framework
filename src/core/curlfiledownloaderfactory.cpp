@@ -86,7 +86,7 @@ CurlFileDownloaderFactory::create()
 		this->data->lf->getComponentLogger("IO.curl"),
 		buildUserAgentString(this->data->pr->get("network.user_agent")),
 		this->data->up->getCacheFile("downloads/"),
-	        this->data->pr->get<uint16_t>("network.connection.timeout"),
+		this->data->pr->get<uint16_t>("network.connection.timeout"),
 		this->data->pr->get<uint16_t>("network.time_between_retries"),
 		this->data->pr->get<uint16_t>("network.resolve.retries"),
 		this->data->pr->get<uint16_t>("network.connection.retries"),
