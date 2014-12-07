@@ -27,12 +27,18 @@
 
 #include <gamekeeper/backend/authmanager.h>
 
+GAMEKEEPER_NAMESPACE_START(core)
+
+interface LoggerFactory;
+
+GAMEKEEPER_NAMESPACE_END(core)
+
 GAMEKEEPER_NAMESPACE_START(backend)
 
 class PUBLIC_API LibSecretManager : public AuthManager
 {
 public:
-	PUBLIC_API LibSecretManager();
+	PUBLIC_API LibSecretManager(std::shared_ptr<core::LoggerFactory>);
 	PUBLIC_API ~LibSecretManager();
 	PRIVATE_API virtual void saveToken(const Token & token) override;
 	PRIVATE_API virtual void removeToken(const Token & token) override;

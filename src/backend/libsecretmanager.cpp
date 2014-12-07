@@ -19,6 +19,9 @@
  */
 
 #include <gamekeeper/backend/libsecretmanager.h>
+#include <gamekeeper/core/logger.h>
+#include <gamekeeper/core/loggerFactory.h>
+#include <gamekeeper/core/loggerStream.h>
 #include <gamekeeper/utils/stringutils.h>
 
 #include <libsecret/secret.h>
@@ -105,15 +108,17 @@ SchemaAttributesWrapper::fillSchemaAndAttributes(const AuthManager::Token & toke
 class LibSecretManager::PImpl
 {
 public:
-	PImpl();
+	PImpl(core::Logger &);
 	std::shared_ptr<SecretService> secretService;
+	core::Logger & logger;
 };
 
-LibSecretManager::PImpl::PImpl()
-:	secretService(secret_service_get_sync(SECRET_SERVICE_OPEN_SESSION, nullptr, nullptr), g_object_unref){}
+LibSecretManager::PImpl::PImpl(core::Logger & _logger)
+:	secretService(secret_service_get_sync(SECRET_SERVICE_OPEN_SESSION, nullptr, nullptr), g_object_unref),
+	logger(_logger){}
 
-LibSecretManager::LibSecretManager()
-:	data(new LibSecretManager::PImpl()){}
+LibSecretManager::LibSecretManager(std::shared_ptr<core::LoggerFactory> lf)
+:	data(new LibSecretManager::PImpl(lf->getComponentLogger("Auth.libsecret"))){}
 
 LibSecretManager::~LibSecretManager()
 {
