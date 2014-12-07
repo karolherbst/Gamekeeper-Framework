@@ -198,7 +198,17 @@ LibSecretManager::readAllTokens(const std::string & group)
 
 		g_hash_table_unref(atts);
 		secret_value_unref(value);
-		tokens.push_back(std::move(token));
+		
+		// after we parse everything check expiry now
+		if(std::chrono::system_clock::now() >= token.expiry)
+		{
+			this->data->logger << LogLevel::Info << "deleted token in group \"" << group << "\"" << endl;
+			this->removeToken(token);
+		}
+		else
+		{
+			tokens.push_back(std::move(token));
+		}
 	}
 
 	g_list_free(list);
