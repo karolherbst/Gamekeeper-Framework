@@ -160,7 +160,7 @@ LibSecretManager::readAllTokens(const std::string & group)
 	g_hash_table_insert(attributes, GPOINTER_CAST(GK_TOKEN_APPLICATION), GPOINTER_CAST(GK_TOKEN_APPLICATION_VALUE));
 	g_hash_table_insert(attributes, GPOINTER_CAST(GK_TOKEN_GROUP), GPOINTER_CAST(group.c_str()));
 
-	GList * list = secret_service_search_sync(this->data->secretService.get(), nullptr, attributes, static_cast<SecretSearchFlags>(SECRET_SEARCH_ALL | SECRET_SEARCH_LOAD_SECRETS), nullptr, nullptr);
+	GList * list = secret_service_search_sync(this->data->secretService.get(), nullptr, attributes, static_cast<SecretSearchFlags>(SECRET_SEARCH_ALL | SECRET_SEARCH_UNLOCK | SECRET_SEARCH_LOAD_SECRETS), nullptr, nullptr);
 	g_hash_table_destroy(attributes);
 
 	for(GList * it = list; it != nullptr; it = it->next)
