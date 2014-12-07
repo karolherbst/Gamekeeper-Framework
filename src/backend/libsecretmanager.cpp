@@ -28,6 +28,9 @@
 
 GAMEKEEPER_NAMESPACE_START(backend)
 
+using core::endl;
+using core::LogLevel;
+
 #define GPOINTER_CAST(value) const_cast<gpointer>(static_cast<const void *>(value))
 
 static constexpr char GK_TOKEN_SCHEMA_NAME[] = "org.gamekeeper.authmanager.libsecret.token";
@@ -163,6 +166,14 @@ LibSecretManager::readAllTokens(const std::string & group)
 	for(GList * it = list; it != nullptr; it = it->next)
 	{
 		SecretItem * item = static_cast<SecretItem *>(it->data);
+		gboolean itemLocked;
+		g_object_get(item, "locked", &itemLocked, nullptr);
+		if(itemLocked == TRUE)
+		{
+			this->data->logger << LogLevel::Error << "couldn't unlock keys for group \"" << group << "\". aborting" << endl;
+			return tokens;
+		}
+
 		SecretValue * value = secret_item_get_secret(item);
 		GHashTable * atts = secret_item_get_attributes(item);
 		gsize * secretSize;
