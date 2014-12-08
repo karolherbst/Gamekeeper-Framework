@@ -58,6 +58,9 @@ PUBLIC_API int main(int argc, const char* argv[])
 	AddOptionsFuncPtr addOptionsFuncPtr = (AddOptionsFuncPtr)::GetProcAddress(GetModuleHandle(NULL), "addOptions");
 	return runtime.main(argc, argv, newInstanceFunc, addOptionsFuncPtr);
 #else
-	return runtime.main(argc, argv, &gamekeeper::client::newInstance, (AddOptionsFuncPtr)dlsym(dlopen(nullptr, RTLD_LAZY), "addOptions"));
+	void * handle = dlopen(nullptr, RTLD_LAZY);
+	int result = runtime.main(argc, argv, &gamekeeper::client::newInstance, (AddOptionsFuncPtr)dlsym(handle, "addOptions"));
+	dlclose(handle);
+	return result;
 #endif
 }
