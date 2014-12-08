@@ -63,7 +63,20 @@ parseLine(std::string line, std::shared_ptr<UserPaths> & userpaths)
 	return line;
 }
 
-Log4cppLoggerFactory::Log4cppLoggerFactory(std::shared_ptr<UserPaths> userpaths)
+class Log4cppLoggerFactory::PImpl
+{
+public:
+	PImpl(std::shared_ptr<UserPaths>);
+	~PImpl();
+
+	Logger& getComponentLogger(const char * const);
+
+	Logger * rootLogger = nullptr;
+	log4cpp::Appender * appender;
+	std::unordered_map<const char *, Logger *> loggers;
+};
+
+Log4cppLoggerFactory::PImpl::PImpl(std::shared_ptr<UserPaths> userpaths)
 :	appender(new log4cpp::OstreamAppender("console", &std::cout))
 {
 	log4cpp::Category & rootCategory = log4cpp::Category::getInstance("GameKeeper");
@@ -136,7 +149,7 @@ Log4cppLoggerFactory::getDefaultLogger()
 }
 
 Logger&
-Log4cppLoggerFactory::getComponentLogger(const char * const id)
+Log4cppLoggerFactory::PImpl::getComponentLogger(const char * const id)
 {
 	if(this->loggers.find(id) == this->loggers.end())
 	{
@@ -149,7 +162,7 @@ Log4cppLoggerFactory::getComponentLogger(const char * const id)
 	return *this->loggers.at(id);
 }
 
-Log4cppLoggerFactory::~Log4cppLoggerFactory()
+Log4cppLoggerFactory::PImpl::~PImpl()
 {
 	if(this->appender != nullptr)
 	{
@@ -166,5 +179,16 @@ Log4cppLoggerFactory::~Log4cppLoggerFactory()
 		delete entry.second;
 	}
 }
+
+Log4cppLoggerFactory::Log4cppLoggerFactory(std::shared_ptr<UserPaths> userpaths)
+:	data(new Log4cppLoggerFactory::PImpl(userpaths)){}
+
+Logger&
+Log4cppLoggerFactory::getComponentLogger(const char * const id)
+{
+	return this->data->getComponentLogger(id);
+}
+
+Log4cppLoggerFactory::~Log4cppLoggerFactory(){}
 
 GAMEKEEPER_NAMESPACE_END(core)

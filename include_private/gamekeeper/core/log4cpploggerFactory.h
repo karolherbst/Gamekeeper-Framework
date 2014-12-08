@@ -45,11 +45,8 @@ public:
 	PRIVATE_API virtual Logger& getComponentLogger(const char * const id) override;
 	PRIVATE_API virtual ~Log4cppLoggerFactory();
 private:
-	Logger * rootLogger = nullptr;
-
-	log4cpp::Appender * appender;
-
-	std::unordered_map<const char *, Logger *> loggers;
+	class PRIVATE_API PImpl;
+	std::unique_ptr<Log4cppLoggerFactory::PImpl> data;
 };
 
 GAMEKEEPER_NAMESPACE_END(core)
