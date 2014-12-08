@@ -19,11 +19,17 @@
  */
 
 #include <gamekeeper/backend/libsecretmanager.h>
+#include <gamekeeper/core/logger.h>
+#include <gamekeeper/core/loggerFactory.h>
+#include <gamekeeper/core/loggerStream.h>
 #include <gamekeeper/utils/stringutils.h>
 
 #include <libsecret/secret.h>
 
 GAMEKEEPER_NAMESPACE_START(backend)
+
+using core::endl;
+using core::LogLevel;
 
 #define GPOINTER_CAST(value) const_cast<gpointer>(static_cast<const void *>(value))
 
@@ -34,6 +40,7 @@ static constexpr char GK_TOKEN_KEY[] = "key";
 static constexpr char GK_TOKEN_EXPIRY[] = "expiry";
 static constexpr char GK_TOKEN_APPLICATION[] = "application";
 static constexpr char GK_TOKEN_APPLICATION_VALUE[] = "gamekeeper";
+static constexpr char GK_TOKEN_PASSWORD_CONTENT_TYPE[] = "text/plain";
 
 static SecretSchema GK_TOKEN_SCHEMA_TEMPLATE
 {
@@ -64,33 +71,84 @@ static SecretSchema GK_TOKEN_SCHEMA_TEMPLATE
 	}
 };
 
-void
-LibSecretManager::saveToken(const AuthManager::Token & token)
+struct SchemaAttributesWrapper
 {
-	SecretSchema genSchema = GK_TOKEN_SCHEMA_TEMPLATE;
+	void fillSchemaAndAttributes(const AuthManager::Token & token);
+	~SchemaAttributesWrapper();
+	SecretSchema schema = GK_TOKEN_SCHEMA_TEMPLATE;
 	GHashTable * attributes = g_hash_table_new(&g_direct_hash, &g_direct_equal);
+private:
+	std::string expiry;
+};
 
+SchemaAttributesWrapper::~SchemaAttributesWrapper()
+{
+	g_hash_table_destroy(attributes);
+}
+
+void
+SchemaAttributesWrapper::fillSchemaAndAttributes(const AuthManager::Token & token)
+{
 	// save trivial stuff first
-	g_hash_table_insert(attributes, GPOINTER_CAST(GK_TOKEN_GROUP), GPOINTER_CAST(token.group.c_str()));
-	g_hash_table_insert(attributes, GPOINTER_CAST(GK_TOKEN_KEY), GPOINTER_CAST(token.key.c_str()));
-	std::string expiryStr(utils::String::toString(std::chrono::duration_cast<std::chrono::seconds>(token.expiry.time_since_epoch()).count()));
-	g_hash_table_insert(attributes, GPOINTER_CAST(GK_TOKEN_EXPIRY), GPOINTER_CAST(expiryStr.c_str()));
-	g_hash_table_insert(attributes, GPOINTER_CAST(GK_TOKEN_APPLICATION), GPOINTER_CAST(GK_TOKEN_APPLICATION_VALUE));
+	g_hash_table_insert(this->attributes, GPOINTER_CAST(GK_TOKEN_GROUP), GPOINTER_CAST(token.group.c_str()));
+	g_hash_table_insert(this->attributes, GPOINTER_CAST(GK_TOKEN_KEY), GPOINTER_CAST(token.key.c_str()));
+	this->expiry = utils::String::toString(std::chrono::duration_cast<std::chrono::seconds>(token.expiry.time_since_epoch()).count());
+	g_hash_table_insert(this->attributes, GPOINTER_CAST(GK_TOKEN_EXPIRY), GPOINTER_CAST(this->expiry.c_str()));
+	g_hash_table_insert(this->attributes, GPOINTER_CAST(GK_TOKEN_APPLICATION), GPOINTER_CAST(GK_TOKEN_APPLICATION_VALUE));
 
 	// we begin at the fourth attribute
 	uint8_t i = 4;
 	for(const auto & p : token.properties)
 	{
-		genSchema.attributes[i].name = p.first.c_str();
-		genSchema.attributes[i].type = SECRET_SCHEMA_ATTRIBUTE_STRING;
-		g_hash_table_insert(attributes, GPOINTER_CAST(p.first.c_str()), GPOINTER_CAST(p.second.c_str()));
+		this->schema.attributes[i].name = p.first.c_str();
+		this->schema.attributes[i].type = SECRET_SCHEMA_ATTRIBUTE_STRING;
+		g_hash_table_insert(this->attributes, GPOINTER_CAST(p.first.c_str()), GPOINTER_CAST(p.second.c_str()));
 		i++;
 	}
-	genSchema.attributes[i].name = nullptr;
+	this->schema.attributes[i].name = nullptr;
+}
 
-	secret_password_storev_sync(&genSchema, attributes, nullptr, (std::string("gamekeeper token for: ") + token.group).c_str(), token.value.c_str(), nullptr, nullptr);
+class LibSecretManager::PImpl
+{
+public:
+	PImpl(core::Logger &);
+	std::shared_ptr<SecretService> secretService;
+	core::Logger & logger;
+};
 
-	g_hash_table_destroy(attributes);
+LibSecretManager::PImpl::PImpl(core::Logger & _logger)
+:	secretService(secret_service_get_sync(SECRET_SERVICE_OPEN_SESSION, nullptr, nullptr), g_object_unref),
+	logger(_logger){}
+
+LibSecretManager::LibSecretManager(std::shared_ptr<core::LoggerFactory> lf)
+:	data(new LibSecretManager::PImpl(lf->getComponentLogger("Auth.libsecret"))){}
+
+LibSecretManager::~LibSecretManager()
+{
+	secret_service_disconnect();
+}
+
+void
+LibSecretManager::saveToken(const AuthManager::Token & token)
+{
+	SchemaAttributesWrapper w;
+	w.fillSchemaAndAttributes(token);
+	secret_service_store_sync(this->data->secretService.get(),
+	                          &w.schema,
+	                          w.attributes,
+	                          nullptr,
+	                          (std::string("gamekeeper token for: ") + token.group).c_str(),
+	                          secret_value_new(token.value.c_str(), token.value.length(), GK_TOKEN_PASSWORD_CONTENT_TYPE),
+	                          nullptr,
+	                          nullptr);
+}
+
+void
+LibSecretManager::removeToken(const AuthManager::Token & token)
+{
+	SchemaAttributesWrapper w;
+	w.fillSchemaAndAttributes(token);
+	secret_service_clear_sync(this->data->secretService.get(), &w.schema, w.attributes, nullptr, nullptr);
 }
 
 AuthManager::Tokens
@@ -102,12 +160,20 @@ LibSecretManager::readAllTokens(const std::string & group)
 	g_hash_table_insert(attributes, GPOINTER_CAST(GK_TOKEN_APPLICATION), GPOINTER_CAST(GK_TOKEN_APPLICATION_VALUE));
 	g_hash_table_insert(attributes, GPOINTER_CAST(GK_TOKEN_GROUP), GPOINTER_CAST(group.c_str()));
 
-	GList * list = secret_service_search_sync(nullptr, nullptr, attributes, static_cast<SecretSearchFlags>(SECRET_SEARCH_ALL | SECRET_SEARCH_LOAD_SECRETS), nullptr, nullptr);
+	GList * list = secret_service_search_sync(this->data->secretService.get(), nullptr, attributes, static_cast<SecretSearchFlags>(SECRET_SEARCH_ALL | SECRET_SEARCH_UNLOCK | SECRET_SEARCH_LOAD_SECRETS), nullptr, nullptr);
 	g_hash_table_destroy(attributes);
 
 	for(GList * it = list; it != nullptr; it = it->next)
 	{
 		SecretItem * item = static_cast<SecretItem *>(it->data);
+		gboolean itemLocked;
+		g_object_get(item, "locked", &itemLocked, nullptr);
+		if(itemLocked == TRUE)
+		{
+			this->data->logger << LogLevel::Error << "couldn't unlock keys for group \"" << group << "\". aborting" << endl;
+			return tokens;
+		}
+
 		SecretValue * value = secret_item_get_secret(item);
 		GHashTable * atts = secret_item_get_attributes(item);
 		gsize * secretSize;
@@ -132,7 +198,17 @@ LibSecretManager::readAllTokens(const std::string & group)
 
 		g_hash_table_unref(atts);
 		secret_value_unref(value);
-		tokens.push_back(std::move(token));
+		
+		// after we parse everything check expiry now
+		if(std::chrono::system_clock::now() >= token.expiry)
+		{
+			this->data->logger << LogLevel::Info << "deleted token in group \"" << group << "\"" << endl;
+			this->removeToken(token);
+		}
+		else
+		{
+			tokens.push_back(std::move(token));
+		}
 	}
 
 	g_list_free(list);

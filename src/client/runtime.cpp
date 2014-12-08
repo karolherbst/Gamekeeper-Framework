@@ -231,7 +231,8 @@ GameKeeperRuntime::main(int argc, const char* argv[], NewInstanceFuncPtr instanc
 		singleInstance();
 
 #ifdef HAS_AUTHMANAGER
-	containerBuilder.registerType<AUTHMANAGERCLASS>()->
+	containerBuilder.registerType<AUTHMANAGERCLASS>(
+		CREATE(new AUTHMANAGERCLASS(INJECT(LoggerFactory))))->
 		as<AuthManager>()->
 		singleInstance();
 #define INJECT_AUTH INJECT(AuthManager)
