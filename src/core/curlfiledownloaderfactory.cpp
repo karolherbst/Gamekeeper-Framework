@@ -48,7 +48,7 @@ CurlFileDownloaderFactory::PImpl::PImpl(std::shared_ptr<LoggerFactory> _lf, std:
 CurlFileDownloaderFactory::CurlFileDownloaderFactory(std::shared_ptr<LoggerFactory> lf, std::shared_ptr<PropertyResolver> pr, std::shared_ptr<UserPaths> up)
 :	data(new CurlFileDownloaderFactory::PImpl(lf, pr, up))
 {
-	curl_global_init(CURL_GLOBAL_SSL);
+	curl_global_init(CURL_GLOBAL_ALL);
 }
 
 CurlFileDownloaderFactory::~CurlFileDownloaderFactory()
