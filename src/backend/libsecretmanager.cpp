@@ -176,7 +176,6 @@ LibSecretManager::readAllTokens(const std::string & group)
 
 		SecretValue * value = secret_item_get_secret(item);
 		GHashTable * atts = secret_item_get_attributes(item);
-		gsize * secretSize;
 
 		AuthManager::Token token(static_cast<gchar *>(g_hash_table_lookup(atts, GK_TOKEN_KEY)),
 		                         secret_value_get_text(value),
