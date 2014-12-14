@@ -63,21 +63,34 @@ parseLine(std::string line, std::shared_ptr<UserPaths> & userpaths)
 	return line;
 }
 
-Log4cppLoggerFactory::Log4cppLoggerFactory(std::shared_ptr<UserPaths> userpaths)
-:	appender(new log4cpp::OstreamAppender("console", &std::cout))
+class Log4cppLoggerFactory::PImpl
 {
-	log4cpp::Category & rootCategory = log4cpp::Category::getInstance("GameKeeper");
+public:
+	PImpl(std::shared_ptr<UserPaths>);
+	~PImpl();
 
+	Logger& getComponentLogger(const char * const);
+
+	Logger * rootLogger = nullptr;
+	log4cpp::Appender * appender;
+	log4cpp::Category & rootCategory;
+	std::unordered_map<const char *, Logger *> loggers;
+};
+
+Log4cppLoggerFactory::PImpl::PImpl(std::shared_ptr<UserPaths> userpaths)
+:	appender(new log4cpp::OstreamAppender("console", &std::cout)),
+	rootCategory(log4cpp::Category::getInstance("GameKeeper"))
+{
 	// add default appender
 	log4cpp::PatternLayout * layout = new log4cpp::PatternLayout();
 	layout->setConversionPattern("%d{%Y-%m-%d %H:%M:%S} [%c] %p: %m%n");
 	this->appender->setLayout(layout);
 
 	// start with DEBUG level until the file is loaded, so that we get all errors
-	rootCategory.setPriority(log4cpp::Priority::DEBUG);
-	rootCategory.addAppender(this->appender);
+	this->rootCategory.setPriority(log4cpp::Priority::DEBUG);
+	this->rootCategory.addAppender(this->appender);
 
-	this->rootLogger = new Log4cppLogger(rootCategory);
+	this->rootLogger = new Log4cppLogger(this->rootCategory);
 
 	// read configuration file if exists
 	bfs::path cFile = userpaths->getConfigFile("log.conf");
@@ -123,10 +136,10 @@ Log4cppLoggerFactory::Log4cppLoggerFactory(std::shared_ptr<UserPaths> userpaths)
 	bfs::remove(cFileGen);
 
 	// we have another logger noew
-	log4cpp::Category::getInstance("GameKeeper").removeAppender(this->appender);
+	this->rootCategory.removeAppender(this->appender);
 	this->appender = nullptr;
 	delete this->rootLogger;
-	this->rootLogger = new Log4cppLogger(log4cpp::Category::getInstance("GameKeeper"));
+	this->rootLogger = new Log4cppLogger(this->rootCategory);
 }
 
 Logger&
@@ -136,7 +149,7 @@ Log4cppLoggerFactory::getDefaultLogger()
 }
 
 Logger&
-Log4cppLoggerFactory::getComponentLogger(const char * const id)
+Log4cppLoggerFactory::PImpl::getComponentLogger(const char * const id)
 {
 	if(this->loggers.find(id) == this->loggers.end())
 	{
@@ -149,11 +162,11 @@ Log4cppLoggerFactory::getComponentLogger(const char * const id)
 	return *this->loggers.at(id);
 }
 
-Log4cppLoggerFactory::~Log4cppLoggerFactory()
+Log4cppLoggerFactory::PImpl::~PImpl()
 {
 	if(this->appender != nullptr)
 	{
-		log4cpp::Category::getInstance("GameKeeper").removeAppender(this->appender);
+		this->rootCategory.removeAppender(this->appender);
 	}
 
 	if(this->rootLogger != nullptr)
@@ -166,5 +179,16 @@ Log4cppLoggerFactory::~Log4cppLoggerFactory()
 		delete entry.second;
 	}
 }
+
+Log4cppLoggerFactory::Log4cppLoggerFactory(std::shared_ptr<UserPaths> userpaths)
+:	data(new Log4cppLoggerFactory::PImpl(userpaths)){}
+
+Logger&
+Log4cppLoggerFactory::getComponentLogger(const char * const id)
+{
+	return this->data->getComponentLogger(id);
+}
+
+Log4cppLoggerFactory::~Log4cppLoggerFactory(){}
 
 GAMEKEEPER_NAMESPACE_END(core)

@@ -439,15 +439,15 @@ fixCookieDomain(std::string & domain)
 FileDownloader::CookieBucket
 CurlFileDownloader::getCookies()
 {
-	struct curl_slist * list;
-	FileDownloader::CookieBucket result;
+	curl_slist * list;
 	this->data->handleCurlError(curl_easy_getinfo(this->data->handle, CURLINFO_COOKIELIST, &list));
 
-	for(; list != nullptr; list = list->next)
+	FileDownloader::CookieBucket result;
+	for(curl_slist * it = list; it != nullptr; it = it->next)
 	{
 		std::vector<std::string> strings;
-		this->data->logger << LogLevel::Debug << "parse Cookie: " << list->data << endl;
-		balgo::split(strings, list->data, balgo::is_any_of("\t"));
+		this->data->logger << LogLevel::Debug << "parse Cookie: " << it->data << endl;
+		balgo::split(strings, it->data, balgo::is_any_of("\t"));
 		Cookie::TimePoint::rep cookieTimeRep(utils::String::toType<Cookie::TimePoint::rep>(strings[COOKIE_EXPIRY_IDX]));
 		Cookie::TimePoint cookieTime = Cookie::TimePoint(std::chrono::seconds(cookieTimeRep));
 		if(cookieTimeRep != 0 && std::chrono::system_clock::now() > cookieTime)

@@ -94,7 +94,7 @@ WebServerFictureAspect::WebServerFictureAspect(std::shared_ptr<Hypodermic::ICont
 				uint64_t size = lexical_cast<uint64_t>(splittedPaths[1]);
 				mg_send_status(conn, 200);
 				uint64_t chunks = (size / 1024);
-				char buffer[1024];
+				char buffer[1024] = {0};
 				for(uint64_t i = 0; i < chunks; i++)
 				{
 					mg_send_data(conn, buffer, 1024);
