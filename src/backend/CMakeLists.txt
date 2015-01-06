@@ -37,6 +37,7 @@ file(GLOB headers
   ${GAMEKEEPER_PRIVATE_INCLUDE_DIR}/gamekeeper/backend/storeconfigurator.h
   ${GAMEKEEPER_PRIVATE_INCLUDE_DIR}/gamekeeper/backend/storemanager.h
   ${GAMEKEEPER_PRIVATE_INCLUDE_DIR}/gamekeeper/backend/xmlgamelistparser.h
+  ${GAMEKEEPER_PRIVATE_INCLUDE_DIR}/gamekeeper/backend/security/generictoken.h
   ${GAMEKEEPER_PRIVATE_INCLUDE_DIR}/gamekeeper/backend/security/libsecretmanager.h
   ${platform_headers}
 )
@@ -48,7 +49,7 @@ file(GLOB sources
   storeconfiguration.cpp
   storemanager.cpp
   xmlgamelistparser.cpp
-  security/token.cpp
+  security/generictoken.cpp
   ${platform_sources}
 )
 

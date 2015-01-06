@@ -23,6 +23,7 @@
 
 #include <gamekeeper/core/common.h>
 
+#include <memory>
 #include <vector>
 
 #include <gamekeeper/core/interface.h>
@@ -33,7 +34,7 @@ struct Token;
 
 interface PUBLIC_API AuthManager
 {
-	typedef std::vector<Token> Tokens;
+	typedef std::vector<std::unique_ptr<Token>> Tokens;
 
 	GAMEKEEPER_INTERFACE_METHODS(AuthManager);
 	PUBLIC_API virtual void saveToken(const Token & token) = 0;

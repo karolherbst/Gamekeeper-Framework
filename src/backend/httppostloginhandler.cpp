@@ -28,6 +28,7 @@
 #include <boost/algorithm/string/split.hpp>
 
 #include <gamekeeper/backend/security/authmanager.h>
+#include <gamekeeper/backend/security/generictoken.h>
 #include <gamekeeper/backend/security/token.h>
 #include <gamekeeper/core/filedownloader.h>
 #include <gamekeeper/utils/stringutils.h>
@@ -79,10 +80,10 @@ HTTPPostLoginHandler::PImpl::PImpl(std::map<std::string, std::string> & config, 
 	if(this->am)
 	{
 		core::FileDownloader::CookieBucket cookies;
-		for(const security::Token & t : this->am->readAllTokens(this->tokenGroup))
+		for(const auto & t : this->am->readAllTokens(this->tokenGroup))
 		{
-			cookies.push_back({t.key, t.value, t.properties.at("domain"), t.properties.at("path"), t.expiry,
-			                   t.properties.at("secure") == GK_TRUE_STRING ? true : false});
+			cookies.push_back({t->getKey(), t->getValue(), t->getProperties().at("domain"), t->getProperties().at("path"), t->getExpiry(),
+			                   t->getProperties().at("secure") == GK_TRUE_STRING ? true : false});
 		}
 		this->hfd->setCookies(cookies);
 	}
@@ -149,13 +150,13 @@ HTTPPostLoginHandler::login(const std::string & username, const std::string & pa
 	{
 		for(const core::FileDownloader::Cookie & c : this->data->hfd->getCookies())
 		{
-			this->data->am->saveToken({c.name, c.value, this->data->tokenGroup, c.expiry,
+			this->data->am->saveToken(security::GenericToken(c.name, c.value, this->data->tokenGroup, c.expiry,
 				{
 					{"domain", c.domain},
 					{"path", c.path},
 					{"secure", c.secure ? GK_TRUE_STRING : GK_FALSE_STRING},
 				}
-			});
+			));
 		}
 	}
 
@@ -168,13 +169,13 @@ HTTPPostLoginHandler::logout()
 	// remove stored tokens first, if anything goes wrong after, we are still in a good state
 	for(const core::FileDownloader::Cookie & c : this->data->hfd->getCookies())
 	{
-		this->data->am->removeToken({c.name, c.value, this->data->tokenGroup, c.expiry,
+		this->data->am->removeToken(security::GenericToken(c.name, c.value, this->data->tokenGroup, c.expiry,
 			{
 				{"domain", c.domain},
 				{"path", c.path},
 				{"secure", c.secure ? GK_TRUE_STRING : GK_FALSE_STRING},
 			}
-		});
+		));
 	}
 	this->data->hfd->postRequest(this->data->logoutUrl);
 	// forcibly clear cookies

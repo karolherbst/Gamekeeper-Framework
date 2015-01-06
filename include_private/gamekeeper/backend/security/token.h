@@ -26,21 +26,21 @@
 #include <chrono>
 #include <unordered_map>
 
+#include <gamekeeper/core/interface.h>
+
 GAMEKEEPER_NAMESPACE_START(backend, security)
 
-struct PUBLIC_API Token
+interface PUBLIC_API Token
 {
+	GAMEKEEPER_INTERFACE_METHODS(Token);
 	typedef std::chrono::system_clock::time_point TimePoint;
 	typedef std::unordered_map<std::string, std::string> Properties;
 
-	PUBLIC_API Token(const std::string & key, const std::string & value, const std::string & group, const TimePoint & expiry = TimePoint(), Properties properties = Properties());
-	PUBLIC_API Token(const std::string & key, const std::string & value, const std::string & group, const TimePoint::duration  & duration, Properties properties = Properties());
-	PUBLIC_API Token(const std::string & key, const std::string & value, const std::string & group, const TimePoint::rep & duration, Properties properties = Properties());
-	const std::string key;
-	std::string value;
-	const std::string group;
-	TimePoint expiry;
-	Properties properties;
+	virtual const std::string & getKey() const = 0;
+	virtual const std::string & getValue() const = 0;
+	virtual const std::string & getGroup() const = 0;
+	virtual const TimePoint & getExpiry() const = 0;
+	virtual const Properties & getProperties() const = 0;
 };
 
 GAMEKEEPER_NAMESPACE_END(backend, security)
