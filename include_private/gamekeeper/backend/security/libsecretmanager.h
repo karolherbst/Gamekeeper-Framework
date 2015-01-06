@@ -25,7 +25,7 @@
 
 #include <memory>
 
-#include <gamekeeper/backend/authmanager.h>
+#include <gamekeeper/backend/security/authmanager.h>
 
 GAMEKEEPER_NAMESPACE_START(core)
 
@@ -33,7 +33,7 @@ interface LoggerFactory;
 
 GAMEKEEPER_NAMESPACE_END(core)
 
-GAMEKEEPER_NAMESPACE_START(backend)
+GAMEKEEPER_NAMESPACE_START(backend, security)
 
 class PUBLIC_API LibSecretManager : public AuthManager
 {
@@ -48,6 +48,6 @@ private:
 	std::unique_ptr<LibSecretManager::PImpl> data;
 };
 
-GAMEKEEPER_NAMESPACE_END(backend)
+GAMEKEEPER_NAMESPACE_END(backend, security)
 
 #endif //GAMEKEEPER_BACKEND_LIBSECRETMANAGER_H

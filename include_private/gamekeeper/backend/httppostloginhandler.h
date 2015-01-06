@@ -34,14 +34,18 @@ class FileDownloader;
 
 GAMEKEEPER_NAMESPACE_END(core)
 
-GAMEKEEPER_NAMESPACE_START(backend)
+GAMEKEEPER_NAMESPACE_START(backend, security)
 
 class AuthManager;
+
+GAMEKEEPER_NAMESPACE_END(backend, security)
+
+GAMEKEEPER_NAMESPACE_START(backend)
 
 class PUBLIC_API HTTPPostLoginHandler : public LoginHandler
 {
 public:
-	PUBLIC_API HTTPPostLoginHandler(std::map<std::string, std::string> & config, std::shared_ptr<core::FileDownloader>, std::shared_ptr<AuthManager>);
+	PUBLIC_API HTTPPostLoginHandler(std::map<std::string, std::string> & config, std::shared_ptr<core::FileDownloader>, std::shared_ptr<security::AuthManager>);
 	PUBLIC_API ~HTTPPostLoginHandler();
 	PRIVATE_API virtual bool login(const std::string & username, const std::string & password) override;
 	PRIVATE_API virtual void logout() override;

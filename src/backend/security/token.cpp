@@ -18,9 +18,9 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#include <gamekeeper/backend/authmanager.h>
+#include <gamekeeper/backend/security/authmanager.h>
 
-GAMEKEEPER_NAMESPACE_START(backend)
+GAMEKEEPER_NAMESPACE_START(backend, security)
 
 AuthManager::Token::Token(const std::string & _key, const std::string & _value, const std::string & _group, const TimePoint & _expiry, Properties _properties)
 :	key(_key),
@@ -35,4 +35,4 @@ AuthManager::Token::Token(const std::string & _key, const std::string & _value, 
 AuthManager::Token::Token(const std::string & _key, const std::string & _value, const std::string & _group, const TimePoint::rep & duration, Properties _properties)
 :	Token(_key, _value, _group, std::chrono::seconds(duration), _properties){}
 
-GAMEKEEPER_NAMESPACE_END(backend)
+GAMEKEEPER_NAMESPACE_END(backend, security)

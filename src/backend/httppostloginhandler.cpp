@@ -27,7 +27,7 @@
 #include <boost/algorithm/string/replace.hpp>
 #include <boost/algorithm/string/split.hpp>
 
-#include <gamekeeper/backend/authmanager.h>
+#include <gamekeeper/backend/security/authmanager.h>
 #include <gamekeeper/core/filedownloader.h>
 #include <gamekeeper/utils/stringutils.h>
 
@@ -43,10 +43,10 @@ static const std::string COOKIE_SECURE{"secure"};
 class HTTPPostLoginHandler::PImpl
 {
 public:
-	PImpl(std::map<std::string, std::string> &, std::shared_ptr<core::FileDownloader>, std::shared_ptr<AuthManager>);
+	PImpl(std::map<std::string, std::string> &, std::shared_ptr<core::FileDownloader>, std::shared_ptr<security::AuthManager>);
 
 	std::shared_ptr<core::FileDownloader> hfd;
-	std::shared_ptr<AuthManager> am;
+	std::shared_ptr<security::AuthManager> am;
 	std::string loginUrl;
 	std::string logoutUrl;
 	std::string usernameField;
@@ -59,7 +59,7 @@ public:
 };
 
 HTTPPostLoginHandler::PImpl::PImpl(std::map<std::string, std::string> & config, std::shared_ptr<core::FileDownloader> _hfd,
-                                   std::shared_ptr<AuthManager> _am)
+                                   std::shared_ptr<security::AuthManager> _am)
 :	hfd(_hfd),
 	am(_am),
 	loginUrl(config["auth.loginurl"]),
@@ -78,7 +78,7 @@ HTTPPostLoginHandler::PImpl::PImpl(std::map<std::string, std::string> & config, 
 	if(this->am)
 	{
 		core::FileDownloader::CookieBucket cookies;
-		for(const AuthManager::Token & t : this->am->readAllTokens(this->tokenGroup))
+		for(const security::AuthManager::Token & t : this->am->readAllTokens(this->tokenGroup))
 		{
 			cookies.push_back({t.key, t.value, t.properties.at("domain"), t.properties.at("path"), t.expiry,
 			                   t.properties.at("secure") == GK_TRUE_STRING ? true : false});
@@ -116,7 +116,7 @@ HTTPPostLoginHandler::PImpl::checkCookiesValidForAuth()
 }
 
 HTTPPostLoginHandler::HTTPPostLoginHandler(std::map<std::string, std::string> & config, std::shared_ptr<core::FileDownloader> hfd,
-                                           std::shared_ptr<AuthManager> am)
+                                           std::shared_ptr<security::AuthManager> am)
 :	data(new HTTPPostLoginHandler::PImpl(config, hfd, am)){}
 
 HTTPPostLoginHandler::~HTTPPostLoginHandler(){}

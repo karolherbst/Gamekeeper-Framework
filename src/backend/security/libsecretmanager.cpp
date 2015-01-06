@@ -18,15 +18,16 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#include <gamekeeper/backend/libsecretmanager.h>
+#include <gamekeeper/backend/security/libsecretmanager.h>
+
+#include <libsecret/secret.h>
+
 #include <gamekeeper/core/logger.h>
 #include <gamekeeper/core/loggerFactory.h>
 #include <gamekeeper/core/loggerStream.h>
 #include <gamekeeper/utils/stringutils.h>
 
-#include <libsecret/secret.h>
-
-GAMEKEEPER_NAMESPACE_START(backend)
+GAMEKEEPER_NAMESPACE_START(backend, security)
 
 using core::endl;
 using core::LogLevel;
@@ -197,7 +198,7 @@ LibSecretManager::readAllTokens(const std::string & group)
 
 		g_hash_table_unref(atts);
 		secret_value_unref(value);
-		
+
 		// after we parse everything check expiry now
 		if(std::chrono::system_clock::now() >= token.expiry)
 		{
@@ -215,4 +216,4 @@ LibSecretManager::readAllTokens(const std::string & group)
 	return tokens;
 }
 
-GAMEKEEPER_NAMESPACE_END(backend)
+GAMEKEEPER_NAMESPACE_END(backend, security)

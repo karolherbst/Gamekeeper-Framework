@@ -39,9 +39,13 @@ class LoggerFactory;
 
 GAMEKEEPER_NAMESPACE_END(core)
 
-GAMEKEEPER_NAMESPACE_START(backend)
+GAMEKEEPER_NAMESPACE_START(backend, security)
 
 class AuthManager;
+
+GAMEKEEPER_NAMESPACE_END(backend, security)
+
+GAMEKEEPER_NAMESPACE_START(backend)
 
 /**
  * @class StoreManager storemanager <gamekeeper/backend/storemanager.h>
@@ -53,7 +57,7 @@ class PUBLIC_API StoreManager
 {
 public:
 	PUBLIC_API StoreManager(std::shared_ptr<core::LoggerFactory>, std::shared_ptr<core::BundlePaths>, std::shared_ptr<core::FileDownloaderFactory>,
-	                        std::shared_ptr<AuthManager>);
+	                        std::shared_ptr<security::AuthManager>);
 	PUBLIC_API std::vector<StoreConfiguration> getAllStores();
 	PUBLIC_API StoreConfiguration getStore(const std::string &);
 

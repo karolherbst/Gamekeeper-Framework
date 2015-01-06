@@ -25,7 +25,7 @@ endif()
 
 if(WITH_LIBSECRET)
   file(GLOB libsecret_manager
-    libsecretmanager.cpp
+    security/libsecretmanager.cpp
   )
   add_definitions(-DSECRET_WITH_UNSTABLE -DSECRET_API_SUBJECT_TO_CHANGE)
 endif()
@@ -33,22 +33,22 @@ endif()
 file(GLOB headers
   ${GAMEKEEPER_PRIVATE_INCLUDE_DIR}/gamekeeper/backend/httppostloginhandler.h
   ${GAMEKEEPER_PRIVATE_INCLUDE_DIR}/gamekeeper/backend/jsongamelistparser.h
-  ${GAMEKEEPER_PRIVATE_INCLUDE_DIR}/gamekeeper/backend/libsecretmanager.h
   ${GAMEKEEPER_PRIVATE_INCLUDE_DIR}/gamekeeper/backend/storeconfiguration.h
   ${GAMEKEEPER_PRIVATE_INCLUDE_DIR}/gamekeeper/backend/storeconfigurator.h
   ${GAMEKEEPER_PRIVATE_INCLUDE_DIR}/gamekeeper/backend/storemanager.h
   ${GAMEKEEPER_PRIVATE_INCLUDE_DIR}/gamekeeper/backend/xmlgamelistparser.h
+  ${GAMEKEEPER_PRIVATE_INCLUDE_DIR}/gamekeeper/backend/security/libsecretmanager.h
   ${platform_headers}
 )
 
 file(GLOB sources
-  authmanager.cpp
   httppostloginhandler.cpp
   jsongamelistparser.cpp
   storeconfigurator.cpp
   storeconfiguration.cpp
   storemanager.cpp
   xmlgamelistparser.cpp
+  security/token.cpp
   ${platform_sources}
 )
 

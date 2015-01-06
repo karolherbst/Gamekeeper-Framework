@@ -18,8 +18,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef GAMEKEEPER_BACKEND_AUTHMANAGER_H
-#define GAMEKEEPER_BACKEND_AUTHMANAGER_H 1
+#ifndef GAMEKEEPER_BACKEND_SECURITY_AUTHMANAGER_H
+#define GAMEKEEPER_BACKEND_SECURITY_AUTHMANAGER_H 1
 
 #include <gamekeeper/core/common.h>
 
@@ -30,7 +30,7 @@
 #include <gamekeeper/core/filedownloader.h>
 #include <gamekeeper/core/interface.h>
 
-GAMEKEEPER_NAMESPACE_START(backend)
+GAMEKEEPER_NAMESPACE_START(backend, security)
 
 interface PUBLIC_API AuthManager
 {
@@ -57,6 +57,6 @@ interface PUBLIC_API AuthManager
 	PUBLIC_API virtual Tokens readAllTokens(const std::string & group) = 0;
 };
 
-GAMEKEEPER_NAMESPACE_END(backend)
+GAMEKEEPER_NAMESPACE_END(backend, security)
 
-#endif //GAMEKEEPER_BACKEND_AUTHMANAGER_H
+#endif //GAMEKEEPER_BACKEND_SECURITY_AUTHMANAGER_H
