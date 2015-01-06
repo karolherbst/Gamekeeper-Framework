@@ -4,9 +4,9 @@
 #include <boost/program_options/variables_map.hpp>
 
 #include <gamekeeper/client/autowire.h>
-#include <gamekeeper/core/filedownloader.h>
 #include <gamekeeper/core/logger.h>
 #include <gamekeeper/core/loggerStream.h>
+#include <gamekeeper/core/network/filedownloader.h>
 #include <gamekeeper/model/game.h>
 #include <gamekeeper/utils/stringutils.h>
 

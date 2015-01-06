@@ -27,7 +27,7 @@
 
 #include <boost/filesystem/path.hpp>
 
-#include <gamekeeper/core/filedownloader.h>
+#include <gamekeeper/core/network/filedownloader.h>
 
 GAMEKEEPER_NAMESPACE_START(core)
 

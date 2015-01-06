@@ -23,8 +23,8 @@
 
 #include <gamekeeper/core/common.h>
 
-#include <gamekeeper/core/filedownloader.h>
 #include <gamekeeper/core/interface.h>
+#include <gamekeeper/core/network/filedownloader.h>
 
 GAMEKEEPER_NAMESPACE_START(backend)
 

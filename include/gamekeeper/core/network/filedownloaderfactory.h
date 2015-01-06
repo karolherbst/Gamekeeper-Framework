@@ -18,32 +18,31 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef GAMEKEEPER_CORE_CURLFILEDOWNLOADERFACTORY_H
-#define GAMEKEEPER_CORE_CURLFILEDOWNLOADERFACTORY_H 1
+#ifndef GAMEKEEPER_CORE_NETWORK_FILEDOWNLOADERFACTORY_H
+#define GAMEKEEPER_CORE_NETWORK_FILEDOWNLOADERFACTORY_H 1
 
 #include <gamekeeper/core/common.h>
 
-#include <gamekeeper/core/filedownloaderfactory.h>
+#include <memory>
+
+#include <gamekeeper/core/interface.h>
 
 GAMEKEEPER_NAMESPACE_START(core)
 
-interface Logger;
-interface LoggerFactory;
-interface PropertyResolver;
-interface UserPaths;
+interface FileDownloader;
 
-class PUBLIC_API CurlFileDownloaderFactory : public FileDownloaderFactory
+/**
+ * @interface FileDownloaderFactory filedownloaderfactory.h <gamekeeper/core/network/filedownloaderfactory.h>
+ *
+ * @author Karol Herbst
+ * @since 0
+ */
+interface PUBLIC_API FileDownloaderFactory
 {
-public:
-	PUBLIC_API CurlFileDownloaderFactory(std::shared_ptr<LoggerFactory>, std::shared_ptr<PropertyResolver>, std::shared_ptr<UserPaths>);
-	PRIVATE_API virtual ~CurlFileDownloaderFactory();
-	PRIVATE_API virtual std::shared_ptr<FileDownloader> create() override;
-private:
-	class PRIVATE_API PImpl;
-
-	std::unique_ptr<CurlFileDownloaderFactory::PImpl> data;
+	GAMEKEEPER_INTERFACE_METHODS(FileDownloaderFactory);
+	PUBLIC_API virtual std::shared_ptr<FileDownloader> create() = 0;
 };
 
 GAMEKEEPER_NAMESPACE_END(core)
 
-#endif //GAMEKEEPER_CORE_CURLFILEDOWNLOADERFACTORY_H
+#endif //GAMEKEEPER_CORE_NETWORK_FILEDOWNLOADER_H

@@ -32,7 +32,7 @@
 #include <gamekeeper/backend/jsongamelistparser.h>
 #include <gamekeeper/backend/storeconfiguration.h>
 #include <gamekeeper/backend/xmlgamelistparser.h>
-#include <gamekeeper/core/filedownloaderfactory.h>
+#include <gamekeeper/core/network/filedownloaderfactory.h>
 #include <gamekeeper/model/store.h>
 #include <gamekeeper/utils/containerutils.h>
 #include <gamekeeper/utils/stringutils.h>

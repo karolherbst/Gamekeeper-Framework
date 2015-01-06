@@ -38,9 +38,9 @@
 #include <gamekeeper/core/logger.h>
 #include <gamekeeper/core/loggerStream.h>
 #include <gamekeeper/core/boostpopropertyresolver.h>
-#include <gamekeeper/core/curlfiledownloaderfactory.h>
 #include <gamekeeper/core/gnuinstalldirspaths.h>
 #include <gamekeeper/core/log4cpploggerFactory.h>
+#include <gamekeeper/core/network/curlfiledownloaderfactory.h>
 #include <gamekeeper/core/portableinstalldirspaths.h>
 #include <gamekeeper/core/stdc++11threadmanager.h>
 #include <gamekeeper/core/xdgpaths.h>

@@ -29,8 +29,6 @@ endif()
 
 file(GLOB headers
   ${GAMEKEEPER_PRIVATE_INCLUDE_DIR}/gamekeeper/core/boostpopropertyresolver.h
-  ${GAMEKEEPER_PRIVATE_INCLUDE_DIR}/gamekeeper/core/curlfiledownloader.h
-  ${GAMEKEEPER_PRIVATE_INCLUDE_DIR}/gamekeeper/core/curlfiledownloaderfactory.h
   ${GAMEKEEPER_PRIVATE_INCLUDE_DIR}/gamekeeper/core/exception.h
   ${GAMEKEEPER_PRIVATE_INCLUDE_DIR}/gamekeeper/core/gnuinstalldirspaths.h
   ${GAMEKEEPER_PRIVATE_INCLUDE_DIR}/gamekeeper/core/log4cppLogger.h
@@ -40,15 +38,16 @@ file(GLOB headers
   ${GAMEKEEPER_PRIVATE_INCLUDE_DIR}/gamekeeper/core/stdc++11threadmanager.h
   ${GAMEKEEPER_PRIVATE_INCLUDE_DIR}/gamekeeper/core/threadmanager.h
   ${GAMEKEEPER_PRIVATE_INCLUDE_DIR}/gamekeeper/core/xdgpaths.h
+
+  ${GAMEKEEPER_PRIVATE_INCLUDE_DIR}/gamekeeper/core/network/curlfiledownloader.h
+  ${GAMEKEEPER_PRIVATE_INCLUDE_DIR}/gamekeeper/core/network/curlfiledownloaderfactory.h
+
   ${platform_headers}
 )
 
 file(GLOB sources
   boostpopropertyresolver.cpp
-  curlfiledownloader.cpp
-  curlfiledownloaderfactory.cpp
   exception.cpp
-  filedownloader.cpp
   gnuinstalldirspaths.cpp
   log4cppLogger.cpp
   log4cpploggerFactory.cpp
@@ -57,6 +56,11 @@ file(GLOB sources
   propertiesmissingexception.cpp
   stdc++11threadmanager.cpp
   xdgpaths.cpp
+
+  network/curlfiledownloader.cpp
+  network/curlfiledownloaderfactory.cpp
+  network/filedownloader.cpp
+
   ${platform_sources}
 )
 

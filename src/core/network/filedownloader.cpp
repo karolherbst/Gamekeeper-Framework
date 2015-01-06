@@ -21,7 +21,7 @@
 #include <boost/algorithm/string/case_conv.hpp>
 #include <boost/algorithm/string/trim.hpp>
 
-#include <gamekeeper/core/filedownloader.h>
+#include <gamekeeper/core/network/filedownloader.h>
 
 namespace balgo = boost::algorithm;
 

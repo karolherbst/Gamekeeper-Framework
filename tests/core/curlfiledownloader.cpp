@@ -25,9 +25,9 @@
 
 #include <std_compat/thread>
 
-#include <gamekeeper/core/curlfiledownloaderfactory.h>
-#include <gamekeeper/core/filedownloader.h>
 #include <gamekeeper/core/log4cpploggerFactory.h>
+#include <gamekeeper/core/network/curlfiledownloaderfactory.h>
+#include <gamekeeper/core/network/filedownloader.h>
 #include <gamekeeper/core/propertyresolver.h>
 #include <gamekeeper/core/userpaths.h>
 #include <gamekeeper/utils/stringutils.h>

@@ -18,7 +18,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#include <gamekeeper/core/curlfiledownloader.h>
+#include <gamekeeper/core/network/curlfiledownloader.h>
 
 #include <vector>
 

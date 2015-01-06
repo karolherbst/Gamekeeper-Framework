@@ -30,7 +30,7 @@
 #include <gamekeeper/backend/security/authmanager.h>
 #include <gamekeeper/backend/security/generictoken.h>
 #include <gamekeeper/backend/security/token.h>
-#include <gamekeeper/core/filedownloader.h>
+#include <gamekeeper/core/network/filedownloader.h>
 #include <gamekeeper/utils/stringutils.h>
 
 namespace balgo = boost::algorithm;

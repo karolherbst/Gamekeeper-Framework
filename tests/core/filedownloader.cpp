@@ -20,7 +20,7 @@
 
 #include <gamekeeper/core/common.h>
 
-#include <gamekeeper/core/filedownloader.h>
+#include <gamekeeper/core/network/filedownloader.h>
 
 #include "defaultfixture.h"
 

@@ -18,8 +18,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef GAMEKEEPER_CORE_FILEDOWNLOADER_H
-#define GAMEKEEPER_CORE_FILEDOWNLOADER_H 1
+#ifndef GAMEKEEPER_CORE_NETWORK_FILEDOWNLOADER_H
+#define GAMEKEEPER_CORE_NETWORK_FILEDOWNLOADER_H 1
 
 #include <gamekeeper/core/common.h>
 
@@ -35,7 +35,7 @@
 GAMEKEEPER_NAMESPACE_START(core)
 
 /**
- * @interface FileDownloader filedownloader.h <gamekeeper/core/filedownloader.h>
+ * @interface FileDownloader filedownloader.h <gamekeeper/core/network/filedownloader.h>
  *
  * This interface provides basic operations to download files over a network. An Implementation shall support
  * HTTP(S) and (S)FTP(S).
@@ -108,4 +108,4 @@ inline bool PUBLIC_INLINE operator!=(const FileDownloader::Cookie & a, const Fil
 
 GAMEKEEPER_NAMESPACE_END(core)
 
-#endif //GAMEKEEPER_CORE_FILEDOWNLOADER_H
+#endif //GAMEKEEPER_CORE_NETWORK_FILEDOWNLOADER_H
