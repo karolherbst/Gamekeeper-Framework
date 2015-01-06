@@ -18,29 +18,31 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef GAMEKEEPER_BACKEND_SECURITY_AUTHMANAGER_H
-#define GAMEKEEPER_BACKEND_SECURITY_AUTHMANAGER_H 1
+#ifndef GAMEKEEPER_BACKEND_SECURITY_TOKEN_H
+#define GAMEKEEPER_BACKEND_SECURITY_TOKEN_H 1
 
 #include <gamekeeper/core/common.h>
 
-#include <vector>
-
-#include <gamekeeper/core/interface.h>
+#include <chrono>
+#include <unordered_map>
 
 GAMEKEEPER_NAMESPACE_START(backend, security)
 
-struct Token;
-
-interface PUBLIC_API AuthManager
+struct PUBLIC_API Token
 {
-	typedef std::vector<Token> Tokens;
+	typedef std::chrono::system_clock::time_point TimePoint;
+	typedef std::unordered_map<std::string, std::string> Properties;
 
-	GAMEKEEPER_INTERFACE_METHODS(AuthManager);
-	PUBLIC_API virtual void saveToken(const Token & token) = 0;
-	PUBLIC_API virtual void removeToken(const Token & token) = 0;
-	PUBLIC_API virtual Tokens readAllTokens(const std::string & group) = 0;
+	PUBLIC_API Token(const std::string & key, const std::string & value, const std::string & group, const TimePoint & expiry = TimePoint(), Properties properties = Properties());
+	PUBLIC_API Token(const std::string & key, const std::string & value, const std::string & group, const TimePoint::duration  & duration, Properties properties = Properties());
+	PUBLIC_API Token(const std::string & key, const std::string & value, const std::string & group, const TimePoint::rep & duration, Properties properties = Properties());
+	const std::string key;
+	std::string value;
+	const std::string group;
+	TimePoint expiry;
+	Properties properties;
 };
 
 GAMEKEEPER_NAMESPACE_END(backend, security)
 
-#endif //GAMEKEEPER_BACKEND_SECURITY_AUTHMANAGER_H
+#endif //GAMEKEEPER_BACKEND_SECURITY_TOKEN_H

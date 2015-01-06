@@ -28,6 +28,7 @@
 #include <boost/algorithm/string/split.hpp>
 
 #include <gamekeeper/backend/security/authmanager.h>
+#include <gamekeeper/backend/security/token.h>
 #include <gamekeeper/core/filedownloader.h>
 #include <gamekeeper/utils/stringutils.h>
 
@@ -78,7 +79,7 @@ HTTPPostLoginHandler::PImpl::PImpl(std::map<std::string, std::string> & config, 
 	if(this->am)
 	{
 		core::FileDownloader::CookieBucket cookies;
-		for(const security::AuthManager::Token & t : this->am->readAllTokens(this->tokenGroup))
+		for(const security::Token & t : this->am->readAllTokens(this->tokenGroup))
 		{
 			cookies.push_back({t.key, t.value, t.properties.at("domain"), t.properties.at("path"), t.expiry,
 			                   t.properties.at("secure") == GK_TRUE_STRING ? true : false});

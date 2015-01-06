@@ -6,6 +6,7 @@ add_custom_target(private_headers
     gamekeeper/backend/loginhandler.h
 
     gamekeeper/backend/security/authmanager.h
+    gamekeeper/backend/security/token.h
 
     gamekeeper/core/loggerFactory.h
     gamekeeper/core/nativethreadhelper.h

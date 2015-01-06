@@ -22,6 +22,7 @@
 
 #include <libsecret/secret.h>
 
+#include <gamekeeper/backend/security/token.h>
 #include <gamekeeper/core/logger.h>
 #include <gamekeeper/core/loggerFactory.h>
 #include <gamekeeper/core/loggerStream.h>
@@ -74,7 +75,7 @@ static SecretSchema GK_TOKEN_SCHEMA_TEMPLATE
 
 struct SchemaAttributesWrapper
 {
-	void fillSchemaAndAttributes(const AuthManager::Token & token);
+	void fillSchemaAndAttributes(const Token & token);
 	~SchemaAttributesWrapper();
 	SecretSchema schema = GK_TOKEN_SCHEMA_TEMPLATE;
 	GHashTable * attributes = g_hash_table_new(&g_direct_hash, &g_direct_equal);
@@ -88,7 +89,7 @@ SchemaAttributesWrapper::~SchemaAttributesWrapper()
 }
 
 void
-SchemaAttributesWrapper::fillSchemaAndAttributes(const AuthManager::Token & token)
+SchemaAttributesWrapper::fillSchemaAndAttributes(const Token & token)
 {
 	// save trivial stuff first
 	g_hash_table_insert(this->attributes, GPOINTER_CAST(GK_TOKEN_GROUP), GPOINTER_CAST(token.group.c_str()));
@@ -130,7 +131,7 @@ LibSecretManager::~LibSecretManager()
 }
 
 void
-LibSecretManager::saveToken(const AuthManager::Token & token)
+LibSecretManager::saveToken(const Token & token)
 {
 	SchemaAttributesWrapper w;
 	w.fillSchemaAndAttributes(token);
@@ -145,7 +146,7 @@ LibSecretManager::saveToken(const AuthManager::Token & token)
 }
 
 void
-LibSecretManager::removeToken(const AuthManager::Token & token)
+LibSecretManager::removeToken(const Token & token)
 {
 	SchemaAttributesWrapper w;
 	w.fillSchemaAndAttributes(token);
@@ -178,16 +179,16 @@ LibSecretManager::readAllTokens(const std::string & group)
 		SecretValue * value = secret_item_get_secret(item);
 		GHashTable * atts = secret_item_get_attributes(item);
 
-		AuthManager::Token token(static_cast<gchar *>(g_hash_table_lookup(atts, GK_TOKEN_KEY)),
-		                         secret_value_get_text(value),
-		                         group,
-		                         utils::String::toType<AuthManager::Token::TimePoint::rep>(static_cast<gchar *>(g_hash_table_lookup(atts, GK_TOKEN_EXPIRY))));
+		Token token(static_cast<gchar *>(g_hash_table_lookup(atts, GK_TOKEN_KEY)),
+		            secret_value_get_text(value),
+		            group,
+		            utils::String::toType<Token::TimePoint::rep>(static_cast<gchar *>(g_hash_table_lookup(atts, GK_TOKEN_EXPIRY))));
 
 		g_hash_table_foreach(atts, [](gpointer keyPtr, gpointer valuePtr, gpointer tokenPtr)
 		{
 			gchar * key = static_cast<gchar *>(keyPtr);
 			gchar * value = static_cast<gchar *>(valuePtr);
-			AuthManager::Token * token = static_cast<AuthManager::Token *>(tokenPtr);
+			Token * token = static_cast<Token *>(tokenPtr);
 
 			// key and expiry are a special cases
 			if(std::string(GK_TOKEN_KEY) != key && std::string(GK_TOKEN_EXPIRY) != key)
