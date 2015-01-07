@@ -18,15 +18,18 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#include <gamekeeper/backend/libsecretmanager.h>
+#include <gamekeeper/backend/security/libsecretmanager.h>
+
+#include <libsecret/secret.h>
+
+#include <gamekeeper/backend/security/generictoken.h>
+#include <gamekeeper/backend/security/token.h>
 #include <gamekeeper/core/logger.h>
 #include <gamekeeper/core/loggerFactory.h>
 #include <gamekeeper/core/loggerStream.h>
 #include <gamekeeper/utils/stringutils.h>
 
-#include <libsecret/secret.h>
-
-GAMEKEEPER_NAMESPACE_START(backend)
+GAMEKEEPER_NAMESPACE_START(backend, security)
 
 using core::endl;
 using core::LogLevel;
@@ -73,7 +76,7 @@ static SecretSchema GK_TOKEN_SCHEMA_TEMPLATE
 
 struct SchemaAttributesWrapper
 {
-	void fillSchemaAndAttributes(const AuthManager::Token & token);
+	void fillSchemaAndAttributes(const Token & token);
 	~SchemaAttributesWrapper();
 	SecretSchema schema = GK_TOKEN_SCHEMA_TEMPLATE;
 	GHashTable * attributes = g_hash_table_new(&g_direct_hash, &g_direct_equal);
@@ -87,18 +90,18 @@ SchemaAttributesWrapper::~SchemaAttributesWrapper()
 }
 
 void
-SchemaAttributesWrapper::fillSchemaAndAttributes(const AuthManager::Token & token)
+SchemaAttributesWrapper::fillSchemaAndAttributes(const Token & token)
 {
 	// save trivial stuff first
-	g_hash_table_insert(this->attributes, GPOINTER_CAST(GK_TOKEN_GROUP), GPOINTER_CAST(token.group.c_str()));
-	g_hash_table_insert(this->attributes, GPOINTER_CAST(GK_TOKEN_KEY), GPOINTER_CAST(token.key.c_str()));
-	this->expiry = utils::String::toString(std::chrono::duration_cast<std::chrono::seconds>(token.expiry.time_since_epoch()).count());
+	g_hash_table_insert(this->attributes, GPOINTER_CAST(GK_TOKEN_GROUP), GPOINTER_CAST(token.getGroup().c_str()));
+	g_hash_table_insert(this->attributes, GPOINTER_CAST(GK_TOKEN_KEY), GPOINTER_CAST(token.getKey().c_str()));
+	this->expiry = utils::String::toString(std::chrono::duration_cast<std::chrono::seconds>(token.getExpiry().time_since_epoch()).count());
 	g_hash_table_insert(this->attributes, GPOINTER_CAST(GK_TOKEN_EXPIRY), GPOINTER_CAST(this->expiry.c_str()));
 	g_hash_table_insert(this->attributes, GPOINTER_CAST(GK_TOKEN_APPLICATION), GPOINTER_CAST(GK_TOKEN_APPLICATION_VALUE));
 
 	// we begin at the fourth attribute
 	uint8_t i = 4;
-	for(const auto & p : token.properties)
+	for(const auto & p : token.getProperties())
 	{
 		this->schema.attributes[i].name = p.first.c_str();
 		this->schema.attributes[i].type = SECRET_SCHEMA_ATTRIBUTE_STRING;
@@ -129,7 +132,7 @@ LibSecretManager::~LibSecretManager()
 }
 
 void
-LibSecretManager::saveToken(const AuthManager::Token & token)
+LibSecretManager::saveToken(const Token & token)
 {
 	SchemaAttributesWrapper w;
 	w.fillSchemaAndAttributes(token);
@@ -137,14 +140,14 @@ LibSecretManager::saveToken(const AuthManager::Token & token)
 	                          &w.schema,
 	                          w.attributes,
 	                          nullptr,
-	                          (std::string("gamekeeper token for: ") + token.group).c_str(),
-	                          secret_value_new(token.value.c_str(), token.value.length(), GK_TOKEN_PASSWORD_CONTENT_TYPE),
+	                          (std::string("gamekeeper token for: ") + token.getGroup()).c_str(),
+	                          secret_value_new(token.getValue().c_str(), token.getValue().length(), GK_TOKEN_PASSWORD_CONTENT_TYPE),
 	                          nullptr,
 	                          nullptr);
 }
 
 void
-LibSecretManager::removeToken(const AuthManager::Token & token)
+LibSecretManager::removeToken(const Token & token)
 {
 	SchemaAttributesWrapper w;
 	w.fillSchemaAndAttributes(token);
@@ -177,37 +180,41 @@ LibSecretManager::readAllTokens(const std::string & group)
 		SecretValue * value = secret_item_get_secret(item);
 		GHashTable * atts = secret_item_get_attributes(item);
 
-		AuthManager::Token token(static_cast<gchar *>(g_hash_table_lookup(atts, GK_TOKEN_KEY)),
-		                         secret_value_get_text(value),
-		                         group,
-		                         utils::String::toType<AuthManager::Token::TimePoint::rep>(static_cast<gchar *>(g_hash_table_lookup(atts, GK_TOKEN_EXPIRY))));
+		Token::Properties properties;
 
-		g_hash_table_foreach(atts, [](gpointer keyPtr, gpointer valuePtr, gpointer tokenPtr)
+		g_hash_table_foreach(atts, [](gpointer keyPtr, gpointer valuePtr, gpointer propertiesPtr)
 		{
 			gchar * key = static_cast<gchar *>(keyPtr);
 			gchar * value = static_cast<gchar *>(valuePtr);
-			AuthManager::Token * token = static_cast<AuthManager::Token *>(tokenPtr);
+			Token::Properties & properties = *static_cast<Token::Properties *>(propertiesPtr);
 
 			// key and expiry are a special cases
 			if(std::string(GK_TOKEN_KEY) != key && std::string(GK_TOKEN_EXPIRY) != key)
 			{
-				token->properties.insert(std::make_pair(key, value));
+				properties.insert(std::make_pair(key, value));
 			}
-		}, &token);
+		}, &properties);
 
-		g_hash_table_unref(atts);
-		secret_value_unref(value);
-		
-		// after we parse everything check expiry now
-		if(std::chrono::system_clock::now() >= token.expiry)
+		std::unique_ptr<GenericToken> token(
+			new GenericToken(static_cast<gchar *>(g_hash_table_lookup(atts, GK_TOKEN_KEY)),
+		                    secret_value_get_text(value),
+		                    group,
+		                    utils::String::toType<Token::TimePoint::rep>(static_cast<gchar *>(g_hash_table_lookup(atts, GK_TOKEN_EXPIRY))),
+		                    properties));
+
+		// after we have access to the expiry, check it
+		if(std::chrono::system_clock::now() >= token->getExpiry())
 		{
 			this->data->logger << LogLevel::Info << "deleted token in group \"" << group << "\"" << endl;
-			this->removeToken(token);
+			this->removeToken(*token);
 		}
 		else
 		{
 			tokens.push_back(std::move(token));
 		}
+
+		g_hash_table_unref(atts);
+		secret_value_unref(value);
 	}
 
 	g_list_free(list);
@@ -215,4 +222,4 @@ LibSecretManager::readAllTokens(const std::string & group)
 	return tokens;
 }
 
-GAMEKEEPER_NAMESPACE_END(backend)
+GAMEKEEPER_NAMESPACE_END(backend, security)

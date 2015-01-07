@@ -102,13 +102,28 @@ typedef int64_t gktime64_t;
  * @param[in] name of the namespace
  */
 #ifdef __cplusplus
-	#define GAMEKEEPER_NAMESPACE_START(name) \
+	#define GAMEKEEPER_NAMESPACE_START_0() \
+	namespace gamekeeper \
+	{
+
+	#define GAMEKEEPER_NAMESPACE_START_1(name) \
 	namespace gamekeeper \
 	{ \
 	namespace name \
 	{
+
+	#define GAMEKEEPER_NAMESPACE_START_2(name1, name2) \
+	namespace gamekeeper \
+	{ \
+	namespace name1 \
+	{ \
+	namespace name2 \
+	{
+
+	#define GAMEKEEPER_NAMESPACE_START_X(x, name1, name2, FUNC, ...) FUNC
+	#define GAMEKEEPER_NAMESPACE_START(...) GAMEKEEPER_NAMESPACE_START_X(,##__VA_ARGS__, GAMEKEEPER_NAMESPACE_START_2(__VA_ARGS__), GAMEKEEPER_NAMESPACE_START_1(__VA_ARGS__), GAMEKEEPER_NAMESPACE_START_0(__VA_ARGS__))
 #else
-	#define GAMEKEEPER_NAMESPACE_START(name)
+	#define GAMEKEEPER_NAMESPACE_START(...)
 #endif
 
 /**
@@ -127,11 +142,22 @@ typedef int64_t gktime64_t;
  * @param[in] name of the namespace
  */
 #ifdef __cplusplus
-#define GAMEKEEPER_NAMESPACE_END(name) \
-} \
-}
+	#define GAMEKEEPER_NAMESPACE_END_0(...) \
+	}
+
+	#define GAMEKEEPER_NAMESPACE_END_1(...) \
+	} \
+	}
+
+	#define GAMEKEEPER_NAMESPACE_END_2(...) \
+	} \
+	} \
+	}
+
+	#define GAMEKEEPER_NAMESPACE_END_X(x, name1, name2, FUNC, ...) FUNC
+	#define GAMEKEEPER_NAMESPACE_END(...) GAMEKEEPER_NAMESPACE_END_X(,##__VA_ARGS__, GAMEKEEPER_NAMESPACE_END_2(__VA_ARGS__), GAMEKEEPER_NAMESPACE_END_1(__VA_ARGS__), GAMEKEEPER_NAMESPACE_END_0(__VA_ARGS__))
 #else
-#define GAMEKEEPER_NAMESPACE_END(name)
+	#define GAMEKEEPER_NAMESPACE_END(...)
 #endif
 
 // the following stuff is for C++ only

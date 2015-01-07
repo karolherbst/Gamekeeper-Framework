@@ -18,36 +18,31 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef GAMEKEEPER_BACKEND_LIBSECRETMANAGER_H
-#define GAMEKEEPER_BACKEND_LIBSECRETMANAGER_H 1
+#ifndef GAMEKEEPER_BACKEND_SECURITY_TOKEN_H
+#define GAMEKEEPER_BACKEND_SECURITY_TOKEN_H 1
 
 #include <gamekeeper/core/common.h>
 
-#include <memory>
+#include <chrono>
+#include <unordered_map>
 
-#include <gamekeeper/backend/authmanager.h>
+#include <gamekeeper/core/interface.h>
 
-GAMEKEEPER_NAMESPACE_START(core)
+GAMEKEEPER_NAMESPACE_START(backend, security)
 
-interface LoggerFactory;
-
-GAMEKEEPER_NAMESPACE_END(core)
-
-GAMEKEEPER_NAMESPACE_START(backend)
-
-class PUBLIC_API LibSecretManager : public AuthManager
+interface PUBLIC_API Token
 {
-public:
-	PUBLIC_API LibSecretManager(std::shared_ptr<core::LoggerFactory>);
-	PUBLIC_API ~LibSecretManager();
-	PRIVATE_API virtual void saveToken(const Token & token) override;
-	PRIVATE_API virtual void removeToken(const Token & token) override;
-	PRIVATE_API virtual Tokens readAllTokens(const std::string & group) override;
-private:
-	class PRIVATE_API PImpl;
-	std::unique_ptr<LibSecretManager::PImpl> data;
+	GAMEKEEPER_INTERFACE_METHODS(Token);
+	typedef std::chrono::system_clock::time_point TimePoint;
+	typedef std::unordered_map<std::string, std::string> Properties;
+
+	virtual const std::string & getKey() const = 0;
+	virtual const std::string & getValue() const = 0;
+	virtual const std::string & getGroup() const = 0;
+	virtual const TimePoint & getExpiry() const = 0;
+	virtual const Properties & getProperties() const = 0;
 };
 
-GAMEKEEPER_NAMESPACE_END(backend)
+GAMEKEEPER_NAMESPACE_END(backend, security)
 
-#endif //GAMEKEEPER_BACKEND_LIBSECRETMANAGER_H
+#endif //GAMEKEEPER_BACKEND_SECURITY_TOKEN_H

@@ -18,21 +18,30 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#include <gamekeeper/backend/authmanager.h>
+#ifndef GAMEKEEPER_BACKEND_SECURITY_AUTHMANAGER_H
+#define GAMEKEEPER_BACKEND_SECURITY_AUTHMANAGER_H 1
 
-GAMEKEEPER_NAMESPACE_START(backend)
+#include <gamekeeper/core/common.h>
 
-AuthManager::Token::Token(const std::string & _key, const std::string & _value, const std::string & _group, const TimePoint & _expiry, Properties _properties)
-:	key(_key),
-	value(_value),
-	group(_group),
-	expiry(_expiry),
-	properties(_properties){}
+#include <memory>
+#include <vector>
 
-AuthManager::Token::Token(const std::string & _key, const std::string & _value, const std::string & _group, const TimePoint::duration & duration, Properties _properties)
-:	Token(_key, _value, _group, TimePoint(duration), _properties){}
+#include <gamekeeper/core/interface.h>
 
-AuthManager::Token::Token(const std::string & _key, const std::string & _value, const std::string & _group, const TimePoint::rep & duration, Properties _properties)
-:	Token(_key, _value, _group, std::chrono::seconds(duration), _properties){}
+GAMEKEEPER_NAMESPACE_START(backend, security)
 
-GAMEKEEPER_NAMESPACE_END(backend)
+struct Token;
+
+interface PUBLIC_API AuthManager
+{
+	typedef std::vector<std::unique_ptr<Token>> Tokens;
+
+	GAMEKEEPER_INTERFACE_METHODS(AuthManager);
+	PUBLIC_API virtual void saveToken(const Token & token) = 0;
+	PUBLIC_API virtual void removeToken(const Token & token) = 0;
+	PUBLIC_API virtual Tokens readAllTokens(const std::string & group) = 0;
+};
+
+GAMEKEEPER_NAMESPACE_END(backend, security)
+
+#endif //GAMEKEEPER_BACKEND_SECURITY_AUTHMANAGER_H

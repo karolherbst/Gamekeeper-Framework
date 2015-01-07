@@ -18,44 +18,36 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef GAMEKEEPER_BACKEND_HTTPPOSTLOGINHANDLER_H
-#define GAMEKEEPER_BACKEND_HTTPPOSTLOGINHANDLER_H 1
+#ifndef GAMEKEEPER_BACKEND_LIBSECRETMANAGER_H
+#define GAMEKEEPER_BACKEND_LIBSECRETMANAGER_H 1
 
 #include <gamekeeper/core/common.h>
 
-#include <map>
 #include <memory>
 
-#include <gamekeeper/backend/loginhandler.h>
+#include <gamekeeper/backend/security/authmanager.h>
 
 GAMEKEEPER_NAMESPACE_START(core)
 
-class FileDownloader;
+interface LoggerFactory;
 
 GAMEKEEPER_NAMESPACE_END(core)
 
 GAMEKEEPER_NAMESPACE_START(backend, security)
 
-class AuthManager;
+class PUBLIC_API LibSecretManager : public AuthManager
+{
+public:
+	PUBLIC_API LibSecretManager(std::shared_ptr<core::LoggerFactory>);
+	PUBLIC_API ~LibSecretManager();
+	PRIVATE_API virtual void saveToken(const Token & token) override;
+	PRIVATE_API virtual void removeToken(const Token & token) override;
+	PRIVATE_API virtual Tokens readAllTokens(const std::string & group) override;
+private:
+	class PRIVATE_API PImpl;
+	std::unique_ptr<LibSecretManager::PImpl> data;
+};
 
 GAMEKEEPER_NAMESPACE_END(backend, security)
 
-GAMEKEEPER_NAMESPACE_START(backend)
-
-class PUBLIC_API HTTPPostLoginHandler : public LoginHandler
-{
-public:
-	PUBLIC_API HTTPPostLoginHandler(std::map<std::string, std::string> & config, std::shared_ptr<core::FileDownloader>, std::shared_ptr<security::AuthManager>);
-	PUBLIC_API ~HTTPPostLoginHandler();
-	PRIVATE_API virtual bool login(const std::string & username, const std::string & password) override;
-	PRIVATE_API virtual void logout() override;
-	PRIVATE_API virtual bool isLoggedIn() const override;
-	PRIVATE_API virtual void downloadFile(const std::string & url, core::FileDownloader::DownloadCallback) override;
-private:
-	class PRIVATE_API PImpl;
-	std::unique_ptr<HTTPPostLoginHandler::PImpl> data;
-};
-
-GAMEKEEPER_NAMESPACE_END(backend)
-
-#endif //GAMEKEEPER_BACKEND_HTTPPOSTLOGINHANDLER_H
+#endif //GAMEKEEPER_BACKEND_LIBSECRETMANAGER_H

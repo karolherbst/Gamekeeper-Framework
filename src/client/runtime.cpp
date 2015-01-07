@@ -59,8 +59,8 @@
 #endif
 
 #ifdef WITH_LIBSECRET
-  #include <gamekeeper/backend/libsecretmanager.h>
-  #define AUTHMANAGERCLASS LibSecretManager
+  #include <gamekeeper/backend/security/libsecretmanager.h>
+  #define AUTHMANAGERCLASS security::LibSecretManager
   #define HAS_AUTHMANAGER 1
 #endif
 
@@ -233,9 +233,9 @@ GameKeeperRuntime::main(int argc, const char* argv[], NewInstanceFuncPtr instanc
 #ifdef HAS_AUTHMANAGER
 	containerBuilder.registerType<AUTHMANAGERCLASS>(
 		CREATE(new AUTHMANAGERCLASS(INJECT(LoggerFactory))))->
-		as<AuthManager>()->
+		as<security::AuthManager>()->
 		singleInstance();
-#define INJECT_AUTH INJECT(AuthManager)
+#define INJECT_AUTH INJECT(security::AuthManager)
 #else
 #define INJECT_AUTH nullptr
 #endif

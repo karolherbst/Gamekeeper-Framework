@@ -40,7 +40,7 @@ using core::endl;
 using core::LogLevel;
 
 StoreManager::StoreManager(std::shared_ptr<core::LoggerFactory> lf, std::shared_ptr<core::BundlePaths> bp, std::shared_ptr<core::FileDownloaderFactory> fdf,
-                           std::shared_ptr<AuthManager> am)
+                           std::shared_ptr<security::AuthManager> am)
 :	logger(lf->getComponentLogger("backend.StoreManager"))
 {
 	StoreConfigurator sc(fdf, am);
