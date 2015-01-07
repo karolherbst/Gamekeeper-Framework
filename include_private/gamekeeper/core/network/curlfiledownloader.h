@@ -33,6 +33,10 @@ GAMEKEEPER_NAMESPACE_START(core)
 
 interface Logger;
 
+GAMEKEEPER_NAMESPACE_END(core)
+
+GAMEKEEPER_NAMESPACE_START(core, network)
+
 class PUBLIC_API CurlFileDownloader : public FileDownloader
 {
 public:
@@ -55,6 +59,6 @@ private:
 	std::unique_ptr<CurlFileDownloader::PImpl> data;
 };
 
-GAMEKEEPER_NAMESPACE_END(core)
+GAMEKEEPER_NAMESPACE_END(core, network)
 
 #endif //GAMEKEEPER_CORE_CURLFILEDOWNLOADER_H

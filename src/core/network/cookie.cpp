@@ -25,7 +25,7 @@
 
 namespace balgo = boost::algorithm;
 
-GAMEKEEPER_NAMESPACE_START(core)
+GAMEKEEPER_NAMESPACE_START(core, network)
 
 static std::string
 fixNameOrValue(const std::string & name)
@@ -73,4 +73,4 @@ bool operator==(const Cookie & a, const Cookie & b)
 	       a.secure == b.secure;
 };
 
-GAMEKEEPER_NAMESPACE_END(core)
+GAMEKEEPER_NAMESPACE_END(core, network)

@@ -25,7 +25,7 @@
 
 #include "defaultfixture.h"
 
-using namespace gamekeeper::core;
+using namespace gamekeeper::core::network;
 
 class FileDownloaderTest : public testing::Test{};
 

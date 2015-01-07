@@ -29,7 +29,7 @@
 #include <gamekeeper/core/propertyresolver.h>
 #include <gamekeeper/core/userpaths.h>
 
-GAMEKEEPER_NAMESPACE_START(core)
+GAMEKEEPER_NAMESPACE_START(core, network)
 
 class CurlFileDownloaderFactory::PImpl
 {
@@ -94,4 +94,4 @@ CurlFileDownloaderFactory::create()
 	);
 }
 
-GAMEKEEPER_NAMESPACE_END(core)
+GAMEKEEPER_NAMESPACE_END(core, network)

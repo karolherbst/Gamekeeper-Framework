@@ -32,7 +32,7 @@
 #include <gamekeeper/core/exception.h>
 #include <gamekeeper/core/interface.h>
 
-GAMEKEEPER_NAMESPACE_START(core)
+GAMEKEEPER_NAMESPACE_START(core, network)
 
 struct Cookie;
 
@@ -73,6 +73,6 @@ interface PUBLIC_API FileDownloader
 	class PUBLIC_API GAMEKEEPER_EXCEPTION(FileDownloaderException);
 };
 
-GAMEKEEPER_NAMESPACE_END(core)
+GAMEKEEPER_NAMESPACE_END(core, network)
 
 #endif //GAMEKEEPER_CORE_NETWORK_FILEDOWNLOADER_H

@@ -25,7 +25,7 @@
 
 #include <chrono>
 
-GAMEKEEPER_NAMESPACE_START(core)
+GAMEKEEPER_NAMESPACE_START(core, network)
 
 /**
  * @interface Cookie cookie.h <gamekeeper/core/network/cookie.h>
@@ -63,6 +63,6 @@ inline bool PUBLIC_INLINE operator!=(const Cookie & a, const Cookie & b)
 	return !(a == b);
 }
 
-GAMEKEEPER_NAMESPACE_END(core)
+GAMEKEEPER_NAMESPACE_END(core, network)
 
 #endif //GAMEKEEPER_CORE_NETWORK_COOKIE_H

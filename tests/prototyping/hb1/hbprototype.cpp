@@ -19,6 +19,7 @@
 GAMECLIENTUI_CLASS(HBPrototype)
 
 using namespace gamekeeper::core;
+using namespace gamekeeper::core::network;
 using namespace gamekeeper::utils;
 namespace po = boost::program_options;
 
@@ -38,7 +39,7 @@ GAMECLIENT_ADD_OPTIONS({
 void
 HBPrototype::init(const ConfigMap & configMap)
 {
-	fileDownloader = gamekeeper::client::Autowire<gamekeeper::core::FileDownloader>();
+	fileDownloader = gamekeeper::client::Autowire<FileDownloader>();
 
 	this->logger << LogLevel::Info << "init" << endl;
 

@@ -32,6 +32,10 @@ interface LoggerFactory;
 interface PropertyResolver;
 interface UserPaths;
 
+GAMEKEEPER_NAMESPACE_END(core)
+
+GAMEKEEPER_NAMESPACE_START(core, network)
+
 class PUBLIC_API CurlFileDownloaderFactory : public FileDownloaderFactory
 {
 public:
@@ -44,6 +48,6 @@ private:
 	std::unique_ptr<CurlFileDownloaderFactory::PImpl> data;
 };
 
-GAMEKEEPER_NAMESPACE_END(core)
+GAMEKEEPER_NAMESPACE_END(core, network)
 
 #endif //GAMEKEEPER_CORE_CURLFILEDOWNLOADERFACTORY_H

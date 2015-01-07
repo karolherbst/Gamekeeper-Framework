@@ -44,7 +44,7 @@ namespace balgo = boost::algorithm;
 namespace bfs = boost::filesystem;
 namespace bio = boost::iostreams;
 
-GAMEKEEPER_NAMESPACE_START(core)
+GAMEKEEPER_NAMESPACE_START(core, network)
 
 class PRIVATE_API CurlFileDownloadInfo
 {
@@ -471,4 +471,4 @@ CurlFileDownloader::getCookies()
 	return result;
 }
 
-GAMEKEEPER_NAMESPACE_END(core)
+GAMEKEEPER_NAMESPACE_END(core, network)

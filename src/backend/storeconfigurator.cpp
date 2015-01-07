@@ -81,7 +81,7 @@ static void loadFileIntoMap(const prop::ptree & tree, std::map<std::string, std:
 	}
 }
 
-StoreConfigurator::StoreConfigurator(std::shared_ptr<core::FileDownloaderFactory> _fdf, std::shared_ptr<security::AuthManager> _am)
+StoreConfigurator::StoreConfigurator(std::shared_ptr<core::network::FileDownloaderFactory> _fdf, std::shared_ptr<security::AuthManager> _am)
 :	fdf(std::move(_fdf)),
 	am(std::move(_am)){}
 

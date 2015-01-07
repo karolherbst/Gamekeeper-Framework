@@ -27,7 +27,7 @@
 
 #include <gamekeeper/core/interface.h>
 
-GAMEKEEPER_NAMESPACE_START(core)
+GAMEKEEPER_NAMESPACE_START(core, network)
 
 interface FileDownloader;
 
@@ -43,6 +43,6 @@ interface PUBLIC_API FileDownloaderFactory
 	PUBLIC_API virtual std::shared_ptr<FileDownloader> create() = 0;
 };
 
-GAMEKEEPER_NAMESPACE_END(core)
+GAMEKEEPER_NAMESPACE_END(core, network)
 
 #endif //GAMEKEEPER_CORE_NETWORK_FILEDOWNLOADER_H

@@ -28,11 +28,11 @@
 #include <gamekeeper/backend/storeconfiguration.h>
 #include <gamekeeper/core/exception.h>
 
-GAMEKEEPER_NAMESPACE_START(core)
+GAMEKEEPER_NAMESPACE_START(core, network)
 
 class FileDownloaderFactory;
 
-GAMEKEEPER_NAMESPACE_END(core)
+GAMEKEEPER_NAMESPACE_END(core, network)
 
 GAMEKEEPER_NAMESPACE_START(backend, security)
 
@@ -51,12 +51,12 @@ GAMEKEEPER_NAMESPACE_START(backend)
 class PUBLIC_API StoreConfigurator
 {
 public:
-	PUBLIC_API StoreConfigurator(std::shared_ptr<core::FileDownloaderFactory>, std::shared_ptr<security::AuthManager>);
+	PUBLIC_API StoreConfigurator(std::shared_ptr<core::network::FileDownloaderFactory>, std::shared_ptr<security::AuthManager>);
 	PUBLIC_API StoreConfiguration configure(const boost::filesystem::path & configFile);
 
 	class PUBLIC_API GAMEKEEPER_EXCEPTION(StoreConfiguratorException);
 private:
-	std::shared_ptr<core::FileDownloaderFactory> fdf;
+	std::shared_ptr<core::network::FileDownloaderFactory> fdf;
 	std::shared_ptr<security::AuthManager> am;
 };
 

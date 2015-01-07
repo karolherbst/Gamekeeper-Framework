@@ -37,6 +37,7 @@
 #include "webserverfixture.h"
 
 using namespace gamekeeper::core;
+using namespace gamekeeper::core::network;
 using namespace gamekeeper::utils;
 
 #if defined(GCC_VERSION) && (GCC_VERSION < 40704 || GCC_VERSION == 40800)

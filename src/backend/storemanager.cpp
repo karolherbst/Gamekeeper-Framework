@@ -39,7 +39,7 @@ GAMEKEEPER_NAMESPACE_START(backend)
 using core::endl;
 using core::LogLevel;
 
-StoreManager::StoreManager(std::shared_ptr<core::LoggerFactory> lf, std::shared_ptr<core::BundlePaths> bp, std::shared_ptr<core::FileDownloaderFactory> fdf,
+StoreManager::StoreManager(std::shared_ptr<core::LoggerFactory> lf, std::shared_ptr<core::BundlePaths> bp, std::shared_ptr<core::network::FileDownloaderFactory> fdf,
                            std::shared_ptr<security::AuthManager> am)
 :	logger(lf->getComponentLogger("backend.StoreManager"))
 {
