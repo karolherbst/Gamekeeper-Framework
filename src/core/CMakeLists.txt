@@ -57,9 +57,9 @@ file(GLOB sources
   stdc++11threadmanager.cpp
   xdgpaths.cpp
 
+  network/cookie.cpp
   network/curlfiledownloader.cpp
   network/curlfiledownloaderfactory.cpp
-  network/filedownloader.cpp
 
   ${platform_sources}
 )

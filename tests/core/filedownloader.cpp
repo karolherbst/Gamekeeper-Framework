@@ -20,12 +20,12 @@
 
 #include <gamekeeper/core/common.h>
 
+#include <gamekeeper/core/network/cookie.h>
 #include <gamekeeper/core/network/filedownloader.h>
 
 #include "defaultfixture.h"
 
 using namespace gamekeeper::core;
-typedef FileDownloader::Cookie Cookie;
 
 class FileDownloaderTest : public testing::Test{};
 

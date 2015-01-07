@@ -22,6 +22,7 @@ add_custom_target(headers
     gamekeeper/core/threadfactory.h
     gamekeeper/core/userpaths.h
 
+    gamekeeper/core/network/cookie.h
     gamekeeper/core/network/filedownloader.h
     gamekeeper/core/network/filedownloaderfactory.h
 

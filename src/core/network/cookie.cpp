@@ -21,7 +21,7 @@
 #include <boost/algorithm/string/case_conv.hpp>
 #include <boost/algorithm/string/trim.hpp>
 
-#include <gamekeeper/core/network/filedownloader.h>
+#include <gamekeeper/core/network/cookie.h>
 
 namespace balgo = boost::algorithm;
 
@@ -49,7 +49,7 @@ fixPath(const std::string & path)
 }
 
 // this constructor will do all required steps from RFC 6265 section 5.2
-FileDownloader::Cookie::Cookie(const std::string & name, const std::string & value, const std::string & domain, const std::string & path, const TimePoint & expiry, bool secure)
+Cookie::Cookie(const std::string & name, const std::string & value, const std::string & domain, const std::string & path, const TimePoint & expiry, bool secure)
 :	name(std::move(fixNameOrValue(name))),
 	value(std::move(fixNameOrValue(value))),
 	domain(std::move(fixDomain(domain))),
@@ -57,13 +57,13 @@ FileDownloader::Cookie::Cookie(const std::string & name, const std::string & val
 	expiry(expiry),
 	secure(secure){}
 
-FileDownloader::Cookie::Cookie(const std::string & name, const std::string & value, const std::string & domain, const std::string & path, const TimePoint::duration & duration, bool secure)
+Cookie::Cookie(const std::string & name, const std::string & value, const std::string & domain, const std::string & path, const TimePoint::duration & duration, bool secure)
 :	Cookie(name, value, domain, path, TimePoint(duration), secure){}
 
-FileDownloader::Cookie::Cookie(const std::string & name, const std::string & value, const std::string & domain, const std::string & path, const TimePoint::rep & duration, bool secure)
+Cookie::Cookie(const std::string & name, const std::string & value, const std::string & domain, const std::string & path, const TimePoint::rep & duration, bool secure)
 :	Cookie(name, value, domain, path, std::chrono::seconds(duration), secure){}
 
-bool operator==(const FileDownloader::Cookie & a, const FileDownloader::Cookie & b)
+bool operator==(const Cookie & a, const Cookie & b)
 {
 	return a.name == b.name &&
 	       a.value == b.value &&

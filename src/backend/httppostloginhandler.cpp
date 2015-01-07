@@ -30,6 +30,7 @@
 #include <gamekeeper/backend/security/authmanager.h>
 #include <gamekeeper/backend/security/generictoken.h>
 #include <gamekeeper/backend/security/token.h>
+#include <gamekeeper/core/network/cookie.h>
 #include <gamekeeper/core/network/filedownloader.h>
 #include <gamekeeper/utils/stringutils.h>
 
@@ -101,7 +102,7 @@ HTTPPostLoginHandler::PImpl::checkCookiesValidForAuth()
 
 	// first get all names
 	std::vector<std::string> names;
-	for(const core::FileDownloader::Cookie & c : cookies)
+	for(const core::Cookie & c : cookies)
 	{
 		names.push_back(c.name);
 	}
@@ -148,7 +149,7 @@ HTTPPostLoginHandler::login(const std::string & username, const std::string & pa
 	// save tokens, if we have an authmanager
 	if(this->data->am && validTokens)
 	{
-		for(const core::FileDownloader::Cookie & c : this->data->hfd->getCookies())
+		for(const core::Cookie & c : this->data->hfd->getCookies())
 		{
 			this->data->am->saveToken(security::GenericToken(c.name, c.value, this->data->tokenGroup, c.expiry,
 				{
@@ -167,7 +168,7 @@ void
 HTTPPostLoginHandler::logout()
 {
 	// remove stored tokens first, if anything goes wrong after, we are still in a good state
-	for(const core::FileDownloader::Cookie & c : this->data->hfd->getCookies())
+	for(const core::Cookie & c : this->data->hfd->getCookies())
 	{
 		this->data->am->removeToken(security::GenericToken(c.name, c.value, this->data->tokenGroup, c.expiry,
 			{
