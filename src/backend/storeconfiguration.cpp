@@ -35,9 +35,9 @@ public:
 };
 
 StoreConfiguration::PImpl::PImpl(std::shared_ptr<GameListParser> _glp, std::shared_ptr<LoginHandler> _lh, std::shared_ptr<model::Store> _store)
-:	glp(_glp),
-	lh(_lh),
-	store(_store){}
+:	glp(std::move(_glp)),
+	lh(std::move(_lh)),
+	store(std::move(_store)){}
 
 StoreConfiguration::StoreConfiguration(std::shared_ptr<GameListParser> glp, std::shared_ptr<LoginHandler> lh, std::shared_ptr<model::Store> store)
 :	data(std::make_shared<PImpl>(glp, lh, store)){}

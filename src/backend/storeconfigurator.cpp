@@ -82,8 +82,8 @@ static void loadFileIntoMap(const prop::ptree & tree, std::map<std::string, std:
 }
 
 StoreConfigurator::StoreConfigurator(std::shared_ptr<core::FileDownloaderFactory> _fdf, std::shared_ptr<security::AuthManager> _am)
-:	fdf(_fdf),
-	am(_am){}
+:	fdf(std::move(_fdf)),
+	am(std::move(_am)){}
 
 StoreConfiguration
 StoreConfigurator::configure(const boost::filesystem::path & configFile)

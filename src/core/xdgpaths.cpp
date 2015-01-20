@@ -49,7 +49,7 @@ createDirectories(const fs::path & p)
 }
 
 XDGPaths::XDGPaths(std::shared_ptr<OSInformation> _osInformation)
-:	osInformation(_osInformation)
+:	osInformation(std::move(_osInformation))
 {
 	createDirectories(this->getConfigFile(""));
 	createDirectories(this->getDataFile(""));

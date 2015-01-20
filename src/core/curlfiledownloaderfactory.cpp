@@ -41,9 +41,9 @@ public:
 };
 
 CurlFileDownloaderFactory::PImpl::PImpl(std::shared_ptr<LoggerFactory> _lf, std::shared_ptr<PropertyResolver> _pr, std::shared_ptr<UserPaths> _up)
-:	lf(_lf),
-	pr(_pr),
-	up(_up){}
+:	lf(std::move(_lf)),
+	pr(std::move(_pr)),
+	up(std::move(_up)){}
 
 CurlFileDownloaderFactory::CurlFileDownloaderFactory(std::shared_ptr<LoggerFactory> lf, std::shared_ptr<PropertyResolver> pr, std::shared_ptr<UserPaths> up)
 :	data(new CurlFileDownloaderFactory::PImpl(lf, pr, up))

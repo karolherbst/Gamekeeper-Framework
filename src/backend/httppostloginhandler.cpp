@@ -62,8 +62,8 @@ public:
 
 HTTPPostLoginHandler::PImpl::PImpl(std::map<std::string, std::string> & config, std::shared_ptr<core::FileDownloader> _hfd,
                                    std::shared_ptr<security::AuthManager> _am)
-:	hfd(_hfd),
-	am(_am),
+:	hfd(std::move(_hfd)),
+	am(std::move(_am)),
 	loginUrl(config["auth.loginurl"]),
 	logoutUrl(config["auth.logouturl"]),
 	usernameField(config["authfield.username"]),
