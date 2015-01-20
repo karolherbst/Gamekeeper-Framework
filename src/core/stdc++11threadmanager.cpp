@@ -18,7 +18,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#include "stdc++11threadmanager.h"
+#include <gamekeeper/core/stdc++11threadmanager.h>
 
 #include <std_compat/mutex>
 

@@ -18,7 +18,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#include "xdgpaths.h"
+#include <gamekeeper/core/xdgpaths.h>
 
 #include <forward_list>
 
