@@ -18,7 +18,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#include "log4cppLoggerStream.h"
+#include <gamekeeper/core/log4cppLoggerStream.h>
 
 GAMEKEEPER_NAMESPACE_START(core)
 

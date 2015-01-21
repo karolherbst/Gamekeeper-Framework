@@ -18,7 +18,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#include "xdgpaths.h"
+#include <gamekeeper/core/xdgpaths.h>
 
 #include <forward_list>
 
@@ -49,7 +49,7 @@ createDirectories(const fs::path & p)
 }
 
 XDGPaths::XDGPaths(std::shared_ptr<OSInformation> _osInformation)
-:	osInformation(_osInformation)
+:	osInformation(std::move(_osInformation))
 {
 	createDirectories(this->getConfigFile(""));
 	createDirectories(this->getDataFile(""));

@@ -11,7 +11,6 @@ if(WITH_LIBSECRET)
   add_definitions(-DWITH_LIBSECRET)
 endif()
 
-add_subdirectory(utils)
 add_subdirectory(model)
 add_subdirectory(client)
 add_subdirectory(core)

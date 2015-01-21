@@ -18,7 +18,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#include "stdc++11threadmanager.h"
+#include <gamekeeper/core/stdc++11threadmanager.h>
 
 #include <std_compat/mutex>
 
@@ -31,7 +31,7 @@ GAMEKEEPER_NAMESPACE_START(core)
 StdCpp11ThreadManager::StdCpp11ThreadManager(std::shared_ptr<NativeThreadHelper> _nativeThreadHelper,
                                              std::shared_ptr<LoggerFactory> loggerFactory)
 :	logger(loggerFactory->getComponentLogger("Threads")),
-	nativeThreadHelper(_nativeThreadHelper){}
+	nativeThreadHelper(std::move(_nativeThreadHelper)){}
 
 StdCpp11ThreadManager::~StdCpp11ThreadManager()
 {

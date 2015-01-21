@@ -25,7 +25,7 @@
 GAMEKEEPER_NAMESPACE_START(client)
 
 StoreControllerImpl::StoreControllerImpl(std::shared_ptr<gamekeeper::backend::StoreManager> _sm)
-:	sm(_sm){}
+:	sm(std::move(_sm)){}
 
 std::vector<std::unique_ptr<Store>>
 StoreControllerImpl::getAll()

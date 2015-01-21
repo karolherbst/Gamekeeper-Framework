@@ -1,8 +1,3 @@
-include_directories(
-  ${GAMEKEEPER_PRIVATE_INCLUDE_DIR}/gamekeeper/model
-  ${CMAKE_CURRENT_SOURCE_DIR}
-)
-
 file(GLOB headers
   ${GAMEKEEPER_PRIVATE_INCLUDE_DIR}/gamekeeper/model/genericgame.h
 )

@@ -1,6 +1,4 @@
 include_directories(
-  ${GAMEKEEPER_PRIVATE_INCLUDE_DIR}/gamekeeper/core
-  ${CMAKE_CURRENT_SOURCE_DIR}
   ${Boost_INCLUDE_DIRS}
   ${CURL_INCLUDE_DIRS}
   ${HYPODERMIC_INCLUDE_DIRS}

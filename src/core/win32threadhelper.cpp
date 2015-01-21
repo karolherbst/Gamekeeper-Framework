@@ -18,7 +18,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#include "win32threadhelper.h"
+#include <gamekeeper/core/win32threadhelper.h>
 
 #include <std_compat/thread>
 
