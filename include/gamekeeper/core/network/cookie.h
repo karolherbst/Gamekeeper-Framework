@@ -25,6 +25,8 @@
 
 #include <chrono>
 
+#include <boost/operators.hpp>
+
 GAMEKEEPER_NAMESPACE_START(core, network)
 
 /**
@@ -38,7 +40,7 @@ GAMEKEEPER_NAMESPACE_START(core, network)
  * @author Karol Herbst
  * @since 0
  */
-struct PUBLIC_API Cookie
+struct PUBLIC_API Cookie : boost::equality_comparable<Cookie>
 {
 	typedef std::chrono::system_clock::time_point TimePoint;
 
@@ -50,7 +52,6 @@ struct PUBLIC_API Cookie
 	                  const TimePoint::rep & duration, bool secure = false);
 
 	bool PUBLIC_API operator==(const Cookie &) const;
-	inline bool PUBLIC_INLINE operator!=(const Cookie &) const;
 
 	const std::string name;
 	const std::string value;
@@ -59,12 +60,6 @@ struct PUBLIC_API Cookie
 	const TimePoint expiry;
 	const bool secure;
 };
-
-inline bool PUBLIC_INLINE
-Cookie::operator!=(const Cookie & c) const
-{
-	return !(*this == c);
-}
 
 GAMEKEEPER_NAMESPACE_END(core, network)
 
