@@ -48,6 +48,10 @@ struct PUBLIC_API Cookie
 	                  const TimePoint::duration &, bool secure = false);
 	PUBLIC_API Cookie(const std::string & name, const std::string & value, const std::string & domain, const std::string & path,
 	                  const TimePoint::rep & duration, bool secure = false);
+
+	bool PUBLIC_API operator==(const Cookie &) const;
+	inline bool PUBLIC_INLINE operator!=(const Cookie &) const;
+
 	const std::string name;
 	const std::string value;
 	const std::string domain;
@@ -56,11 +60,10 @@ struct PUBLIC_API Cookie
 	const bool secure;
 };
 
-bool PUBLIC_API operator==(const Cookie & a, const Cookie & b);
-
-inline bool PUBLIC_INLINE operator!=(const Cookie & a, const Cookie & b)
+inline bool PUBLIC_INLINE
+Cookie::operator!=(const Cookie & c) const
 {
-	return !(a == b);
+	return !(*this == c);
 }
 
 GAMEKEEPER_NAMESPACE_END(core, network)

@@ -63,14 +63,15 @@ Cookie::Cookie(const std::string & name, const std::string & value, const std::s
 Cookie::Cookie(const std::string & name, const std::string & value, const std::string & domain, const std::string & path, const TimePoint::rep & duration, bool secure)
 :	Cookie(name, value, domain, path, std::chrono::seconds(duration), secure){}
 
-bool operator==(const Cookie & a, const Cookie & b)
+bool
+Cookie::operator==(const Cookie & c) const
 {
-	return a.name == b.name &&
-	       a.value == b.value &&
-	       a.domain == b.domain &&
-	       a.expiry == b.expiry &&
-	       a.path == b.path &&
-	       a.secure == b.secure;
+	return this->name == c.name &&
+	       this->value == c.value &&
+	       this->domain == c.domain &&
+	       this->expiry == c.expiry &&
+	       this->path == c.path &&
+	       this->secure == c.secure;
 };
 
 GAMEKEEPER_NAMESPACE_END(core, network)
