@@ -23,8 +23,8 @@
 
 #include <gamekeeper/core/common.h>
 
-#include <gamekeeper/core/filedownloader.h>
 #include <gamekeeper/core/interface.h>
+#include <gamekeeper/core/network/filedownloader.h>
 
 GAMEKEEPER_NAMESPACE_START(backend)
 
@@ -35,7 +35,7 @@ interface PUBLIC_API LoginHandler
 	PUBLIC_API virtual bool login(const std::string & username, const std::string & password) = 0;
 	PUBLIC_API virtual void logout() = 0;
 	PUBLIC_API virtual bool isLoggedIn() const = 0;
-	PUBLIC_API virtual void downloadFile(const std::string & url, core::FileDownloader::DownloadCallback) = 0;
+	PUBLIC_API virtual void downloadFile(const std::string & url, core::network::FileDownloader::DownloadCallback) = 0;
 };
 
 GAMEKEEPER_NAMESPACE_END(backend)

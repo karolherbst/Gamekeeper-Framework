@@ -30,7 +30,8 @@
 #include <gamekeeper/backend/security/authmanager.h>
 #include <gamekeeper/backend/security/generictoken.h>
 #include <gamekeeper/backend/security/token.h>
-#include <gamekeeper/core/filedownloader.h>
+#include <gamekeeper/core/network/cookie.h>
+#include <gamekeeper/core/network/filedownloader.h>
 #include <gamekeeper/utils/stringutils.h>
 
 namespace balgo = boost::algorithm;
@@ -45,9 +46,9 @@ static const std::string COOKIE_SECURE{"secure"};
 class HTTPPostLoginHandler::PImpl
 {
 public:
-	PImpl(std::map<std::string, std::string> &, std::shared_ptr<core::FileDownloader>, std::shared_ptr<security::AuthManager>);
+	PImpl(std::map<std::string, std::string> &, std::shared_ptr<core::network::FileDownloader>, std::shared_ptr<security::AuthManager>);
 
-	std::shared_ptr<core::FileDownloader> hfd;
+	std::shared_ptr<core::network::FileDownloader> hfd;
 	std::shared_ptr<security::AuthManager> am;
 	std::string loginUrl;
 	std::string logoutUrl;
@@ -60,7 +61,7 @@ public:
 	bool checkCookiesValidForAuth();
 };
 
-HTTPPostLoginHandler::PImpl::PImpl(std::map<std::string, std::string> & config, std::shared_ptr<core::FileDownloader> _hfd,
+HTTPPostLoginHandler::PImpl::PImpl(std::map<std::string, std::string> & config, std::shared_ptr<core::network::FileDownloader> _hfd,
                                    std::shared_ptr<security::AuthManager> _am)
 :	hfd(std::move(_hfd)),
 	am(std::move(_am)),
@@ -79,7 +80,7 @@ HTTPPostLoginHandler::PImpl::PImpl(std::map<std::string, std::string> & config, 
 	// we might not get an authmanager
 	if(this->am)
 	{
-		core::FileDownloader::CookieBucket cookies;
+		core::network::FileDownloader::CookieBucket cookies;
 		for(const auto & t : this->am->readAllTokens(this->tokenGroup))
 		{
 			cookies.push_back({t->getKey(), t->getValue(), t->getProperties().at("domain"), t->getProperties().at("path"), t->getExpiry(),
@@ -101,7 +102,7 @@ HTTPPostLoginHandler::PImpl::checkCookiesValidForAuth()
 
 	// first get all names
 	std::vector<std::string> names;
-	for(const core::FileDownloader::Cookie & c : cookies)
+	for(const core::network::Cookie & c : cookies)
 	{
 		names.push_back(c.name);
 	}
@@ -117,7 +118,7 @@ HTTPPostLoginHandler::PImpl::checkCookiesValidForAuth()
 	return !cookies.empty();
 }
 
-HTTPPostLoginHandler::HTTPPostLoginHandler(std::map<std::string, std::string> & config, std::shared_ptr<core::FileDownloader> hfd,
+HTTPPostLoginHandler::HTTPPostLoginHandler(std::map<std::string, std::string> & config, std::shared_ptr<core::network::FileDownloader> hfd,
                                            std::shared_ptr<security::AuthManager> am)
 :	data(new HTTPPostLoginHandler::PImpl(config, hfd, am)){}
 
@@ -129,7 +130,7 @@ HTTPPostLoginHandler::login(const std::string & username, const std::string & pa
 	// save username
 	this->data->username = username;
 
-	core::FileDownloader::Form form
+	core::network::FileDownloader::Form form
 	{
 		{this->data->usernameField, username},
 		{this->data->passwordField, password}
@@ -139,7 +140,7 @@ HTTPPostLoginHandler::login(const std::string & username, const std::string & pa
 	{
 		this->data->hfd->postRequest(this->data->loginUrl, form);
 	}
-	catch(const core::FileDownloader::FileDownloaderException & e)
+	catch(const core::network::FileDownloader::FileDownloaderException & e)
 	{
 		return false;
 	}
@@ -148,7 +149,7 @@ HTTPPostLoginHandler::login(const std::string & username, const std::string & pa
 	// save tokens, if we have an authmanager
 	if(this->data->am && validTokens)
 	{
-		for(const core::FileDownloader::Cookie & c : this->data->hfd->getCookies())
+		for(const core::network::Cookie & c : this->data->hfd->getCookies())
 		{
 			this->data->am->saveToken(security::GenericToken(c.name, c.value, this->data->tokenGroup, c.expiry,
 				{
@@ -167,7 +168,7 @@ void
 HTTPPostLoginHandler::logout()
 {
 	// remove stored tokens first, if anything goes wrong after, we are still in a good state
-	for(const core::FileDownloader::Cookie & c : this->data->hfd->getCookies())
+	for(const core::network::Cookie & c : this->data->hfd->getCookies())
 	{
 		this->data->am->removeToken(security::GenericToken(c.name, c.value, this->data->tokenGroup, c.expiry,
 			{
@@ -189,7 +190,7 @@ HTTPPostLoginHandler::isLoggedIn() const
 }
 
 void
-HTTPPostLoginHandler::downloadFile(const std::string & url, core::FileDownloader::DownloadCallback callback)
+HTTPPostLoginHandler::downloadFile(const std::string & url, core::network::FileDownloader::DownloadCallback callback)
 {
 	std::string parsedString = url;
 	balgo::replace_all(parsedString, "${authfield.username}", this->data->username);

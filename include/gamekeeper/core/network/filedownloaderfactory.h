@@ -18,8 +18,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef GAMEKEEPER_CORE_FILEDOWNLOADERFACTORY_H
-#define GAMEKEEPER_CORE_FILEDOWNLOADERFACTORY_H 1
+#ifndef GAMEKEEPER_CORE_NETWORK_FILEDOWNLOADERFACTORY_H
+#define GAMEKEEPER_CORE_NETWORK_FILEDOWNLOADERFACTORY_H 1
 
 #include <gamekeeper/core/common.h>
 
@@ -27,12 +27,12 @@
 
 #include <gamekeeper/core/interface.h>
 
-GAMEKEEPER_NAMESPACE_START(core)
+GAMEKEEPER_NAMESPACE_START(core, network)
 
 interface FileDownloader;
 
 /**
- * @interface FileDownloaderFactory filedownloaderfactory.h <gamekeeper/core/filedownloaderfactory.h>
+ * @interface FileDownloaderFactory filedownloaderfactory.h <gamekeeper/core/network/filedownloaderfactory.h>
  *
  * @author Karol Herbst
  * @since 0
@@ -43,6 +43,6 @@ interface PUBLIC_API FileDownloaderFactory
 	PUBLIC_API virtual std::shared_ptr<FileDownloader> create() = 0;
 };
 
-GAMEKEEPER_NAMESPACE_END(core)
+GAMEKEEPER_NAMESPACE_END(core, network)
 
-#endif //GAMEKEEPER_CORE_FILEDOWNLOADER_H
+#endif //GAMEKEEPER_CORE_NETWORK_FILEDOWNLOADER_H

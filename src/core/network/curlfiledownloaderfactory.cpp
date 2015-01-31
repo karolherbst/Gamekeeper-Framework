@@ -18,18 +18,18 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#include <gamekeeper/core/curlfiledownloaderfactory.h>
+#include <gamekeeper/core/network/curlfiledownloaderfactory.h>
 
 #include <sstream>
 
 #include <curl/curl.h>
 
-#include <gamekeeper/core/curlfiledownloader.h>
-#include <gamekeeper/core/userpaths.h>
 #include <gamekeeper/core/loggerFactory.h>
+#include <gamekeeper/core/network/curlfiledownloader.h>
 #include <gamekeeper/core/propertyresolver.h>
+#include <gamekeeper/core/userpaths.h>
 
-GAMEKEEPER_NAMESPACE_START(core)
+GAMEKEEPER_NAMESPACE_START(core, network)
 
 class CurlFileDownloaderFactory::PImpl
 {
@@ -94,4 +94,4 @@ CurlFileDownloaderFactory::create()
 	);
 }
 
-GAMEKEEPER_NAMESPACE_END(core)
+GAMEKEEPER_NAMESPACE_END(core, network)

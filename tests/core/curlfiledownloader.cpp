@@ -25,9 +25,10 @@
 
 #include <std_compat/thread>
 
-#include <gamekeeper/core/curlfiledownloaderfactory.h>
-#include <gamekeeper/core/filedownloader.h>
 #include <gamekeeper/core/log4cpploggerFactory.h>
+#include <gamekeeper/core/network/cookie.h>
+#include <gamekeeper/core/network/curlfiledownloaderfactory.h>
+#include <gamekeeper/core/network/filedownloader.h>
 #include <gamekeeper/core/propertyresolver.h>
 #include <gamekeeper/core/userpaths.h>
 #include <gamekeeper/utils/stringutils.h>
@@ -36,6 +37,7 @@
 #include "webserverfixture.h"
 
 using namespace gamekeeper::core;
+using namespace gamekeeper::core::network;
 using namespace gamekeeper::utils;
 
 #if defined(GCC_VERSION) && (GCC_VERSION < 40704 || GCC_VERSION == 40800)

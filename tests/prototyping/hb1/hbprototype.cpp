@@ -4,9 +4,10 @@
 #include <boost/program_options/variables_map.hpp>
 
 #include <gamekeeper/client/autowire.h>
-#include <gamekeeper/core/filedownloader.h>
 #include <gamekeeper/core/logger.h>
 #include <gamekeeper/core/loggerStream.h>
+#include <gamekeeper/core/network/cookie.h>
+#include <gamekeeper/core/network/filedownloader.h>
 #include <gamekeeper/model/game.h>
 #include <gamekeeper/utils/stringutils.h>
 
@@ -18,11 +19,11 @@
 GAMECLIENTUI_CLASS(HBPrototype)
 
 using namespace gamekeeper::core;
+using namespace gamekeeper::core::network;
 using namespace gamekeeper::utils;
 namespace po = boost::program_options;
 
 typedef FileDownloader::CookieBucket CookieBucket;
-typedef FileDownloader::Cookie Cookie;
 typedef FileDownloader::Form Form;
 
 static std::shared_ptr<FileDownloader> fileDownloader;
@@ -38,7 +39,7 @@ GAMECLIENT_ADD_OPTIONS({
 void
 HBPrototype::init(const ConfigMap & configMap)
 {
-	fileDownloader = gamekeeper::client::Autowire<gamekeeper::core::FileDownloader>();
+	fileDownloader = gamekeeper::client::Autowire<FileDownloader>();
 
 	this->logger << LogLevel::Info << "init" << endl;
 

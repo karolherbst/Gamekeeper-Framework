@@ -21,11 +21,11 @@
 #include <boost/algorithm/string/case_conv.hpp>
 #include <boost/algorithm/string/trim.hpp>
 
-#include <gamekeeper/core/filedownloader.h>
+#include <gamekeeper/core/network/cookie.h>
 
 namespace balgo = boost::algorithm;
 
-GAMEKEEPER_NAMESPACE_START(core)
+GAMEKEEPER_NAMESPACE_START(core, network)
 
 static std::string
 fixNameOrValue(const std::string & name)
@@ -49,7 +49,7 @@ fixPath(const std::string & path)
 }
 
 // this constructor will do all required steps from RFC 6265 section 5.2
-FileDownloader::Cookie::Cookie(const std::string & name, const std::string & value, const std::string & domain, const std::string & path, const TimePoint & expiry, bool secure)
+Cookie::Cookie(const std::string & name, const std::string & value, const std::string & domain, const std::string & path, const TimePoint & expiry, bool secure)
 :	name(std::move(fixNameOrValue(name))),
 	value(std::move(fixNameOrValue(value))),
 	domain(std::move(fixDomain(domain))),
@@ -57,20 +57,21 @@ FileDownloader::Cookie::Cookie(const std::string & name, const std::string & val
 	expiry(expiry),
 	secure(secure){}
 
-FileDownloader::Cookie::Cookie(const std::string & name, const std::string & value, const std::string & domain, const std::string & path, const TimePoint::duration & duration, bool secure)
+Cookie::Cookie(const std::string & name, const std::string & value, const std::string & domain, const std::string & path, const TimePoint::duration & duration, bool secure)
 :	Cookie(name, value, domain, path, TimePoint(duration), secure){}
 
-FileDownloader::Cookie::Cookie(const std::string & name, const std::string & value, const std::string & domain, const std::string & path, const TimePoint::rep & duration, bool secure)
+Cookie::Cookie(const std::string & name, const std::string & value, const std::string & domain, const std::string & path, const TimePoint::rep & duration, bool secure)
 :	Cookie(name, value, domain, path, std::chrono::seconds(duration), secure){}
 
-bool operator==(const FileDownloader::Cookie & a, const FileDownloader::Cookie & b)
+bool
+Cookie::operator==(const Cookie & c) const
 {
-	return a.name == b.name &&
-	       a.value == b.value &&
-	       a.domain == b.domain &&
-	       a.expiry == b.expiry &&
-	       a.path == b.path &&
-	       a.secure == b.secure;
+	return this->name == c.name &&
+	       this->value == c.value &&
+	       this->domain == c.domain &&
+	       this->expiry == c.expiry &&
+	       this->path == c.path &&
+	       this->secure == c.secure;
 };
 
-GAMEKEEPER_NAMESPACE_END(core)
+GAMEKEEPER_NAMESPACE_END(core, network)

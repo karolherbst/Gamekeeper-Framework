@@ -18,7 +18,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#include <gamekeeper/core/curlfiledownloader.h>
+#include <gamekeeper/core/network/curlfiledownloader.h>
 
 #include <vector>
 
@@ -37,13 +37,14 @@
 
 #include <gamekeeper/core/logger.h>
 #include <gamekeeper/core/loggerStream.h>
+#include <gamekeeper/core/network/cookie.h>
 #include <gamekeeper/utils/stringutils.h>
 
 namespace balgo = boost::algorithm;
 namespace bfs = boost::filesystem;
 namespace bio = boost::iostreams;
 
-GAMEKEEPER_NAMESPACE_START(core)
+GAMEKEEPER_NAMESPACE_START(core, network)
 
 class PRIVATE_API CurlFileDownloadInfo
 {
@@ -367,14 +368,14 @@ constexpr vector_size_type COOKIE_NAME_IDX{5};
 constexpr vector_size_type COOKIE_VALUE_IDX{6};
 
 static bool
-isSessionCookie(const FileDownloader::Cookie & c)
+isSessionCookie(const Cookie & c)
 {
 	// check against epoch
-	return c.expiry == FileDownloader::Cookie::TimePoint();
+	return c.expiry == Cookie::TimePoint();
 }
 
 static bool
-isCookieExpiredAndNotSession(const FileDownloader::Cookie & c)
+isCookieExpiredAndNotSession(const Cookie & c)
 {
 	return std::chrono::system_clock::now() >= c.expiry && !isSessionCookie(c);
 }
@@ -436,13 +437,13 @@ fixCookieDomain(std::string & domain)
 	return domain;
 }
 
-FileDownloader::CookieBucket
+CurlFileDownloader::CookieBucket
 CurlFileDownloader::getCookies()
 {
 	curl_slist * list;
 	this->data->handleCurlError(curl_easy_getinfo(this->data->handle, CURLINFO_COOKIELIST, &list));
 
-	FileDownloader::CookieBucket result;
+	CookieBucket result;
 	for(curl_slist * it = list; it != nullptr; it = it->next)
 	{
 		std::vector<std::string> strings;
@@ -470,4 +471,4 @@ CurlFileDownloader::getCookies()
 	return result;
 }
 
-GAMEKEEPER_NAMESPACE_END(core)
+GAMEKEEPER_NAMESPACE_END(core, network)

@@ -32,7 +32,7 @@
 #include <gamekeeper/backend/jsongamelistparser.h>
 #include <gamekeeper/backend/storeconfiguration.h>
 #include <gamekeeper/backend/xmlgamelistparser.h>
-#include <gamekeeper/core/filedownloaderfactory.h>
+#include <gamekeeper/core/network/filedownloaderfactory.h>
 #include <gamekeeper/model/store.h>
 #include <gamekeeper/utils/containerutils.h>
 #include <gamekeeper/utils/stringutils.h>
@@ -81,7 +81,7 @@ static void loadFileIntoMap(const prop::ptree & tree, std::map<std::string, std:
 	}
 }
 
-StoreConfigurator::StoreConfigurator(std::shared_ptr<core::FileDownloaderFactory> _fdf, std::shared_ptr<security::AuthManager> _am)
+StoreConfigurator::StoreConfigurator(std::shared_ptr<core::network::FileDownloaderFactory> _fdf, std::shared_ptr<security::AuthManager> _am)
 :	fdf(std::move(_fdf)),
 	am(std::move(_am)){}
 

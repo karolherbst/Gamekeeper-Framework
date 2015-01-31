@@ -14,8 +14,6 @@ add_custom_target(headers
 
     gamekeeper/core/bundlepaths.h
     gamekeeper/core/common.h
-    gamekeeper/core/filedownloader.h
-    gamekeeper/core/filedownloaderfactory.h
     gamekeeper/core/interface.h
     gamekeeper/core/logger.h
     gamekeeper/core/loggerStream.h
@@ -23,6 +21,10 @@ add_custom_target(headers
     gamekeeper/core/propertyresolver.h
     gamekeeper/core/threadfactory.h
     gamekeeper/core/userpaths.h
+
+    gamekeeper/core/network/cookie.h
+    gamekeeper/core/network/filedownloader.h
+    gamekeeper/core/network/filedownloaderfactory.h
 
     gamekeeper/model/game.h
     gamekeeper/model/macros.h

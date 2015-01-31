@@ -18,8 +18,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef GAMEKEEPER_CORE_FILEDOWNLOADER_H
-#define GAMEKEEPER_CORE_FILEDOWNLOADER_H 1
+#ifndef GAMEKEEPER_CORE_NETWORK_FILEDOWNLOADER_H
+#define GAMEKEEPER_CORE_NETWORK_FILEDOWNLOADER_H 1
 
 #include <gamekeeper/core/common.h>
 
@@ -32,10 +32,12 @@
 #include <gamekeeper/core/exception.h>
 #include <gamekeeper/core/interface.h>
 
-GAMEKEEPER_NAMESPACE_START(core)
+GAMEKEEPER_NAMESPACE_START(core, network)
+
+struct Cookie;
 
 /**
- * @interface FileDownloader filedownloader.h <gamekeeper/core/filedownloader.h>
+ * @interface FileDownloader filedownloader.h <gamekeeper/core/network/filedownloader.h>
  *
  * This interface provides basic operations to download files over a network. An Implementation shall support
  * HTTP(S) and (S)FTP(S).
@@ -50,34 +52,6 @@ interface PUBLIC_API FileDownloader
 	typedef std::basic_istream<gkbyte_t> ByteIstream;
 
 	typedef std::function<bool (ByteIstream &)> DownloadCallback;
-
-	/**
-	 * @interface Cookie filedownloader.h <gamekeeper/core/filedownloader.h>
-	 *
-	 * A Cookie is a small piece of data to store http data sent by the server. This class provides an easy way to create such.
-	 * All fields are conforming to the HTTP State Management Mechanism standard (RFC 6265) and have the same meaning period.
-	 *
-	 * All created Cookie objects represent session cookies by default
-	 *
-	 * @author Karol Herbst
-	 * @since 0
-	 */
-	struct PUBLIC_API Cookie
-	{
-		typedef std::chrono::system_clock::time_point TimePoint;
-		PUBLIC_API Cookie(const std::string & name, const std::string & value, const std::string & domain, const std::string & path = "",
-		                  const TimePoint & expiry = TimePoint(std::chrono::seconds(0)), bool secure = false);
-		PUBLIC_API Cookie(const std::string & name, const std::string & value, const std::string & domain, const std::string & path,
-		                  const TimePoint::duration &, bool secure = false);
-		PUBLIC_API Cookie(const std::string & name, const std::string & value, const std::string & domain, const std::string & path,
-		                  const TimePoint::rep & duration, bool secure = false);
-		const std::string name;
-		const std::string value;
-		const std::string domain;
-		const std::string path;
-		const TimePoint expiry;
-		const bool secure;
-	};
 
 	typedef std::vector<Cookie> CookieBucket;
 
@@ -99,13 +73,6 @@ interface PUBLIC_API FileDownloader
 	class PUBLIC_API GAMEKEEPER_EXCEPTION(FileDownloaderException);
 };
 
-bool PUBLIC_API operator==(const FileDownloader::Cookie & a, const FileDownloader::Cookie & b);
+GAMEKEEPER_NAMESPACE_END(core, network)
 
-inline bool PUBLIC_INLINE operator!=(const FileDownloader::Cookie & a, const FileDownloader::Cookie & b)
-{
-	return !(a == b);
-}
-
-GAMEKEEPER_NAMESPACE_END(core)
-
-#endif //GAMEKEEPER_CORE_FILEDOWNLOADER_H
+#endif //GAMEKEEPER_CORE_NETWORK_FILEDOWNLOADER_H
