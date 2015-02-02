@@ -39,7 +39,6 @@ using core::LogLevel;
 static constexpr char GK_TOKEN_SCHEMA_NAME[] = "org.gamekeeper.authmanager.libsecret.token";
 
 static constexpr char GK_TOKEN_GROUP[] = "group";
-static constexpr char GK_TOKEN_KEY[] = "key";
 static constexpr char GK_TOKEN_EXPIRY[] = "expiry";
 static constexpr char GK_TOKEN_APPLICATION[] = "application";
 static constexpr char GK_TOKEN_APPLICATION_VALUE[] = "gamekeeper";
@@ -53,10 +52,6 @@ static SecretSchema GK_TOKEN_SCHEMA_TEMPLATE
 	{
 		{
 			.name = GK_TOKEN_GROUP,
-			.type = SECRET_SCHEMA_ATTRIBUTE_STRING
-		},
-		{
-			.name = GK_TOKEN_KEY,
 			.type = SECRET_SCHEMA_ATTRIBUTE_STRING
 		},
 		{
@@ -94,14 +89,12 @@ SchemaAttributesWrapper::fillSchemaAndAttributes(const Token & token)
 {
 	// save trivial stuff first
 	g_hash_table_insert(this->attributes, GPOINTER_CAST(GK_TOKEN_GROUP), GPOINTER_CAST(token.getGroup().c_str()));
-	g_hash_table_insert(this->attributes, GPOINTER_CAST(GK_TOKEN_KEY), GPOINTER_CAST(token.getKey().c_str()));
 	this->expiry = utils::String::toString(std::chrono::duration_cast<std::chrono::seconds>(token.getExpiry().time_since_epoch()).count());
 	g_hash_table_insert(this->attributes, GPOINTER_CAST(GK_TOKEN_EXPIRY), GPOINTER_CAST(this->expiry.c_str()));
 	g_hash_table_insert(this->attributes, GPOINTER_CAST(GK_TOKEN_APPLICATION), GPOINTER_CAST(GK_TOKEN_APPLICATION_VALUE));
 
-	// we begin at the fourth attribute
-	uint8_t i = 4;
-	for(const auto & p : token.getProperties())
+	uint8_t i = g_hash_table_size(this->attributes);
+	for(const auto & p : token.getKey())
 	{
 		this->schema.attributes[i].name = p.first.c_str();
 		this->schema.attributes[i].type = SECRET_SCHEMA_ATTRIBUTE_STRING;
@@ -188,19 +181,18 @@ LibSecretManager::readAllTokens(const std::string & group)
 			gchar * value = static_cast<gchar *>(valuePtr);
 			Token::Properties & properties = *static_cast<Token::Properties *>(propertiesPtr);
 
-			// key and expiry are a special cases
-			if(std::string(GK_TOKEN_KEY) != key && std::string(GK_TOKEN_EXPIRY) != key)
+			// expiry is a special cases
+			if(std::string(GK_TOKEN_EXPIRY) != key)
 			{
 				properties.insert(std::make_pair(key, value));
 			}
 		}, &properties);
 
 		std::unique_ptr<GenericToken> token(
-			new GenericToken(static_cast<gchar *>(g_hash_table_lookup(atts, GK_TOKEN_KEY)),
+			new GenericToken(properties,
 		                    secret_value_get_text(value),
 		                    group,
-		                    utils::String::toType<Token::TimePoint::rep>(static_cast<gchar *>(g_hash_table_lookup(atts, GK_TOKEN_EXPIRY))),
-		                    properties));
+		                    utils::String::toType<Token::TimePoint::rep>(static_cast<gchar *>(g_hash_table_lookup(atts, GK_TOKEN_EXPIRY)))));
 
 		// after we have access to the expiry, check it
 		if(std::chrono::system_clock::now() >= token->getExpiry())
