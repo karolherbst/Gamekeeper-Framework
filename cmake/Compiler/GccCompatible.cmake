@@ -13,8 +13,8 @@ else()
   add_compiler_flags(CXX -std=c++0x)
 endif()
 
-# having as-needed enabled is good practise
-add_linker_flags(-Wl,--as-needed)
+# having as-needed and -z,defs enabled is good practise (less issues with different environments)
+add_linker_flags(-Wl,--as-needed -Wl,-z,defs)
 
 # disable some warnings
 add_compiler_flags(
@@ -27,4 +27,5 @@ add_compiler_flags(
 # enable warnings we want to enforce
 add_compiler_flags(-Werror
   -Wswitch
+  -Wreturn-type
 )
