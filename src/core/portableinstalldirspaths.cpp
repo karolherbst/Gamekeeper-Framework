@@ -31,15 +31,15 @@ static bfs::path exePath;
 class PortableInstallDirsPaths::PImpl
 {
 public:
-	PImpl(std::shared_ptr<OSInformation>);
+	PImpl();
 	bfs::path dataPath;
 };
 
-PortableInstallDirsPaths::PImpl::PImpl(std::shared_ptr<OSInformation> osi)
-:	dataPath(osi->getExecPath().parent_path() / "data"){}
+PortableInstallDirsPaths::PImpl::PImpl()
+:	dataPath(OSInformation::get().getExecPath().parent_path() / "data"){}
 
-PortableInstallDirsPaths::PortableInstallDirsPaths(std::shared_ptr<OSInformation> osi)
-:	data(new PImpl(osi)){}
+PortableInstallDirsPaths::PortableInstallDirsPaths()
+:	data(new PImpl()){}
 
 PortableInstallDirsPaths::~PortableInstallDirsPaths(){}
 

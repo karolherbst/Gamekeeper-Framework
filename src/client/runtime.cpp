@@ -48,13 +48,9 @@
 // some platform dependent stuff
 #ifdef GAMEKEEPER_OS_IS_WINDOWS
   #include <gamekeeper/core/win32threadhelper.h>
-  #include <gamekeeper/core/windowsinformation.h>
-  #define OSINFORMATIONCLASS WindowsInformation
   #define THREADHELPERCLASS Win32ThreadHelper
 #else
-  #include <gamekeeper/core/linuxinformation.h>
   #include <gamekeeper/core/pthreadhelper.h>
-  #define OSINFORMATIONCLASS LinuxInformation
   #define THREADHELPERCLASS PthreadHelper
 #endif
 
@@ -78,10 +74,7 @@ GameKeeperRuntime::GameKeeperRuntime()
 	Hypodermic::ContainerBuilder containerBuilder;
 
 	// set up pre IoC container
-	containerBuilder.registerType<OSINFORMATIONCLASS>()->
-		as<OSInformation>()->
-		singleInstance();
-	containerBuilder.registerType<XDGPaths>(CREATE(new XDGPaths(INJECT(OSInformation))))->
+	containerBuilder.registerType<XDGPaths>()->
 		as<UserPaths>()->
 		singleInstance();
 	localContainer = containerBuilder.build();
@@ -178,10 +171,6 @@ GameKeeperRuntime::main(int argc, const char* argv[], NewInstanceFuncPtr instanc
 	// set up the real IoC container
 
 	// reuse instances from the pre container
-	containerBuilder.registerInstance<OSInformation>(
-		localContainer->resolve<OSInformation>())->
-		as<OSInformation>()->
-		singleInstance();
 	containerBuilder.registerInstance<UserPaths>(
 		localContainer->resolve<UserPaths>())->
 		as<UserPaths>()->
@@ -205,7 +194,7 @@ GameKeeperRuntime::main(int argc, const char* argv[], NewInstanceFuncPtr instanc
 	}
 	else if(bundleLayout == "portable")
 	{
-		containerBuilder.registerType<PortableInstallDirsPaths>(CREATE(new PortableInstallDirsPaths(INJECT(OSInformation))))->
+		containerBuilder.registerType<PortableInstallDirsPaths>()->
 			as<BundlePaths>()->
 			singleInstance();
 	}

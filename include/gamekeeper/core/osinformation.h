@@ -44,6 +44,14 @@ interface PUBLIC_API OSInformation
 	GAMEKEEPER_INTERFACE_METHODS(OSInformation);
 
 	/**
+	 * @author Karol Herbst
+	 * @since 0
+	 *
+	 * @return the current active OSInformation implementation
+	 */
+	PUBLIC_API static OSInformation & get();
+
+	/**
 	 * returns the value of the given environment variable name
 	 *
 	 * @author Karol Herbst

@@ -35,7 +35,7 @@ static const std::string COULD_NOT_CREATE_DIRECTORY{"Couldn't create directories
 
 const std::string XDGPaths::prefix = "gamekeeper";
 
-#define defaultPath(path) this->osInformation->getUserPath() / path
+#define defaultPath(path) OSInformation::get().getUserPath() / path
 
 static bool
 createDirectories(const fs::path & p)
@@ -48,8 +48,7 @@ createDirectories(const fs::path & p)
 	return directoryCreated;
 }
 
-XDGPaths::XDGPaths(std::shared_ptr<OSInformation> _osInformation)
-:	osInformation(std::move(_osInformation))
+XDGPaths::XDGPaths()
 {
 	createDirectories(this->getConfigFile(""));
 	createDirectories(this->getDataFile(""));
@@ -84,13 +83,13 @@ XDGPaths::getCacheFile(std::string name)
 fs::path
 XDGPaths::getRuntimeFile(std::string name)
 {
-	return resolveFile("XDG_RUNTIME_DIR", this->osInformation->getSystemRoot() / "tmp" / this->osInformation->getUserName(), name);
+	return resolveFile("XDG_RUNTIME_DIR", OSInformation::get().getSystemRoot() / "tmp" / OSInformation::get().getUserName(), name);
 }
 
 fs::path
 XDGPaths::resolveFile(const char * singlePath, const fs::path& singleDefault, std::string fileName)
 {
-	std::string resolvedSinglePath = this->osInformation->getEnv(singlePath);
+	std::string resolvedSinglePath = OSInformation::get().getEnv(singlePath);
 	if(resolvedSinglePath.empty())
 	{
 		return singleDefault / XDGPaths::prefix / fileName;
@@ -117,7 +116,7 @@ fs::path
 XDGPaths::resolveFile(const char * singlePath, const fs::path& singleDefault, const char * multiPath,
                       const char * multiDefaults, std::string fileName)
 {
-	std::string resolvedSinglePath = this->osInformation->getEnv(singlePath);
+	std::string resolvedSinglePath = OSInformation::get().getEnv(singlePath);
 	if(!resolvedSinglePath.empty())
 	{
 		fs::path singlePathFile = fs::path(resolvedSinglePath) / XDGPaths::prefix / fileName;
@@ -127,7 +126,7 @@ XDGPaths::resolveFile(const char * singlePath, const fs::path& singleDefault, co
 		}
 	}
 
-	std::string resolvedMultiPath = this->osInformation->getEnv(multiPath);
+	std::string resolvedMultiPath = OSInformation::get().getEnv(multiPath);
 	if(resolvedMultiPath.empty())
 	{
 		resolvedMultiPath = multiDefaults;
@@ -135,7 +134,7 @@ XDGPaths::resolveFile(const char * singlePath, const fs::path& singleDefault, co
 
 	std::forward_list<std::string> splittedPaths;
 	// token_compress_on will merge empty empty entries away (eg: some/path::another/path: => some/path:another/path)
-	algo::split(splittedPaths, resolvedMultiPath, algo::is_any_of(this->osInformation->getEnvSeperator()),
+	algo::split(splittedPaths, resolvedMultiPath, algo::is_any_of(OSInformation::get().getEnvSeperator()),
 	            algo::token_compress_on);
 	for(const std::string & path : splittedPaths)
 	{

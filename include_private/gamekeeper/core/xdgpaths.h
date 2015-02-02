@@ -23,8 +23,6 @@
 
 #include <gamekeeper/core/common.h>
 
-#include <memory>
-
 #include <gamekeeper/core/osinformation.h>
 #include <gamekeeper/core/userpaths.h>
 
@@ -33,15 +31,13 @@ GAMEKEEPER_NAMESPACE_START(core)
 class PUBLIC_API XDGPaths : public UserPaths
 {
 public:
-	PUBLIC_API XDGPaths(std::shared_ptr<OSInformation>);
+	PUBLIC_API XDGPaths();
 	PRIVATE_API virtual boost::filesystem::path getConfigFile(std::string name) override;
 	PRIVATE_API virtual boost::filesystem::path getDataFile(std::string name) override;
 	PRIVATE_API virtual boost::filesystem::path getCacheFile(std::string name) override;
 	PRIVATE_API virtual boost::filesystem::path getRuntimeFile(std::string name) override;
 private:
 	static const std::string prefix;
-
-	std::shared_ptr<OSInformation> osInformation;
 
 	PRIVATE_API boost::filesystem::path resolveFile(const char *, const boost::filesystem::path&, std::string);
 	PRIVATE_API boost::filesystem::path resolveFile(const char *, const boost::filesystem::path&, const char *,
