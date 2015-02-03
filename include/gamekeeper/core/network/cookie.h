@@ -18,8 +18,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef GAMEKEEPER_CORE_NETWORK_COOKIE_H
-#define GAMEKEEPER_CORE_NETWORK_COOKIE_H 1
+#pragma once
 
 #include <gamekeeper/core/common.h>
 
@@ -62,5 +61,3 @@ struct PUBLIC_API Cookie : boost::equality_comparable<Cookie>
 };
 
 GAMEKEEPER_NAMESPACE_END(core, network)
-
-#endif //GAMEKEEPER_CORE_NETWORK_COOKIE_H

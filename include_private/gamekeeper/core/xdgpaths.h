@@ -18,8 +18,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef GAMEKEEPER_CORE_XDGPATHS_H
-#define GAMEKEEPER_CORE_XDGPATHS_H 1
+#pragma once
 
 #include <gamekeeper/core/common.h>
 
@@ -45,5 +44,3 @@ private:
 };
 
 GAMEKEEPER_NAMESPACE_END(core)
-
-#endif //GAMEKEEPER_CORE_XDGPATHS_H

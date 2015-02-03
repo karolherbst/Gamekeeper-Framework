@@ -18,8 +18,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef GAMEKEEPER_CORE_LOGGERFACTORY_H
-#define GAMEKEEPER_CORE_LOGGERFACTORY_H 1
+#pragma once
 
 #include <gamekeeper/core/common.h>
 
@@ -60,5 +59,3 @@ interface PRIVATE_API LoggerFactory
 };
 
 GAMEKEEPER_NAMESPACE_END(core)
-
-#endif //GAMEKEEPER_CORE_LOGGERFACTORY_H

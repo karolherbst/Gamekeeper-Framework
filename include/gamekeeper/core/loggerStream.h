@@ -18,8 +18,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef GAMEKEEPER_CORE_LOGGERSTREAM_H
-#define GAMEKEEPER_CORE_LOGGERSTREAM_H 1
+#pragma once
 
 #include <gamekeeper/core/common.h>
 
@@ -114,5 +113,3 @@ inline PUBLIC_INLINE LoggerStream& endl(LoggerStream& loggerStream)
 }
 
 GAMEKEEPER_NAMESPACE_END(core)
-
-#endif //GAMEKEEPER_CORE_LOGGERSTREAM_H

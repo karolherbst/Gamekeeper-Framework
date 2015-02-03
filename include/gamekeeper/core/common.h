@@ -18,8 +18,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef GAMEKEEPER_CORE_COMMON_H
-#define GAMEKEEPER_CORE_COMMON_H 1
+#pragma once
 
 // some headers we want to use nearly everywhere
 
@@ -268,5 +267,3 @@ typedef int64_t gktime64_t;
 // some global variables
 constexpr char GK_TRUE_STRING[] = "true";
 constexpr char GK_FALSE_STRING[] = "false";
-
-#endif //GAMEKEEPER_CORE_COMMON_H

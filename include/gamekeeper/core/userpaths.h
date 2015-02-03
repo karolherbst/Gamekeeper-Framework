@@ -18,8 +18,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef GAMEKEEPER_CORE_USERPATHS_H
-#define GAMEKEEPER_CORE_USERPATHS_H 1
+#pragma once
 
 #include <gamekeeper/core/common.h>
 
@@ -99,5 +98,3 @@ interface PUBLIC_API UserPaths
 };
 
 GAMEKEEPER_NAMESPACE_END(core)
-
-#endif //GAMEKEEPER_CORE_OSPATHS_H

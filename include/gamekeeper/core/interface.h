@@ -18,8 +18,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef GAMEKEEPER_CORE_INTERFACE_H
-#define GAMEKEEPER_CORE_INTERFACE_H 1
+#pragma once
 
 #include <gamekeeper/core/common.h>
 
@@ -35,5 +34,3 @@
 	PUBLIC_INLINE type() = default; \
 	PRIVATE_API type(const type&) = delete; \
 	PRIVATE_API type & operator=(const type &) = delete
-
-#endif //GAMEKEEPER_CORE_INTERFACE_H
