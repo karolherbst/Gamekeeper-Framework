@@ -22,20 +22,20 @@
 
 GAMEKEEPER_NAMESPACE_START(backend, security)
 
-GenericToken::GenericToken(const std::string & _key, const std::string & _value, const std::string & _group, const TimePoint & _expiry, Properties _properties)
-:	key(_key),
-	value(_value),
+GenericToken::GenericToken(const Properties & _key, const std::string & _value, const std::string & _group, const TimePoint & _expiry/*, Properties _properties*/)
+:	value(_value),
 	group(_group),
 	expiry(_expiry),
-	properties(_properties){}
+	key(_key)/*,
+	properties(_properties)*/{}
 
-GenericToken::GenericToken(const std::string & _key, const std::string & _value, const std::string & _group, const TimePoint::duration & duration, Properties _properties)
-:	GenericToken(_key, _value, _group, TimePoint(duration), _properties){}
+GenericToken::GenericToken(const Properties & _key, const std::string & _value, const std::string & _group, const TimePoint::duration & duration/*, Properties _properties*/)
+:	GenericToken(_key, _value, _group, TimePoint(duration)/*, _properties*/){}
 
-GenericToken::GenericToken(const std::string & _key, const std::string & _value, const std::string & _group, const TimePoint::rep & duration, Properties _properties)
-:	GenericToken(_key, _value, _group, std::chrono::seconds(duration), _properties){}
+GenericToken::GenericToken(const Properties & _key, const std::string & _value, const std::string & _group, const TimePoint::rep & duration/*, Properties _properties*/)
+:	GenericToken(_key, _value, _group, std::chrono::seconds(duration)/*, _properties*/){}
 
-const std::string &
+const GenericToken::Properties &
 GenericToken::getKey() const
 {
 	return this->key;
@@ -59,10 +59,10 @@ GenericToken::getExpiry() const
 	return this->expiry;
 }
 
-const GenericToken::Properties &
+/*const GenericToken::Properties &
 GenericToken::getProperties() const
 {
 	return this->properties;
-}
+}*/
 
 GAMEKEEPER_NAMESPACE_END(backend, security)

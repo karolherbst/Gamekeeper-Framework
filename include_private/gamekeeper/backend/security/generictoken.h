@@ -30,21 +30,21 @@ GAMEKEEPER_NAMESPACE_START(backend, security)
 class PRIVATE_API GenericToken : public Token
 {
 public:
-	GenericToken(const std::string & key, const std::string & value, const std::string & group, const TimePoint & expiry = TimePoint(), Properties properties = Properties());
-	GenericToken(const std::string & key, const std::string & value, const std::string & group, const TimePoint::duration  & duration, Properties properties = Properties());
-	GenericToken(const std::string & key, const std::string & value, const std::string & group, const TimePoint::rep & duration, Properties properties = Properties());
+	GenericToken(const Properties & key, const std::string & value, const std::string & group, const TimePoint & expiry = TimePoint()/*, Properties properties = Properties()*/);
+	GenericToken(const Properties & key, const std::string & value, const std::string & group, const TimePoint::duration  & duration/*, Properties properties = Properties()*/);
+	GenericToken(const Properties & key, const std::string & value, const std::string & group, const TimePoint::rep & duration/*, Properties properties = Properties()*/);
 
-	virtual const std::string & getKey() const override;
 	virtual const std::string & getValue() const override;
 	virtual const std::string & getGroup() const override;
 	virtual const TimePoint & getExpiry() const override;
-	virtual const Properties & getProperties() const override;
+	virtual const Properties & getKey() const override;
+//	virtual const Properties & getProperties() const override;
 private:
-	const std::string key;
 	const std::string value;
 	const std::string group;
 	const TimePoint expiry;
-	const Properties properties;
+	const Properties key;
+//	const Properties properties;
 };
 
 GAMEKEEPER_NAMESPACE_END(backend, security)

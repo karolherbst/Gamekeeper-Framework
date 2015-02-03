@@ -36,11 +36,12 @@ interface PUBLIC_API Token
 	typedef std::chrono::system_clock::time_point TimePoint;
 	typedef std::unordered_map<std::string, std::string> Properties;
 
-	virtual const std::string & getKey() const = 0;
 	virtual const std::string & getValue() const = 0;
 	virtual const std::string & getGroup() const = 0;
 	virtual const TimePoint & getExpiry() const = 0;
-	virtual const Properties & getProperties() const = 0;
+
+	virtual const Properties & getKey() const = 0;
+//	virtual const Properties & getProperties() const = 0;
 };
 
 GAMEKEEPER_NAMESPACE_END(backend, security)

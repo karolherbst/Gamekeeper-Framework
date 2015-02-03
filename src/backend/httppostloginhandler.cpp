@@ -83,8 +83,8 @@ HTTPPostLoginHandler::PImpl::PImpl(std::map<std::string, std::string> & config, 
 		core::network::FileDownloader::CookieBucket cookies;
 		for(const auto & t : this->am->readAllTokens(this->tokenGroup))
 		{
-			cookies.push_back({t->getKey(), t->getValue(), t->getProperties().at("domain"), t->getProperties().at("path"), t->getExpiry(),
-			                   t->getProperties().at("secure") == GK_TRUE_STRING ? true : false});
+			cookies.push_back({t->getKey().at("name"), t->getValue(), t->getKey().at("domain"), t->getKey().at("path"), t->getExpiry(),
+			                   t->getKey().at("secure") == GK_TRUE_STRING ? true : false});
 		}
 		this->hfd->setCookies(cookies);
 	}
@@ -151,13 +151,13 @@ HTTPPostLoginHandler::login(const std::string & username, const std::string & pa
 	{
 		for(const core::network::Cookie & c : this->data->hfd->getCookies())
 		{
-			this->data->am->saveToken(security::GenericToken(c.name, c.value, this->data->tokenGroup, c.expiry,
+			this->data->am->saveToken(security::GenericToken(
 				{
+					{"name", c.name},
 					{"domain", c.domain},
 					{"path", c.path},
 					{"secure", c.secure ? GK_TRUE_STRING : GK_FALSE_STRING},
-				}
-			));
+				}, c.value, this->data->tokenGroup, c.expiry));
 		}
 	}
 
@@ -170,13 +170,13 @@ HTTPPostLoginHandler::logout()
 	// remove stored tokens first, if anything goes wrong after, we are still in a good state
 	for(const core::network::Cookie & c : this->data->hfd->getCookies())
 	{
-		this->data->am->removeToken(security::GenericToken(c.name, c.value, this->data->tokenGroup, c.expiry,
+		this->data->am->removeToken(security::GenericToken(
 			{
+				{"name", c.name},
 				{"domain", c.domain},
 				{"path", c.path},
 				{"secure", c.secure ? GK_TRUE_STRING : GK_FALSE_STRING},
-			}
-		));
+			}, c.value, this->data->tokenGroup, c.expiry));
 	}
 	this->data->hfd->postRequest(this->data->logoutUrl);
 	// forcibly clear cookies
