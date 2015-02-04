@@ -43,6 +43,7 @@ getFromLogLevel(const LogLevel& l)
 		case LogLevel::Info:
 			return log4cpp::Priority::INFO;
 		case LogLevel::Warn:
+		default:
 			return log4cpp::Priority::WARN;
 	}
 }

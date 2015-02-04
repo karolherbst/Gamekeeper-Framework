@@ -36,7 +36,7 @@ protected:
 	virtual void SetUp() override
 	{
 		this->osInfo = this->container->resolve<OSInformation>();
-		this->userPaths = new XDGPaths(this->osInfo);
+		this->userPaths = new XDGPaths();
 
 		// reset all env values, so that we don't get false positives
 		this->osInfo->setEnv("XDG_DATA_HOME", "");

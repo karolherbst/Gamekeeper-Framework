@@ -18,8 +18,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef GAMEKEEPER_BACKEND_STOREMANAGER_H
-#define GAMEKEEPER_BACKEND_STOREMANAGER_H 1
+#pragma once
 
 #include <gamekeeper/core/common.h>
 
@@ -73,5 +72,3 @@ private:
 };
 
 GAMEKEEPER_NAMESPACE_END(backend)
-
-#endif //GAMEKEEPER_BACKEND_STORECONFIGURATOR_H

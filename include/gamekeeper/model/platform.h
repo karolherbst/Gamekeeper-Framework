@@ -18,8 +18,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef GAMEKEEPER_MODEL_PLATFORM_H
-#define GAMEKEEPER_MODEL_PLATFORM_H 1
+#pragma once
 
 #include <gamekeeper/core/common.h>
 
@@ -36,5 +35,3 @@ enum class Platform : uint16_t
 };
 
 GAMEKEEPER_NAMESPACE_END(model)
-
-#endif //GAMEKEEPER_MODEL_PLATFORM_H

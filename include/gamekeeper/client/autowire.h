@@ -18,8 +18,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef GAMEKEEPER_CLIENT_AUTOWIRE_H
-#define GAMEKEEPER_CLIENT_AUTOWIRE_H 1
+#pragma once
 
 #include <gamekeeper/core/common.h>
 
@@ -91,5 +90,3 @@ Autowire<T>::get() const noexcept
 }
 
 GAMEKEEPER_NAMESPACE_END(client)
-
-#endif //GAMEKEEPER_CLIENT_AUTOWIRE_H

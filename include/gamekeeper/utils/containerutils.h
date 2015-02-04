@@ -18,8 +18,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef GAMEKEEPER_UTILS_CONTAINERUTILS_H
-#define GAMEKEEPER_UTILS_CONTAINERUTILS_H 1
+#pragma once
 
 #include <gamekeeper/core/common.h>
 
@@ -77,5 +76,3 @@ Containers::checkMissing(const Container & container, const Keys & keys, const I
 }
 
 GAMEKEEPER_NAMESPACE_END(utils)
-
-#endif //GAMEKEEPER_UTILS_STRINGUTILS_H

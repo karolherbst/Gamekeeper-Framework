@@ -18,19 +18,24 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#pragma once
+#include <gamekeeper/core/osinformation.h>
 
-#include <gamekeeper/core/common.h>
-
-#include <gamekeeper/core/nativethreadhelper.h>
+#ifdef GAMEKEEPER_OS_IS_WINDOWS
+  #include <gamekeeper/core/windowsinformation.h>
+  #define OSINFORMATIONCLASS WindowsInformation
+#else
+  #include <gamekeeper/core/linuxinformation.h>
+  #define OSINFORMATIONCLASS LinuxInformation
+#endif
 
 GAMEKEEPER_NAMESPACE_START(core)
 
-class PUBLIC_API Win32ThreadHelper : public NativeThreadHelper
+OSInformation &
+OSInformation::get()
 {
-public:
-	PRIVATE_API virtual void setNameOfThread(std::thread & thread, const char * name) override;
-	PRIVATE_API virtual std::string getNameOfThread(std::thread & thread) override;
-};
+	// no race condition since c++11
+	static OSINFORMATIONCLASS osinfo;
+	return osinfo;
+}
 
 GAMEKEEPER_NAMESPACE_END(core)

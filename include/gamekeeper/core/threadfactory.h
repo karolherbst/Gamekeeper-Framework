@@ -18,8 +18,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef GAMEKEEPER_CORE_THREADFACTORY_H
-#define GAMEKEEPER_CORE_THREADFACTORY_H 1
+#pragma once
 
 #include <gamekeeper/core/common.h>
 
@@ -70,5 +69,3 @@ interface PUBLIC_API ThreadFactory
 };
 
 GAMEKEEPER_NAMESPACE_END(core)
-
-#endif //GAMEKEEPER_CORE_THREADMANAGER_H

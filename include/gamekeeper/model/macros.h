@@ -18,8 +18,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef GAMEKEEPER_MODEL_MACROS_H
-#define GAMEKEEPER_MODEL_MACROS_H 1
+#pragma once
 
 #include <boost/preprocessor/control/iif.hpp>
 #include <boost/preprocessor/list/for_each.hpp>
@@ -362,5 +361,3 @@ GK_MODEL_CALL_IMPL(BOOST_PP_IIF(BOOST_PP_TUPLE_ELEM(4, 3, elem), \
  * @param[in] optional the macro which should be applied to optional members
  */
 #define GK_MODEL_DO_FORALL(model, required, optional) BOOST_PP_LIST_FOR_EACH(GK_MODEL_DO_FORALL_IMPL, (required, optional), BOOST_PP_TUPLE_TO_LIST(model))
-
-#endif //GAMEKEEPER_MODEL_MACROS_H

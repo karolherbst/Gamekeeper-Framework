@@ -18,8 +18,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef GAMEKEEPER_MODEL_GAME_H
-#define GAMEKEEPER_MODEL_GAME_H 1
+#pragma once
 
 #include <gamekeeper/core/interface.h>
 
@@ -44,5 +43,3 @@ interface PUBLIC_API Game
 };
 
 GAMEKEEPER_NAMESPACE_END(model)
-
-#endif //GAMEKEEPER_MODEL_GAME_H

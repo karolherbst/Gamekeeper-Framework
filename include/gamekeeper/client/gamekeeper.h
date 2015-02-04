@@ -18,8 +18,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef GAMEKEEPER_CLIENT_GAMEKEEPER_H
-#define GAMEKEEPER_CLIENT_GAMEKEEPER_H 1
+#pragma once
 
 #include <gamekeeper/core/common.h>
 
@@ -137,5 +136,3 @@ addOptions(boost::program_options::options_description_easy_init & cmd, \
            boost::program_options::options_description_easy_init & both) body
 
 GAMEKEEPER_NAMESPACE_END(client)
-
-#endif //GAMEKEEPER_CLIENT_GAMEKEEPER_H

@@ -18,8 +18,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef GAMEKEEPER_CORE_PORTABLEINSTALLDIRSPATHS_H
-#define GAMEKEEPER_CORE_PORTABLEINSTALLDIRSPATHS_H 1
+#pragma once
 
 #include <gamekeeper/core/common.h>
 
@@ -32,7 +31,7 @@ interface OSInformation;
 class PUBLIC_API PortableInstallDirsPaths : public BundlePaths
 {
 public:
-	PUBLIC_API PortableInstallDirsPaths(std::shared_ptr<OSInformation>);
+	PUBLIC_API PortableInstallDirsPaths();
 	PRIVATE_API ~PortableInstallDirsPaths();
 
 	PRIVATE_API virtual const boost::filesystem::path & getDataPath() override;
@@ -42,5 +41,3 @@ private:
 };
 
 GAMEKEEPER_NAMESPACE_END(core)
-
-#endif //GAMEKEEPER_CORE_PORTABLEINSTALLDIRSPATHS_H

@@ -18,8 +18,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef GAMEKEEPER_CORE_OSINFORMATION_H
-#define GAMEKEEPER_CORE_OSINFORMATION_H 1
+#pragma once
 
 #include <gamekeeper/core/common.h>
 
@@ -42,6 +41,14 @@ GAMEKEEPER_NAMESPACE_START(core)
 interface PUBLIC_API OSInformation
 {
 	GAMEKEEPER_INTERFACE_METHODS(OSInformation);
+
+	/**
+	 * @author Karol Herbst
+	 * @since 0
+	 *
+	 * @return the current active OSInformation implementation
+	 */
+	PUBLIC_API static OSInformation & get();
 
 	/**
 	 * returns the value of the given environment variable name
@@ -117,5 +124,3 @@ interface PUBLIC_API OSInformation
 };
 
 GAMEKEEPER_NAMESPACE_END(core)
-
-#endif //GAMEKEEPER_CORE_OSINFORMATION_H
