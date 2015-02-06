@@ -75,6 +75,12 @@ HBPrototype::startEventLoop()
 	this->doPythonStuff();
 }
 
+bool
+HBPrototype::isPortable()
+{
+	return false;
+}
+
 typedef struct {
   PyObject_HEAD
   void *ptr;

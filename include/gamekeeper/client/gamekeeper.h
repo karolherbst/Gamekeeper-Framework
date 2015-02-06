@@ -89,6 +89,14 @@ interface PUBLIC_API GameKeeperUI
 	 * @post blocks the current thread of execution
 	 */
 	PUBLIC_API virtual void startEventLoop() = 0;
+
+	/**
+	 * @author Karol Herbst
+	 * @since 0
+	 *
+	 * @return true if the client is portable
+	 */
+	PUBLIC_API virtual bool isPortable() = 0;
 };
 
 /**

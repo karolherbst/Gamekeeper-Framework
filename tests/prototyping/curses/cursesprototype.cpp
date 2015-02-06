@@ -351,3 +351,9 @@ CursesPrototype::startEventLoop()
 	stores = sc->getAll();
 	cw::toplevel::mainloop();
 }
+
+bool
+CursesPrototype::isPortable()
+{
+	return false;
+}

@@ -31,6 +31,12 @@ GenericPrototype::onShutdown()
 {
 }
 
+bool
+GenericPrototype::isPortable()
+{
+	return false;
+}
+
 static std::string
 platformsToString(const std::set<gamekeeper::model::Platform> & platforms)
 {

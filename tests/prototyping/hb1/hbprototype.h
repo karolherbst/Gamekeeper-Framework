@@ -11,6 +11,7 @@ public:
 	virtual void init(const ConfigMap &) override;
 	virtual void onShutdown() override;
 	virtual void startEventLoop() override;
+	virtual bool isPortable() override;
 private:
 	const char * username = nullptr;
 	const char * userpass = nullptr;
