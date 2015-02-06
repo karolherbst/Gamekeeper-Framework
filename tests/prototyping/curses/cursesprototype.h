@@ -1,5 +1,4 @@
-#ifndef CURSESPROTOTYPE_H
-#define CURSESPROTOTYPE_H 1
+#pragma once
 
 #include <gamekeeper/client/gamekeeper.h>
 
@@ -13,5 +12,3 @@ public:
 private:
 	gamekeeper::core::Logger& logger;
 };
-
-#endif
