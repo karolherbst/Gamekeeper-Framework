@@ -8,9 +8,9 @@ endif()
 # we will use the std=c++0x flag until we run into any incompatibilty.
 # std=c++11 requires gcc-4.7+
 if(MINGW)
-  add_compiler_flags(CXX -std=gnu++0x)
+  add_compiler_flags(CXX -std=gnu++14)
 else()
-  add_compiler_flags(CXX -std=c++0x)
+  add_compiler_flags(CXX -std=c++14)
 endif()
 
 # having as-needed and -z,defs enabled is good practise (less issues with different environments)
