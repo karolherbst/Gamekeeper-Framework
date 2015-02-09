@@ -61,18 +61,13 @@ using namespace gamekeeper::utils;
 class CurlFileDownloaderTest : public gamekeeper::test::DefaultFicture
 {
 protected:
-	FileDownloaderFactory * fileDownloaderFactory = nullptr;
+	std::unique_ptr<FileDownloaderFactory> fileDownloaderFactory;
 
 	virtual void SetUp() override
 	{
-		this->fileDownloaderFactory = new CurlFileDownloaderFactory(this->container->resolve<LoggerFactory>(),
-		                                                            this->container->resolve<PropertyResolver>(),
-		                                                            this->container->resolve<UserPaths>());
-	}
-
-	virtual void TearDown() override
-	{
-		delete this->fileDownloaderFactory;
+		this->fileDownloaderFactory = std::make_unique<CurlFileDownloaderFactory>(this->container->resolve<LoggerFactory>(),
+		                                                                          this->container->resolve<PropertyResolver>(),
+		                                                                          this->container->resolve<UserPaths>());
 	}
 };
 

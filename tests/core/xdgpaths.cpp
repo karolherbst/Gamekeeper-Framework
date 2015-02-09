@@ -36,7 +36,7 @@ protected:
 	virtual void SetUp() override
 	{
 		this->osInfo = this->container->resolve<OSInformation>();
-		this->userPaths = new XDGPaths();
+		this->userPaths = std::make_unique<XDGPaths>();
 
 		// reset all env values, so that we don't get false positives
 		this->osInfo->setEnv("XDG_DATA_HOME", "");
@@ -53,7 +53,6 @@ protected:
 
 	virtual void TearDown() override
 	{
-		delete this->userPaths;
 		if(fs::exists(fs::current_path() / "tests.gtest"))
 		{
 			fs::remove_all(fs::current_path() / "tests.gtest");
@@ -61,7 +60,7 @@ protected:
 	}
 
 	std::shared_ptr<OSInformation> osInfo;
-	UserPaths * userPaths = nullptr;
+	std::unique_ptr<UserPaths> userPaths;
 	fs::path currentTestPathSingle;
 	fs::path currentTestPathMulti1;
 	fs::path currentTestPathMulti2;

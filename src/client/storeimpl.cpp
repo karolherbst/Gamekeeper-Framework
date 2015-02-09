@@ -30,15 +30,15 @@ GAMEKEEPER_NAMESPACE_START(client)
 class StoreImpl::PImpl
 {
 public:
-	PImpl(backend::StoreConfiguration *);
+	PImpl(const backend::StoreConfiguration & _config);
 	std::unique_ptr<backend::StoreConfiguration> config;
 };
 
-StoreImpl::PImpl::PImpl(backend::StoreConfiguration * _config)
-:	config(_config){}
+StoreImpl::PImpl::PImpl(const backend::StoreConfiguration & _config)
+:	config(std::make_unique<backend::StoreConfiguration>(_config)){}
 
 StoreImpl::StoreImpl(const backend::StoreConfiguration & _config)
-:	data(std::make_unique<PImpl>(new backend::StoreConfiguration(_config))){}
+:	data(std::make_unique<PImpl>(_config)){}
 
 StoreImpl::~StoreImpl() = default;
 
