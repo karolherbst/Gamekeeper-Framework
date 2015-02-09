@@ -39,7 +39,7 @@ PortableInstallDirsPaths::PImpl::PImpl()
 :	dataPath(OSInformation::get().getExecPath().parent_path() / "data"){}
 
 PortableInstallDirsPaths::PortableInstallDirsPaths()
-:	data(new PImpl()){}
+:	data(std::make_unique<PImpl>()){}
 
 PortableInstallDirsPaths::~PortableInstallDirsPaths(){}
 

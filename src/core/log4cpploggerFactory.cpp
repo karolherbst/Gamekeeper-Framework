@@ -181,7 +181,7 @@ Log4cppLoggerFactory::PImpl::~PImpl()
 }
 
 Log4cppLoggerFactory::Log4cppLoggerFactory(std::shared_ptr<UserPaths> userpaths)
-:	data(new Log4cppLoggerFactory::PImpl(userpaths)){}
+:	data(std::make_unique<Log4cppLoggerFactory::PImpl>(userpaths)){}
 
 Logger&
 Log4cppLoggerFactory::getComponentLogger(const char * const id)

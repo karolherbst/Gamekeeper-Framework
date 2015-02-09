@@ -33,7 +33,7 @@ GameImpl::PImpl::PImpl(std::unique_ptr<model::Game> && model)
 :	game(std::move(model)){}
 
 GameImpl::GameImpl(std::unique_ptr<model::Game> && model)
-:	data(new PImpl(std::move(model))){
+:	data(std::make_unique<PImpl>(std::move(model))){
 
 }
 

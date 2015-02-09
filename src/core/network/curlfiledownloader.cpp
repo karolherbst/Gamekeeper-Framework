@@ -290,7 +290,7 @@ CurlFileDownloader::PImpl::resolveDownloadPath(const std::string & url)
 
 CurlFileDownloader::CurlFileDownloader(Logger & logger, const std::string & userAgent, const bfs::path & cacheDir, uint16_t connectionTimeout,
                                        uint16_t retryPause, uint16_t maxResolveRetries, uint16_t maxConnectRetries, uint32_t maxBufferSize)
-:	data(new PImpl(logger, userAgent, cacheDir, connectionTimeout, retryPause, maxResolveRetries, maxConnectRetries, maxBufferSize)){}
+:	data(std::make_unique<PImpl>(logger, userAgent, cacheDir, connectionTimeout, retryPause, maxResolveRetries, maxConnectRetries, maxBufferSize)){}
 
 CurlFileDownloader::~CurlFileDownloader(){}
 

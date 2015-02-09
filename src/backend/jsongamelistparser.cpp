@@ -59,7 +59,7 @@ JSONGameListParser::PImpl::PImpl(std::map<std::string, std::string> & config)
 	platformLin64Id(config["platform.lin64"]){}
 
 JSONGameListParser::JSONGameListParser(std::map<std::string, std::string> & config)
-:	data(new JSONGameListParser::PImpl(config)){}
+:	data(std::make_unique<JSONGameListParser::PImpl>(config)){}
 
 JSONGameListParser::~JSONGameListParser(){}
 

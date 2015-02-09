@@ -33,7 +33,7 @@ StoreControllerImpl::getAll()
 	std::vector<std::unique_ptr<Store>> result;
 	for(auto & s : this->sm->getAllStores())
 	{
-		result.push_back(std::move(std::unique_ptr<Store>(new StoreImpl(s))));
+		result.push_back(std::make_unique<StoreImpl>(s));
 	}
 	return result;
 }
@@ -41,7 +41,7 @@ StoreControllerImpl::getAll()
 std::unique_ptr<Store>
 StoreControllerImpl::get(const std::string & name)
 {
-	return std::unique_ptr<Store>(new StoreImpl(this->sm->getStore(name)));
+	return std::make_unique<StoreImpl>(this->sm->getStore(name));
 }
 
 GAMEKEEPER_NAMESPACE_END(client)

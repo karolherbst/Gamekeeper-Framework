@@ -38,7 +38,7 @@ StoreImpl::PImpl::PImpl(backend::StoreConfiguration * _config)
 :	config(_config){}
 
 StoreImpl::StoreImpl(const backend::StoreConfiguration & _config)
-:	data(new StoreImpl::PImpl(new backend::StoreConfiguration(_config))){}
+:	data(std::make_unique<PImpl>(new backend::StoreConfiguration(_config))){}
 
 StoreImpl::~StoreImpl() = default;
 
@@ -73,7 +73,7 @@ StoreImpl::getAllGames()
 	{
 		for(auto & g : this->data->config->getGameListParser()->parseGameList(is))
 		{
-			result.push_back(std::move(std::unique_ptr<Game>(new GameImpl(std::move(g)))));
+			result.push_back(std::make_unique<GameImpl>(std::move(g)));
 		}
 		return true;
 	});

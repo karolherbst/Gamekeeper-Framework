@@ -30,7 +30,7 @@ struct GenericGame::PImpl
 };
 
 GenericGame::GenericGame()
-:	data(new PImpl()){}
+:	data(std::make_unique<PImpl>()){}
 
 GenericGame::~GenericGame(){}
 
