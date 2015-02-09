@@ -192,7 +192,7 @@ LibSecretManager::readAllTokens(const std::string & group)
 			std::make_unique<GenericToken>(properties,
 			                               secret_value_get_text(value),
 			                               group,
-			                               utils::String::toType<Token::TimePoint::rep>(static_cast<gchar *>(g_hash_table_lookup(atts, GK_TOKEN_EXPIRY)))));
+			                               Token::TimePoint(std::chrono::seconds(utils::String::toType<Token::TimePoint::rep>(static_cast<gchar *>(g_hash_table_lookup(atts, GK_TOKEN_EXPIRY)))))));
 
 		// after we have access to the expiry, check it
 		if(std::chrono::system_clock::now() >= token->getExpiry())
