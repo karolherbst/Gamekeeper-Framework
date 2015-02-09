@@ -51,7 +51,7 @@ parseLine(std::string line, std::shared_ptr<UserPaths> & userpaths)
 	if(pos != std::string::npos)
 	{
 		std::string filename = line.substr(pos + 10);
-		bfs::path logfile = userpaths->getDataFile(std::string("log/") + filename);
+		bfs::path logfile = userpaths->getDataFile("log/"s + filename);
 		bfs::create_directories(logfile.parent_path());
 		line.replace(pos + 10, std::string::npos, logfile.string());
 	}

@@ -81,7 +81,7 @@ StoreManager::getStore(const std::string & name)
 	}
 	catch(const std::out_of_range &)
 	{
-		throw StoreManagerException(std::string("store ") + name + " doesn't exist");
+		throw StoreManagerException("store "s + name + " doesn't exist");
 	}
 }
 

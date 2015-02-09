@@ -168,7 +168,7 @@ StoreConfigurator::configure(const boost::filesystem::path & configFile)
 	// indicates parsing error in the read_* calls
 	catch(const prop::file_parser_error & fpe)
 	{
-		throw StoreConfiguratorException(std::string("parsing error[") + fpe.message() + "] in file: " + configFile.string() + ":" + utils::String::toString(fpe.line()));
+		throw StoreConfiguratorException("parsing error["s + fpe.message() + "] in file: " + configFile.string() + ":" + utils::String::toString(fpe.line()));
 	}
 	// just rethrow them
 	catch(const StoreConfiguratorException &)
@@ -177,7 +177,7 @@ StoreConfigurator::configure(const boost::filesystem::path & configFile)
 	}
 	catch(const std::exception & ex)
 	{
-		throw StoreConfiguratorException(std::string("error[") + ex.what() + "] while parsing store config file: " + configFile.string());
+		throw StoreConfiguratorException("error["s + ex.what() + "] while parsing store config file: " + configFile.string());
 	}
 	catch(...)
 	{

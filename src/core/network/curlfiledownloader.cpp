@@ -214,7 +214,7 @@ CurlFileDownloader::PImpl::performCurl(uint16_t timeout, uint16_t resolveFailed,
 			else
 			{
 				this->logger << LogLevel::Error << "CURL returned with response code: " << returnCode << endl;
-				throw FileDownloaderException(std::string("HTTPS response code ") + utils::String::toString(returnCode));
+				throw FileDownloaderException("HTTPS response code "s + utils::String::toString(returnCode));
 			}
 			break;
 		case CURLE_COULDNT_RESOLVE_HOST: // 6
@@ -272,7 +272,7 @@ CurlFileDownloader::PImpl::handleCurlError(CURLcode code)
 		default:
 			// unhandled error
 			this->logger << LogLevel::Fatal << "CURL error \"" << curl_easy_strerror(code) << "\" (" << code << ") unhandled, please report a bug" << endl;
-			throw FileDownloaderException(std::string("unhandled CURL error") + curl_easy_strerror(code));
+			throw FileDownloaderException("unhandled CURL error"s + curl_easy_strerror(code));
 			break;
 	}
 }

@@ -133,7 +133,7 @@ LibSecretManager::saveToken(const Token & token)
 	                          &w.schema,
 	                          w.attributes,
 	                          nullptr,
-	                          (std::string("gamekeeper token for: ") + token.getGroup()).c_str(),
+	                          ("gamekeeper token for: "s + token.getGroup()).c_str(),
 	                          secret_value_new(token.getValue().c_str(), token.getValue().length(), GK_TOKEN_PASSWORD_CONTENT_TYPE),
 	                          nullptr,
 	                          nullptr);
