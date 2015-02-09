@@ -360,7 +360,7 @@ static const std::string COOKIE_FALSE{"FALSE"};
 typedef std::vector<std::string>::size_type vector_size_type;
 
 constexpr vector_size_type COOKIE_DOMAIN_IDX{0};
-constexpr vector_size_type COOKIE_ENTIREDOMAIN_IDX{1};
+//constexpr vector_size_type COOKIE_ENTIREDOMAIN_IDX{1};
 constexpr vector_size_type COOKIE_PATH_IDX{2};
 constexpr vector_size_type COOKIE_SECURE_IDX{3};
 constexpr vector_size_type COOKIE_EXPIRY_IDX{4};

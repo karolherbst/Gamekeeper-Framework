@@ -28,8 +28,8 @@
 
 GAMEKEEPER_NAMESPACE_START(backend)
 
-class GameListParser;
-class LoginHandler;
+interface GameListParser;
+interface LoginHandler;
 
 struct PUBLIC_API StoreConfiguration
 {

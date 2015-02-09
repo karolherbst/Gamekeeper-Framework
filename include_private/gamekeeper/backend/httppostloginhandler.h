@@ -29,13 +29,13 @@
 
 GAMEKEEPER_NAMESPACE_START(core)
 
-class FileDownloader;
+interface FileDownloader;
 
 GAMEKEEPER_NAMESPACE_END(core)
 
 GAMEKEEPER_NAMESPACE_START(backend, security)
 
-class AuthManager;
+interface AuthManager;
 
 GAMEKEEPER_NAMESPACE_END(backend, security)
 

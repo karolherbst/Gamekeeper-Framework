@@ -28,7 +28,7 @@
 
 GAMEKEEPER_NAMESPACE_START(backend)
 
-class StoreConfiguration;
+interface StoreConfiguration;
 
 GAMEKEEPER_NAMESPACE_END(backend)
 
