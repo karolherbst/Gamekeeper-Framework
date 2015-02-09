@@ -188,8 +188,8 @@ TEST_F(CurlFileDownloaderTest, cookieCheckExpiring)
 {
 	auto cfd = this->fileDownloaderFactory->create();
 	cfd->addCookie({"expiring", "expiring", "domain.org", "/",
-	                std::chrono::duration_cast<std::chrono::seconds>((std::chrono::system_clock::now() + std::chrono::seconds(1)).time_since_epoch()).count()});
+	                std::chrono::duration_cast<std::chrono::seconds>((std::chrono::system_clock::now() + 1s).time_since_epoch()).count()});
 	ASSERT_FALSE(cfd->getCookies().empty());
-	std::this_thread::sleep_for(std::chrono::seconds(2));
+	std::this_thread::sleep_for(2s);
 	ASSERT_TRUE(cfd->getCookies().empty());
 }
