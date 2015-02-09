@@ -292,7 +292,7 @@ CurlFileDownloader::CurlFileDownloader(Logger & logger, const std::string & user
                                        uint16_t retryPause, uint16_t maxResolveRetries, uint16_t maxConnectRetries, uint32_t maxBufferSize)
 :	data(std::make_unique<PImpl>(logger, userAgent, cacheDir, connectionTimeout, retryPause, maxResolveRetries, maxConnectRetries, maxBufferSize)){}
 
-CurlFileDownloader::~CurlFileDownloader(){}
+CurlFileDownloader::~CurlFileDownloader() = default;
 
 static uint64_t
 emptyCurlFileDownloadCallback(void * const, size_t size, size_t nrMem, void *)

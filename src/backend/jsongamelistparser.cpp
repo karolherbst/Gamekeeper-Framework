@@ -61,7 +61,7 @@ JSONGameListParser::PImpl::PImpl(std::map<std::string, std::string> & config)
 JSONGameListParser::JSONGameListParser(std::map<std::string, std::string> & config)
 :	data(std::make_unique<JSONGameListParser::PImpl>(config)){}
 
-JSONGameListParser::~JSONGameListParser(){}
+JSONGameListParser::~JSONGameListParser() = default;
 
 std::vector<std::unique_ptr<model::Game>>
 JSONGameListParser::parseGameList(std::basic_istream<gkbyte_t> & is)

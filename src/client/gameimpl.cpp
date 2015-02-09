@@ -37,7 +37,7 @@ GameImpl::GameImpl(std::unique_ptr<model::Game> && model)
 
 }
 
-GameImpl::~GameImpl(){}
+GameImpl::~GameImpl() = default;
 GK_BUILD_GET_IMPLEMENTATION_WRAPPER(GAME_MODEL, GameImpl,, this->data->game)
 
 GAMEKEEPER_NAMESPACE_END(client)
