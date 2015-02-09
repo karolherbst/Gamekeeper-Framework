@@ -40,6 +40,8 @@ StoreImpl::PImpl::PImpl(backend::StoreConfiguration * _config)
 StoreImpl::StoreImpl(const backend::StoreConfiguration & _config)
 :	data(new StoreImpl::PImpl(new backend::StoreConfiguration(_config))){}
 
+StoreImpl::~StoreImpl() = default;
+
 GK_BUILD_GET_IMPLEMENTATION_WRAPPER(STORE_MODEL, StoreImpl,, this->data->config->getStore())
 
 bool
