@@ -18,33 +18,16 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#pragma once
-
-#include <gamekeeper/core/common.h>
-
-#include <memory>
-
-#include <gamekeeper/backend/security/authmanager.h>
+#include <gamekeeper/core/logger.h>
+#include <gamekeeper/core/log4cpploggerFactory.h>
 
 GAMEKEEPER_NAMESPACE_START(core)
 
-interface LoggerFactory;
+Logger &
+Logger::get(const std::string & category)
+{
+	static Log4cppLoggerFactory lf;
+	return lf.getComponentLogger(category.c_str());
+}
 
 GAMEKEEPER_NAMESPACE_END(core)
-
-GAMEKEEPER_NAMESPACE_START(backend, security)
-
-class PUBLIC_API LibSecretManager : public AuthManager
-{
-public:
-	PUBLIC_API LibSecretManager();
-	PUBLIC_API ~LibSecretManager();
-	PRIVATE_API virtual void saveToken(const Token & token) override;
-	PRIVATE_API virtual void removeToken(const Token & token) override;
-	PRIVATE_API virtual Tokens readAllTokens(const std::string & group) override;
-private:
-	class PRIVATE_API PImpl;
-	std::unique_ptr<LibSecretManager::PImpl> data;
-};
-
-GAMEKEEPER_NAMESPACE_END(backend, security)

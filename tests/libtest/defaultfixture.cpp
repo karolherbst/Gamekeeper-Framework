@@ -124,17 +124,13 @@ DefaultFicture::DefaultFicture() {
 		containerBuilder.registerType<TestUserPaths>()->
 			as<UserPaths>()->
 			singleInstance();
-		containerBuilder.registerType<Log4cppLoggerFactory>()->
-		        as<LoggerFactory>()->
-		        singleInstance();
 		containerBuilder.registerType<TestPropertyResolver>(CREATE_CAPTURED([this], new TestPropertyResolver(this->props)))->
 			as<PropertyResolver>()->
 			singleInstance();
 		containerBuilder.registerType<THREADHELPERCLASS>()->
 			as<NativeThreadHelper>()->
 			singleInstance();
-		containerBuilder.registerType<StdCpp11ThreadManager>(CREATE(new StdCpp11ThreadManager(INJECT(NativeThreadHelper),
-		                                                                                      INJECT(LoggerFactory))))->
+		containerBuilder.registerType<StdCpp11ThreadManager>(CREATE(new StdCpp11ThreadManager(INJECT(NativeThreadHelper))))->
 			as<ThreadManager>()->
 			as<ThreadFactory>()->
 			singleInstance();

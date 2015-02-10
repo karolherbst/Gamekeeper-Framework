@@ -95,6 +95,17 @@ public:
 	GAMEKEEPER_INTERFACE_METHODS(Logger);
 
 	/**
+	 * static access method to logger endpoints
+	 *
+	 * @author Karol Herbst
+	 * @since 0
+	 *
+	 * @param category the category of the logger
+	 * @return a logger for the given category
+	 */
+	PUBLIC_API static Logger & get(const std::string & category);
+
+	/**
 	 * Stream based log method
 	 *
 	 * use this to get a logger Stream to perform logging

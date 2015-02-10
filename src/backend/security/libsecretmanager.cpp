@@ -25,7 +25,6 @@
 #include <gamekeeper/backend/security/generictoken.h>
 #include <gamekeeper/backend/security/token.h>
 #include <gamekeeper/core/logger.h>
-#include <gamekeeper/core/loggerFactory.h>
 #include <gamekeeper/core/loggerStream.h>
 #include <gamekeeper/utils/stringutils.h>
 
@@ -116,8 +115,8 @@ LibSecretManager::PImpl::PImpl(core::Logger & _logger)
 :	secretService(secret_service_get_sync(SECRET_SERVICE_OPEN_SESSION, nullptr, nullptr), g_object_unref),
 	logger(_logger){}
 
-LibSecretManager::LibSecretManager(std::shared_ptr<core::LoggerFactory> lf)
-:	data(std::make_unique<LibSecretManager::PImpl>(lf->getComponentLogger("Auth.libsecret"))){}
+LibSecretManager::LibSecretManager()
+:	data(std::make_unique<LibSecretManager::PImpl>(core::Logger::get("Auth.libsecret"))){}
 
 LibSecretManager::~LibSecretManager()
 {

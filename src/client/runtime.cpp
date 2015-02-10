@@ -35,11 +35,10 @@
 #include <gamekeeper/client/gamekeeper.h>
 #include <gamekeeper/client/hypodermic.h>
 #include <gamekeeper/client/storecontrollerimpl.h>
-#include <gamekeeper/core/logger.h>
-#include <gamekeeper/core/loggerStream.h>
 #include <gamekeeper/core/boostpopropertyresolver.h>
 #include <gamekeeper/core/gnuinstalldirspaths.h>
-#include <gamekeeper/core/log4cpploggerFactory.h>
+#include <gamekeeper/core/logger.h>
+#include <gamekeeper/core/loggerStream.h>
 #include <gamekeeper/core/network/curlfiledownloaderfactory.h>
 #include <gamekeeper/core/portableinstalldirspaths.h>
 #include <gamekeeper/core/stdc++11threadmanager.h>
@@ -180,36 +179,31 @@ GameKeeperRuntime::main(int argc, const char* argv[], NewInstanceFuncPtr instanc
 			singleInstance();
 	}
 
-	containerBuilder.registerType<Log4cppLoggerFactory>()->
-		as<LoggerFactory>()->
-		singleInstance();
 	containerBuilder.registerInstance(pr)->
 		as<PropertyResolver>()->
 		singleInstance();
 	containerBuilder.registerType<network::CurlFileDownloaderFactory>(
-		CREATE(new network::CurlFileDownloaderFactory(INJECT(LoggerFactory), INJECT(PropertyResolver))))->
+		CREATE(new network::CurlFileDownloaderFactory(INJECT(PropertyResolver))))->
 		as<network::FileDownloaderFactory>()->
 		singleInstance();
 	containerBuilder.registerType<THREADHELPERCLASS>()->
 		as<NativeThreadHelper>()->
 		singleInstance();
 	containerBuilder.registerType<StdCpp11ThreadManager>(
-		CREATE(new StdCpp11ThreadManager(INJECT(NativeThreadHelper),
-	                                     INJECT(LoggerFactory))))->
+		CREATE(new StdCpp11ThreadManager(INJECT(NativeThreadHelper))))->
 		as<ThreadManager>()->
 		as<ThreadFactory>()->
 		singleInstance();
 
 #ifdef HAS_AUTHMANAGER
-	containerBuilder.registerType<AUTHMANAGERCLASS>(
-		CREATE(new AUTHMANAGERCLASS(INJECT(LoggerFactory))))->
+	containerBuilder.registerType<AUTHMANAGERCLASS>()->
 		as<security::AuthManager>()->
 		singleInstance();
 #define INJECT_AUTH INJECT(security::AuthManager)
 #else
 #define INJECT_AUTH nullptr
 #endif
-	containerBuilder.registerType<StoreManager>(CREATE(new StoreManager(INJECT(LoggerFactory), INJECT(BundlePaths), INJECT(network::FileDownloaderFactory),
+	containerBuilder.registerType<StoreManager>(CREATE(new StoreManager(INJECT(BundlePaths), INJECT(network::FileDownloaderFactory),
 	                                                                    INJECT_AUTH)))->
 		as<StoreManager>()->
 		singleInstance();
@@ -220,10 +214,9 @@ GameKeeperRuntime::main(int argc, const char* argv[], NewInstanceFuncPtr instanc
 #pragma GCC diagnostic pop
 	container = containerBuilder.build();
 
-	std::shared_ptr<gamekeeper::core::LoggerFactory> loggerFactory = container->resolve<gamekeeper::core::LoggerFactory>();
-	loggerFactory->getComponentLogger("main") << gamekeeper::core::LogLevel::Debug << "firing up GameKeeper" << gamekeeper::core::endl;
+	Logger::get("main") << gamekeeper::core::LogLevel::Debug << "firing up GameKeeper" << gamekeeper::core::endl;
 
-	this->gameKeeperUI.reset(instanceFuncPtr(loggerFactory->getComponentLogger("UI.client")));
+	this->gameKeeperUI.reset(instanceFuncPtr(Logger::get("UI.client")));
 	this->gameKeeperUI->init(vm);
 	this->gameKeeperUI->startEventLoop();
 
