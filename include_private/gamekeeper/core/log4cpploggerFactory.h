@@ -39,7 +39,7 @@ interface UserPaths;
 class PUBLIC_API Log4cppLoggerFactory : public LoggerFactory
 {
 public:
-	PUBLIC_API Log4cppLoggerFactory(std::shared_ptr<UserPaths>);
+	PUBLIC_API Log4cppLoggerFactory();
 	PRIVATE_API virtual Logger& getDefaultLogger() override;
 	PRIVATE_API virtual Logger& getComponentLogger(const char * const id) override;
 	PRIVATE_API virtual ~Log4cppLoggerFactory();

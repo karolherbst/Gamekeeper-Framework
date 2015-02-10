@@ -124,7 +124,7 @@ DefaultFicture::DefaultFicture() {
 		containerBuilder.registerType<TestUserPaths>()->
 			as<UserPaths>()->
 			singleInstance();
-		containerBuilder.registerType<Log4cppLoggerFactory>(CREATE(new Log4cppLoggerFactory(INJECT(UserPaths))))->
+		containerBuilder.registerType<Log4cppLoggerFactory>()->
 		        as<LoggerFactory>()->
 		        singleInstance();
 		containerBuilder.registerType<TestPropertyResolver>(CREATE_CAPTURED([this], new TestPropertyResolver(this->props)))->

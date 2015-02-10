@@ -43,7 +43,7 @@
 #include <gamekeeper/core/network/curlfiledownloaderfactory.h>
 #include <gamekeeper/core/portableinstalldirspaths.h>
 #include <gamekeeper/core/stdc++11threadmanager.h>
-#include <gamekeeper/core/xdgpaths.h>
+#include <gamekeeper/core/userpaths.h>
 
 // some platform dependent stuff
 #ifdef GAMEKEEPER_OS_IS_WINDOWS
@@ -65,20 +65,7 @@ namespace po = boost::program_options;
 
 GAMEKEEPER_NAMESPACE_START(client)
 
-static std::shared_ptr<Hypodermic::IContainer> localContainer;
 static std::shared_ptr<Hypodermic::IContainer> container;
-
-GameKeeperRuntime::GameKeeperRuntime()
-{
-	using namespace gamekeeper::core;
-	Hypodermic::ContainerBuilder containerBuilder;
-
-	// set up pre IoC container
-	containerBuilder.registerType<XDGPaths>()->
-		as<UserPaths>()->
-		singleInstance();
-	localContainer = containerBuilder.build();
-}
 
 static void
 fillProperties(po::options_description & cmd, po::options_description & file)
@@ -148,7 +135,7 @@ GameKeeperRuntime::main(int argc, const char* argv[], NewInstanceFuncPtr instanc
 	po::variables_map vm;
 	po::store(po::parse_command_line(argc, argv, descCmd), vm);
 
-	fs::path configFile = localContainer->resolve<UserPaths>()->getConfigFile("properties.conf");
+	fs::path configFile = UserPaths::get().getConfigFile("properties.conf");
 	if(fs::exists(configFile))
 	{
 		po::store(po::parse_config_file<char>(configFile.string().c_str(), descFile, true), vm);
@@ -169,12 +156,6 @@ GameKeeperRuntime::main(int argc, const char* argv[], NewInstanceFuncPtr instanc
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-parameter"
 	// set up the real IoC container
-
-	// reuse instances from the pre container
-	containerBuilder.registerInstance<UserPaths>(
-		localContainer->resolve<UserPaths>())->
-		as<UserPaths>()->
-		singleInstance();
 
 	std::string bundleLayout = pr->get<std::string>("filelayout.bundle");
 
@@ -199,14 +180,14 @@ GameKeeperRuntime::main(int argc, const char* argv[], NewInstanceFuncPtr instanc
 			singleInstance();
 	}
 
-	containerBuilder.registerType<Log4cppLoggerFactory>(CREATE(new Log4cppLoggerFactory(INJECT(UserPaths))))->
+	containerBuilder.registerType<Log4cppLoggerFactory>()->
 		as<LoggerFactory>()->
 		singleInstance();
 	containerBuilder.registerInstance(pr)->
 		as<PropertyResolver>()->
 		singleInstance();
 	containerBuilder.registerType<network::CurlFileDownloaderFactory>(
-		CREATE(new network::CurlFileDownloaderFactory(INJECT(LoggerFactory), INJECT(PropertyResolver), INJECT(UserPaths))))->
+		CREATE(new network::CurlFileDownloaderFactory(INJECT(LoggerFactory), INJECT(PropertyResolver))))->
 		as<network::FileDownloaderFactory>()->
 		singleInstance();
 	containerBuilder.registerType<THREADHELPERCLASS>()->

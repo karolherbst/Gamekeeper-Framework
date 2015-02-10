@@ -44,7 +44,7 @@ namespace bfs = boost::filesystem;
 GAMEKEEPER_NAMESPACE_START(core)
 
 static std::string
-parseLine(std::string line, std::shared_ptr<UserPaths> & userpaths)
+parseLine(std::string line)
 {
 	balgo::erase_all(line, " ");
 	std::string::size_type pos = line.find(".fileName=");
@@ -52,7 +52,7 @@ parseLine(std::string line, std::shared_ptr<UserPaths> & userpaths)
 	if(pos != std::string::npos)
 	{
 		std::string filename = line.substr(pos + 10);
-		bfs::path logfile = userpaths->getDataFile("log/"s + filename);
+		bfs::path logfile = UserPaths::get().getDataFile("log/"s + filename);
 		bfs::create_directories(logfile.parent_path());
 		line.replace(pos + 10, std::string::npos, logfile.string());
 	}
@@ -67,7 +67,7 @@ parseLine(std::string line, std::shared_ptr<UserPaths> & userpaths)
 class Log4cppLoggerFactory::PImpl
 {
 public:
-	PImpl(std::shared_ptr<UserPaths>);
+	PImpl();
 	~PImpl();
 
 	Logger& getComponentLogger(const char * const);
@@ -78,7 +78,7 @@ public:
 	std::unordered_map<const char *, Logger *> loggers;
 };
 
-Log4cppLoggerFactory::PImpl::PImpl(std::shared_ptr<UserPaths> userpaths)
+Log4cppLoggerFactory::PImpl::PImpl()
 :	appender(new log4cpp::OstreamAppender("console", &std::cout)),
 	rootCategory(log4cpp::Category::getInstance("GameKeeper"))
 {
@@ -94,7 +94,7 @@ Log4cppLoggerFactory::PImpl::PImpl(std::shared_ptr<UserPaths> userpaths)
 	this->rootLogger = std::make_unique<Log4cppLogger>(this->rootCategory);
 
 	// read configuration file if exists
-	bfs::path cFile = userpaths->getConfigFile("log.conf");
+	bfs::path cFile = UserPaths::get().getConfigFile("log.conf");
 	if(!bfs::exists(cFile))
 	{
 		return;
@@ -104,7 +104,7 @@ Log4cppLoggerFactory::PImpl::PImpl(std::shared_ptr<UserPaths> userpaths)
 	logger << LogLevel::Debug << "parse config file at: " << cFile.string() << endl;
 
 	bfs::ifstream ifstream(cFile);
-	bfs::path cFileGen = userpaths->getConfigFile("log.conf.gen");
+	bfs::path cFileGen = UserPaths::get().getConfigFile("log.conf.gen");
 	bfs::remove(cFileGen);
 	bfs::ofstream ofstream(cFileGen);
 	std::string line;
@@ -119,7 +119,7 @@ Log4cppLoggerFactory::PImpl::PImpl(std::shared_ptr<UserPaths> userpaths)
 			continue;
 		}
 
-		parsedLine = parseLine(line, userpaths);
+		parsedLine = parseLine(line);
 		logger << LogLevel::Debug << "parsed line \"" << line << "\" to: \"" << parsedLine << "\"" << endl;
 		ofstream << parsedLine << std::endl;
 	}
@@ -175,8 +175,8 @@ Log4cppLoggerFactory::PImpl::~PImpl()
 	}
 }
 
-Log4cppLoggerFactory::Log4cppLoggerFactory(std::shared_ptr<UserPaths> userpaths)
-:	data(std::make_unique<Log4cppLoggerFactory::PImpl>(userpaths)){}
+Log4cppLoggerFactory::Log4cppLoggerFactory()
+:	data(std::make_unique<PImpl>()){}
 
 Logger&
 Log4cppLoggerFactory::getComponentLogger(const char * const id)

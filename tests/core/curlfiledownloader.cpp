@@ -66,8 +66,7 @@ protected:
 	virtual void SetUp() override
 	{
 		this->fileDownloaderFactory = std::make_unique<CurlFileDownloaderFactory>(this->container->resolve<LoggerFactory>(),
-		                                                                          this->container->resolve<PropertyResolver>(),
-		                                                                          this->container->resolve<UserPaths>());
+		                                                                          this->container->resolve<PropertyResolver>());
 	}
 };
 

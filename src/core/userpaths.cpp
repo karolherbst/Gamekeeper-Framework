@@ -18,33 +18,16 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#pragma once
-
-#include <gamekeeper/core/common.h>
-
-#include <gamekeeper/core/network/filedownloaderfactory.h>
+#include <gamekeeper/core/userpaths.h>
+#include <gamekeeper/core/xdgpaths.h>
 
 GAMEKEEPER_NAMESPACE_START(core)
 
-interface Logger;
-interface LoggerFactory;
-interface PropertyResolver;
-interface UserPaths;
+UserPaths &
+UserPaths::get()
+{
+	static XDGPaths userInfo;
+	return userInfo;
+}
 
 GAMEKEEPER_NAMESPACE_END(core)
-
-GAMEKEEPER_NAMESPACE_START(core, network)
-
-class PUBLIC_API CurlFileDownloaderFactory : public FileDownloaderFactory
-{
-public:
-	PUBLIC_API CurlFileDownloaderFactory(std::shared_ptr<LoggerFactory>, std::shared_ptr<PropertyResolver>);
-	PRIVATE_API virtual ~CurlFileDownloaderFactory();
-	PRIVATE_API virtual std::shared_ptr<FileDownloader> create() override;
-private:
-	class PRIVATE_API PImpl;
-
-	std::unique_ptr<CurlFileDownloaderFactory::PImpl> data;
-};
-
-GAMEKEEPER_NAMESPACE_END(core, network)

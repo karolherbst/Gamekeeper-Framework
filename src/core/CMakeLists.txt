@@ -56,6 +56,7 @@ file(GLOB sources
   portableinstalldirspaths.cpp
   propertiesmissingexception.cpp
   stdc++11threadmanager.cpp
+  userpaths.cpp
   xdgpaths.cpp
 
   network/cookie.cpp
