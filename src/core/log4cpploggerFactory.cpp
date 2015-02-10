@@ -22,6 +22,7 @@
 #include <gamekeeper/core/log4cpploggerFactory.h>
 #include <gamekeeper/core/userpaths.h>
 
+#include <memory>
 #include <string>
 #include <vector>
 
@@ -51,7 +52,7 @@ parseLine(std::string line, std::shared_ptr<UserPaths> & userpaths)
 	if(pos != std::string::npos)
 	{
 		std::string filename = line.substr(pos + 10);
-		bfs::path logfile = userpaths->getDataFile(std::string("log/") + filename);
+		bfs::path logfile = userpaths->getDataFile("log/"s + filename);
 		bfs::create_directories(logfile.parent_path());
 		line.replace(pos + 10, std::string::npos, logfile.string());
 	}
@@ -71,7 +72,7 @@ public:
 
 	Logger& getComponentLogger(const char * const);
 
-	Logger * rootLogger = nullptr;
+	std::unique_ptr<Logger> rootLogger;
 	log4cpp::Appender * appender;
 	log4cpp::Category & rootCategory;
 	std::unordered_map<const char *, Logger *> loggers;
@@ -90,7 +91,7 @@ Log4cppLoggerFactory::PImpl::PImpl(std::shared_ptr<UserPaths> userpaths)
 	this->rootCategory.setPriority(log4cpp::Priority::DEBUG);
 	this->rootCategory.addAppender(this->appender);
 
-	this->rootLogger = new Log4cppLogger(this->rootCategory);
+	this->rootLogger = std::make_unique<Log4cppLogger>(this->rootCategory);
 
 	// read configuration file if exists
 	bfs::path cFile = userpaths->getConfigFile("log.conf");
@@ -138,8 +139,7 @@ Log4cppLoggerFactory::PImpl::PImpl(std::shared_ptr<UserPaths> userpaths)
 	// we have another logger noew
 	this->rootCategory.removeAppender(this->appender);
 	this->appender = nullptr;
-	delete this->rootLogger;
-	this->rootLogger = new Log4cppLogger(this->rootCategory);
+	this->rootLogger = std::make_unique<Log4cppLogger>(this->rootCategory);
 }
 
 Logger&
@@ -169,11 +169,6 @@ Log4cppLoggerFactory::PImpl::~PImpl()
 		this->rootCategory.removeAppender(this->appender);
 	}
 
-	if(this->rootLogger != nullptr)
-	{
-		delete this->rootLogger;
-	}
-
 	for(auto entry : this->loggers)
 	{
 		delete entry.second;
@@ -181,7 +176,7 @@ Log4cppLoggerFactory::PImpl::~PImpl()
 }
 
 Log4cppLoggerFactory::Log4cppLoggerFactory(std::shared_ptr<UserPaths> userpaths)
-:	data(new Log4cppLoggerFactory::PImpl(userpaths)){}
+:	data(std::make_unique<Log4cppLoggerFactory::PImpl>(userpaths)){}
 
 Logger&
 Log4cppLoggerFactory::getComponentLogger(const char * const id)

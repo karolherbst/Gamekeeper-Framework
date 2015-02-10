@@ -119,7 +119,7 @@ StdCpp11ThreadManager::createThread(const char * name, ThreadFunction function)
 		return;
 
 	// local insert lock
-	std::shared_ptr<std::mutex> mtxP(new std::mutex());
+	std::shared_ptr<std::mutex> mtxP(std::make_shared<std::mutex>());
 	std::unique_lock<std::mutex> lock(*mtxP);
 	std::thread newThread([this, function, mtxP]()
 	{

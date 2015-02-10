@@ -44,7 +44,7 @@ struct PUBLIC_API Cookie : boost::equality_comparable<Cookie>
 	typedef std::chrono::system_clock::time_point TimePoint;
 
 	PUBLIC_API Cookie(const std::string & name, const std::string & value, const std::string & domain, const std::string & path = "",
-	                  const TimePoint & expiry = TimePoint(std::chrono::seconds(0)), bool secure = false);
+	                  const TimePoint & expiry = TimePoint(0s), bool secure = false);
 	PUBLIC_API Cookie(const std::string & name, const std::string & value, const std::string & domain, const std::string & path,
 	                  const TimePoint::duration &, bool secure = false);
 	PUBLIC_API Cookie(const std::string & name, const std::string & value, const std::string & domain, const std::string & path,

@@ -33,11 +33,11 @@ GameImpl::PImpl::PImpl(std::unique_ptr<model::Game> && model)
 :	game(std::move(model)){}
 
 GameImpl::GameImpl(std::unique_ptr<model::Game> && model)
-:	data(new PImpl(std::move(model))){
+:	data(std::make_unique<PImpl>(std::move(model))){
 
 }
 
-GameImpl::~GameImpl(){}
+GameImpl::~GameImpl() = default;
 GK_BUILD_GET_IMPLEMENTATION_WRAPPER(GAME_MODEL, GameImpl,, this->data->game)
 
 GAMEKEEPER_NAMESPACE_END(client)

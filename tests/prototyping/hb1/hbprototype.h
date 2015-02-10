@@ -1,5 +1,4 @@
-#ifndef HBPROTOTYPE_H
-#define HBPROTOTYPE_H
+#pragma once
 
 #include <gamekeeper/client/gamekeeper.h>
 
@@ -22,5 +21,3 @@ private:
 	std::string content;
 	void doPythonStuff();
 };
-
-#endif // HBPROTOTYPE_H

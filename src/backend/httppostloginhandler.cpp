@@ -120,9 +120,9 @@ HTTPPostLoginHandler::PImpl::checkCookiesValidForAuth()
 
 HTTPPostLoginHandler::HTTPPostLoginHandler(std::map<std::string, std::string> & config, std::shared_ptr<core::network::FileDownloader> hfd,
                                            std::shared_ptr<security::AuthManager> am)
-:	data(new HTTPPostLoginHandler::PImpl(config, hfd, am)){}
+:	data(std::make_unique<HTTPPostLoginHandler::PImpl>(config, hfd, am)){}
 
-HTTPPostLoginHandler::~HTTPPostLoginHandler(){}
+HTTPPostLoginHandler::~HTTPPostLoginHandler() = default;
 
 bool
 HTTPPostLoginHandler::login(const std::string & username, const std::string & password)

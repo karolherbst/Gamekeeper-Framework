@@ -30,7 +30,7 @@
  * @param type the name of the interface
  */
 #define GAMEKEEPER_INTERFACE_METHODS(type) \
-	PUBLIC_INLINE virtual ~type(){} \
+	PUBLIC_INLINE virtual ~type() = default; \
 	PUBLIC_INLINE type() = default; \
 	PRIVATE_API type(const type&) = delete; \
 	PRIVATE_API type & operator=(const type &) = delete

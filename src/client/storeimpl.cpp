@@ -30,15 +30,17 @@ GAMEKEEPER_NAMESPACE_START(client)
 class StoreImpl::PImpl
 {
 public:
-	PImpl(backend::StoreConfiguration *);
+	PImpl(const backend::StoreConfiguration & _config);
 	std::unique_ptr<backend::StoreConfiguration> config;
 };
 
-StoreImpl::PImpl::PImpl(backend::StoreConfiguration * _config)
-:	config(_config){}
+StoreImpl::PImpl::PImpl(const backend::StoreConfiguration & _config)
+:	config(std::make_unique<backend::StoreConfiguration>(_config)){}
 
 StoreImpl::StoreImpl(const backend::StoreConfiguration & _config)
-:	data(new StoreImpl::PImpl(new backend::StoreConfiguration(_config))){}
+:	data(std::make_unique<PImpl>(_config)){}
+
+StoreImpl::~StoreImpl() = default;
 
 GK_BUILD_GET_IMPLEMENTATION_WRAPPER(STORE_MODEL, StoreImpl,, this->data->config->getStore())
 
@@ -71,7 +73,7 @@ StoreImpl::getAllGames()
 	{
 		for(auto & g : this->data->config->getGameListParser()->parseGameList(is))
 		{
-			result.push_back(std::move(std::unique_ptr<Game>(new GameImpl(std::move(g)))));
+			result.push_back(std::make_unique<GameImpl>(std::move(g)));
 		}
 		return true;
 	});

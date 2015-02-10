@@ -53,7 +53,7 @@ public:
 	PUBLIC_API GameKeeperRuntime();
 	PUBLIC_API int main(int argc, const char* argv[], NewInstanceFuncPtr, AddOptionsFuncPtr);
 private:
-	GameKeeperUI * gameKeeperUI;
+	std::unique_ptr<GameKeeperUI> gameKeeperUI;
 };
 
 GAMEKEEPER_NAMESPACE_END(client)

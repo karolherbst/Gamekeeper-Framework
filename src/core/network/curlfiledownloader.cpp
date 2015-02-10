@@ -214,7 +214,7 @@ CurlFileDownloader::PImpl::performCurl(uint16_t timeout, uint16_t resolveFailed,
 			else
 			{
 				this->logger << LogLevel::Error << "CURL returned with response code: " << returnCode << endl;
-				throw FileDownloaderException(std::string("HTTPS response code ") + utils::String::toString(returnCode));
+				throw FileDownloaderException("HTTPS response code "s + utils::String::toString(returnCode));
 			}
 			break;
 		case CURLE_COULDNT_RESOLVE_HOST: // 6
@@ -272,7 +272,7 @@ CurlFileDownloader::PImpl::handleCurlError(CURLcode code)
 		default:
 			// unhandled error
 			this->logger << LogLevel::Fatal << "CURL error \"" << curl_easy_strerror(code) << "\" (" << code << ") unhandled, please report a bug" << endl;
-			throw FileDownloaderException(std::string("unhandled CURL error") + curl_easy_strerror(code));
+			throw FileDownloaderException("unhandled CURL error"s + curl_easy_strerror(code));
 			break;
 	}
 }
@@ -290,9 +290,9 @@ CurlFileDownloader::PImpl::resolveDownloadPath(const std::string & url)
 
 CurlFileDownloader::CurlFileDownloader(Logger & logger, const std::string & userAgent, const bfs::path & cacheDir, uint16_t connectionTimeout,
                                        uint16_t retryPause, uint16_t maxResolveRetries, uint16_t maxConnectRetries, uint32_t maxBufferSize)
-:	data(new PImpl(logger, userAgent, cacheDir, connectionTimeout, retryPause, maxResolveRetries, maxConnectRetries, maxBufferSize)){}
+:	data(std::make_unique<PImpl>(logger, userAgent, cacheDir, connectionTimeout, retryPause, maxResolveRetries, maxConnectRetries, maxBufferSize)){}
 
-CurlFileDownloader::~CurlFileDownloader(){}
+CurlFileDownloader::~CurlFileDownloader() = default;
 
 static uint64_t
 emptyCurlFileDownloadCallback(void * const, size_t size, size_t nrMem, void *)

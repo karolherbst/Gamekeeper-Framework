@@ -59,9 +59,9 @@ JSONGameListParser::PImpl::PImpl(std::map<std::string, std::string> & config)
 	platformLin64Id(config["platform.lin64"]){}
 
 JSONGameListParser::JSONGameListParser(std::map<std::string, std::string> & config)
-:	data(new JSONGameListParser::PImpl(config)){}
+:	data(std::make_unique<JSONGameListParser::PImpl>(config)){}
 
-JSONGameListParser::~JSONGameListParser(){}
+JSONGameListParser::~JSONGameListParser() = default;
 
 std::vector<std::unique_ptr<model::Game>>
 JSONGameListParser::parseGameList(std::basic_istream<gkbyte_t> & is)
@@ -83,7 +83,7 @@ JSONGameListParser::parseGameList(std::basic_istream<gkbyte_t> & is)
 			for(size_t i = 0; i < json_array_size(gamesList); i++)
 			{
 				json_t * gameNode = json_array_get(gamesList, i);
-				model::GenericGame * game = new model::GenericGame();
+				std::unique_ptr<model::GenericGame> game = std::make_unique<model::GenericGame>();
 				game->setId(json_string_value(json_path_get(gameNode, this->data->gameIdPath.c_str())));
 				game->setName(json_string_value(json_path_get(gameNode, this->data->gameNamePath.c_str())));
 				if(!this->data->gameDescriptionPath.empty())
@@ -120,7 +120,7 @@ JSONGameListParser::parseGameList(std::basic_istream<gkbyte_t> & is)
 				}
 				game->setPlatforms(std::move(platforms));
 
-				games.push_back(std::move(std::unique_ptr<model::Game>(game)));
+				games.push_back(std::move(game));
 			}
 		}
 	}

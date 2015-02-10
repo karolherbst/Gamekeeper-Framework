@@ -242,7 +242,7 @@ GameKeeperRuntime::main(int argc, const char* argv[], NewInstanceFuncPtr instanc
 	std::shared_ptr<gamekeeper::core::LoggerFactory> loggerFactory = container->resolve<gamekeeper::core::LoggerFactory>();
 	loggerFactory->getComponentLogger("main") << gamekeeper::core::LogLevel::Debug << "firing up GameKeeper" << gamekeeper::core::endl;
 
-	this->gameKeeperUI = instanceFuncPtr(loggerFactory->getComponentLogger("UI.client"));
+	this->gameKeeperUI.reset(instanceFuncPtr(loggerFactory->getComponentLogger("UI.client")));
 	this->gameKeeperUI->init(vm);
 	this->gameKeeperUI->startEventLoop();
 
@@ -251,7 +251,6 @@ GameKeeperRuntime::main(int argc, const char* argv[], NewInstanceFuncPtr instanc
 	for(int8_t count = 0; count < 5 && !threadManager->tryJoinFor(2000); count++){}
 
 	this->gameKeeperUI->onShutdown();
-	delete this->gameKeeperUI;
 
 	return EXIT_SUCCESS;
 }

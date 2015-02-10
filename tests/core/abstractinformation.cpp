@@ -21,6 +21,8 @@
 #include <gamekeeper/core/common.h>
 #include <gamekeeper/core/linuxinformation.h>
 
+#include <memory>
+
 #include <boost/filesystem/operations.hpp>
 #include <boost/filesystem/path.hpp>
 
@@ -34,15 +36,10 @@ class OSINFORMATIONCLASSTEST : public testing::Test
 protected:
 	virtual void SetUp() override
 	{
-		this->osInfo = new OSINFORMATIONCLASS();
+		this->osInfo = std::make_unique<OSINFORMATIONCLASS>();
 	}
 
-	virtual void TearDown() override
-	{
-		delete this->osInfo;
-	}
-
-	OSInformation * osInfo = nullptr;
+	std::unique_ptr<OSInformation> osInfo;
 };
 
 #if defined(GAMEKEEPER_OS_IS_WINDOWS)

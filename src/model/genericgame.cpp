@@ -30,9 +30,9 @@ struct GenericGame::PImpl
 };
 
 GenericGame::GenericGame()
-:	data(new PImpl()){}
+:	data(std::make_unique<PImpl>()){}
 
-GenericGame::~GenericGame(){}
+GenericGame::~GenericGame() = default;
 
 GK_BUILD_IMPLEMENTATION(GAME_MODEL, GenericGame,, this->data)
 

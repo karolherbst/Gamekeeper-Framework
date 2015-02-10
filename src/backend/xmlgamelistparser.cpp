@@ -40,7 +40,7 @@ XpathQuery::XpathQuery(const std::string & _query)
 {
 	if(!_query.empty())
 	{
-		query.reset(new pugi::xpath_query(_query.c_str()));
+		query = std::make_unique<pugi::xpath_query>(_query.c_str());
 	}
 }
 
@@ -88,9 +88,9 @@ XMLGameListParser::PImpl::PImpl(std::map<std::string, std::string> & config)
 	platformLin64Id(config["platform.lin64"]){}
 
 XMLGameListParser::XMLGameListParser(std::map<std::string, std::string> & config)
-:	data(new XMLGameListParser::PImpl(config)){}
+:	data(std::make_unique<PImpl>(config)){}
 
-XMLGameListParser::~XMLGameListParser(){}
+XMLGameListParser::~XMLGameListParser() = default;
 
 std::vector<std::unique_ptr<model::Game>>
 XMLGameListParser::parseGameList(std::basic_istream<gkbyte_t> & is)
@@ -102,7 +102,7 @@ XMLGameListParser::parseGameList(std::basic_istream<gkbyte_t> & is)
 		pugi::xpath_node_set result = this->data->gamesListQuery->evaluate_node_set(doc.document_element());
 		for(const pugi::xpath_node & node : result)
 		{
-			model::GenericGame * game = new model::GenericGame();
+			std::unique_ptr<model::GenericGame> game = std::make_unique<model::GenericGame>();
 			game->setId(this->data->gameIdQuery->evaluate_string(node));
 			game->setName(this->data->gameNameQuery->evaluate_string(node));
 			if(this->data->gameDescriptionQuery)
@@ -153,7 +153,7 @@ XMLGameListParser::parseGameList(std::basic_istream<gkbyte_t> & is)
 			}
 			game->setPlatforms(std::move(platforms));
 
-			games.push_back(std::move(std::unique_ptr<model::Game>(game)));
+			games.push_back(std::move(game));
 		}
 	}
 	return games;

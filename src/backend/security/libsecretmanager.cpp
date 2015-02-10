@@ -117,7 +117,7 @@ LibSecretManager::PImpl::PImpl(core::Logger & _logger)
 	logger(_logger){}
 
 LibSecretManager::LibSecretManager(std::shared_ptr<core::LoggerFactory> lf)
-:	data(new LibSecretManager::PImpl(lf->getComponentLogger("Auth.libsecret"))){}
+:	data(std::make_unique<LibSecretManager::PImpl>(lf->getComponentLogger("Auth.libsecret"))){}
 
 LibSecretManager::~LibSecretManager()
 {
@@ -133,7 +133,7 @@ LibSecretManager::saveToken(const Token & token)
 	                          &w.schema,
 	                          w.attributes,
 	                          nullptr,
-	                          (std::string("gamekeeper token for: ") + token.getGroup()).c_str(),
+	                          ("gamekeeper token for: "s + token.getGroup()).c_str(),
 	                          secret_value_new(token.getValue().c_str(), token.getValue().length(), GK_TOKEN_PASSWORD_CONTENT_TYPE),
 	                          nullptr,
 	                          nullptr);
@@ -189,10 +189,10 @@ LibSecretManager::readAllTokens(const std::string & group)
 		}, &properties);
 
 		std::unique_ptr<GenericToken> token(
-			new GenericToken(properties,
-		                    secret_value_get_text(value),
-		                    group,
-		                    utils::String::toType<Token::TimePoint::rep>(static_cast<gchar *>(g_hash_table_lookup(atts, GK_TOKEN_EXPIRY)))));
+			std::make_unique<GenericToken>(properties,
+			                               secret_value_get_text(value),
+			                               group,
+			                               utils::String::toType<Token::TimePoint::rep>(static_cast<gchar *>(g_hash_table_lookup(atts, GK_TOKEN_EXPIRY)))));
 
 		// after we have access to the expiry, check it
 		if(std::chrono::system_clock::now() >= token->getExpiry())

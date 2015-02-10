@@ -267,3 +267,12 @@ typedef int64_t gktime64_t;
 // some global variables
 constexpr char GK_TRUE_STRING[] = "true";
 constexpr char GK_FALSE_STRING[] = "false";
+
+// we want to support Standard user-defined literals by default
+// also we use a hacky trick to achieve that
+namespace std { inline namespace literals {
+	inline namespace chrono_literals{}
+	inline namespace string_literals{}
+}}
+using namespace std::literals::chrono_literals;
+using namespace std::literals::string_literals;

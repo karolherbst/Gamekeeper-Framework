@@ -130,7 +130,7 @@ WebServerFictureAspect::WebServerFictureAspect(std::shared_ptr<Hypodermic::ICont
 	const char * msg = mg_set_option(this->server, "listening_port", "8080");
 	if(msg != nullptr)
 	{
-		throw core::GameKeeperMessageException(std::string("couldn't setup embedded webserver: ") + msg);
+		throw core::GameKeeperMessageException("couldn't setup embedded webserver: "s + msg);
 	}
 	container->resolve<ThreadFactory>()->createThread("mongoose server thread",
 		[this](ThreadFactory::ThreadFunction::argument_type interrupted) -> void
