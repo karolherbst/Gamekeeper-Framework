@@ -159,6 +159,17 @@ typedef int64_t gktime64_t;
 	#define GAMEKEEPER_NAMESPACE_END(...)
 #endif
 
+// likely, unlikely macros
+#if defined(GCC_VERSION) || defined(__clang__)
+	#define GK_LIKELY_CASE(x, r) __builtin_expect((x), r)
+	#define GK_LIKELY(x) GK_LIKELY_CASE((x),true)
+	#define GK_UNLIKELY(x) GK_LIKELY_CASE((x),false)
+#else
+	#define GK_LIKELY_CASE(x, r) (x)
+	#define GK_LIKELY(x) (x)
+	#define GK_UNLIKELY(x) (x)
+#endif
+
 // the following stuff is for C++ only
 #ifdef __cplusplus
 	// declare override if the compiler does not understand it
