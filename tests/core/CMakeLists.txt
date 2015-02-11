@@ -19,6 +19,7 @@ endif()
 file(GLOB sources
   curlfiledownloader.cpp
   filedownloader.cpp
+  singleton.cpp
   xdgpaths.cpp
   ${platform_sources}
 )
