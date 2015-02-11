@@ -25,13 +25,9 @@
 // some platform dependent stuff
 #ifdef GAMEKEEPER_OS_IS_WINDOWS
   #include <gamekeeper/core/win32threadhelper.h>
-  #include <gamekeeper/core/windowsinformation.h>
-  #define OSINFORMATIONCLASS WindowsInformation
   #define THREADHELPERCLASS Win32ThreadHelper
 #else
-  #include <gamekeeper/core/linuxinformation.h>
   #include <gamekeeper/core/pthreadhelper.h>
-  #define OSINFORMATIONCLASS LinuxInformation
   #define THREADHELPERCLASS PthreadHelper
 #endif
 
@@ -118,9 +114,6 @@ DefaultFicture::DefaultFicture() {
 		using namespace gamekeeper::core;
 
 		// set up IoC container
-		containerBuilder.registerType<OSINFORMATIONCLASS>()->
-		        as<OSInformation>()->
-		        singleInstance();
 		containerBuilder.registerType<TestUserPaths>()->
 			as<UserPaths>()->
 			singleInstance();
