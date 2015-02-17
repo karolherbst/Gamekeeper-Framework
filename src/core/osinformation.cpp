@@ -20,6 +20,8 @@
 
 #include <gamekeeper/core/osinformation.h>
 
+#include <gamekeeper/core/singleton.h>
+
 #ifdef GAMEKEEPER_OS_IS_WINDOWS
   #include <gamekeeper/core/windowsinformation.h>
   #define OSINFORMATIONCLASS WindowsInformation
@@ -33,9 +35,7 @@ GAMEKEEPER_NAMESPACE_START(core)
 OSInformation &
 OSInformation::get()
 {
-	// no race condition since c++11
-	static OSINFORMATIONCLASS osinfo;
-	return osinfo;
+	return Singleton::get<OSINFORMATIONCLASS>();
 }
 
 GAMEKEEPER_NAMESPACE_END(core)
