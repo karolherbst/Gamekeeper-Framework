@@ -22,6 +22,7 @@ add_compiler_flags(
   -Wno-sign-conversion
   -Wno-switch-enum
   -Wno-error=deprecated-declarations
+  -Wno-error=missing-field-initializers
 )
 
 # enable warnings we want to enforce

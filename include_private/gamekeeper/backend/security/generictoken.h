@@ -30,8 +30,6 @@ class PRIVATE_API GenericToken : public Token
 {
 public:
 	GenericToken(const Properties & key, const std::string & value, const std::string & group, const TimePoint & expiry = TimePoint()/*, Properties properties = Properties()*/);
-	GenericToken(const Properties & key, const std::string & value, const std::string & group, const TimePoint::duration  & duration/*, Properties properties = Properties()*/);
-	GenericToken(const Properties & key, const std::string & value, const std::string & group, const TimePoint::rep & duration/*, Properties properties = Properties()*/);
 
 	virtual const std::string & getValue() const override;
 	virtual const std::string & getGroup() const override;

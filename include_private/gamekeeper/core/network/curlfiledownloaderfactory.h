@@ -38,7 +38,7 @@ GAMEKEEPER_NAMESPACE_START(core, network)
 class PUBLIC_API CurlFileDownloaderFactory : public FileDownloaderFactory
 {
 public:
-	PUBLIC_API CurlFileDownloaderFactory(std::shared_ptr<LoggerFactory>, std::shared_ptr<PropertyResolver>, std::shared_ptr<UserPaths>);
+	PUBLIC_API CurlFileDownloaderFactory(std::shared_ptr<PropertyResolver>);
 	PRIVATE_API virtual ~CurlFileDownloaderFactory();
 	PRIVATE_API virtual std::shared_ptr<FileDownloader> create() override;
 private:

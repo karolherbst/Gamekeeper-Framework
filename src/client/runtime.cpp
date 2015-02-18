@@ -35,15 +35,14 @@
 #include <gamekeeper/client/gamekeeper.h>
 #include <gamekeeper/client/hypodermic.h>
 #include <gamekeeper/client/storecontrollerimpl.h>
-#include <gamekeeper/core/logger.h>
-#include <gamekeeper/core/loggerStream.h>
 #include <gamekeeper/core/boostpopropertyresolver.h>
 #include <gamekeeper/core/gnuinstalldirspaths.h>
-#include <gamekeeper/core/log4cpploggerFactory.h>
+#include <gamekeeper/core/logger.h>
+#include <gamekeeper/core/loggerStream.h>
 #include <gamekeeper/core/network/curlfiledownloaderfactory.h>
 #include <gamekeeper/core/portableinstalldirspaths.h>
 #include <gamekeeper/core/stdc++11threadmanager.h>
-#include <gamekeeper/core/xdgpaths.h>
+#include <gamekeeper/core/userpaths.h>
 
 // some platform dependent stuff
 #ifdef GAMEKEEPER_OS_IS_WINDOWS
@@ -65,20 +64,7 @@ namespace po = boost::program_options;
 
 GAMEKEEPER_NAMESPACE_START(client)
 
-static std::shared_ptr<Hypodermic::IContainer> localContainer;
 static std::shared_ptr<Hypodermic::IContainer> container;
-
-GameKeeperRuntime::GameKeeperRuntime()
-{
-	using namespace gamekeeper::core;
-	Hypodermic::ContainerBuilder containerBuilder;
-
-	// set up pre IoC container
-	containerBuilder.registerType<XDGPaths>()->
-		as<UserPaths>()->
-		singleInstance();
-	localContainer = containerBuilder.build();
-}
 
 static void
 fillProperties(po::options_description & cmd, po::options_description & file)
@@ -148,7 +134,7 @@ GameKeeperRuntime::main(int argc, const char* argv[], NewInstanceFuncPtr instanc
 	po::variables_map vm;
 	po::store(po::parse_command_line(argc, argv, descCmd), vm);
 
-	fs::path configFile = localContainer->resolve<UserPaths>()->getConfigFile("properties.conf");
+	fs::path configFile = UserPaths::get().getConfigFile("properties.conf");
 	if(fs::exists(configFile))
 	{
 		po::store(po::parse_config_file<char>(configFile.string().c_str(), descFile, true), vm);
@@ -169,12 +155,6 @@ GameKeeperRuntime::main(int argc, const char* argv[], NewInstanceFuncPtr instanc
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-parameter"
 	// set up the real IoC container
-
-	// reuse instances from the pre container
-	containerBuilder.registerInstance<UserPaths>(
-		localContainer->resolve<UserPaths>())->
-		as<UserPaths>()->
-		singleInstance();
 
 	std::string bundleLayout = pr->get<std::string>("filelayout.bundle");
 
@@ -199,36 +179,31 @@ GameKeeperRuntime::main(int argc, const char* argv[], NewInstanceFuncPtr instanc
 			singleInstance();
 	}
 
-	containerBuilder.registerType<Log4cppLoggerFactory>(CREATE(new Log4cppLoggerFactory(INJECT(UserPaths))))->
-		as<LoggerFactory>()->
-		singleInstance();
 	containerBuilder.registerInstance(pr)->
 		as<PropertyResolver>()->
 		singleInstance();
 	containerBuilder.registerType<network::CurlFileDownloaderFactory>(
-		CREATE(new network::CurlFileDownloaderFactory(INJECT(LoggerFactory), INJECT(PropertyResolver), INJECT(UserPaths))))->
+		CREATE(new network::CurlFileDownloaderFactory(INJECT(PropertyResolver))))->
 		as<network::FileDownloaderFactory>()->
 		singleInstance();
 	containerBuilder.registerType<THREADHELPERCLASS>()->
 		as<NativeThreadHelper>()->
 		singleInstance();
 	containerBuilder.registerType<StdCpp11ThreadManager>(
-		CREATE(new StdCpp11ThreadManager(INJECT(NativeThreadHelper),
-	                                     INJECT(LoggerFactory))))->
+		CREATE(new StdCpp11ThreadManager(INJECT(NativeThreadHelper))))->
 		as<ThreadManager>()->
 		as<ThreadFactory>()->
 		singleInstance();
 
 #ifdef HAS_AUTHMANAGER
-	containerBuilder.registerType<AUTHMANAGERCLASS>(
-		CREATE(new AUTHMANAGERCLASS(INJECT(LoggerFactory))))->
+	containerBuilder.registerType<AUTHMANAGERCLASS>()->
 		as<security::AuthManager>()->
 		singleInstance();
 #define INJECT_AUTH INJECT(security::AuthManager)
 #else
 #define INJECT_AUTH nullptr
 #endif
-	containerBuilder.registerType<StoreManager>(CREATE(new StoreManager(INJECT(LoggerFactory), INJECT(BundlePaths), INJECT(network::FileDownloaderFactory),
+	containerBuilder.registerType<StoreManager>(CREATE(new StoreManager(INJECT(BundlePaths), INJECT(network::FileDownloaderFactory),
 	                                                                    INJECT_AUTH)))->
 		as<StoreManager>()->
 		singleInstance();
@@ -239,10 +214,9 @@ GameKeeperRuntime::main(int argc, const char* argv[], NewInstanceFuncPtr instanc
 #pragma GCC diagnostic pop
 	container = containerBuilder.build();
 
-	std::shared_ptr<gamekeeper::core::LoggerFactory> loggerFactory = container->resolve<gamekeeper::core::LoggerFactory>();
-	loggerFactory->getComponentLogger("main") << gamekeeper::core::LogLevel::Debug << "firing up GameKeeper" << gamekeeper::core::endl;
+	Logger::get("main") << gamekeeper::core::LogLevel::Debug << "firing up GameKeeper" << gamekeeper::core::endl;
 
-	this->gameKeeperUI.reset(instanceFuncPtr(loggerFactory->getComponentLogger("UI.client")));
+	this->gameKeeperUI.reset(instanceFuncPtr(Logger::get("UI.client")));
 	this->gameKeeperUI->init(vm);
 	this->gameKeeperUI->startEventLoop();
 

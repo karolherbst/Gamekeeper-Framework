@@ -29,12 +29,6 @@ GenericToken::GenericToken(const Properties & _key, const std::string & _value, 
 	key(_key)/*,
 	properties(_properties)*/{}
 
-GenericToken::GenericToken(const Properties & _key, const std::string & _value, const std::string & _group, const TimePoint::duration & duration/*, Properties _properties*/)
-:	GenericToken(_key, _value, _group, TimePoint(duration)/*, _properties*/){}
-
-GenericToken::GenericToken(const Properties & _key, const std::string & _value, const std::string & _group, const TimePoint::rep & duration/*, Properties _properties*/)
-:	GenericToken(_key, _value, _group, std::chrono::seconds(duration)/*, _properties*/){}
-
 const GenericToken::Properties &
 GenericToken::getKey() const
 {

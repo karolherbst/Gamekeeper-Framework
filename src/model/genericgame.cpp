@@ -24,8 +24,9 @@
 
 GAMEKEEPER_NAMESPACE_START(model)
 
-struct GenericGame::PImpl
+class GenericGame::PImpl
 {
+public:
 	GK_BUILD_MEMBER(GAME_MODEL)
 };
 

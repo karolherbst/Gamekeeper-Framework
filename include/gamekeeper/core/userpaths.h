@@ -48,6 +48,14 @@ interface PUBLIC_API UserPaths
 	GAMEKEEPER_INTERFACE_METHODS(UserPaths);
 
 	/**
+	 * @author Karol Herbst
+	 * @since 0
+	 *
+	 * @return the current active UserPaths implementation
+	 */
+	PUBLIC_API static UserPaths & get();
+	
+	/**
 	 * returns the file with the given name from the config paths
 	 *
 	 * @author Karol Herbst

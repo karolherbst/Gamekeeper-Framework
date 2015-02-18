@@ -18,34 +18,16 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#pragma once
-
-#include <gamekeeper/core/common.h>
-
-#include <unordered_map>
-
-#include <gamekeeper/core/loggerFactory.h>
-
-namespace log4cpp
-{
-	class Appender;
-}
+#include <gamekeeper/core/userpaths.h>
+#include <gamekeeper/core/xdgpaths.h>
 
 GAMEKEEPER_NAMESPACE_START(core)
 
-interface Logger;
-interface UserPaths;
-
-class PUBLIC_API Log4cppLoggerFactory : public LoggerFactory
+UserPaths &
+UserPaths::get()
 {
-public:
-	PUBLIC_API Log4cppLoggerFactory();
-	PRIVATE_API virtual Logger& getDefaultLogger() override;
-	PRIVATE_API virtual Logger& getComponentLogger(const char * const id) override;
-	PRIVATE_API virtual ~Log4cppLoggerFactory();
-private:
-	class PRIVATE_API PImpl;
-	std::unique_ptr<Log4cppLoggerFactory::PImpl> data;
-};
+	static XDGPaths userInfo;
+	return userInfo;
+}
 
 GAMEKEEPER_NAMESPACE_END(core)

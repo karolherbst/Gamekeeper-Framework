@@ -52,10 +52,12 @@ file(GLOB sources
   log4cppLogger.cpp
   log4cpploggerFactory.cpp
   log4cppLoggerStream.cpp
+  logger.cpp
   osinformation.cpp
   portableinstalldirspaths.cpp
   propertiesmissingexception.cpp
   stdc++11threadmanager.cpp
+  userpaths.cpp
   xdgpaths.cpp
 
   network/cookie.cpp

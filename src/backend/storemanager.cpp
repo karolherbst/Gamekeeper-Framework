@@ -27,7 +27,6 @@
 #include <gamekeeper/backend/storeconfigurator.h>
 #include <gamekeeper/core/bundlepaths.h>
 #include <gamekeeper/core/logger.h>
-#include <gamekeeper/core/loggerFactory.h>
 #include <gamekeeper/core/loggerStream.h>
 #include <gamekeeper/utils/stringutils.h>
 
@@ -39,9 +38,9 @@ GAMEKEEPER_NAMESPACE_START(backend)
 using core::endl;
 using core::LogLevel;
 
-StoreManager::StoreManager(std::shared_ptr<core::LoggerFactory> lf, std::shared_ptr<core::BundlePaths> bp, std::shared_ptr<core::network::FileDownloaderFactory> fdf,
+StoreManager::StoreManager(std::shared_ptr<core::BundlePaths> bp, std::shared_ptr<core::network::FileDownloaderFactory> fdf,
                            std::shared_ptr<security::AuthManager> am)
-:	logger(lf->getComponentLogger("backend.StoreManager"))
+:	logger(core::Logger::get("backend.StoreManager"))
 {
 	StoreConfigurator sc(fdf, am);
 	// load all store config files

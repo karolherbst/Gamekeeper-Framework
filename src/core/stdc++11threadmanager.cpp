@@ -23,14 +23,12 @@
 #include <std_compat/mutex>
 
 #include <gamekeeper/core/logger.h>
-#include <gamekeeper/core/loggerFactory.h>
 #include <gamekeeper/core/loggerStream.h>
 
 GAMEKEEPER_NAMESPACE_START(core)
 
-StdCpp11ThreadManager::StdCpp11ThreadManager(std::shared_ptr<NativeThreadHelper> _nativeThreadHelper,
-                                             std::shared_ptr<LoggerFactory> loggerFactory)
-:	logger(loggerFactory->getComponentLogger("Threads")),
+StdCpp11ThreadManager::StdCpp11ThreadManager(std::shared_ptr<NativeThreadHelper> _nativeThreadHelper)
+:	logger(Logger::get("Threads")),
 	nativeThreadHelper(std::move(_nativeThreadHelper)){}
 
 StdCpp11ThreadManager::~StdCpp11ThreadManager()

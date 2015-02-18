@@ -41,7 +41,7 @@ interface LoggerFactory;
 class PUBLIC_API StdCpp11ThreadManager : public ThreadManager, public ThreadFactory
 {
 public:
-	PUBLIC_API StdCpp11ThreadManager(std::shared_ptr<NativeThreadHelper>, std::shared_ptr<LoggerFactory>);
+	PUBLIC_API StdCpp11ThreadManager(std::shared_ptr<NativeThreadHelper>);
 	PRIVATE_API virtual ~StdCpp11ThreadManager();
 	PRIVATE_API virtual bool tryJoinFor(int64_t seconds) override;
 	PRIVATE_API virtual void interruptAll() override;

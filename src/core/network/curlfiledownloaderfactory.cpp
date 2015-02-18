@@ -24,7 +24,7 @@
 
 #include <curl/curl.h>
 
-#include <gamekeeper/core/loggerFactory.h>
+#include <gamekeeper/core/logger.h>
 #include <gamekeeper/core/network/curlfiledownloader.h>
 #include <gamekeeper/core/propertyresolver.h>
 #include <gamekeeper/core/userpaths.h>
@@ -34,19 +34,15 @@ GAMEKEEPER_NAMESPACE_START(core, network)
 class CurlFileDownloaderFactory::PImpl
 {
 public:
-	PImpl(std::shared_ptr<LoggerFactory>, std::shared_ptr<PropertyResolver>, std::shared_ptr<UserPaths>);
-	std::shared_ptr<LoggerFactory> lf;
+	PImpl(std::shared_ptr<PropertyResolver>);
 	std::shared_ptr<PropertyResolver> pr;
-	std::shared_ptr<UserPaths> up;
 };
 
-CurlFileDownloaderFactory::PImpl::PImpl(std::shared_ptr<LoggerFactory> _lf, std::shared_ptr<PropertyResolver> _pr, std::shared_ptr<UserPaths> _up)
-:	lf(std::move(_lf)),
-	pr(std::move(_pr)),
-	up(std::move(_up)){}
+CurlFileDownloaderFactory::PImpl::PImpl(std::shared_ptr<PropertyResolver> _pr)
+:	pr(std::move(_pr)){}
 
-CurlFileDownloaderFactory::CurlFileDownloaderFactory(std::shared_ptr<LoggerFactory> lf, std::shared_ptr<PropertyResolver> pr, std::shared_ptr<UserPaths> up)
-:	data(std::make_unique<PImpl>(lf, pr, up))
+CurlFileDownloaderFactory::CurlFileDownloaderFactory(std::shared_ptr<PropertyResolver> pr)
+:	data(std::make_unique<PImpl>(pr))
 {
 	curl_global_init(CURL_GLOBAL_ALL);
 }
@@ -83,9 +79,9 @@ CurlFileDownloaderFactory::create()
 {
 	return std::make_shared<CurlFileDownloader>
 	(
-		this->data->lf->getComponentLogger("IO.curl"),
+		Logger::get("IO.curl"),
 		buildUserAgentString(this->data->pr->get("network.user_agent")),
-		this->data->up->getCacheFile("downloads/"),
+		UserPaths::get().getCacheFile("downloads/"),
 		this->data->pr->get<uint16_t>("network.connection.timeout"),
 		this->data->pr->get<uint16_t>("network.time_between_retries"),
 		this->data->pr->get<uint16_t>("network.resolve.retries"),
