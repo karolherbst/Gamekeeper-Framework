@@ -19,6 +19,8 @@
  */
 
 #include <gamekeeper/core/userpaths.h>
+
+#include <gamekeeper/core/singleton.h>
 #include <gamekeeper/core/xdgpaths.h>
 
 GAMEKEEPER_NAMESPACE_START(core)
@@ -26,8 +28,7 @@ GAMEKEEPER_NAMESPACE_START(core)
 UserPaths &
 UserPaths::get()
 {
-	static XDGPaths userInfo;
-	return userInfo;
+	return Singleton::get<XDGPaths>();
 }
 
 GAMEKEEPER_NAMESPACE_END(core)

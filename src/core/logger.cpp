@@ -20,13 +20,14 @@
 
 #include <gamekeeper/core/logger.h>
 #include <gamekeeper/core/log4cpploggerFactory.h>
+#include <gamekeeper/core/singleton.h>
 
 GAMEKEEPER_NAMESPACE_START(core)
 
 Logger &
 Logger::get(const std::string & category)
 {
-	static Log4cppLoggerFactory lf;
+	static LoggerFactory & lf = Singleton::get<Log4cppLoggerFactory>();
 	return lf.getComponentLogger(category.c_str());
 }
 
