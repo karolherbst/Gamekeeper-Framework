@@ -40,8 +40,7 @@ class PUBLIC_API CurlFileDownloader : public FileDownloader
 {
 public:
 	PUBLIC_API CurlFileDownloader(Logger & logger, const std::string & userAgent, const boost::filesystem::path & cacheDir,
-	                              uint16_t connectionTimeout, uint16_t retryPause, uint16_t maxResolveRetries, uint16_t maxConnectRetries,
-	                              uint32_t maxBufferSize);
+	                              uint16_t connectionTimeout, uint16_t retryPause, uint16_t maxRetries, uint32_t maxBufferSize);
 	PRIVATE_API virtual ~CurlFileDownloader();
 
 	PRIVATE_API virtual void getRequest(const std::string & url, const DownloadCallback & callback) override;

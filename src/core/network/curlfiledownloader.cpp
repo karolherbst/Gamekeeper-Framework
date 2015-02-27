@@ -131,10 +131,10 @@ class CurlFileDownloader::PImpl
 {
 public:
 	PImpl(Logger &, const std::string & userAgent, const bfs::path & cacheDir, uint16_t connectionTimeout, uint16_t retryPause,
-	      uint16_t maxResolveRetries, uint16_t maxConnectRetries, uint32_t maxBufferSize);
+	      uint16_t maxRetries, uint32_t maxBufferSize);
 	~PImpl();
 
-	void performCurl(uint16_t timeout = 0, uint16_t resolveFailed = 0, uint16_t connectFailed = 0);
+	void performCurl(uint16_t timeout = 0, uint16_t failureCount = 0);
 	template <typename T>
 	void setOpt(CURLoption option, const T &);
 	void handleCurlError(CURLcode code);
@@ -145,8 +145,7 @@ public:
 
 	bfs::path cacheDir;
 	uint32_t retryPause;
-	uint16_t maxResolveRetries;
-	uint16_t maxConnectRetries;
+	uint16_t maxRetries;
 	uint32_t maxBufferSize;
 };
 
@@ -162,13 +161,12 @@ curlDebugCallback(CURL *, curl_infotype type, char * data, size_t length, Logger
 	return 0;
 }
 
-CurlFileDownloader::PImpl::PImpl(Logger & _logger, const std::string & userAgent, const bfs::path & _cacheDir, uint16_t connectionTimeout, uint16_t _retryPause, uint16_t mrr, uint16_t mcr, uint32_t mbs)
+CurlFileDownloader::PImpl::PImpl(Logger & _logger, const std::string & userAgent, const bfs::path & _cacheDir, uint16_t connectionTimeout, uint16_t _retryPause, uint16_t mr, uint32_t mbs)
 :	handle(curl_easy_init()),
 	logger(_logger),
 	cacheDir(_cacheDir),
 	retryPause(_retryPause),
-	maxResolveRetries(mrr),
-	maxConnectRetries(mcr),
+	maxRetries(mr),
 	maxBufferSize(mbs)
 {
 	setOpt(CURLOPT_USERAGENT, userAgent.c_str());
@@ -193,7 +191,7 @@ CurlFileDownloader::PImpl::~PImpl()
 }
 
 void
-CurlFileDownloader::PImpl::performCurl(uint16_t timeout, uint16_t resolveFailed, uint16_t connectFailed)
+CurlFileDownloader::PImpl::performCurl(uint16_t timeout, uint16_t failureCount)
 {
 	if(timeout > 0)
 	{
@@ -218,30 +216,30 @@ CurlFileDownloader::PImpl::performCurl(uint16_t timeout, uint16_t resolveFailed,
 			}
 			break;
 		case CURLE_COULDNT_RESOLVE_HOST: // 6
-			if(resolveFailed < this->maxResolveRetries)
+			if(failureCount < this->maxRetries)
 			{
 				this->logger << LogLevel::Warn << "CURL couldn't resolve host, retrying" << endl;
-				this->performCurl(this->retryPause, ++resolveFailed, connectFailed);
+				this->performCurl(this->retryPause, ++failureCount);
 			}
 			else
 			{
 				std::string message("CURL couldn't resolve host after ");
-				message += utils::String::toString(resolveFailed);
+				message += utils::String::toString(failureCount);
 				message += " retries";
 				this->logger << LogLevel::Error << message << endl;
 				throw FileDownloaderException(message);
 			}
 			break;
 		case CURLE_COULDNT_CONNECT: // 7
-			if(connectFailed < this->maxConnectRetries)
+			if(failureCount < this->maxRetries)
 			{
 				this->logger << LogLevel::Warn << "CURL couldn't connect to host, retrying" << endl;
-				this->performCurl(this->retryPause, resolveFailed, ++connectFailed);
+				this->performCurl(this->retryPause, ++failureCount);
 			}
 			else
 			{
 				std::string message("CURL couldn't connect to host after ");
-				message += utils::String::toString(connectFailed);
+				message += utils::String::toString(failureCount);
 				message += " retries";
 				this->logger << LogLevel::Error << message << endl;
 				throw FileDownloaderException(message);
@@ -289,8 +287,8 @@ CurlFileDownloader::PImpl::resolveDownloadPath(const std::string & url)
 }
 
 CurlFileDownloader::CurlFileDownloader(Logger & logger, const std::string & userAgent, const bfs::path & cacheDir, uint16_t connectionTimeout,
-                                       uint16_t retryPause, uint16_t maxResolveRetries, uint16_t maxConnectRetries, uint32_t maxBufferSize)
-:	data(std::make_unique<PImpl>(logger, userAgent, cacheDir, connectionTimeout, retryPause, maxResolveRetries, maxConnectRetries, maxBufferSize)){}
+                                       uint16_t retryPause, uint16_t maxRetries, uint32_t maxBufferSize)
+:	data(std::make_unique<PImpl>(logger, userAgent, cacheDir, connectionTimeout, retryPause, maxRetries, maxBufferSize)){}
 
 CurlFileDownloader::~CurlFileDownloader() = default;
 

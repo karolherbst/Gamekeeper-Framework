@@ -78,11 +78,10 @@ fillProperties(po::options_description & cmd, po::options_description & file)
 	descNetwork.add_options()
 		("filelayout.bundle", po::value<std::string>()->default_value("auto"))
 		("network.debug", po::value<bool>()->default_value(false)->implicit_value(true))
+		("network.retries", po::value<uint16_t>()->default_value(3))
 		("network.time_between_retries", po::value<uint16_t>()->default_value(300))
 		("network.user_agent", po::value<std::string>())
-		("network.resolve.retries", po::value<uint16_t>()->default_value(3))
 		("network.resolve.timeout", po::value<uint16_t>()->default_value(5000))
-		("network.connection.retries", po::value<uint16_t>()->default_value(3))
 		("network.connection.timeout", po::value<uint16_t>()->default_value(30000))
 		("network.download.max_buffer_size", po::value<uint32_t>()->default_value(2048));
 
