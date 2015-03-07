@@ -178,6 +178,8 @@ CurlFileDownloader::PImpl::PImpl(Logger & _logger, const std::string & userAgent
 	setOpt(CURLOPT_CONNECTTIMEOUT_MS, connectionTimeout);
 	// always enable cookie engine
 	setOpt(CURLOPT_COOKIEJAR, nullptr);
+	// always enable all builtin encodings
+	setOpt(CURLOPT_ACCEPT_ENCODING, "");
 	if(this->logger.isEnabled(LogLevel::Debug))
 	{
 		setOpt(CURLOPT_VERBOSE, 1);
